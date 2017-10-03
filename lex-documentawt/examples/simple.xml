@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="GB2312" ?> <!-- <[CDATA
+
+文档排版工具 / lex-document
+
+- 发布 2011/05/31 李新豪(lerrain@gmail.com)
+ 
+- 文档模板的常用标签意义说明：
+  <typeset_document> 文档根标签。
+  <font_mapping> 字体预设部分，描述整个文档的字体引入信息。
+  <font> 具体字体描述。
+    name属性：模板文档中该字体的名字。
+    src属性：字体文件的路径。
+  <page_setting> 页面定义
+  <page> 具体页面定义
+  <template> 每一页面上固有的元素集合，通常是指页眉页脚等。
+  <paragraph> 文档片段，不同片段的纸张大小方向可以不同。
+  <if> 判断，在满足一定条件时才显示其所含的内容，它所含的内容作为一个元素集合。
+  <reset> 重置流坐标。
+  <loop> 循环。
+  <image> 图片。
+  <text> 文字块。
+  <rect> 纯色矩形。
+  <insert> 外部插入，较复杂的文字表格等可由java方法自行组装后作为一个元素集合插入。
+
+- 使用详见lex-document.jar包中的readme.txt
+
+]]> -->
+
+<typeset_document>
+	<font_mapping>
+		<font name="f1" value="FONT_EXT1"/>
+	</font_mapping>
+	
+	<page_setting>
+		<page name="default" default="yes" size="A4" x="100" y="225" width="1900" height="2500">
+			<template name="header" x="80" y="80" width="1940" height="120">
+				<text x="220" y="10" width="1500" height="40" font="hei" font_size="30" color="black" align="center" valign="middle" value="'页眉 * 页眉 * 页眉 * 页眉 * 页眉 * 页眉 * 页眉 * 页眉 * 页眉'"/>
+				<rect x="0" y="85" width="1940" height="5" color="black"/>
+			</template>
+			
+			<template name="footer" x="80" y="2750" width="1940" height="150">
+				<rect x="0" y="10" width="1940" height="5" color="black"/>
+   				<text x="220" y="50" width="1500" height="40" font="f1" font_size="30" color="black" align="center" valign="middle" value="'页脚 * 页脚 * 页脚 * 页脚 * 页脚 * 页脚 * 页脚 * 页脚 * 页脚'"/>
+				<text x="820" y="120" width="300" height="30" font="kai" font_size="30" color="black" align="center" valign="middle" value="'第' + PAGE.SEQUENCE + '页'"/>
+				<text x="1200" y="120" width="700" height="30" font="hei" font_size="20" color="black" align="right" valign="middle" value="'打印时间：' + SYSTEM.PRINT_TIME"/>
+			</template>
+		</page>
+	</page_setting>
+
+	<paragraph visible="true">
+		<text x="100" y="0" width="1700" height="100" font="hei" font_size="45" color="black" value="'test1'"/>
+		<text x="100" y="200" width="1700" height="100" font="hei" font_size="45" color="black" value="'test2'"/>
+		<text x="100" y="300" width="1700" height="100" font="hei" font_size="45" color="black" value="'test3'"/>
+		<text x="100" y="400" width="1700" height="100" font="hei" font_size="45" color="black" value="'test4'"/>
+	</paragraph>
+</typeset_document>

@@ -1,0 +1,65 @@
+版本历史
+
+1.0 太平单机版附带版本
+
+2.0 以对象为基础重构
+
+3.0 语法及架构规范化重构
+
+4.0 公式引擎扩展为脚本引擎，脚本的语法（如变量定义、赋值、循环、条件判断、函数定义等）以java、javascript、c等为范本设计，同时支持3.0的所有语法。
+
+主要的关键字
+for,while,if,else,return,continue,break,var,throw,new,function,null
+var i = 0;
+var testFunction = function(x, y) { return x + y; }
+没有列出的与java的相似
+
+运算符
+注：expN代表一个表达式(变量和常量都属于表达式)，varN代表一个变量，conN代表一个常量
+exp1 + exp2
+exp1 - exp2
+exp1 * exp2
+exp1 / exp2
+exp1 % exp2 或 exp1 mod exp2
+!exp1 或 not exp1
+var1++
+var1--
+var1 = exp1
+var1 += exp1
+var1 -= exp1
+var1 *= exp1
+var1 /= exp1
+exp1 == exp2
+exp1 != exp2
+exp1 > exp2 或 exp1 gt exp2
+exp1 >= exp2 或 exp1 ge exp2
+exp1 < exp2 或 exp1 lt exp2
+exp1 <= exp2 或 exp1 le exp2
+exp1 and exp2 或 exp1 && exp2
+exp1 or exp2 或 exp1 || exp2
+[exp1, exp2, ..., expN]
+exp1 ? exp2 : exp3
+
+内置函数
+try(5/0,5/2); //如果第一个表达式执行出现异常了，那么返回第二个表达式的值。
+var strs = array('abc','def'); //array，strs的值是数组
+case(xxx>0, 1, -1);
+case(x, 1, 100, 2, 200, 300); //偶数个参数，最后一个参数为都不符合的情况下的值。
+ceil(1.05);
+var x = ceil(1.05, 1); //x=1.1f
+floor(1.05);
+var x = floor(1.05, 1); //x=1.0f
+var x = max(1, 2, 3);
+var x = min(1, 2, 3);
+var x = pow(1.05,20);
+print(x);
+round(1.05);
+var x = round(1.05, 1); //x=1.1f;
+var x = size(strs); //参照上面array的例子，x=2
+str_begin('xxxxx', 'abc'); //java的startsWith
+str_end('xxxxx', 'abc'); //java的endsWith
+str_index('xxxxx', 'abc'); //java的indexOf
+call(f,[p1,p2,p3], rider); //函数调用
+val([1,2,3], 2); //取数组[1,2,3]的第2个值，结果为3
+val([1,2,3], 5); //越界或数组为空时为0，不会报错
+

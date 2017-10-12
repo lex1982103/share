@@ -46,11 +46,10 @@
  */
 package lerrain.tool.script;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
@@ -125,7 +124,10 @@ public class Script implements Code
 	 * <p>由于表达式最终结果需要转化为对象用作返回结果，所以如果是脚本中表达式数量很多却不复杂，那么也不要使用这种方式。<p>
 	 */
 	public static final int NATIVE			= 1;
-	
+
+	//自定义函数，没加同步锁，初始化的时候加入，不要在执行的时候add
+	public static final Map FUNCTIONS		= new HashMap();
+
 	/**
 	 * 高精度模式，java中实际使用BigDecimal来完成
 	 */
@@ -255,6 +257,11 @@ public class Script implements Code
 			return null;
 
 		return new Script(Words.wordsOf(text), true);
+	}
+
+	public static void addFunction(String name, Function f)
+	{
+		FUNCTIONS.put(name, f);
 	}
 	
 	public static int getCalculateMode()

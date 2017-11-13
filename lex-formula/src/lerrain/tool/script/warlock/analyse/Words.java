@@ -66,6 +66,19 @@ public class Words
 	
 	List c = new ArrayList();
 	List d = new ArrayList();
+	List e = new ArrayList();
+
+	String scriptStr;
+
+	public Words(String scriptStr)
+	{
+		this.scriptStr = scriptStr;
+	}
+
+	public String getScript()
+	{
+		return scriptStr;
+	}
 	
 	public int size()
 	{
@@ -86,27 +99,33 @@ public class Words
 	{
 		return (String)c.get(index);
 	}
-	
-	public void add(char word)
+
+	public int getLocation(int index)
 	{
-		add(word + "", getSymbolType(word));
+		return (Integer)e.get(index);
+	}
+
+	public void add(char word, int loc)
+	{
+		add(word + "", getSymbolType(word), loc);
 	}
 	
-	public void add(String word, int type)
+	public void add(String word, int type, int loc)
 	{
 		c.add(word);
 		d.add(new Integer(type));
+		e.add(new Integer(loc));
 	}
 	
 	public void add(Words ws, int from, int to)
 	{
 		for (int i = from; i < to; i++)
-			add(ws.getWord(i), ws.getType(i));
+			add(ws.getWord(i), ws.getType(i), ws.getLocation(i));
 	}
 	
 	public Words cut(int from, int to)
 	{
-		Words ws = new Words();
+		Words ws = new Words(scriptStr);
 		ws.add(this, from, to);
 		
 		return ws;
@@ -119,9 +138,7 @@ public class Words
 	
 	public int getType(int index)
 	{
-		if (index < 0)
-			index += 0;
-		return ((Integer)d.get(index)).intValue();
+		return (Integer)d.get(index);
 	}
 	
 	public String toString()
@@ -133,7 +150,7 @@ public class Words
 	{
 		text = Text.cutComment(text);
 		
-		Words ws = new Words();
+		Words ws = new Words(text);
 		
 		int len = text.length();
 		for (int i = 0; i < len; i++)
@@ -148,12 +165,12 @@ public class Words
 				str = str.replaceAll("[\\\\][\']", "\'");
 				str = str.replaceAll("[\\\\][\\\\]", "\\");
 				str = str.replaceAll("[\\\\][n]", "\n");
-				ws.add(str, STRING);
+				ws.add(str, STRING, i);
 				i = j;
 			}
 			else if (isSpecialSymbol(c))
 			{
-				ws.add(c);
+				ws.add(c, i);
 			}
 			else if (isSymbol(c))
 			{
@@ -166,7 +183,7 @@ public class Words
 				}
 				
 				String w = text.substring(x, i + 1);
-				ws.add(w, getSymbolType(w));
+				ws.add(w, getSymbolType(w), x);
 			}
 			else if (isLetter(c)) //如果是单词
 			{
@@ -179,7 +196,7 @@ public class Words
 				}
 
 				String w = text.substring(x, i + 1);
-				ws.add(w, getWordType(w));
+				ws.add(w, getWordType(w), x);
 			}
 			else if (isNumber(c)) //如果是数字(包括小数)，不接受C语言钟类似1.2f，3L这种形式的数字
 			{
@@ -192,7 +209,7 @@ public class Words
 				}
 				String number = text.substring(x, i + 1);
 				//此处加入对数字的校验
-				ws.add(number, NUMBER);
+				ws.add(number, NUMBER, x);
 			}
 		}
 		
@@ -350,7 +367,7 @@ public class Words
 	
 	private static boolean isSpecialSymbol(char c)
 	{
-		return c == '(' || c == '[' || c == '{' || c == '}' || c == ']' || c == ')' || c == ',' || c == '.' || c == ';';
+		return c == '(' || c == '[' || c == '{' || c == '}' || c == ']' || c == ')' || c == ',' || c == '.' || c == ';' || c == '@';
 	}
 	
 	private static boolean isSymbol(char c)

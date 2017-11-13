@@ -13,7 +13,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class StatementThread implements Code
 {
-	Code callback, code;
+	Code pre, code;
 
 	public StatementThread(Words ws)
 	{
@@ -22,7 +22,7 @@ public class StatementThread implements Code
 			throw new RuntimeException("thread 后面需要为小括号");
 
 		int right = Syntax.findRightBrace(ws, left + 1);
-		callback = Expression.expressionOf(ws.cut(left + 1, right));
+		pre = new Script(ws.cut(left + 1, right));
 
 		left = right + 1;
 		if (ws.getType(left) != Words.BRACE)
@@ -34,33 +34,27 @@ public class StatementThread implements Code
 
 	public Object run(final Factors factors)
 	{
-		final Function res = callback == null ? null : (Function)callback.run(factors);
+		final Stack stack = new Stack(factors);
+		if (pre != null)
+			pre.run(stack);
 
 		Thread th = new Thread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				Object r = code.run(factors);
-				if (res != null)
-				{
-					if (r instanceof Wrap)
-						res.run(((Wrap)r).toArray(), factors);
-					else
-						res.run(new Object[]{r}, factors);
-				}
+				code.run(stack);
 			}
 		});
 
 		th.start();
-
-		return null;
+		return th;
 	}
 
 	public String toText(String space)
 	{
 		StringBuffer buf = new StringBuffer("THREAD (");
-		buf.append(callback == null ? "" : callback.toText(""));
+		buf.append(pre == null ? "" : pre.toText(""));
 		buf.append(")\n");
 		buf.append(space + "{\n");
 		buf.append(code.toText(space + "    ") + "\n");

@@ -51,6 +51,7 @@ import java.util.*;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
@@ -109,7 +110,7 @@ import lerrain.tool.script.warlock.analyse.Words;
  * <p></p>
  * @author lerrain
  */
-public class Script implements Code
+public class Script extends CodeImpl
 {
 	/**
 	 * <p>这是一种用原生计算代替高精度计算的方式，某些情形下，可以显著提升计算速度，在Script中设置即可。</p>
@@ -135,6 +136,8 @@ public class Script implements Code
 	
 	public static final int PRECISE_SCALE	= 10;
 
+	public static boolean STACK_MESSAGE		= true;
+
 	private static int mode = NATIVE;
 	
 	/**
@@ -155,6 +158,8 @@ public class Script implements Code
 	
 	public Script(Words ws, boolean main)
 	{
+		super(ws);
+
 		this.main = main;
 		
 		List line = Syntax.split(ws);

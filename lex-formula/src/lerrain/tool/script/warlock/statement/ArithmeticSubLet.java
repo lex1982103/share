@@ -7,6 +7,8 @@ import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Map;
+
 public class ArithmeticSubLet implements Code
 {
 	Code l, r;
@@ -30,8 +32,13 @@ public class ArithmeticSubLet implements Code
 
 			return v;
 		}
-		
-		throw new RuntimeException("只可以在数字上做递减赋值运算");
+		else if (left.isMap())
+		{
+			((Map) left.getValue()).remove(right.getValue());
+			return left.getValue();
+		}
+
+		throw new RuntimeException("只可以在数字或Map上做递减赋值运算");
 	}
 
 	public String toText(String space)

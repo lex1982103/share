@@ -2,18 +2,22 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticAddAdd implements Code
+public class ArithmeticAddAdd extends CodeImpl
 {
 	Code l, r;
 	
 	public ArithmeticAddAdd(Words ws, int i)
 	{
+		super(ws, i);
+
 		if (i == 0)
 			r = Expression.expressionOf(ws.cut(i + 1));
 		else if (i == ws.size() - 1)
@@ -25,34 +29,41 @@ public class ArithmeticAddAdd implements Code
 
 	public Object run(Factors factors)
 	{
-		if (l != null)
+		try
 		{
-			Value v = Value.valueOf(l, factors);
-			if (v.isDecimal())
+			if (l != null)
 			{
-				double num = v.doubleValue();
-				((Reference)l).let(factors, Double.valueOf(num + 1));
-				
+				Value v = Value.valueOf(l, factors);
+				if (v.isDecimal())
+				{
+					double num = v.doubleValue();
+					((Reference) l).let(factors, Double.valueOf(num + 1));
+
 //				BigDecimal num = v.toDecimal();
 //				((Reference)l).let(factors, num.add(new BigDecimal(1)));
-				return Double.valueOf(num);
+					return Double.valueOf(num);
+				}
 			}
-		}
-		else
-		{
-			Value v = Value.valueOf(r, factors);
-			if (v.isDecimal())
+			else
 			{
-				Double num = Double.valueOf(v.doubleValue() + 1);
-				((Reference)r).let(factors, num);
+				Value v = Value.valueOf(r, factors);
+				if (v.isDecimal())
+				{
+					Double num = Double.valueOf(v.doubleValue() + 1);
+					((Reference) r).let(factors, num);
 
 //				BigDecimal num = v.toDecimal().add(new BigDecimal(1));
 //				((Reference)r).let(factors, num);
-				return num;
+					return num;
+				}
 			}
 		}
+		catch (Exception e)
+		{
+			throw new ScriptRuntimeException(this, factors, e);
+		}
 		
-		throw new RuntimeException("只可以在数字上做累加");
+		throw new ScriptRuntimeException(this, factors, "只可以在数字上做累加");
 	}
 
 	public String toText(String space)

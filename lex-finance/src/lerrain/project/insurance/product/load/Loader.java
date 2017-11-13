@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import lerrain.project.insurance.product.Config;
 import lerrain.project.insurance.product.attachment.axachart.AxaChartParser;
 import lerrain.project.insurance.product.attachment.chart.ChartParser;
 import lerrain.project.insurance.product.attachment.combo.ComboChartDefParser;
@@ -21,8 +22,6 @@ public class Loader
 	String resDir;
 	String xmlPath;
 	
-	Map attachmentParsers;
-	
 	Map companys;
 	Map products;
 	
@@ -33,8 +32,6 @@ public class Loader
 	
 	public Loader(String resDir, String xmlFile)
 	{
-		initAttachments();
-		
 		this.resDir = resDir;
 
 		if (resDir == null)
@@ -44,25 +41,10 @@ public class Loader
 		
 		this.xmlPath = resDir + xmlFile;
 	}
-	
-	private void initAttachments()
-	{
-		attachmentParsers = new HashMap();
-		attachmentParsers.put("table", new TableParser());
-		attachmentParsers.put("coverage", new CoverageParser());
-		attachmentParsers.put("liability", new LiabilityParser());
-		attachmentParsers.put("combo", new ComboParser());
-		attachmentParsers.put("combo_def", new ComboDefParser());
-		attachmentParsers.put("combo_chart_def", new ComboChartDefParser());
-		attachmentParsers.put("chart", new ChartParser());
-		attachmentParsers.put("chart@axa", new AxaChartParser());
-		attachmentParsers.put("tgraph", new TGraphParser());
-		attachmentParsers.put("document", new DocumentParser());
-	}
-	
+
 	protected Map getAttachmentParsers()
 	{
-		return attachmentParsers;
+		return Config.getParserMap();
 	}
 	
 	protected Map getCompanys()

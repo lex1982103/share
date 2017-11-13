@@ -1,6 +1,7 @@
 package lerrain.tool;
 
 import java.io.*;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -139,6 +140,8 @@ public class Disk
 				}
 			}
 		}
+
+		destination.setLastModified(source.lastModified());
 	}
 	
 	/**
@@ -324,5 +327,51 @@ public class Disk
 		{
 			return null;
 		}
+	}
+
+	public static byte[] md5Of(File file)
+	{
+		MessageDigest messageDigest = null;
+
+		byte[] b = new byte[1024 * 1024];
+
+		try (InputStream is = new FileInputStream(file))
+		{
+			messageDigest = MessageDigest.getInstance("MD5");
+
+			List<byte[]> res = new ArrayList<>();
+
+			int c = -1;
+			int t = 0;
+
+			while ((c = is.read(b)) >= 0)
+			{
+				messageDigest.reset();
+				messageDigest.update(b);
+
+				byte[] block = messageDigest.digest();
+				res.add(block);
+
+				t += block.length;
+			}
+
+			byte[] md5 = new byte[t];
+			t = 0;
+
+			for (byte[] bb : res)
+			{
+				System.arraycopy(bb, 0, md5, t, bb.length);
+				t += bb.length;
+			}
+
+			messageDigest.reset();
+			messageDigest.update(md5);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("md5 exception", e);
+		}
+
+		return messageDigest.digest();
 	}
 }

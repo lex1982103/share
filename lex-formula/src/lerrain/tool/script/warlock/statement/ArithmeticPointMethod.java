@@ -51,9 +51,6 @@ public class ArithmeticPointMethod implements Code
 		Object v = obj.run(factors);
 		Object[] wrap = Wrap.arrayOf(param, factors);
 		
-//		if (v instanceof Processor)
-//			return ((Processor)v).perform(name, wrap);
-		
 		if (v instanceof Factors)
 		{
 			Object val = ((Factors)v).get(name);

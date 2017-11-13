@@ -3,8 +3,10 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
@@ -28,7 +30,7 @@ import java.util.Map;
  * 如果每个都计算，那么这个函数是没办法运行的。
  * 
  */
-public class ArithmeticFunction implements Code
+public class ArithmeticFunction extends CodeImpl
 {
 	String name;
 	
@@ -53,6 +55,8 @@ public class ArithmeticFunction implements Code
 		Script.FUNCTIONS.put("fill", new FunctionFill());
 		Script.FUNCTIONS.put("sum", new FunctionSum());
 		Script.FUNCTIONS.put("val", new FunctionVal());
+		Script.FUNCTIONS.put("long", new FunctionLong());
+		Script.FUNCTIONS.put("int", new FunctionInteger());
 		Script.FUNCTIONS.put("find", new FunctionFind());
 		Script.FUNCTIONS.put("str", new FunctionStr());
 		Script.FUNCTIONS.put("str_begin", new FunctionStrBegin());
@@ -73,6 +77,8 @@ public class ArithmeticFunction implements Code
 	
 	public ArithmeticFunction(Words ws, int i)
 	{
+		super(ws, i);
+
 		if (i > 0)
 			throw new SyntaxException("不是一个有效的函数语法 - " + ws);
 		
@@ -174,9 +180,9 @@ public class ArithmeticFunction implements Code
 		if (f == null)
 		{
 			if (v == null)
-				throw new RuntimeException("未找到函数 - " + name);
+				throw new ScriptRuntimeException(this, factors, "未找到函数 - " + name);
 			else
-				throw new RuntimeException("该变量对应的值不是函数体 - " + name + " is " + v.getClass());
+				throw new ScriptRuntimeException(this, factors, "该变量对应的值不是函数体 - " + name + " is " + v.getClass() + ": " + v.toString());
 		}
 
 		//用户自定义的函数，参数直接运算

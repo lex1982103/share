@@ -8,4 +8,6 @@ public interface Code extends Formula
 	public Object run(Factors factors);
 	
 	public String toText(String space);
+
+	//public void printCode();
 }

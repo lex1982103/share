@@ -3,20 +3,24 @@ package lerrain.tool.script.warlock.statement;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticPointKey implements Code, Reference
+public class ArithmeticPointKey extends CodeImpl implements Reference
 {
 	Code l;
 	String key;
 	
 	public ArithmeticPointKey(Words ws, int i)
 	{
+		super(ws, i);
+
 		l = Expression.expressionOf(ws.cut(0, i));
 		
 		if (ws.getType(i + 1) != Words.KEY)
@@ -36,14 +40,14 @@ public class ArithmeticPointKey implements Code, Reference
 		Object v = l.run(factors);
 		
 		if (v == null)
-			throw new RuntimeException("空指针 - " + toText(""));
+			throw new ScriptRuntimeException(this, factors, "空指针 - " + toText(""));
 		
 		if (v instanceof Factors)
 			return ((Factors)v).get(key);
 		if (v instanceof Map)
 			return ((Map)v).get(key);
 		
-		throw new RuntimeException("POINT-KEY运算要求左侧值为参数表或Map类型");
+		throw new ScriptRuntimeException(this, factors, "POINT-KEY运算要求左侧值为参数表或Map类型");
 	}
 
 	public void let(Factors factors, Object value)
@@ -54,7 +58,7 @@ public class ArithmeticPointKey implements Code, Reference
 		else if (v instanceof Map)
 			((Map)v).put(key, value);
 		else
-			throw new RuntimeException("赋值时，被赋值一方的POINT运算的左侧不是有效类型");
+			throw new ScriptRuntimeException(this, factors, "赋值时，被赋值一方的POINT运算的左侧不是有效类型");
 	}
 
 	public String toText(String space)

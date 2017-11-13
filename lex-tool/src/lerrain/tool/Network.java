@@ -13,12 +13,22 @@ import java.security.cert.X509Certificate;
 
 public class Network
 {
+	public static String request(String urlstr)
+	{
+		return request(urlstr, null, 5000, "GET");
+	}
+
 	public static String request(String urlstr, String req)
 	{
-		return request(urlstr, req, 30);
+		return request(urlstr, req, 5000, req == null ? "GET" : "POST");
 	}
 
 	public static String request(String urlstr, String req, int timeout)
+	{
+		return request(urlstr, req, timeout, "POST");
+	}
+
+	public static String request(String urlstr, String req, int timeout, String method)
 	{
 		String res = null;
 		
@@ -55,6 +65,8 @@ public class Network
 				}
 			}
 
+			//System.out.println(conn.getContentType());
+
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try (InputStream in = conn.getInputStream())
 			{
@@ -71,7 +83,8 @@ public class Network
 		}
 		catch (Exception e)
 		{
-			System.out.println(String.format("request: %s<%s> - %s", urlstr, req, e.getMessage()));
+			e.printStackTrace();
+			//System.out.println(String.format("request: %s<%s> - %s", urlstr, req, e.getMessage()));
 		}
 		finally
 		{

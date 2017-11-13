@@ -128,7 +128,7 @@ public class Expression
 		
 		if (pos >= 0)
 			return arithmeticOf(ws.getType(pos), ws, pos);
-		
+
 		throw new SyntaxException("无法处理的运算 - " + ws.toString());
 	}
 	
@@ -211,26 +211,27 @@ public class Expression
 		if (arithmetic == Words.COMMA) return 60;
 		if (arithmetic == Words.QUESTMARK) return 100;
 		if (arithmetic == Words.COLON) return 101;
-		
-		if (arithmetic == Words.NEW) return 1250;
-		if (arithmetic == Words.FUNCTION_DIM) return 1260;
-		
+
 		if (arithmetic == Words.POINT_KEY) return 1300;
 		if (arithmetic == Words.POINT_METHOD) return 1300;
-		if (arithmetic == Words.BRACKET) return 1300;
 		if (arithmetic == Words.FUNCTION) return 1300;
+		if (arithmetic == Words.BRACKET) return 1300;
 		if (arithmetic == Words.BRACE) return 1300;
-		
+		if (arithmetic == Words.PRT) return 1300;
+
+		if (arithmetic == Words.FUNCTION_DIM) return 1260;
+		if (arithmetic == Words.NEW) return 1250;
+
 		if (arithmetic == Words.POSITIVE) return 1200;
 		if (arithmetic == Words.NEGATIVE) return 1200;
 		if (arithmetic == Words.ADDADD) return 1200;
 		if (arithmetic == Words.SUBSUB) return 1200;
-		if (arithmetic == Words.ADD) return 1000;
-		if (arithmetic == Words.SUB) return 1000;
 		if (arithmetic == Words.MULTIPLY) return 1010;
 		if (arithmetic == Words.DIVIDE) return 1010;
 		if (arithmetic == Words.MOD) return 1010;
-		
+		if (arithmetic == Words.ADD) return 1000;
+		if (arithmetic == Words.SUB) return 1000;
+
 		if (arithmetic == Words.AND) return 300;
 		if (arithmetic == Words.OR) return 200;
 		if (arithmetic == Words.REVISE) return 1200;
@@ -240,9 +241,7 @@ public class Expression
 		if (arithmetic == Words.LESS) return 800;
 		if (arithmetic == Words.GREATEREQUAL) return 800;
 		if (arithmetic == Words.LESSEQUAL) return 800;
-		
-		if (arithmetic == Words.PRT) return 2000;
-		
+
 		return -1;
 	}
 }

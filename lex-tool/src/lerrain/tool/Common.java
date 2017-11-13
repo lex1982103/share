@@ -35,7 +35,7 @@ public class Common
 	{
 		if (val instanceof Number)
 		{
-			return BigDecimal.valueOf(((Number)val).doubleValue());
+			return BigDecimal.valueOf(((Number) val).doubleValue());
 		}
 		else if (val instanceof String)
 		{
@@ -62,7 +62,7 @@ public class Common
 		{
 			try
 			{
-				return Double.parseDouble((String)val);
+				return Double.parseDouble((String) val);
 			}
 			catch (Exception e)
 			{
@@ -83,7 +83,7 @@ public class Common
 		{
 			try
 			{
-				return Long.parseLong((String)val);
+				return Long.parseLong((String) val);
 			}
 			catch (Exception e)
 			{
@@ -204,7 +204,7 @@ public class Common
 		return false;
 	}
 
-	public static List<String> listOf(Object val)
+	static List<String> listOf(Object val)
 	{
 		if (val instanceof List)
 		{
@@ -264,6 +264,31 @@ public class Common
 		return BigDecimal.valueOf(val).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
+	public static String pathOf(String... path)
+	{
+		String path1 = null;
+
+		for (String path2 : path)
+		{
+			if (path1 == null)
+			{
+				path1 = path2;
+			}
+			else if (path2 != null)
+			{
+				if (!path1.endsWith("/") && !path1.endsWith("\\") && !path1.equals(File.separator))
+					path1 += File.separator;
+				if (path2.startsWith("/") || path2.startsWith("\\") || path2.startsWith(File.separator))
+					path2 = path2.substring(1);
+
+				path1 += path2;
+			}
+		}
+
+		return path1;
+	}
+
+/*
 	public static String pathOf(String path1, String path2)
 	{
 		if (Common.isEmpty(path1))
@@ -277,6 +302,7 @@ public class Common
 
 		return path1 + path2;
 	}
+*/
 
 	public static int getAge(Date birthday)
 	{

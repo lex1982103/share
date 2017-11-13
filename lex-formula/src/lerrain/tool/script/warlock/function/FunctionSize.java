@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.function;
 
 import java.util.List;
+import java.util.Map;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
@@ -28,7 +29,9 @@ public class FunctionSize implements Function
 				num = ((int[][])r).length;
 			else if (r instanceof List)
 				num = ((List)r).size();
-			
+			else if (r instanceof Map)
+				num = ((Map)r).size();
+
 			if (num < -1)
 				throw new RuntimeException("求size的对象无法识别为数组 - " + r.getClass());
 			

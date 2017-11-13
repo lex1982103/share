@@ -4,7 +4,8 @@ public interface AttachmentParser
 {
 	public static final int XML			= 1;
 	public static final int DATABASE	= 2;
-	
+
+	@Deprecated
 	public String getName();
 
 	/**

@@ -88,4 +88,16 @@ public class Stack implements Factors
 	{
 		return root;
 	}
+
+	public Map getStackMap()
+	{
+		Map m1 = new HashMap();
+		if (heap != null)
+			m1.putAll(heap);
+
+		if (root instanceof Stack)
+			m1.put("parent", ((Stack) root).getStackMap());
+
+		return m1;
+	}
 }

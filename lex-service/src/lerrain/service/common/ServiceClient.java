@@ -11,5 +11,5 @@ import feign.RequestLine;
 public interface ServiceClient
 {
     @RequestLine("POST /{link}")
-    JSONObject req(@Param("link") String link, JSON param);
+    public String req(@Param("link") String link, JSON param);
 }

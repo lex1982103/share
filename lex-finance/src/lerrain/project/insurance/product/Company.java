@@ -96,16 +96,7 @@ public class Company implements Serializable
 
 		if (d == null)
 		{
-			filterMap = new HashMap();
-			filterMap.put("coverage", new CoverageFilter());
-			filterMap.put("liability", new LiabilityFilter());
-			filterMap.put("table", new TableFilter());
-			filterMap.put("combo", new ComboFilter());
-			filterMap.put("combo_chart", new ComboChartFilter());
-			filterMap.put("chart", new ChartFilter());
-			filterMap.put("chart@axa", new AxaChartFilter());
-			filterMap.put("tgraph", new TGraphFilter());
-			filterMap.put("document", new DocumentFilter());
+			filterMap = Config.getFilterMap();
 		}
 		else
 		{

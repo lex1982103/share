@@ -6,17 +6,19 @@ import java.util.Map;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticArray implements Code, Reference
+public class ArithmeticArray extends CodeImpl implements Reference
 {
-	String type = null;
+	int type = 0;
 	
 	Code v, a;
 	
@@ -24,13 +26,17 @@ public class ArithmeticArray implements Code, Reference
 	
 	public ArithmeticArray(Words ws, int i)
 	{
+		super(ws, i);
+
 		if (ws.getType(i) != Words.BRACKET || ws.getType(ws.size() - 1) != Words.BRACKET_R)
 			throw new SyntaxException("找不到数组的右括号");
 		
 		if (i > 0) //否则为Object数组定义 [a, b, c, ...]
 		{
 			if (i == 1 && "double".equals(ws.getWord(0))) // double[a, b, c, ...]
-				type = "double";
+				type = 1;
+			else if (i == 1 && "@".equals(ws.getWord(0))) // double[a, b, c, ...]
+				type = 2;
 			else
 				v = Expression.expressionOf(ws.cut(0, i));
 		}
@@ -44,75 +50,88 @@ public class ArithmeticArray implements Code, Reference
 
 	public Object run(Factors factors)
 	{
-		if (v == null) // [a, b, c, ...] 等同于java的 new Object[] {a, b, c, ...}
+		try
 		{
-			if (type == null) // [a, b, c, ...] 
-				return Wrap.arrayOf(a, factors);
-			else // double[a, b, c, ...] 
-				return Wrap.doubleArrayOf(a, factors);
-		}
+			if (v == null) // [a, b, c, ...] 等同于java的 new Object[] {a, b, c, ...}
+			{
+				if (type == 0) // [a, b, c, ...]
+					return Wrap.arrayOf(a, factors);
+				else if (type == 1) // double[a, b, c, ...]
+					return Wrap.doubleArrayOf(a, factors);
+				else if (type == 2) // @[a, b, c, ...]
+					return Wrap.wrapOf(a, factors).toList();
+			}
 
-		Object val = v.run(factors);
-		Object pos = a.run(factors);
-		
-		int i, j;
-		
-		if (pos instanceof Wrap) //旧的写法IT.ABC[i, j]，向下兼容一下，最多2维，3维以上无视
-		{
-			Object[] p = ((Wrap)pos).toArray();
-			i = Value.intOf(p[0]);
-			j = Value.intOf(p[1]);
-			
-			if (val instanceof int[][])
+			Object val = v.run(factors);
+			Object pos = a.run(factors);
+
+			int i, j;
+
+			if (pos instanceof Wrap) //旧的写法IT.ABC[i, j]，向下兼容一下，最多2维，3维以上无视
 			{
-				return Integer.valueOf(((int[][])val)[i][j]);
-			}
-			else if (val instanceof double[][])
-			{
-				return Double.valueOf(((double[][])val)[i][j]);
-			}
-			else if (val instanceof Object[][])
-			{
-				return ((Object[][])val)[i][j];
-			}
-			else if (val instanceof Object[])
-			{
-				val = ((Object[])val)[i];
-				
-				if (val instanceof int[])
+				Object[] p = ((Wrap) pos).toArray();
+				i = Value.intOf(p[0]);
+				j = Value.intOf(p[1]);
+
+				if (val instanceof int[][])
 				{
-					return Integer.valueOf(((int[])val)[j]);
+					return Integer.valueOf(((int[][]) val)[i][j]);
 				}
-				else if (val instanceof double[])
+				else if (val instanceof double[][])
 				{
-					return Double.valueOf(((double[])val)[j]);
+					return Double.valueOf(((double[][]) val)[i][j]);
+				}
+				else if (val instanceof Object[][])
+				{
+					return ((Object[][]) val)[i][j];
 				}
 				else if (val instanceof Object[])
 				{
-					return ((Object[])val)[j];
+					val = ((Object[]) val)[i];
+
+					if (val instanceof int[])
+					{
+						return Integer.valueOf(((int[]) val)[j]);
+					}
+					else if (val instanceof double[])
+					{
+						return Double.valueOf(((double[]) val)[j]);
+					}
+					else if (val instanceof Object[])
+					{
+						return ((Object[]) val)[j];
+					}
 				}
+				else if (val instanceof Function) //旧的IT.XXX[A, B]，前面的IT.XXX实际是个函数，这里做一次转译
+				{
+					return ((Function) val).run(p, factors);
+				}
+
+				throw new RuntimeException("无法处理的旧版2维数组运算");
 			}
-			else if (val instanceof Function) //旧的IT.XXX[A, B]，前面的IT.XXX实际是个函数，这里做一次转译
-			{
-				return ((Function)val).run(p, factors);
-			}
-			
-			throw new RuntimeException("无法处理的旧版2维数组运算");
-		}
-		
-		if (pos instanceof String)
-		{
+
 			if (val instanceof Map)
-				return ((Map<?, ?>)val).get(pos);
-			if (val instanceof Factors)
-				return ((Factors)val).get((String)pos);
-			
-			throw new RuntimeException("index为string要求数组为map或factors");
-		}
-		
-		//现在都是这种写法IT.ABC[i][j]
-		i = Value.intOf(pos);
-		
+			{
+				return ((Map<?, ?>) val).get(pos);
+			}
+			else if (val instanceof Factors)
+			{
+				return ((Factors) val).get(pos == null ? null : pos.toString());
+			}
+
+//		if (pos instanceof String)
+//		{
+//			if (val instanceof Map)
+//				return ((Map<?, ?>)val).get(pos);
+//			if (val instanceof Factors)
+//				return ((Factors)val).get((String)pos);
+//
+//			throw new RuntimeException("index为string要求数组为map或factors");
+//		}
+
+			//现在都是这种写法IT.ABC[i][j]
+			i = Value.intOf(pos);
+
 //		if (val instanceof Formula) //函数
 //		{
 //			Stack stack = new Stack(factors);
@@ -128,38 +147,43 @@ public class ArithmeticArray implements Code, Reference
 //			
 //			return ((Formula)val).run(stack);
 //		}
-		
-		if (val instanceof int[]) //1维数组
-		{
-			return Integer.valueOf(((int[])val)[i]);
-		}
-		else if (val instanceof double[]) //1维数组
-		{
-			return Double.valueOf(((double[])val)[i]);
-		}
-		else if (val instanceof int[][]) //2维数组
-		{
-			return ((int[][])val)[i];
-		}
-		else if (val instanceof double[][]) //2维数组
-		{
-			return ((double[][])val)[i];
-		}
+
+			if (val instanceof int[]) //1维数组
+			{
+				return Integer.valueOf(((int[]) val)[i]);
+			}
+			else if (val instanceof double[]) //1维数组
+			{
+				return Double.valueOf(((double[]) val)[i]);
+			}
+			else if (val instanceof int[][]) //2维数组
+			{
+				return ((int[][]) val)[i];
+			}
+			else if (val instanceof double[][]) //2维数组
+			{
+				return ((double[][]) val)[i];
+			}
 //		else if (val instanceof Object[][])
 //		{
 //			return ((Object[][])val)[i];
 //		}
-		else if (val instanceof Object[])
-		{
+			else if (val instanceof Object[])
+			{
 //			System.out.println("*****" + ((Object[])val)[i]);
-			return ((Object[])val)[i];
+				return ((Object[]) val)[i];
+			}
+			else if (val instanceof List)
+			{
+				return ((List) val).get(i);
+			}
+
+			throw new RuntimeException("无法处理的数组运算 - " + toText("") + " is " + val);
 		}
-		else if (val instanceof List)
+		catch (Exception e)
 		{
-			return ((List)val).get(i);
+			throw new ScriptRuntimeException(this, factors, e);
 		}
-		
-		throw new RuntimeException("无法处理的数组运算 - " + toText("") + " is " + val);
 	}
 
 	public String toText(String space)
@@ -236,6 +260,10 @@ public class ArithmeticArray implements Code, Reference
 		else if (val instanceof List) //1维数组
 		{
 			((List)val).set(Value.intOf(wrap[0]), value);
+		}
+		else if (val instanceof Map)
+		{
+			((Map<Object, Object>)val).put(pos, value);
 		}
 		else
 		{

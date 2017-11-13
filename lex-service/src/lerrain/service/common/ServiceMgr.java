@@ -14,6 +14,10 @@ import lerrain.tool.Common;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -27,13 +31,31 @@ public class ServiceMgr
     @Resource
     private Environment env;
 
-//    Map<String, String> srv;
+    Map<String, String> current = new HashMap<>();
     Map<String, ServiceClient> map = new HashMap<>();
 
-//    public ClientMgr(Map<String, String> srv)
-//    {
-//        this.srv = srv;
-//    }
+    @RequestMapping("/service/reset.json")
+    @ResponseBody
+    public JSONObject reset(@RequestBody(required=false) JSONObject json)
+    {
+        synchronized (map)
+        {
+            for (Map.Entry<String, Object> e : json.entrySet())
+            {
+                String url = Common.trimStringOf(e.getValue());
+                ServiceClient client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url);
+
+                map.put(e.getKey(), client);
+                current.put(e.getKey(), url);
+            }
+        }
+
+        JSONObject res = new JSONObject();
+        res.put("result", "success");
+        res.put("content", current);
+
+        return res;
+    }
 
     public ServiceClient getClient(String str)
     {
@@ -42,7 +64,11 @@ public class ServiceMgr
             String url = env.getProperty("service." + str);
             ServiceClient client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url);
 
-            map.put(str, client);
+            synchronized (map)
+            {
+                map.put(str, client);
+                current.put(str, url);
+            }
         }
 
         return map.get(str);
@@ -50,10 +76,20 @@ public class ServiceMgr
 
     public JSONObject req(String service, String loc, JSON param)
     {
+        return JSONObject.parseObject(reqStr(service, loc, param));
+    }
+
+    public JSONObject reqVal(String service, String loc, JSON param)
+    {
+        return JSONObject.parseObject(reqStr(service, loc, param)).getJSONObject("content");
+    }
+
+    public String reqStr(String service, String loc, JSON param)
+    {
         try
         {
             long t = System.currentTimeMillis();
-            JSONObject res = this.getClient(service).req(loc, param);
+            String res = this.getClient(service).req(loc, param);
 
             Log.debug("request: " + service + "/" + loc + " -- " + param + ", response: " + res + " in " + (System.currentTimeMillis() - t) + "ms");
             return res;
@@ -82,7 +118,8 @@ public class ServiceMgr
         {
             try (InputStream is = response.body().asInputStream())
             {
-                return JSONObject.parse(Common.byteOf(is));
+                return Common.stringOf(is, "utf-8");
+//                return JSONObject.parse(Common.byteOf(is));
             }
         }
     }

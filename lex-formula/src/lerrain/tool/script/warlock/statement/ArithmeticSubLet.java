@@ -2,47 +2,70 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.List;
 import java.util.Map;
 
-public class ArithmeticSubLet implements Code
+public class ArithmeticSubLet extends CodeImpl
 {
-	Code l, r;
+	Code lc, rc;
 	
 	public ArithmeticSubLet(Words ws, int i)
 	{
-		l = Expression.expressionOf(ws.cut(0, i));
-		r = Expression.expressionOf(ws.cut(i + 1));
+		super(ws, i);
+
+		lc = Expression.expressionOf(ws.cut(0, i));
+		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
-		Value left = Value.valueOf(l, factors);
-		Value right = Value.valueOf(r, factors);
-		
-		if (left.isDecimal() && right.isDecimal())
+		try
 		{
-			Double v = Double.valueOf(left.doubleValue() - right.doubleValue());
-//			BigDecimal v = left.toDecimal().subtract(right.toDecimal());
-			((Reference)l).let(factors, v);
+			Object l = lc.run(factors);
+			Object r = rc.run(factors);
 
-			return v;
+			if (l instanceof Number && r instanceof Number)
+			{
+				Object v;
+
+				if (isFloat(l) || isFloat(r))
+					v = ((Number)l).doubleValue() - ((Number)r).doubleValue();
+				else if (isInt(l) && isInt(r))
+					v = ((Number)l).intValue() - ((Number)r).intValue();
+				else
+					v = ((Number)l).longValue() - ((Number)r).longValue();
+
+				((Reference) lc).let(factors, v);
+				return v;
+			}
+			else if (l instanceof Map)
+			{
+				((Map) l).remove(r);
+				return l;
+			}
+			else if (l instanceof List)
+			{
+				((List) l).remove(((Number)r).intValue());
+				return l;
+			}
 		}
-		else if (left.isMap())
+		catch (Exception e)
 		{
-			((Map) left.getValue()).remove(right.getValue());
-			return left.getValue();
+			throw new ScriptRuntimeException(this, factors, e);
 		}
 
-		throw new RuntimeException("只可以在数字或Map上做递减赋值运算");
+		throw new RuntimeException("只可以在数字、List或Map上做递减赋值运算");
 	}
 
 	public String toText(String space)
 	{
-		return l.toText("") + " -= " + r.toText("");
+		return lc.toText("") + " -= " + rc.toText("");
 	}
 }

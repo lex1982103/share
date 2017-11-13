@@ -8,17 +8,17 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticComma implements Code
 {
-	Code l, r;
+	Code lc, rc;
 	
 	public ArithmeticComma(Words ws, int i)
 	{
-		l = Expression.expressionOf(ws.cut(0, i));
-		r = Expression.expressionOf(ws.cut(i + 1));
+		lc = Expression.expressionOf(ws.cut(0, i));
+		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
-		return new Wrap(l.run(factors), r.run(factors));
+		return new Wrap(lc.run(factors), rc.run(factors));
 		
 //		/*
 //		 * 由逗号分割开的多个表达式，通常是用作函数或数组的参数，并不是每个都需要计算的
@@ -31,16 +31,16 @@ public class ArithmeticComma implements Code
 	
 	public Code left()
 	{
-		return l;
+		return lc;
 	}
 
 	public Code right()
 	{
-		return r;
+		return rc;
 	}
 
 	public String toText(String space)
 	{
-		return l.toText("") + ", " + r.toText("");
+		return lc.toText("") + ", " + rc.toText("");
 	}
 }

@@ -2,40 +2,48 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticSub implements Code
+public class ArithmeticSub extends CodeImpl
 {
-	Code l, r;
+	Code lc, rc;
 	
 	public ArithmeticSub(Words ws, int i)
 	{
+		super(ws, i);
+
 		if (i > 0)
-			l = Expression.expressionOf(ws.cut(0, i));
+			lc = Expression.expressionOf(ws.cut(0, i));
 		else
-			l = null;
+			lc = null;
 		
-		r = Expression.expressionOf(ws.cut(i + 1));
+		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
-		Value left = l == null ? new Value(0) : Value.valueOf(l, factors);
-		Value right = Value.valueOf(r, factors);
-		
-		if (left.isDecimal() && right.isDecimal())
+		Object l = lc == null ? 0 : lc.run(factors);
+		Object r = rc.run(factors);
+
+		if (l instanceof Number && r instanceof Number)
 		{
-//			return left.toDecimal().subtract(right.toDecimal());
-			return Double.valueOf(left.doubleValue() - right.doubleValue());
+			if (isFloat(l) || isFloat(r))
+				return ((Number) l).doubleValue() - ((Number) r).doubleValue();
+			else if (isInt(l) && isInt(r))
+				return ((Number) l).intValue() - ((Number) r).intValue();
+			else
+				return ((Number) l).longValue() - ((Number) r).longValue();
 		}
-		
-		throw new RuntimeException("只可以对数字做减法运算");
+
+		throw new ScriptRuntimeException(this, factors, "只可以对数字做减法运算：" + l + " - " + r);
 	}
 
 	public String toText(String space)
 	{
-		return l == null ? "-" + r.toText("") : (l.toText("") + " - " + r.toText(""));
+		return lc == null ? "-" + rc.toText("") : (lc.toText("") + " - " + rc.toText(""));
 	}
 }

@@ -34,8 +34,6 @@ public class ArithmeticFunction extends CodeImpl
 {
 	String name;
 	
-	Code params;
-	
 	Function fs;
 
 	static
@@ -73,6 +71,7 @@ public class ArithmeticFunction extends CodeImpl
 		Script.FUNCTIONS.put("timestr", new FunctionTimeStr());
 		Script.FUNCTIONS.put("num", new FunctionNum());
 		Script.FUNCTIONS.put("sleep", new FunctionSleep());
+		Script.FUNCTIONS.put("reflex", new FunctionReflex());
 	}
 	
 	public ArithmeticFunction(Words ws, int i)
@@ -149,28 +148,10 @@ public class ArithmeticFunction extends CodeImpl
 //			fs = new FunctionNum();
 //		else if ("sleep".equals(name))
 //			fs = new FunctionSleep();
-
-		int l = i + 1;
-		int r = Syntax.findRightBrace(ws, l + 1);
-		
-		params = l + 1 == r ? null : Expression.expressionOf(ws.cut(l + 1, r));
 	}
 
 	public Object run(Factors factors)
 	{
-		if ("try".equals(name))
-		{
-			ArithmeticComma c = (ArithmeticComma)params;
-			try
-			{
-				return c.left().run(factors);
-			}
-			catch (Exception e)
-			{
-				return c.right().run(factors);
-			}
-		}
-		
 		Function f = fs;
 		
 		Object v = factors.get(name);
@@ -185,24 +166,11 @@ public class ArithmeticFunction extends CodeImpl
 				throw new ScriptRuntimeException(this, factors, "该变量对应的值不是函数体 - " + name + " is " + v.getClass() + ": " + v.toString());
 		}
 
-		//用户自定义的函数，参数直接运算
-		Object[] wrap = Wrap.arrayOf(params, factors);
-
-//		Stack stack = new Stack(factors);
-//		if (wrap != null)
-//		{
-//			stack.set("#0", new Integer(wrap.length));
-//			for (int i = 0; i < wrap.length; i++)
-//			{
-//				stack.set("#" + (i + 1), wrap[i]);
-//			}
-//		}
-		
-		return f.run(wrap, factors);
+		return f;
 	}
 
 	public String toText(String space)
 	{
-		return name + "(" + (params == null ? "" : params.toText("")) + ")";
+		return name;
 	}
 }

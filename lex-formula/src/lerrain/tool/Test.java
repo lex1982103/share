@@ -13,8 +13,27 @@ import lerrain.tool.script.Stack;
 
 public class Test
 {
+	public static void print(Object v)
+	{
+		System.out.println(v.getClass() + ": " + v);
+	}
+
+
 	public static void main(String[] s)
 	{
+		Map map = new HashMap();
+		map.put("x", new Integer(65));
+		map.put("y", new Integer(61));
+
+		Stack stack = new Stack(new TestParam(map));
+
+		print(Script.scriptOf("x+y").run(stack));
+		print(Script.scriptOf("x*y").run(stack));
+		print(Script.scriptOf("x%y").run(stack));
+		print(Script.scriptOf("x/y").run(stack));
+		print(Script.scriptOf("x+=y").run(stack));
+		print(Script.scriptOf("x-y").run(stack));
+
 		String str = "var scriptName = \"Pis.hexie.app\";\n" +
 				"var log = null;\n" +
 				"\n" +
@@ -159,11 +178,6 @@ public class Test
 				"return main();\n";
 
 		Formula script = Script.scriptOf(str);
-		
-		Map map = new HashMap();
-		map.put("LoggerFactory", new Integer(65));
-		
-		Stack stack = new Stack(new TestParam(map));
 		
 		long t1 = System.currentTimeMillis();
 

@@ -32,7 +32,10 @@ public class Constant implements Code
 		}
 		else if (type == Words.NUMBER)
 		{
-			v = new BigDecimal(text);
+			if (text.indexOf(".") >= 0)
+				v = new BigDecimal(text);
+			else
+				v = Integer.valueOf(text);
 		}
 		else if (type == Words.STRING)
 		{

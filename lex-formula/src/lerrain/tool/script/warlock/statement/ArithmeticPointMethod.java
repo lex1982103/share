@@ -6,8 +6,10 @@ import java.util.Map;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
@@ -25,163 +27,39 @@ import lerrain.tool.script.warlock.analyse.Words;
  * @author lerrain
  *
  */
-public class ArithmeticPointMethod implements Code
+public class ArithmeticPointMethod extends CodeImpl
 {
-	Code obj, param;
+	Code obj;
 	
 	String name;
 	
 	public ArithmeticPointMethod(Words ws, int i)
 	{
+		super(ws, i);
+
 		obj = Expression.expressionOf(ws.cut(0, i));
 		
 		if (ws.getType(i + 1) != Words.METHOD)
 			throw new SyntaxException("POINT-METHOD运算右侧没有找到方法名");
 		
 		name = ws.getWord(i + 1);
-		
-		int l = i + 2;
-		int r = Syntax.findRightBrace(ws, l + 1);
-		
-		param = l + 1 == r ? null : Expression.expressionOf(ws.cut(l + 1, r));
 	}
 
 	public Object run(Factors factors)
 	{
 		Object v = obj.run(factors);
-		Object[] wrap = Wrap.arrayOf(param, factors);
-		
+
 		if (v instanceof Factors)
-		{
-			Object val = ((Factors)v).get(name);
-			if (val instanceof Function)
-				return ((Function)val).run(wrap, factors);
-		}
-		
+			return ((Factors)v).get(name);
+
 		if (v instanceof Map)
-		{
-			Object val = ((Map)v).get(name);
-			if (val instanceof Function)
-				return ((Function)val).run(wrap, factors);
-		}
-		
-		Object value;
-		
-		Class[] classArray = new Class[wrap.length];
-		for (int i=0;i<classArray.length;i++)
-		{
-			if (wrap[i] != null)
-				classArray[i] = wrap[i].getClass();
-		}
-		
-		Method method = null;
-		try
-		{
-			method = v.getClass().getDeclaredMethod(name, classArray);
-		}
-		catch (NoSuchMethodException e)
-		{
-			//上面的方法，如果参数某个参数是传入参数的父类，则会找不到该方法。这里对这种情况做一下处理。
-			//OC--
-			Method[] m = v.getClass().getMethods();
-			for (int i=0;i<m.length;i++)
-			{
-				if (name.equals(m[i].getName()))
-				{
-					Class[] c = m[i].getParameterTypes();
-					if (c.length == classArray.length)
-					{
-						boolean pass = true;
-						for(int j=0;j<c.length;j++)
-						{
-							//传入参数是null，除了int(double boolean等先不考虑了)以外的其他都适合，只找第一个。
-							if (wrap[j] == null && !c[j].equals(Integer.TYPE))
-							{
-							}
-							//int
-							else if (c[j].equals(Integer.TYPE) && wrap[j] instanceof Integer)
-							{
-							}
-							else if (c[j].equals(Integer.TYPE) && wrap[j] instanceof BigDecimal)
-							{
-								wrap[j] = Integer.valueOf(((BigDecimal)wrap[j]).intValue());
-							}
-							//boolean
-							else if (c[j].equals(Boolean.TYPE) && wrap[j] instanceof Boolean)
-							{
-							}
-							//double
-							else if (c[j].equals(Double.TYPE) && wrap[j] instanceof Double)
-							{
-							}
-							else if (c[j].equals(Double.TYPE) && wrap[j] instanceof Integer)
-							{
-								wrap[j] = Double.valueOf(((Integer)wrap[j]).doubleValue());
-							}
-							else if (c[j].equals(Double.TYPE) && wrap[j] instanceof Float)
-							{
-								wrap[j] = Double.valueOf(((Float)wrap[j]).doubleValue());
-							}
-							else if (c[j].equals(Double.TYPE) && wrap[j] instanceof BigDecimal)
-							{
-								wrap[j] = Double.valueOf(((BigDecimal)wrap[j]).doubleValue());
-							}
-							//float
-							else if (c[j].equals(Float.TYPE) && wrap[j] instanceof Integer)
-							{
-								wrap[j] = Float.valueOf(((Integer)wrap[j]).floatValue());
-							}
-							else if (c[j].equals(Float.TYPE) && wrap[j] instanceof Float)
-							{
-							}
-							else if (c[j].equals(Float.TYPE) && wrap[j] instanceof Double)
-							{
-								wrap[j] = Float.valueOf(((Float)wrap[j]).floatValue());
-							}
-							else if (c[j].equals(Float.TYPE) && wrap[j] instanceof BigDecimal)
-							{
-								wrap[j] = Float.valueOf(((BigDecimal)wrap[j]).floatValue());
-							}
-							else if (!c[j].isInstance(wrap[j]))
-							{
-								pass = false;
-								break;
-							}
-						}
-						
-						if (pass)
-						{
-							method = m[i];
-							break;
-						}
-					}
-					
-				}
-			}
-			//--OC
-		}
-		
-		try
-		{
-			if (method == null)
-				throw new NoSuchMethodException();
-			
-			value = method.invoke(v, wrap);
-		}
-		catch (NoSuchMethodException e)
-		{
-			throw new RuntimeException("point运算取值失败，没有该方法 -- 对象：" + v + "，方法名: " + name + "<" + wrap.length + ">", e);
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("point运算取值失败，方法内部错误 -- 对象：" + v + "，方法名: " + name, e);
-		}
-		
-		return value;
+			return ((Map)v).get(name);
+
+		throw new ScriptRuntimeException(this, factors, "point左侧只能是map或者factors，目前为" + v.toString());
 	}
 
 	public String toText(String space)
 	{
-		return obj.toText("") + "." + name + "(" + (param == null ? "" : param.toText("")) + ")";
+		return obj.toText("") + "." + name;
 	}
 }

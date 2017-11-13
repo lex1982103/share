@@ -33,37 +33,35 @@ public class ArithmeticAddAdd extends CodeImpl
 		{
 			if (l != null)
 			{
-				Value v = Value.valueOf(l, factors);
-				if (v.isDecimal())
-				{
-					double num = v.doubleValue();
-					((Reference) l).let(factors, Double.valueOf(num + 1));
-
-//				BigDecimal num = v.toDecimal();
-//				((Reference)l).let(factors, num.add(new BigDecimal(1)));
-					return Double.valueOf(num);
-				}
+				Number v = (Number)l.run(factors);
+				if (isInt(v))
+					((Reference) l).let(factors, v.intValue() + 1);
+				else if (isLong(v))
+					((Reference) l).let(factors, v.longValue() + 1);
+				else
+					((Reference) l).let(factors, v.doubleValue() + 1);
+				return v;
 			}
 			else
 			{
-				Value v = Value.valueOf(r, factors);
-				if (v.isDecimal())
-				{
-					Double num = Double.valueOf(v.doubleValue() + 1);
-					((Reference) r).let(factors, num);
+				Number v = (Number)r.run(factors);
+				Object n;
 
-//				BigDecimal num = v.toDecimal().add(new BigDecimal(1));
-//				((Reference)r).let(factors, num);
-					return num;
-				}
+				if (isInt(v))
+					n = v.intValue() + 1;
+				else if (isLong(v))
+					n = v.longValue() + 1;
+				else
+					n = v.doubleValue() + 1;
+
+				((Reference) r).let(factors, n);
+				return n;
 			}
 		}
 		catch (Exception e)
 		{
 			throw new ScriptRuntimeException(this, factors, e);
 		}
-		
-		throw new ScriptRuntimeException(this, factors, "只可以在数字上做累加");
 	}
 
 	public String toText(String space)

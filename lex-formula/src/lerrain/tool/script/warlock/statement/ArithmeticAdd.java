@@ -3,45 +3,55 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticAdd implements Code
+public class ArithmeticAdd extends CodeImpl
 {
-	Code l, r;
+	Code lc, rc;
 	
 	public ArithmeticAdd(Words ws, int i)
 	{
-		l = Expression.expressionOf(ws.cut(0, i));
-		r = Expression.expressionOf(ws.cut(i + 1));
+		super(ws, i);
+
+		lc = Expression.expressionOf(ws.cut(0, i));
+		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
-		Value left = Value.valueOf(l, factors);
-		Value right = Value.valueOf(r, factors);
-		
-		if (left.isDecimal() && right.isDecimal())
+		Object l = lc.run(factors);
+		Object r = rc.run(factors);
+
+		if (l instanceof Number && r instanceof Number)
 		{
+			if (isFloat(l) || isFloat(r))
+				return ((Number)l).doubleValue() + ((Number)r).doubleValue();
+			else if (isInt(l) && isInt(r))
+				return ((Number)l).intValue() + ((Number)r).intValue();
+			else
+				return ((Number)l).longValue() + ((Number)r).longValue();
+
 //			return left.toDecimal().add(right.toDecimal());
-			return Double.valueOf(left.doubleValue() + right.doubleValue());
+//			return Double.valueOf(left.doubleValue() + right.doubleValue());
 		}
-		else if (left.isNull())
+		else if (l == null)
 		{
-			return right.getValue();
+			return r;
 		}
-		else if (right.isNull())
+		else if (r == null)
 		{
-			return left.getValue();
+			return l;
 		}
 		else
 		{
-			return left.toString() + right.toString();
+			return l.toString() + r.toString();
 		}
 	}
 
 	public String toText(String space)
 	{
-		return l.toText("") + " + " + r.toText("");
+		return lc.toText("") + " + " + rc.toText("");
 	}
 }

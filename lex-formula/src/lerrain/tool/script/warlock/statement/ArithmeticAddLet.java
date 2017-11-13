@@ -15,81 +15,83 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticAddLet extends CodeImpl
 {
-	Code l, r;
+	Code lc, rc;
 	
 	public ArithmeticAddLet(Words ws, int i)
 	{
 		super(ws, i);
 
-		l = Expression.expressionOf(ws.cut(0, i));
-		r = Expression.expressionOf(ws.cut(i + 1));
+		lc = Expression.expressionOf(ws.cut(0, i));
+		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
 		try
 		{
-			Value left = Value.valueOf(l, factors);
-			Value right = Value.valueOf(r, factors);
+			Object l = lc.run(factors);
+			Object r = rc.run(factors);
 
-			if (right.isNull())
+			if (r == null)
 			{
-				return left.getValue();
+				return l;
 			}
-			else if (left.isNull() && (l instanceof Reference))
+			else if (l == null)
 			{
-				((Reference) l).let(factors, right.getValue());
-				return right.getValue();
-			}
-			else if (left.isDecimal() && right.isDecimal())
-			{
-				Double v = Double.valueOf(left.doubleValue() + right.doubleValue());
-//			BigDecimal v = right.toDecimal().add(left.toDecimal());
-				((Reference) l).let(factors, v);
+				((Reference) lc).let(factors, r);
 
+				return r;
+			}
+			else if (l instanceof Number && r instanceof Number)
+			{
+				Object v;
+
+				if (isFloat(l) || isFloat(r))
+					v = ((Number)l).doubleValue() + ((Number)r).doubleValue();
+				else if (isInt(l) && isInt(r))
+					v = ((Number)l).intValue() + ((Number)r).intValue();
+				else
+					v = ((Number)l).longValue() + ((Number)r).longValue();
+
+				((Reference) lc).let(factors, v);
 				return v;
 			}
-			else if (left.isMap())
+			else if (l instanceof Map)
 			{
-				if (right.isNull())
-					return left.getValue();
+				if (r instanceof Map)
+					((Map) l).putAll((Map) r);
 
-				if (right.isMap())
-					((Map) left.getValue()).putAll((Map) right.getValue());
-
-				return left.getValue();
+				return l;
 			}
-			else if (left.isString())
+			else if (l instanceof List)
 			{
-				String v = left.getValue().toString() + right.getValue();
-				((Reference) l).let(factors, v);
+				((List) l).add(r);
 
-				return v;
+				return l;
 			}
-			else if (left.getType() == Value.TYPE_LIST)
+			else if (l instanceof Date)
 			{
-				((List) left.getValue()).add(right.getValue());
-
-				return left.getValue();
-			}
-			else if (left.getType() == Value.TYPE_DATE)
-			{
-				Date now = (Date) left.getValue();
-				now.setTime(now.getTime() + right.longValue());
+				Date now = (Date) l;
+				now.setTime(now.getTime() + ((Number)r).longValue());
 
 				return now;
+			}
+			else
+			{
+				String v = l.toString() + r.toString();
+				((Reference) lc).let(factors, v);
+
+				return v;
 			}
 		}
 		catch (Exception e)
 		{
 			throw new ScriptRuntimeException(this, factors, e);
 		}
-
-		throw new ScriptRuntimeException(this, factors, "只可以在数字、字符串、Map或List上做累加赋值运算");
 	}
 
 	public String toText(String space)
 	{
-		return l.toText("") + " += " + r.toText("");
+		return lc.toText("") + " += " + rc.toText("");
 	}
 }

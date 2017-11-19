@@ -38,6 +38,7 @@ public class ArithmeticFunction extends CodeImpl
 
 	static
 	{
+		Script.FUNCTIONS.put("try", new FunctionTry());
 		Script.FUNCTIONS.put("case", new FunctionCase());
 		Script.FUNCTIONS.put("round", new FunctionRound());
 		Script.FUNCTIONS.put("ceil", new FunctionCeil());

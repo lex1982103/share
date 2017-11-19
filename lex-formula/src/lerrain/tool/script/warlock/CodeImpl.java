@@ -55,6 +55,7 @@ public abstract class CodeImpl implements Code
 		String s = words.getScript();
 		if (!s.endsWith("\n"))
 			s += "\n";
+		s = s.replaceAll("\r", " ");
 
 		int p1 = words.getLocation(pos1);
 		int p2 = pos2 + 1 >= words.size() ? s.length() : words.getLocation(pos2 + 1);

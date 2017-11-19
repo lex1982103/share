@@ -27,10 +27,15 @@ public class Stack implements Factors
 	
 	public void declare(String name)
 	{
+		declare(name, null);
+	}
+
+	public void declare(String name, Object val)
+	{
 		if (heap == null)
 			heap = new HashMap();
-		
-		heap.put(name, null);
+
+		heap.put(name, val);
 	}
 	
 	public void set(String name, Object value)

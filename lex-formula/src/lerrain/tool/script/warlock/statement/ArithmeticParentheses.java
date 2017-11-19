@@ -35,40 +35,47 @@ public class ArithmeticParentheses extends CodeImpl
 
 	public Object run(Factors factors)
 	{
-		if (left != null)
+		try
 		{
-			Function val = (Function)left.run(factors);
-
-			if (val instanceof FunctionTry)
+			if (left != null)
 			{
-				Object v;
-				try
+				Function val = (Function) left.run(factors);
+
+				if (val instanceof FunctionTry)
 				{
-					v = ((ArithmeticComma) prt).left().run(factors);
+					Object v;
+					try
+					{
+						v = ((ArithmeticComma) prt).left().run(factors);
+					}
+					catch (Exception e)
+					{
+						v = ((ArithmeticComma) prt).right().run(factors);
+					}
+					return v;
 				}
-				catch (Exception e)
+
+				Object[] params = null;
+
+				if (prt != null)
 				{
-					v = ((ArithmeticComma) prt).right().run(factors);
+					Object r = prt.run(factors);
+					if (r instanceof Wrap)
+						params = ((Wrap) r).toArray();
+					else
+						params = new Object[]{r};
 				}
-				return v;
+
+				return val.run(params, factors);
 			}
-
-			Object[] params = null;
-
-			if (prt != null)
+			else
 			{
-				Object r = prt.run(factors);
-				if (r instanceof Wrap)
-					params = ((Wrap) r).toArray();
-				else
-					params = new Object[]{r};
+				return prt.run(factors);
 			}
-
-			return val.run(params, factors);
 		}
-		else
+		catch (Exception e)
 		{
-			return prt.run(factors);
+			throw new ScriptRuntimeException(this, factors, e);
 		}
 	}
 

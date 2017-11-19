@@ -19,9 +19,7 @@ public class CompanyLoader
 	Loader loader;
 	
 	Company company;
-	
-	List elementList = new ArrayList();
-	
+
 	public CompanyLoader(String resDir, Loader loader)
 	{
 		this.resDir = resDir;
@@ -240,9 +238,6 @@ public class CompanyLoader
 	
 	/**
 	 * 初始化变量与对象映射
-	 * @param varDef
-	 * @param parentNode
-	 * @throws Exception
 	 */
 	private void preloadVariable(VariableDefine interestVar, XmlNode e)
 	{
@@ -362,9 +357,6 @@ public class CompanyLoader
 	
 	/**
 	 * attachment.xml
-	 * 
-	 * @param parentNode
-	 * @throws Exception
 	 */
 	private void preloadAttachment(XmlNode e)
 	{
@@ -389,9 +381,6 @@ public class CompanyLoader
 
 	/**
 	 * 初始化产品参数，缴费、保障、领取等
-	 * @param functionSet
-	 * @param parentNode
-	 * @throws Exception
 	 */
 	private void preloadParameter(XmlNode e)
 	{

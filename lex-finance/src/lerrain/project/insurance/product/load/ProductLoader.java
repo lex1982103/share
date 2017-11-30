@@ -252,7 +252,6 @@ public class ProductLoader
 	
 	/**
 	 * 数据源
-	 * @param element
 	 */
 	private void parseData(XmlNode e, String path)
 	{
@@ -296,9 +295,7 @@ public class ProductLoader
 	}
 	
 	/**
-	 * 
-	 * @param root
-	 * @return
+	 *
 	 */
 	private void parseAttachment(XmlNode e)
 	{
@@ -336,6 +333,28 @@ public class ProductLoader
 				product.addBind(productId, when == null || "".equals(when) ? null : FormulaUtil.formulaOf(when));
 			}
 		}
+	}
+
+	private void parseDuty(XmlNode e)
+	{
+		List dutyList = new ArrayList();
+
+		for (Iterator iter = e.getChildren().iterator(); iter.hasNext(); )
+		{
+			XmlNode n1 = (XmlNode)iter.next();
+			if ("item".equals(n1.getName()))
+			{
+				Duty duty = new Duty();
+				duty.setName(n1.getAttribute("name"));
+				duty.setCode(n1.getAttribute("code"));
+				duty.setPremium(Script.scriptOf(n1.getAttribute("premium")));
+				duty.setAmount(Script.scriptOf(n1.getText()));
+				dutyList.add(duty);
+			}
+		}
+
+		if (!dutyList.isEmpty())
+			product.setDutyList(dutyList);
 	}
 	
 	private void parseRule(XmlNode e)
@@ -411,9 +430,7 @@ public class ProductLoader
 	}
 	
 	/**
-	 * 
-	 * @param root
-	 * @return
+	 *
 	 */
 	private void parseInterest(XmlNode e)
 	{
@@ -603,7 +620,6 @@ public class ProductLoader
 	
 	/**
 	 * 缴费、保障、领取等
-	 * @param element
 	 */
 	private void parseOption(XmlNode e)
 	{
@@ -675,22 +691,22 @@ public class ProductLoader
 	
 	private void parsePortfolio(XmlNode e)
 	{
-		Portfolio portfolio = new Portfolio();
+		final Portfolio portfolio = new Portfolio();
 
 		for (Iterator iter = e.getChildren("product").iterator(); iter.hasNext(); )
 		{
 			XmlNode n1 = (XmlNode)iter.next();
-			
-			String productId = n1.getAttribute("id");
-			String parent = n1.getAttribute("parent");
-			String desc = n1.getAttribute("desc");
-			String c = n1.getAttributeInOrder("condition,c");
+
+			final String productId = n1.getAttribute("id");
+			final String parent = n1.getAttribute("parent");
+			final String desc = n1.getAttribute("desc");
+			final String c = n1.getAttributeInOrder("condition,c");
 
 			String amount = n1.getAttribute("amount");
 			String premium = n1.getAttribute("premium");
 			String quantity = n1.getAttribute("quantity");
 
-			InitValue iv = new InitValue();
+			final InitValue iv = new InitValue();
 			iv.setAmount(FormulaUtil.formulaOf(amount));
 			iv.setPremium(FormulaUtil.formulaOf(premium));
 			iv.setQuantity(FormulaUtil.formulaOf(quantity));
@@ -700,8 +716,15 @@ public class ProductLoader
 				XmlNode n2 = (XmlNode)iter2.next();
 				iv.set(n2.getName(), FormulaUtil.formulaOf(n2.getText()));
 			}
-			
-			portfolio.addProduct(parent == null ? null : (Insurance)loader.products.get(parent), (Insurance)loader.products.get(productId), iv, FormulaUtil.formulaOf(c), desc);
+
+			loader.addListener(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					portfolio.addProduct(parent == null ? null : (Insurance)loader.products.get(parent), (Insurance)loader.products.get(productId), iv, FormulaUtil.formulaOf(c), desc);
+				}
+			});
 		}
 
 		product.setType(Insurance.PACKAGE);
@@ -729,6 +752,10 @@ public class ProductLoader
 			else if ("attachment".equals(n1.getName()))
 			{
 				parseAttachment(n1);
+			}
+			else if ("duty".equals(n1.getName()))
+			{
+				parseDuty(n1);
 			}
 			else if ("rule".equals(n1.getName()))
 			{

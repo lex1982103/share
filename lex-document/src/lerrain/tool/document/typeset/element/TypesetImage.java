@@ -48,6 +48,8 @@ public class TypesetImage extends TypesetElement
 				dImage.addImageSource(getImageSource(DocumentImage.TYPE_SRC).run(tvs), DocumentImage.TYPE_SRC);
 			if (hasType(DocumentImage.TYPE_FILE))
 				dImage.addImageSource(getImageSource(DocumentImage.TYPE_FILE).run(tvs), DocumentImage.TYPE_FILE);
+			if (hasType(DocumentImage.TYPE_BASE64))
+				dImage.addImageSource(getImageSource(DocumentImage.TYPE_BASE64).run(tvs), DocumentImage.TYPE_BASE64);
 			if (hasType(DocumentImage.TYPE_OTHER))
 				dImage.addImageSource(getImageSource(DocumentImage.TYPE_OTHER).run(tvs), DocumentImage.TYPE_OTHER);
 		}

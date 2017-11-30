@@ -514,6 +514,7 @@ public class ParserXml implements TypesetParser
 			String path = node.getAttribute("path");
 			String file = node.getAttribute("file");
 			String url = node.getAttribute("url");
+			String base64 = node.getAttribute("base64");
 			String other = node.getAttribute("other");
 			
 			if (!isEmpty(src))
@@ -536,12 +537,17 @@ public class ParserXml implements TypesetParser
 				Formula vf = TypesetUtil.formulaOf(url);
 				image.addImageSource(vf, DocumentImage.TYPE_URL);
 			}
+			if (!isEmpty(base64))
+			{
+				Formula vf = TypesetUtil.formulaOf(base64);
+				image.addImageSource(vf, DocumentImage.TYPE_BASE64);
+			}
 			if (!isEmpty(other))
 			{
 				Formula vf = TypesetUtil.formulaOf(other);
 				image.addImageSource(vf, DocumentImage.TYPE_OTHER);
 			}
-			
+
 			if ("sign".equals(node.getNodeName()))
 				image.setSign(true);
 			

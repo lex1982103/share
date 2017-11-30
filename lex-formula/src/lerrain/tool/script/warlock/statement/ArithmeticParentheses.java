@@ -43,14 +43,15 @@ public class ArithmeticParentheses extends CodeImpl
 
 				if (val instanceof FunctionTry)
 				{
-					Object v;
+					Object v = null;
 					try
 					{
 						v = ((ArithmeticComma) prt).left().run(factors);
 					}
 					catch (Exception e)
 					{
-						v = ((ArithmeticComma) prt).right().run(factors);
+						if (((ArithmeticComma) prt).right() != null)
+							v = ((ArithmeticComma) prt).right().run(factors);
 					}
 					return v;
 				}

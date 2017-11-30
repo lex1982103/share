@@ -1,23 +1,19 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
-import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Wrap;
-import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class StatementThread implements Code
+public class StatementSynch implements Code
 {
 	Code pre, code;
 
-	public StatementThread(Words ws)
+	public StatementSynch(Words ws)
 	{
-		int left = 1; //callback左括号的位置
+		int left = 1;
 		if (ws.getType(left) == Words.PRT)
 		{
 			int right = Syntax.findRightBrace(ws, left + 1);
@@ -27,7 +23,7 @@ public class StatementThread implements Code
 		}
 
 		if (ws.getType(left) != Words.BRACE)
-			throw new RuntimeException("thread 代码体需要以大括号包裹");
+			throw new RuntimeException("synch 代码体需要以大括号包裹");
 
 		int right = Syntax.findRightBrace(ws, left + 1);
 		code = new Script(ws.cut(left + 1, right));
@@ -38,22 +34,15 @@ public class StatementThread implements Code
 		final Stack stack = new Stack(factors);
 		Object r = pre == null ? null : pre.run(stack);
 
-		Thread th = new Thread(new Runnable()
+		synchronized (r == null ? code : r)
 		{
-			@Override
-			public void run()
-			{
-				code.run(stack);
-			}
-		});
-		th.start();
-
-		return r;
+			return code.run(stack);
+		}
 	}
 
 	public String toText(String space)
 	{
-		StringBuffer buf = new StringBuffer("THREAD (");
+		StringBuffer buf = new StringBuffer("SYNCH (");
 		buf.append(pre == null ? "" : pre.toText(""));
 		buf.append(")\n");
 		buf.append(space + "{\n");

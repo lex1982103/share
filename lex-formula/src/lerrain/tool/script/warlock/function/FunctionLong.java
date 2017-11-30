@@ -5,6 +5,7 @@ import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class FunctionLong implements Function
 {
@@ -16,6 +17,8 @@ public class FunctionLong implements Function
 			return x;
 		if (x instanceof Number)
 			return ((Number) x).longValue();
+		if (x instanceof Date)
+			return ((Date) x).getTime();
 		if (x instanceof String)
 			return Long.parseLong((String)x);
 

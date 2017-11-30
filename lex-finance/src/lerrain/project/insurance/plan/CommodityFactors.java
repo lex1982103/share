@@ -29,6 +29,8 @@ public class CommodityFactors implements FactorsSupport, Serializable
 	Map cache = new HashMap();
 
 	FactorsSupport applicantFactors, insurantFactors;
+
+	CommodityDuty duty;
 	
 	public CommodityFactors(Commodity commodity)
 	{
@@ -82,6 +84,9 @@ public class CommodityFactors implements FactorsSupport, Serializable
 			vars.put("QUANTITY", quantity);
 		if (premiumFy != null)
 			vars.put("PREMIUM_FY", premiumFy);
+
+		if (insurance.getDutyList() != null)
+			duty = new CommodityDuty(insurance.getDutyList(), this);
 	}
 	
 	/**
@@ -200,6 +205,8 @@ public class CommodityFactors implements FactorsSupport, Serializable
 			return commodity.getProduct().getId();
 		if ("CODE".equals(name))
 			return commodity.getProduct().getCode();
+		if ("DUTY".equals(name))
+			return duty;
 		if ("NAME".equals(name))
 			return commodity.getProduct().getName();
 		if ("UNIT".equals(name) || "UNIT_AMOUNT".equals(name)) //UNIT_AMOUNT是以前的写法
@@ -374,7 +381,10 @@ public class CommodityFactors implements FactorsSupport, Serializable
 	{
 		insurantFactors.clearCache();
 		applicantFactors.clearCache();
-		
+
+		if (duty != null)
+			duty.clear();
+
 		cache.clear();
 		
 		if (it != null)

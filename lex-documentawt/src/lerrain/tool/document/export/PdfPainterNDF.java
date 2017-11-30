@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -170,8 +171,9 @@ public class PdfPainterNDF implements Painter
 			{
 				imageDst = dImage.getImage(DocumentImage.TYPE_BIN);
 			}
-			else
+			else if (dImage.hasImage(DocumentImage.TYPE_BASE64))
 			{
+				imageDst = Base64.getDecoder().decode((String)dImage.getImage(DocumentImage.TYPE_BASE64));
 			}
 
 			Image image = null;

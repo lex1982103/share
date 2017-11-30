@@ -64,6 +64,10 @@ public class Syntax
 			{
 				return new StatementThread(ws);
 			}
+			else if ("synch".equals(word))
+			{
+				return new StatementSynch(ws);
+			}
 //			else if ("try".equals(word))
 //			{
 //				return new StatementTry(ws);

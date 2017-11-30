@@ -112,7 +112,9 @@ public class Insurance implements Serializable
 	 */
 	VariableDefine interestVars			= null;						//
 	Map scriptMap						= null;
-	
+
+	List dutyList						= null;
+
 	/*
 	 * 规则相关
 	 */
@@ -168,7 +170,17 @@ public class Insurance implements Serializable
 		
 		bindList.add(id);
 	}
-	
+
+	public List getDutyList()
+	{
+		return dutyList;
+	}
+
+	public void setDutyList(List dutyList)
+	{
+		this.dutyList = dutyList;
+	}
+
 	public void addAccumulativeAmount(String type, Formula formula)
 	{
 		if (accumulativeAmount == null)

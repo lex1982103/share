@@ -1,9 +1,7 @@
 package lerrain.project.insurance.product.load;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import lerrain.project.insurance.product.Config;
 import lerrain.project.insurance.product.attachment.axachart.AxaChartParser;
@@ -24,6 +22,8 @@ public class Loader
 	
 	Map companys;
 	Map products;
+
+	List listeners = new ArrayList();
 	
 	public Loader()
 	{
@@ -67,9 +67,17 @@ public class Loader
 			{
 				throw new ProductParseException("主配置文件解析失败：" + xmlPath, e);
 			}
+
+			for (int i=0;i<listeners.size();i++)
+				((Runnable)listeners.get(i)).run();
 		}
 		
 		return companys;
+	}
+
+	public void addListener(Runnable l)
+	{
+		listeners.add(l);
 	}
 	
 	private void read(XmlNode e)

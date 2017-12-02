@@ -199,7 +199,8 @@ public class PdfPainterNDF implements Painter
 				image.setAbsolutePosition(sx, sy);
 				image.scaleAbsolute(sw, sh);
 
-				document.add(image);
+				pdf.addImage(image);
+				//document.add(image);
 			}
 		}
 		else if (element instanceof DocumentText)

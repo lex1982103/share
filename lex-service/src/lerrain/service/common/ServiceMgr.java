@@ -76,15 +76,15 @@ public class ServiceMgr
 
     public JSONObject req(String service, String loc, JSON param)
     {
-        return JSONObject.parseObject(reqStr(service, loc, param));
+        return JSONObject.parseObject(reqStr(service, loc, param.toJSONString()));
     }
 
     public JSONObject reqVal(String service, String loc, JSON param)
     {
-        return JSONObject.parseObject(reqStr(service, loc, param)).getJSONObject("content");
+        return JSONObject.parseObject(reqStr(service, loc, param.toJSONString())).getJSONObject("content");
     }
 
-    public String reqStr(String service, String loc, JSON param)
+    public String reqStr(String service, String loc, String param)
     {
         try
         {

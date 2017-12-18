@@ -63,11 +63,11 @@ public class FunctionTime implements Function
 		else
 		{
 			String str = v[0] == null ? "00000000000000" : FunctionTimeStr.getString((Date)v[0], "yyyyMMddHHmmss");
-			String buf = "%04d%02d%02d%02d%02d%02d";
+			String buf = "%04d-%02d-%02d %02d:%02d:%02d";
 			Object[] vv = new Object[6];
 			for (int i=0;i<6;i++)
 				vv[i] = (i + 1 < v.length ? Value.intOf(v[i + 1]) : 0) + Integer.parseInt(str.substring(i == 0 ? 0 : i * 2 + 2, i * 2 + 4));
-			return getDate(String.format(buf, vv), "yyyyMMddHHmmss");
+			return getDate(String.format(buf, vv), "yyyy-MM-dd HH:mm:ss");
 		}
 //
 //		else if (v.length == 3)
@@ -123,6 +123,6 @@ public class FunctionTime implements Function
 	public static void main(String[] s)
 	{
 		FunctionTime ft = new FunctionTime();
-		System.out.println(ft.run(new Object[] {new Date(), 0, 0, 1}, null ));
+		System.out.println(ft.run(new Object[] {new Date(), 0, 0, 90}, null ));
 	}
 }

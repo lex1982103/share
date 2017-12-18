@@ -61,7 +61,7 @@ public class VariableArray implements Function, Serializable
 		if (temp == null)
 		{
 			for (int i = 0; i < param.length && v != null && i < v.length; i++)
-				p.set(param[i], v[i]);
+				p.declare(param[i], v[i]);
 			
 			return f.run(p);
 		}
@@ -79,11 +79,8 @@ public class VariableArray implements Function, Serializable
 			if (r == null)
 			{
 				for (int i = 0; i < param.length; i++)
-				{
-					p.declare(param[i]); //必须要声明一下，不然数组嵌套的时候会把上一级的数组的同名值（通常是A1,A2）给改了
-					p.set(param[i], v[i]);
-				}
-				
+					p.declare(param[i], v[i]); //必须要声明一下，不然数组嵌套的时候会把上一级的数组的同名值（通常是A1,A2）给改了
+
 				r = f.run(p);
 				temp.put(key, r);
 			}

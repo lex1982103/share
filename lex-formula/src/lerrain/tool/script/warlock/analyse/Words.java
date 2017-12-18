@@ -28,7 +28,9 @@ public class Words
 	public static final int FUNCTION_DIM		= 71; 
 	public static final int SEMICOLON			= 80; //;
 	public static final int POINT_KEY			= 90; 
-	public static final int POINT_METHOD		= 91; 
+	public static final int POINT_METHOD		= 91;
+	public static final int POINT_KEY2			= 92;
+	public static final int POINT_METHOD2		= 93;
 	public static final int COMMA				= 100; //,
 	public static final int QUESTMARK			= 101; //?
 	public static final int COLON				= 102; //:
@@ -236,22 +238,33 @@ public class Words
 			if (t == WORD)
 			{
 				boolean isNew = i != 0 && getType(i - 1) == NEW;
-				boolean isPoint = i != 0 && getType(i - 1) == POINT_KEY;
+				boolean isPoint = i != 0 && (getType(i - 1) == POINT_KEY || getType(i - 1) == POINT_KEY2);
 				boolean isPrt = i != size - 1 && getType(i + 1) == PRT;
 				
 				if (isNew)
+				{
 					setType(i, CLASS);
+				}
 				else if (isPoint && isPrt)
 				{
 					setType(i, METHOD);
-					setType(i - 1, POINT_METHOD);
+					if (getType(i - 1) == POINT_KEY2)
+						setType(i - 1, POINT_METHOD2);
+					else
+						setType(i - 1, POINT_METHOD);
 				}
 				else if (isPoint && !isPrt)
+				{
 					setType(i, KEY);
+				}
 				else if (!isPoint && isPrt)
+				{
 					setType(i, FUNCTION);
+				}
 				else
+				{
 					setType(i, VARIABLE);
+				}
 			}
 		}
 	}
@@ -260,8 +273,6 @@ public class Words
 	{
 		if (word == ';')
 			return SEMICOLON;
-		else if (word == '.')
-			return POINT_KEY;
 		else if (word == ',')
 			return COMMA;
 		else if (word == '(')
@@ -326,6 +337,10 @@ public class Words
 			return COLON;
 		if ("::".equals(symbol))
 			return COLON2;
+		if (".".equals(symbol))
+			return POINT_KEY;
+		if ("..".equals(symbol))
+			return POINT_KEY2;
 
 		return SYMBOL;
 	}
@@ -367,12 +382,12 @@ public class Words
 	
 	private static boolean isSpecialSymbol(char c)
 	{
-		return c == '(' || c == '[' || c == '{' || c == '}' || c == ']' || c == ')' || c == ',' || c == '.' || c == ';' || c == '@';
+		return c == '(' || c == '[' || c == '{' || c == '}' || c == ']' || c == ')' || c == ',' || c == ';' || c == '@';
 	}
 	
 	private static boolean isSymbol(char c)
 	{
-		return c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '|' || c == '&' || c == '>' || c == '<' || c == '~' || c == '?' || c == ':' || c == '^' || c == '%' || c == '!';
+		return c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '|' || c == '&' || c == '.' || c == '>' || c == '<' || c == '~' || c == '?' || c == ':' || c == '^' || c == '%' || c == '!';
 	}
 	
 	private static boolean isLetter(char c)

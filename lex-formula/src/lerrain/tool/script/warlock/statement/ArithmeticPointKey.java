@@ -16,6 +16,8 @@ public class ArithmeticPointKey extends CodeImpl implements Reference
 {
 	Code l;
 	String key;
+
+	boolean tk = true;
 	
 	public ArithmeticPointKey(Words ws, int i)
 	{
@@ -25,7 +27,10 @@ public class ArithmeticPointKey extends CodeImpl implements Reference
 		
 		if (ws.getType(i + 1) != Words.KEY)
 			throw new SyntaxException("POINT-KEY运算右侧没有找到KEY");
-		
+
+		if (ws.getType(i) == Words.POINT_KEY2)
+			tk = false;
+
 		key = ws.getWord(i + 1);
 	}
 
@@ -40,7 +45,12 @@ public class ArithmeticPointKey extends CodeImpl implements Reference
 		Object v = l.run(factors);
 		
 		if (v == null)
-			throw new ScriptRuntimeException(this, factors, "空指针 - " + toText(""));
+		{
+			if (tk)
+				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText(""));
+			else
+				return null;
+		}
 		
 		if (v instanceof Factors)
 			return ((Factors)v).get(key);

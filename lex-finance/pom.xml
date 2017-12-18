@@ -9,7 +9,7 @@
 		<dependency>
 			<groupId>lerrain</groupId>
 			<artifactId>formula</artifactId>
-			<version>5.0.2</version>
+			<version>6.1.5</version>
 		</dependency>
 	</dependencies>
 

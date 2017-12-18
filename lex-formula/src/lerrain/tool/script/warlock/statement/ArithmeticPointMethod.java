@@ -32,6 +32,8 @@ public class ArithmeticPointMethod extends CodeImpl
 	Code obj;
 	
 	String name;
+
+	boolean tk = true;
 	
 	public ArithmeticPointMethod(Words ws, int i)
 	{
@@ -41,13 +43,24 @@ public class ArithmeticPointMethod extends CodeImpl
 		
 		if (ws.getType(i + 1) != Words.METHOD)
 			throw new SyntaxException("POINT-METHOD运算右侧没有找到方法名");
-		
+
+		if (ws.getType(i) == Words.POINT_KEY2)
+			tk = false;
+
 		name = ws.getWord(i + 1);
 	}
 
 	public Object run(Factors factors)
 	{
 		Object v = obj.run(factors);
+
+		if (v == null)
+		{
+			if (tk)
+				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText(""));
+			else
+				return null;
+		}
 
 		if (v instanceof Factors)
 			return ((Factors)v).get(name);

@@ -172,8 +172,8 @@ public class Expression
 		if (arithmetic == Words.NEW) return new ArithmeticNew(ws, pos);
 		if (arithmetic == Words.FUNCTION_DIM) return new ArithmeticFunctionDim(ws, pos);
 
-		if (arithmetic == Words.POINT_KEY) return new ArithmeticPointKey(ws, pos);
-		if (arithmetic == Words.POINT_METHOD) return new ArithmeticPointMethod(ws, pos);
+		if (arithmetic == Words.POINT_KEY || arithmetic == Words.POINT_KEY2) return new ArithmeticPointKey(ws, pos);
+		if (arithmetic == Words.POINT_METHOD || arithmetic == Words.POINT_METHOD2) return new ArithmeticPointMethod(ws, pos);
 		if (arithmetic == Words.BRACKET) return new ArithmeticArray(ws, pos);
 		if (arithmetic == Words.FUNCTION) return new ArithmeticFunction(ws, pos);
 		if (arithmetic == Words.BRACE) return new ArithmeticBrace(ws, pos);
@@ -214,6 +214,8 @@ public class Expression
 
 		if (arithmetic == Words.POINT_KEY) return 1300;
 		if (arithmetic == Words.POINT_METHOD) return 1300;
+		if (arithmetic == Words.POINT_KEY2) return 1300;
+		if (arithmetic == Words.POINT_METHOD2) return 1300;
 		if (arithmetic == Words.FUNCTION) return 1300;
 		if (arithmetic == Words.BRACKET) return 1300;
 		if (arithmetic == Words.BRACE) return 1300;

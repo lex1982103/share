@@ -1,16 +1,10 @@
 package lerrain.service.common;
 
-import com.alibaba.fastjson.JSONObject;
-import lerrain.tool.Common;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +16,11 @@ public class Log
 
     static boolean write = false;
 
+    static boolean write_info = true;
+    static boolean write_debug = true;
+    static boolean write_alert = true;
+    static boolean write_error = true;
+
     static String fmt = "%tF %tT <%s> %s.%s: %s";
 
     static List<String> buffer = new ArrayList<>();
@@ -29,6 +28,25 @@ public class Log
     public static String getLogFile(long time)
     {
         return LOG_DIR + String.format("%tF", time) + ".log";
+    }
+
+    /**
+     * 设置日志输出级别
+     * @param levels 从（info,debug,alert,error）中选择一个或多个日志输出级别','(英文逗号)隔开，为空则关闭所有
+     */
+    public static void resetWriteLevel(String levels){
+        if(levels == null || "".equals(levels.trim())){
+            write_alert = false;
+            write_debug = false;
+            write_error = false;
+            write_info = false;
+        } else {
+            levels = ","+levels.replaceAll(" ","").toLowerCase()+",";
+            write_alert = levels.indexOf(",alert,") >= 0;
+            write_debug = levels.indexOf(",debug,") >= 0;
+            write_info = levels.indexOf(",info,") >= 0;
+            write_error = levels.indexOf(",error,") >= 0;
+        }
     }
 
     public static void stopWrite()
@@ -105,61 +123,73 @@ public class Log
 
     public static void info(Object str, Exception e)
     {
-        print("INFO", str, e);
+        if(write_info)
+            print("INFO", str, e);
     }
 
     public static void info(Object str)
     {
-        print("INFO", str, null);
+        if(write_info)
+            print("INFO", str, null);
     }
 
     public static void info(Exception e)
     {
-        print("INFO", null, e);
+        if(write_info)
+            print("INFO", null, e);
     }
 
     public static void debug(Object str, Exception e)
     {
-        print("DEBUG", str, e);
+        if(write_debug)
+            print("DEBUG", str, e);
     }
 
     public static void debug(Object str)
     {
-        print("DEBUG", str, null);
+        if(write_debug)
+            print("DEBUG", str, null);
     }
 
     public static void debug(Exception e)
     {
-        print("DEBUG", null, e);
+        if(write_debug)
+            print("DEBUG", null, e);
     }
 
     public static void alert(Object str, Exception e)
     {
-        print("ALERT", str, e);
+        if(write_alert)
+            print("ALERT", str, e);
     }
 
     public static void alert(Object str)
     {
-        print("ALERT", str, null);
+        if(write_alert)
+            print("ALERT", str, null);
     }
 
     public static void alert(Exception e)
     {
-        print("ALERT", null, e);
+        if(write_alert)
+            print("ALERT", null, e);
     }
 
     public static void error(Object str, Exception e)
     {
-        print("ERROR", str, e);
+        if(write_error)
+            print("ERROR", str, e);
     }
 
     public static void error(Object str)
     {
-        print("ERROR", str, null);
+        if(write_error)
+            print("ERROR", str, null);
     }
 
     public static void error(Exception e)
     {
-        print("ERROR", null, e);
+        if(write_error)
+            print("ERROR", null, e);
     }
 }

@@ -34,13 +34,17 @@ public class Log
      * 设置日志输出级别
      * @param levels 从（info,debug,alert,error）中选择一个或多个日志输出级别','(英文逗号)隔开，为空则关闭所有
      */
-    public static void resetWriteLevel(String levels){
-        if(levels == null || "".equals(levels.trim())){
+    public static void resetWriteLevel(String levels)
+    {
+        if(levels == null || "".equals(levels.trim()))
+        {
             write_alert = false;
             write_debug = false;
             write_error = false;
             write_info = false;
-        } else {
+        }
+        else
+        {
             levels = ","+levels.replaceAll(" ","").toLowerCase()+",";
             write_alert = levels.indexOf(",alert,") >= 0;
             write_debug = levels.indexOf(",debug,") >= 0;
@@ -121,6 +125,12 @@ public class Log
         }
     }
 
+    public static void info(String fmt, Object... obj)
+    {
+        if(write_info)
+            print("INFO", String.format(fmt, obj), null);
+    }
+
     public static void info(Object str, Exception e)
     {
         if(write_info)
@@ -137,6 +147,12 @@ public class Log
     {
         if(write_info)
             print("INFO", null, e);
+    }
+
+    public static void debug(String fmt, Object... obj)
+    {
+        if(write_debug)
+            print("DEBUG", String.format(fmt, obj), null);
     }
 
     public static void debug(Object str, Exception e)
@@ -157,6 +173,12 @@ public class Log
             print("DEBUG", null, e);
     }
 
+    public static void alert(String fmt, Object... obj)
+    {
+        if(write_alert)
+            print("ALERT", String.format(fmt, obj), null);
+    }
+
     public static void alert(Object str, Exception e)
     {
         if(write_alert)
@@ -173,6 +195,12 @@ public class Log
     {
         if(write_alert)
             print("ALERT", null, e);
+    }
+
+    public static void error(String fmt, Object... obj)
+    {
+        if(write_error)
+            print("ERROR", String.format(fmt, obj), null);
     }
 
     public static void error(Object str, Exception e)

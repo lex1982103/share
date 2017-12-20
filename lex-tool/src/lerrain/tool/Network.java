@@ -83,8 +83,9 @@ public class Network
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			//System.out.println(String.format("request: %s<%s> - %s", urlstr, req, e.getMessage()));
+//			e.printStackTrace();
+//			System.out.println(String.format("request: %s<%s> - %s", urlstr, req, e.getMessage()));
+			System.out.println(String.format("request: %s - %s", urlstr, e.toString()));
 		}
 		finally
 		{

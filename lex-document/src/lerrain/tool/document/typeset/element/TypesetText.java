@@ -194,6 +194,9 @@ public class TypesetText extends TypesetElement
 				TypesetCoord tc = textDimension.getSize(font, line + c);
 				if ((x + tc.x > width && width > 0) || x + tc.x > bodyWidth)
 				{
+					String[] ll = findSpt(c, line);
+					line = ll[0];
+
 					DocumentText sText = textOf(line, color, font, x, y, tw, tc.y);
 					dPanel.add(sText);
 
@@ -203,7 +206,7 @@ public class TypesetText extends TypesetElement
 					tc.x = tc.x - tw;
 					x = 0;
 					y += lineHeight > 0 ? lineHeight : tc.y;
-					line = "";
+					line = ll[1];
 				}
 				
 				tw = tc.x;
@@ -254,7 +257,69 @@ public class TypesetText extends TypesetElement
 
 		return dPanel;
 	}
-	
+
+	private String[] findSpt(char c, String line)
+	{
+		String newLine = "";
+
+		if (isRightSymbol(c)) //最后一个字如果是文字，先拿下来，之后剩下的：如果是连续的leftsymbol，全拿下来，否则不动。
+		{
+			for (int j = line.length() - 1; j >= 1; j--)
+			{
+				char c1 = line.charAt(j);
+				if (!isRightSymbol(c1) || j == 1)
+				{
+					newLine = line.substring(j + 1) + newLine;
+					line = line.substring(0, j + 1);
+					break;
+				}
+			}
+
+			char c2 = line.charAt(line.length() - 1);
+			if (!isLeftSymbol(c2) && !isRightSymbol(c2))
+			{
+				newLine = line.substring(line.length() - 1) + newLine;
+				line = line.substring(0, line.length() - 1);
+			}
+
+			for (int j = line.length() - 1; j >= 1; j--)
+			{
+				char c1 = line.charAt(j);
+				if (!isLeftSymbol(c1) || j == 1)
+				{
+					newLine = line.substring(j + 1) + newLine;
+					line = line.substring(0, j + 1);
+					break;
+				}
+			}
+		}
+		else //如果是leftsymbol，那么连续的都拿下来，其他不动
+		{
+			for (int j = line.length() - 1; j >= 1; j--)
+			{
+				char c1 = line.charAt(j);
+				if (!isLeftSymbol(c1))
+				{
+					newLine = line.substring(j + 1) + newLine;
+					line = line.substring(0, j + 1);
+					break;
+				}
+			}
+		}
+
+		return new String[] {line, newLine};
+	}
+
+	private boolean isRightSymbol(char c)
+	{
+		return c == '。' || c == '，' || c == '；' || c == '、' || c == '》' || c == '）' || c == '？' || c == '！' || c == '”' || c == '：' || c == '’' || c == '…';
+	}
+
+	private boolean isLeftSymbol(char c)
+	{
+		return c == '《' || c == '（' || c == '“' ||c == '‘';
+	}
+
 	private DocumentText textOf(String text, LexColor color, LexFont font, int x, int y, int width, int height)
 	{
 		DocumentText sText = new DocumentText

@@ -2,6 +2,7 @@ package lerrain.tool.script.warlock;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.warlock.analyse.Words;
 
 import java.io.PrintStream;

@@ -34,9 +34,7 @@ public class ServiceMgr
     Map<String, String> current = new HashMap<>();
     Map<String, ServiceClient> map = new HashMap<>();
 
-    @RequestMapping("/service/reset.json")
-    @ResponseBody
-    public JSONObject reset(@RequestBody(required=false) JSONObject json)
+    public void reset(Map<String, Object> json)
     {
         synchronized (map)
         {
@@ -49,12 +47,6 @@ public class ServiceMgr
                 current.put(e.getKey(), url);
             }
         }
-
-        JSONObject res = new JSONObject();
-        res.put("result", "success");
-        res.put("content", current);
-
-        return res;
     }
 
     public ServiceClient getClient(String str)

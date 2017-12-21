@@ -57,7 +57,7 @@ public class Insurance implements Serializable
 	public static final int CURRENCY_USD	= 3; //美元
 	public static final int CURRENCY_EUR	= 4; //欧元
 	public static final int CURRENCY_GBP	= 5; //英镑
-	public static final int CURRENCY_HDK	= 6; //港元
+	public static final int CURRENCY_HKD = 6; //港元
 	public static final int CURRENCY_JPY	= 7; //日元
 	
 	int version							= 2;						//定义文件版本，根据版本的不同，少数地方算法会有差异
@@ -78,7 +78,7 @@ public class Insurance implements Serializable
 	double unit							= 1;						//单份额度
 
 	int currency						= Insurance.CURRENCY_CNY;
-	int type							= Insurance.CLAUSE;		//对象类型，产品、组合
+	int type							= Insurance.CLAUSE;			//对象类型，产品、组合
 	int category						= Insurance.LIFEINS;		//大类型，寿险、财险
 	String productType					= null;						//小类型
 	

@@ -415,7 +415,7 @@ public class CommodityFactors implements FactorsSupport, Serializable
 			return "eur";
 		else if (currency == Insurance.CURRENCY_GBP)
 			return "gbp";
-		else if (currency == Insurance.CURRENCY_HDK)
+		else if (currency == Insurance.CURRENCY_HKD)
 			return "hdk";
 		else if (currency == Insurance.CURRENCY_JPY)
 			return "jpy";

@@ -115,9 +115,17 @@ public class ProductLoader
 			product.setCurrency(Insurance.CURRENCY_CNY);
 		else if ("twd".equalsIgnoreCase(currency))
 			product.setCurrency(Insurance.CURRENCY_TWD);
+		else if ("hkd".equalsIgnoreCase(currency))
+			product.setCurrency(Insurance.CURRENCY_HKD);
 		else if ("usd".equalsIgnoreCase(currency))
 			product.setCurrency(Insurance.CURRENCY_USD);
-		
+		else if ("gbp".equalsIgnoreCase(currency))
+			product.setCurrency(Insurance.CURRENCY_GBP);
+		else if ("jpy".equalsIgnoreCase(currency))
+			product.setCurrency(Insurance.CURRENCY_JPY);
+		else if ("eur".equalsIgnoreCase(currency))
+			product.setCurrency(Insurance.CURRENCY_EUR);
+
 		/*
 		 * 数据计算的关联关系
 		 * 某险种的某项改变时，需要清除所有和他有关的信息，保证重新计算时没有使用任何旧数据的缓冲信息。

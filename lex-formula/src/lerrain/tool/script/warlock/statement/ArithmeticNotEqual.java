@@ -3,15 +3,18 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticNotEqual implements Code
+public class ArithmeticNotEqual extends CodeImpl
 {
 	Code l, r;
 	
 	public ArithmeticNotEqual(Words ws, int i)
 	{
+		super(ws, i);
+
 		l = Expression.expressionOf(ws.cut(0, i));
 		r = Expression.expressionOf(ws.cut(i + 1));
 	}

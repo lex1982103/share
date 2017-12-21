@@ -4,15 +4,18 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticDivide implements Code
+public class ArithmeticDivide extends CodeImpl
 {
 	Code lc, rc;
 	
 	public ArithmeticDivide(Words ws, int i)
 	{
+		super(ws, i);
+
 		lc = Expression.expressionOf(ws.cut(0, i));
 		rc = Expression.expressionOf(ws.cut(i + 1));
 	}

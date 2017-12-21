@@ -4,16 +4,20 @@ import java.util.Date;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticGreater implements Code
+public class ArithmeticGreater extends CodeImpl
 {
 	Code l, r;
 	
 	public ArithmeticGreater(Words ws, int i)
 	{
+		super(ws, i);
+
 		l = Expression.expressionOf(ws.cut(0, i));
 		r = Expression.expressionOf(ws.cut(i + 1));
 	}
@@ -34,8 +38,8 @@ public class ArithmeticGreater implements Code
 			Date d2 = (Date)right.getValue();
 			return new Boolean(d1.after(d2));
 		}
-		
-		throw new RuntimeException("大小比较只可以在数字上进行");
+
+		throw new ScriptRuntimeException(this, factors, "大小比较只可以在数字、日期上进行");
 	}
 
 	public String toText(String space)

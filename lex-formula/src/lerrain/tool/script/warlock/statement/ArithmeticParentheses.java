@@ -82,6 +82,6 @@ public class ArithmeticParentheses extends CodeImpl
 
 	public String toText(String space)
 	{
-		return left.toText("") + "(" + (prt == null ? "" : prt.toText("")) + ")";
+		return (left == null ? "" : left.toText("")) + "(" + (prt == null ? "" : prt.toText("")) + ")";
 	}
 }

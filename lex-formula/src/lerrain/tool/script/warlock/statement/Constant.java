@@ -43,7 +43,7 @@ public class Constant implements Code
 		}
 		else
 		{
-			throw new RuntimeException("无法识别的常量");
+			throw new RuntimeException("无法识别的常量：" + v);
 		}
 	}
 	

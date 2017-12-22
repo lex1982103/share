@@ -337,6 +337,9 @@ public class PdfPainterSign implements Painter
 				pdf.lineTo(sx + sw, sy + 1);
 				pdf.stroke();
 			}
+
+			if (dText.getLink() != null)
+				pdf.setAction(new PdfAction(dText.getLink()), sx, sy + sh, sx + sw, sy);
 		}
 		else if (element instanceof DocumentPanel)
 		{
@@ -383,6 +386,9 @@ public class PdfPainterSign implements Painter
 			int count = dPanel.getElementCount();
 			for (int i = 0; i < count; i++)
 				translateElement(pdf, document, pageNum, paper, x + dPanel.getX(), y + dPanel.getY(), dPanel.getElement(i), appendMap);
+
+			if (dPanel.getLink() != null)
+				pdf.setAction(new PdfAction(dPanel.getLink()), sx, sy + sh, sx + sw, sy);
 		}
 	}
 	

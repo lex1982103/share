@@ -11,7 +11,6 @@ import lerrain.tool.document.typeset.TypesetUtil;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
-import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.util.Base64;
@@ -328,6 +327,9 @@ public class PdfPainterSign2 implements Painter
 				pdf.lineTo(sx + sw, sy + 1);
 				pdf.stroke();
 			}
+
+			if (dText.getLink() != null)
+				pdf.setAction(new PdfAction(dText.getLink()), sx, sy + sh, sx + sw, sy);
 		}
 		else if (element instanceof DocumentPanel)
 		{
@@ -374,6 +376,9 @@ public class PdfPainterSign2 implements Painter
 			int count = dPanel.getElementCount();
 			for (int i = 0; i < count; i++)
 				translateElement(pdf, document, pageNum, paper, x + dPanel.getX(), y + dPanel.getY(), dPanel.getElement(i), appendMap);
+
+			if (dPanel.getLink() != null)
+				pdf.setAction(new PdfAction(dPanel.getLink()), sx, sy + sh, sx + sw, sy);
 		}
 	}
 	

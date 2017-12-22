@@ -7,6 +7,7 @@ import lerrain.tool.document.element.DocumentImage;
 import lerrain.tool.document.element.LexElement;
 import lerrain.tool.document.typeset.TypesetParameters;
 import lerrain.tool.formula.Formula;
+import lerrain.tool.formula.Value;
 
 public class TypesetImage extends TypesetElement
 {
@@ -37,7 +38,7 @@ public class TypesetImage extends TypesetElement
 	{
 		DocumentImage dImage = new DocumentImage();
 		dImage.setSign(sign);
-		
+
 		try
 		{
 			if (hasType(DocumentImage.TYPE_URL))
@@ -55,14 +56,26 @@ public class TypesetImage extends TypesetElement
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("ERROR: TypesetImage Image - " + e.toString());
 		}
 
 		dImage.setSize(this.getWidth().value(tvs), this.getHeight().value(tvs));
 		dImage.setLocation(this.getX().value(tvs), tvs.getDatum() + this.getY().value(tvs));
 		
 		resetY(tvs, dImage);
-		
+
+		if (this.getLink() != null)
+		{
+			try
+			{
+				dImage.setLink(this.getLink().run(tvs).toString());
+			}
+			catch (Exception e)
+			{
+				System.out.println("ERROR: TypesetImage Link - " + e.toString());
+			}
+		}
+
 		return dImage;
 	}
 

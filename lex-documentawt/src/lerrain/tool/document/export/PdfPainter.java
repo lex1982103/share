@@ -1,39 +1,16 @@
 package lerrain.tool.document.export;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Map;
-
-import lerrain.tool.document.DocumentExportException;
-import lerrain.tool.document.LexColor;
-import lerrain.tool.document.LexDocument;
-import lerrain.tool.document.LexFont;
-import lerrain.tool.document.LexPage;
-import lerrain.tool.document.element.DocumentImage;
-import lerrain.tool.document.element.DocumentLine;
-import lerrain.tool.document.element.DocumentPanel;
-import lerrain.tool.document.element.DocumentRect;
-import lerrain.tool.document.element.DocumentText;
-import lerrain.tool.document.element.LexElement;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import lerrain.tool.document.*;
+import lerrain.tool.document.element.*;
 import lerrain.tool.document.size.Paper;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfWriter;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PdfPainter implements Painter
 {
@@ -169,36 +146,64 @@ public class PdfPainter implements Painter
 		else if (element instanceof DocumentImage)
 		{
 			DocumentImage dImage = (DocumentImage)element;
-			File imageFile = null;
-			
+			Object imageDst = null;
+
 			if (dImage.hasImage(DocumentImage.TYPE_FILE))
 			{
-				imageFile = (File)dImage.getImage(DocumentImage.TYPE_FILE);
+				imageDst = dImage.getImage(DocumentImage.TYPE_FILE);
 			}
 			else if (dImage.hasImage(DocumentImage.TYPE_SRC))
 			{
-				imageFile = new File((String)dImage.getImage(DocumentImage.TYPE_SRC));
+				imageDst = new File((String)dImage.getImage(DocumentImage.TYPE_SRC));
 			}
 			else if (dImage.hasImage(DocumentImage.TYPE_PATH))
 			{
-				imageFile = new File((String)dImage.getImage(DocumentImage.TYPE_PATH));
+				imageDst = new File((String)dImage.getImage(DocumentImage.TYPE_PATH));
 			}
-			else
+			else if (dImage.hasImage(DocumentImage.TYPE_BIN))
 			{
+				imageDst = dImage.getImage(DocumentImage.TYPE_BIN);
 			}
-			
-			if (imageFile != null)
+			else if (dImage.hasImage(DocumentImage.TYPE_BASE64))
 			{
-				Image image = (Image)appendMap.get("image:" + imageFile.getAbsolutePath());
+				imageDst = Base64.getDecoder().decode((String)dImage.getImage(DocumentImage.TYPE_BASE64));
+			}
+			else if (dImage.hasImage(DocumentImage.TYPE_QRCODE))
+			{
+				BarcodeQRCode qrcode = new BarcodeQRCode((String)dImage.getImage(DocumentImage.TYPE_QRCODE), 1, 1, null);
+				imageDst = qrcode.getImage();
+			}
+
+			Image image = null;
+
+			if (imageDst instanceof Image)
+			{
+				image = (Image)imageDst;
+			}
+			else if (imageDst instanceof File)
+			{
+				File imageFile = (File)imageDst;
+				image = (Image)appendMap.get("image:" + imageFile.getAbsolutePath());
 				if (image == null)
 				{
 					image = Image.getInstance(imageFile.getAbsolutePath());
 					appendMap.put("image:" + imageFile.getAbsolutePath(), image);
 				}
-				
+			}
+			else if (imageDst instanceof byte[])
+			{
+				byte[] b = (byte[])imageDst;
+				image = Image.getInstance(b);
+			}
+
+			if (image != null)
+			{
 				image.setAbsolutePosition(sx, sy);
 				image.scaleAbsolute(sw, sh);
-				
+
+				if (dImage.getLink() != null)
+					pdf.setAction(new PdfAction(dImage.getLink()), sx, sy + sh, sx + sw, sy);
+
 				document.add(image);
 			}
 		}

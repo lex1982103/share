@@ -77,6 +77,9 @@ public class ParserXml implements TypesetParser
 		temp = node.getAttribute("style");
 		if (!isEmpty(temp)) text.setStyle(temp);
 
+		temp = node.getAttribute("link");
+		if (!isEmpty(temp)) text.setLink(TypesetUtil.formulaOf(temp));
+
 		temp = node.getAttribute("mode");
 		if (!isEmpty(temp))
 		{
@@ -503,6 +506,13 @@ public class ParserXml implements TypesetParser
 			if (node.hasAttribute("underline"))
 				text.setUnderline(node.getAttribute("underline"));
 			
+			return text;
+		}
+		else if ("qrcode".equals(node.getNodeName()))
+		{
+			TypesetQrcode text = new TypesetQrcode();
+			parseTypesetBase(typeset, node, text);
+
 			return text;
 		}
 		else if ("image".equals(node.getNodeName()) || "sign".equals(node.getNodeName()))

@@ -255,6 +255,18 @@ public class TypesetText extends TypesetElement
 		dPanel.setSize(fullWidth, height + margin[1] + margin[3]);
 		resetY(tvs, dPanel);
 
+		if (this.getLink() != null)
+		{
+			try
+			{
+				dPanel.setLink(Value.stringOf(this.getLink(), tvs));
+			}
+			catch (Exception e)
+			{
+				System.out.println("ERROR: TypesetText Link - " + e.toString());
+			}
+		}
+
 		return dPanel;
 	}
 

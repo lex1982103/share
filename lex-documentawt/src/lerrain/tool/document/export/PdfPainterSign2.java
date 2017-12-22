@@ -14,6 +14,7 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -212,13 +213,23 @@ public class PdfPainterSign2 implements Painter
 			{
 				imageDst = dImage.getImage(DocumentImage.TYPE_BIN);
 			}
-			else
+			else if (dImage.hasImage(DocumentImage.TYPE_BASE64))
 			{
+				imageDst = Base64.getDecoder().decode((String)dImage.getImage(DocumentImage.TYPE_BASE64));
+			}
+			else if (dImage.hasImage(DocumentImage.TYPE_QRCODE))
+			{
+				BarcodeQRCode qrcode = new BarcodeQRCode((String)dImage.getImage(DocumentImage.TYPE_QRCODE), 1, 1, null);
+				imageDst = qrcode.getImage();
 			}
 
 			Image image = null;
-			
-			if (imageDst instanceof File)
+
+			if (imageDst instanceof Image)
+			{
+				image = (Image)imageDst;
+			}
+			else if (imageDst instanceof File)
 			{
 				File imageFile = (File)imageDst;
 				image = (Image)appendMap.get("image:" + imageFile.getAbsolutePath());
@@ -246,6 +257,9 @@ public class PdfPainterSign2 implements Painter
 				{
 					image.setAbsolutePosition(sx, sy);
 					image.scaleAbsolute(sw, sh);
+
+					if (dImage.getLink() != null)
+						pdf.setAction(new PdfAction(dImage.getLink()), sx, sy + sh, sx + sw, sy);
 
 					document.add(image);
 				}

@@ -2,6 +2,7 @@ package lerrain.tool.document.export;
 
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
@@ -175,10 +176,19 @@ public class PdfPainterNDF implements Painter
 			{
 				imageDst = Base64.getDecoder().decode((String)dImage.getImage(DocumentImage.TYPE_BASE64));
 			}
+			else if (dImage.hasImage(DocumentImage.TYPE_QRCODE))
+			{
+				BarcodeQRCode qrcode = new BarcodeQRCode((String)dImage.getImage(DocumentImage.TYPE_QRCODE), 1, 1, null);
+				imageDst = qrcode.getImage();
+			}
 
 			Image image = null;
-			
-			if (imageDst instanceof File)
+
+			if (imageDst instanceof Image)
+			{
+				image = (Image)imageDst;
+			}
+			else if (imageDst instanceof File)
 			{
 				File imageFile = (File)imageDst;
 				image = (Image)appendMap.get("image:" + imageFile.getAbsolutePath());
@@ -199,8 +209,10 @@ public class PdfPainterNDF implements Painter
 				image.setAbsolutePosition(sx, sy);
 				image.scaleAbsolute(sw, sh);
 
-				pdf.addImage(image);
-				//document.add(image);
+				if (dImage.getLink() != null)
+					pdf.setAction(new PdfAction(dImage.getLink()), sx, sy + sh, sx + sw, sy);
+
+				document.add(image);
 			}
 		}
 		else if (element instanceof DocumentText)

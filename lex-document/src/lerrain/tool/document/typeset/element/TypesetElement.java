@@ -30,7 +30,8 @@ public abstract class TypesetElement
 	LexColor color;
 	LexColor bgColor;
 	LexColor borderColor;
-	
+
+	Formula link;
 	Formula value;
 	
 	TypesetNumber topBorder;
@@ -54,13 +55,23 @@ public abstract class TypesetElement
 	Map style;
 //	String style;
 	String underline;
-	
+
 	Formula condition;
 	
 	//内容过长自动扩展
 	boolean fixed = false;
 	
 	boolean split = true;
+
+	public Formula getLink()
+	{
+		return link;
+	}
+
+	public void setLink(Formula link)
+	{
+		this.link = link;
+	}
 
 	public boolean isFixed()
 	{

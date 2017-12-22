@@ -15,6 +15,7 @@ public class DocumentImage extends LexElement
 	public static final int TYPE_URL	= 4; //url
 	public static final int TYPE_BIN	= 5; //byte[]
 	public static final int TYPE_BASE64 = 6; //base64
+	public static final int TYPE_QRCODE = 7; //qrcode
 	public static final int TYPE_OTHER	= 99;
 
 	boolean sign = false;

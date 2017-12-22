@@ -37,8 +37,20 @@ public abstract class LexElement implements Serializable
 	
 	int horizontalAlign = LexElement.ALIGN_CENTER;
 	int verticalAlign = LexElement.ALIGN_MIDDLE;
+
+	String link;
 	
 	Formula resetAtFinal;
+
+	public String getLink()
+	{
+		return link;
+	}
+
+	public void setLink(String link)
+	{
+		this.link = link;
+	}
 
 	public int getX()
 	{

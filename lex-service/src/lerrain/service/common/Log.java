@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class Log
 {
+    public static boolean EXCEPTION_STACK = true;
+
     static String LOG_DIR = "log/";
 
     static boolean write = false;
@@ -98,18 +100,26 @@ public class Log
 
     private static void print(String inf, Object str, Exception e)
     {
-        if (e != null) try
+        if (e != null)
         {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            if (EXCEPTION_STACK)
+            {
+                try (ByteArrayOutputStream os = new ByteArrayOutputStream())
+                {
+                    PrintWriter pw = new PrintWriter(os);
+                    e.printStackTrace(pw);
+                    pw.close();
 
-            PrintWriter pw = new PrintWriter(os);
-            e.printStackTrace(pw);
-            pw.close();
-
-            str = (str == null ? "" : str) + "\n" + os.toString();
-        }
-        catch (Exception e1)
-        {
+                    str = (str == null ? "" : str) + "\n" + os.toString();
+                }
+                catch (Exception e1)
+                {
+                }
+            }
+            else
+            {
+                str = (str == null ? "" : str) + "\n" + e.toString();
+            }
         }
 
         long t = System.currentTimeMillis();

@@ -33,6 +33,7 @@ public class ServiceMgr
 
     Map<String, String> current = new HashMap<>();
     Map<String, ServiceClient> map = new HashMap<>();
+    Map<String, Integer> prtLog = new HashMap<>();
 
     public void reset(Map<String, Object> json)
     {
@@ -47,6 +48,11 @@ public class ServiceMgr
                 current.put(e.getKey(), url);
             }
         }
+    }
+
+    public void setLog(String service, int level)
+    {
+        prtLog.put(service, level);
     }
 
     public ServiceClient getClient(String str)
@@ -83,7 +89,14 @@ public class ServiceMgr
             long t = System.currentTimeMillis();
             String res = this.getClient(service).req(loc, param);
 
-            Log.debug("request: " + service + "/" + loc + " -- " + param + ", response: " + res + " in " + (System.currentTimeMillis() - t) + "ms");
+            Integer level = prtLog.get(service);
+            if (level != null)
+            {
+                if (level == 1)
+                    Log.debug("%s => %s/%s(%dms) => %s", param, service, loc, System.currentTimeMillis() - t, res);
+                else if (level == 2)
+                    Log.info("%s => %s/%s(%dms) => %s", param, service, loc, System.currentTimeMillis() - t, res);
+            }
             return res;
         }
         catch (Exception e)

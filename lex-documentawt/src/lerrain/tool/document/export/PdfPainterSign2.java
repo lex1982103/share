@@ -315,8 +315,9 @@ public class PdfPainterSign2 implements Painter
 			float y2 = font.getBaseFont().getDescentPoint(text, scale(fontSize));
 			
 			ColumnText colText = new ColumnText(pdf);
-			colText.setAlignment(Element.ALIGN_MIDDLE);
-			colText.setSimpleColumn(new Phrase(text, font), sx, sy, sx + sw, sy + sh, (sh - (y1 - y2)) / 2 + y1, Element.ALIGN_CENTER);
+			int align = dText.getHorizontalAlign() == DocumentText.ALIGN_CENTER ? Element.ALIGN_CENTER : dText.getHorizontalAlign() == DocumentText.ALIGN_RIGHT ? Element.ALIGN_RIGHT : Element.ALIGN_CENTER;
+			colText.setAlignment(align);
+			colText.setSimpleColumn(new Phrase(text, font), sx, sy, sx + sw, sy + sh, (sh - (y1 - y2)) / 2 + y1, align);
 			colText.go();
 			
 			if (dText.getUnderline() != null)

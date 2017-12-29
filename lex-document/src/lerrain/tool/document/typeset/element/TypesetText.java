@@ -195,7 +195,11 @@ public class TypesetText extends TypesetElement
 				if ((x + tc.x > width && width > 0) || x + tc.x > bodyWidth)
 				{
 					String[] ll = findSpt(c, line);
-					line = ll[0];
+					if (!ll[0].equals(line))
+					{
+						line = ll[0];
+						tw = textDimension.getSize(font, line).x;
+					}
 
 					DocumentText sText = textOf(line, color, font, x, y, tw, tc.y);
 					dPanel.add(sText);

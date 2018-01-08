@@ -4,6 +4,8 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
+import java.text.DecimalFormat;
+
 public class FunctionStr implements Function
 {
 	public Object run(Object[] v, Factors factors)
@@ -17,10 +19,18 @@ public class FunctionStr implements Function
 		}
 		else if (v.length == 2)
 		{
-			String r = (String)v[0];
-			int r1 = Value.intOf(v[1]);
-			
-			return r.substring(r1);
+			if (v[1] instanceof String)
+			{
+				DecimalFormat df = new DecimalFormat((String)v[1]);
+				return df.format(v[0]);
+			}
+			else
+			{
+				String r = (String) v[0];
+				int r1 = Value.intOf(v[1]);
+
+				return r.substring(r1);
+			}
 		}
 		else if (v.length == 3)
 		{

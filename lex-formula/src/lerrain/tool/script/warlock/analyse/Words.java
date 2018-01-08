@@ -39,7 +39,8 @@ public class Words
 	public static final int AND					= 120; 
 	public static final int OR					= 130; 
 	public static final int REVISE				= 140; 
-	public static final int EQUAL				= 150; 
+	public static final int EQUAL				= 150;
+	public static final int APPROX				= 155; //~= 约等
 	public static final int NOTEQUAL			= 160; 
 	public static final int GREATER				= 170; 
 	public static final int LESS				= 180; 
@@ -305,6 +306,8 @@ public class Words
 			return EQUAL;
 		if ("!=".equals(symbol))
 			return NOTEQUAL;
+		if ("~=".equals(symbol))
+			return APPROX;
 		if (">".equals(symbol))
 			return GREATER;
 		if ("<".equals(symbol))
@@ -361,7 +364,7 @@ public class Words
 			return OR;
 		if ("not".equals(word))
 			return REVISE;
-		
+
 		if ("new".equals(word))
 			return NEW;
 		if ("function".equals(word))

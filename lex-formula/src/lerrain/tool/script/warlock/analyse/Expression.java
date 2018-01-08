@@ -2,38 +2,7 @@ package lerrain.tool.script.warlock.analyse;
 
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.statement.ArithmeticAdd;
-import lerrain.tool.script.warlock.statement.ArithmeticAddAdd;
-import lerrain.tool.script.warlock.statement.ArithmeticAddLet;
-import lerrain.tool.script.warlock.statement.ArithmeticAnd;
-import lerrain.tool.script.warlock.statement.ArithmeticArray;
-import lerrain.tool.script.warlock.statement.ArithmeticBrace;
-import lerrain.tool.script.warlock.statement.ArithmeticColon;
-import lerrain.tool.script.warlock.statement.ArithmeticComma;
-import lerrain.tool.script.warlock.statement.ArithmeticDivide;
-import lerrain.tool.script.warlock.statement.ArithmeticEqual;
-import lerrain.tool.script.warlock.statement.ArithmeticFunction;
-import lerrain.tool.script.warlock.statement.ArithmeticFunctionDim;
-import lerrain.tool.script.warlock.statement.ArithmeticGreater;
-import lerrain.tool.script.warlock.statement.ArithmeticGreaterEqual;
-import lerrain.tool.script.warlock.statement.ArithmeticLess;
-import lerrain.tool.script.warlock.statement.ArithmeticLessEqual;
-import lerrain.tool.script.warlock.statement.ArithmeticLet;
-import lerrain.tool.script.warlock.statement.ArithmeticMod;
-import lerrain.tool.script.warlock.statement.ArithmeticMultiply;
-import lerrain.tool.script.warlock.statement.ArithmeticNew;
-import lerrain.tool.script.warlock.statement.ArithmeticNot;
-import lerrain.tool.script.warlock.statement.ArithmeticNotEqual;
-import lerrain.tool.script.warlock.statement.ArithmeticOr;
-import lerrain.tool.script.warlock.statement.ArithmeticParentheses;
-import lerrain.tool.script.warlock.statement.ArithmeticPointKey;
-import lerrain.tool.script.warlock.statement.ArithmeticPointMethod;
-import lerrain.tool.script.warlock.statement.ArithmeticQuestMark;
-import lerrain.tool.script.warlock.statement.ArithmeticSub;
-import lerrain.tool.script.warlock.statement.ArithmeticSubLet;
-import lerrain.tool.script.warlock.statement.ArithmeticSubSub;
-import lerrain.tool.script.warlock.statement.Constant;
-import lerrain.tool.script.warlock.statement.Variable;
+import lerrain.tool.script.warlock.statement.*;
 
 /**
  * 表达式处理
@@ -192,6 +161,7 @@ public class Expression
 		if (arithmetic == Words.OR) return new ArithmeticOr(ws, pos);
 		if (arithmetic == Words.REVISE) return new ArithmeticNot(ws, pos);
 		if (arithmetic == Words.EQUAL) return new ArithmeticEqual(ws, pos);
+		if (arithmetic == Words.APPROX) return new ArithmeticApprox(ws, pos);
 		if (arithmetic == Words.NOTEQUAL) return new ArithmeticNotEqual(ws, pos);
 		if (arithmetic == Words.GREATER) return new ArithmeticGreater(ws, pos);
 		if (arithmetic == Words.LESS) return new ArithmeticLess(ws, pos);
@@ -238,6 +208,7 @@ public class Expression
 		if (arithmetic == Words.OR) return 200;
 		if (arithmetic == Words.REVISE) return 1200;
 		if (arithmetic == Words.EQUAL) return 700;
+		if (arithmetic == Words.APPROX) return 700;
 		if (arithmetic == Words.NOTEQUAL) return 700;
 		if (arithmetic == Words.GREATER) return 800;
 		if (arithmetic == Words.LESS) return 800;

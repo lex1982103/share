@@ -29,7 +29,7 @@ public class FunctionFormat implements Function
 
 			return String.format(style, vals);
 		}
-		
+
 		throw new RuntimeException("错误的format运算");
 	}
 }

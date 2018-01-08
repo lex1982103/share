@@ -5,16 +5,9 @@ import lerrain.tool.formula.Function;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
-import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.CodeImpl;
-import lerrain.tool.script.warlock.Wrap;
-import lerrain.tool.script.warlock.analyse.Expression;
-import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 
@@ -73,6 +66,8 @@ public class ArithmeticFunction extends CodeImpl
 		Script.FUNCTIONS.put("num", new FunctionNum());
 		Script.FUNCTIONS.put("sleep", new FunctionSleep());
 		Script.FUNCTIONS.put("reflex", new FunctionReflex());
+		Script.FUNCTIONS.put("type", new FunctionType());
+		Script.FUNCTIONS.put("trim", new FunctionTrim());
 	}
 	
 	public ArithmeticFunction(Words ws, int i)

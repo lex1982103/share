@@ -35,7 +35,7 @@ public class FunctionReflex implements Function
 		}
 		catch (NoSuchMethodException e)
 		{
-			//ÉÏÃæµÄ·½·¨£¬Èç¹û²ÎÊýÄ³¸ö²ÎÊýÊÇ´«Èë²ÎÊýµÄ¸¸Àà£¬Ôò»áÕÒ²»µ½¸Ã·½·¨¡£ÕâÀï¶ÔÕâÖÖÇé¿ö×öÒ»ÏÂ´¦Àí¡£
+			//ä¸Šé¢çš„æ–¹æ³•ï¼Œå¦‚æžœå‚æ•°æŸä¸ªå‚æ•°æ˜¯ä¼ å…¥å‚æ•°çš„çˆ¶ç±»ï¼Œåˆ™ä¼šæ‰¾ä¸åˆ°è¯¥æ–¹æ³•ã€‚è¿™é‡Œå¯¹è¿™ç§æƒ…å†µåšä¸€ä¸‹å¤„ç†ã€‚
 			//OC--
 			Method[] m = v.getClass().getMethods();
 			for (int i=0;i<m.length;i++)
@@ -48,7 +48,7 @@ public class FunctionReflex implements Function
 						boolean pass = true;
 						for(int j=0;j<c.length;j++)
 						{
-							//´«Èë²ÎÊýÊÇnull£¬³ýÁËint(double booleanµÈÏÈ²»¿¼ÂÇÁË)ÒÔÍâµÄÆäËû¶¼ÊÊºÏ£¬Ö»ÕÒµÚÒ»¸ö¡£
+							//ä¼ å…¥å‚æ•°æ˜¯nullï¼Œé™¤äº†int(double booleanç­‰å…ˆä¸è€ƒè™‘äº†)ä»¥å¤–çš„å…¶ä»–éƒ½é€‚åˆï¼Œåªæ‰¾ç¬¬ä¸€ä¸ªã€‚
 							if (wrap[j] == null && !c[j].equals(Integer.TYPE))
 							{
 							}
@@ -124,11 +124,11 @@ public class FunctionReflex implements Function
 		}
 		catch (NoSuchMethodException e)
 		{
-			throw new RuntimeException("pointÔËËãÈ¡ÖµÊ§°Ü£¬Ã»ÓÐ¸Ã·½·¨ -- ¶ÔÏó£º" + v + "£¬·½·¨Ãû: " + name + "<" + wrap.length + ">", e);
+			throw new RuntimeException("pointè¿ç®—å–å€¼å¤±è´¥ï¼Œæ²¡æœ‰è¯¥æ–¹æ³• -- å¯¹è±¡ï¼š" + v + "ï¼Œæ–¹æ³•å: " + name + "<" + wrap.length + ">", e);
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("pointÔËËãÈ¡ÖµÊ§°Ü£¬·½·¨ÄÚ²¿´íÎó -- ¶ÔÏó£º" + v + "£¬·½·¨Ãû: " + name, e);
+			throw new RuntimeException("pointè¿ç®—å–å€¼å¤±è´¥ï¼Œæ–¹æ³•å†…éƒ¨é”™è¯¯ -- å¯¹è±¡ï¼š" + v + "ï¼Œæ–¹æ³•å: " + name, e);
 		}
 
 		return value;

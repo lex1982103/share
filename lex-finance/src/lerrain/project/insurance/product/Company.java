@@ -12,10 +12,7 @@ import lerrain.project.insurance.product.rule.Rule;
 import lerrain.tool.data.DataParser;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Company implements Serializable
 {
@@ -80,10 +77,10 @@ public class Company implements Serializable
 //		};
 
 		dataParserMap = new HashMap();
-		riskMap = new HashMap();
+		riskMap = new LinkedHashMap();
 //		varDefMap = new HashMap();
-		ruleMap = new HashMap();
-		inputMap = new HashMap();
+		ruleMap = new LinkedHashMap();
+		inputMap = new LinkedHashMap();
 		additional = new HashMap();
 //		formulaMap = new HashMap();
 
@@ -196,6 +193,11 @@ public class Company implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public Map getOptionMap(String type)
+	{
+		return (Map)inputMap.get(type);
 	}
 
 	public List getRuleList(int type)

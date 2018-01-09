@@ -151,7 +151,7 @@ public class ArithmeticFunction extends CodeImpl
 		Function f = fs;
 		
 		Object v = factors.get(name);
-		if (v != null && v instanceof Function)
+		if (v instanceof Function)
 			f = (Function)v;
 		
 		if (f == null)

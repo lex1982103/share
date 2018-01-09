@@ -2,6 +2,7 @@ package lerrain.tool.script.warlock.statement;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
@@ -64,9 +65,10 @@ public class ArithmeticPointMethod extends CodeImpl
 
 		if (v instanceof Factors)
 			return ((Factors)v).get(name);
-
 		if (v instanceof Map)
 			return ((Map)v).get(name);
+		if (v instanceof List)
+			return ((List)v).get(Integer.parseInt(name));
 
 		throw new ScriptRuntimeException(this, factors, "point左侧只能是map或者factors，目前为" + v.toString());
 	}

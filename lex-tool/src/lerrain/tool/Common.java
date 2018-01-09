@@ -94,6 +94,48 @@ public class Common
 		return null;
 	}
 
+	public static Integer toInteger(Object val)
+	{
+		if (val instanceof Number)
+		{
+			return ((Number)val).intValue();
+		}
+		else if (val instanceof String)
+		{
+			try
+			{
+				return Integer.parseInt((String) val);
+			}
+			catch (Exception e)
+			{
+				return null;
+			}
+		}
+
+		return null;
+	}
+
+	public static Double toDouble(Object val)
+	{
+		if (val instanceof Number)
+		{
+			return ((Number)val).doubleValue();
+		}
+		else if (val instanceof String)
+		{
+			try
+			{
+				return Double.parseDouble((String) val);
+			}
+			catch (Exception e)
+			{
+				return null;
+			}
+		}
+
+		return null;
+	}
+
 	public static int intOf(Object val, int defoult)
 	{
 		if (val instanceof Number)
@@ -141,6 +183,35 @@ public class Common
 		}
 
 		return defoult;
+	}
+
+	public static Boolean toBoolean(Object val)
+	{
+		if (val instanceof Boolean)
+		{
+			return (Boolean)val;
+		}
+		else if (val instanceof Number)
+		{
+			return ((Number)val).intValue() != 0;
+		}
+		else if (val instanceof String)
+		{
+			if ("Y".equalsIgnoreCase((String)val) || "YES".equalsIgnoreCase((String)val) || "true".equalsIgnoreCase((String)val))
+				return true;
+			if ("N".equalsIgnoreCase((String)val) || "NO".equalsIgnoreCase((String)val) || "false".equalsIgnoreCase((String)val))
+				return false;
+			try
+			{
+				return Integer.parseInt((String)val) == 0;
+			}
+			catch (Exception e)
+			{
+				return null;
+			}
+		}
+
+		return null;
 	}
 
 	public static Date dateOf(Object val)

@@ -1,5 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
@@ -56,8 +58,24 @@ public class ArithmeticPointKey extends CodeImpl implements Reference
 			return ((Factors)v).get(key);
 		if (v instanceof Map)
 			return ((Map)v).get(key);
-		
-		throw new ScriptRuntimeException(this, factors, "POINT-KEY运算要求左侧值为参数表或Map类型");
+		if (v instanceof List)
+			return ((List)v).get(Integer.parseInt(key));
+
+		try
+		{
+			Field f = v.getClass().getDeclaredField(key);
+			if (f != null)
+			{
+				f.setAccessible(true);
+				return f.get(v);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new ScriptRuntimeException(this, factors, String.format("POINT-KEY失败：%s<%s> / %s，%s", v.toString(), v.getClass().toString(), key, e.toString()));
+		}
+
+		throw new ScriptRuntimeException(this, factors, String.format("POINT-KEY失败：%s<%s> / %s，缺少key", v.toString(), v.getClass().toString(), key));
 	}
 
 	public void let(Factors factors, Object value)

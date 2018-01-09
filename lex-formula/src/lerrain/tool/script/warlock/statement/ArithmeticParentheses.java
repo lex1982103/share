@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
@@ -39,7 +40,12 @@ public class ArithmeticParentheses extends CodeImpl
 		{
 			if (left != null)
 			{
-				Function val = (Function) left.run(factors);
+				Object res = left.run(factors);
+
+				if (res instanceof Formula)
+					return ((Formula) res).run(factors);
+
+				Function val = (Function) res;
 
 				if (val instanceof FunctionTry)
 				{

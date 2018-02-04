@@ -35,6 +35,8 @@ public class ServiceMgr
     Map<String, ServiceClient> map = new HashMap<>();
     Map<String, Integer> prtLog = new HashMap<>();
 
+    Map<String, long[]> idRange = new HashMap<>();
+
     public void reset(Map<String, Object> json)
     {
         synchronized (map)
@@ -104,6 +106,41 @@ public class ServiceMgr
             Log.error("request: " + service + "/" + loc + " -- " + param, e);
             throw e;
         }
+    }
+
+    public synchronized Long nextId(String code)
+    {
+        long[] v = idRange.get(code);
+
+        if (v == null)
+        {
+            v = reqId(code);
+            idRange.put(code, v);
+        }
+        else
+        {
+            v[0]++;
+
+            if (v[0] > v[1])
+            {
+                long[] r = reqId(code);
+                v[0] = r[0];
+                v[1] = r[1];
+            }
+        }
+
+        return v[0];
+    }
+
+    public long[] reqId(String code)
+    {
+        String[] res = this.reqStr("dict", "id/req", code).split(",");
+
+        long[] r = new long[2];
+        r[0] = Long.parseLong(res[0]);
+        r[1] = Long.parseLong(res[1]);
+
+        return r;
     }
 
     class JSONEncoder implements Encoder

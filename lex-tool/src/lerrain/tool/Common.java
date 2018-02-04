@@ -238,14 +238,26 @@ public class Common
 			try
 			{
 				String str = (String)val;
-				if (str.length() == 8)
-					return getDate((String)val, "yyyyMMdd");
-				else if (str.length() == 10)
-					return getDate((String)val, "yyyy-MM-dd");
-				else if (str.length() == 14)
-					return getDate((String)val, "yyyyMMddHHmmss");
-				else if (str.length() == 19)
-					return getDate((String)val, "yyyy-MM-dd HH:mm:ss");
+				str = str.replaceAll("[\\\\/]", "-");
+
+				int mode;
+				if (str.indexOf(":") > 0)
+					mode = 4;
+				else if (str.length() > 10)
+					mode = 3;
+				else if (str.indexOf("-") < 0)
+					mode = 1;
+				else
+					mode = 2;
+
+				if (mode == 1)
+					return getDate(str, "yyyyMMdd");
+				else if (mode == 2)
+					return getDate(str, "yyyy-MM-dd");
+				else if (mode == 3)
+					return getDate(str, "yyyyMMddHHmmss");
+				else if (mode == 4)
+					return getDate(str, "yyyy-MM-dd HH:mm:ss");
 				else
 					return defoult;
 			}
@@ -264,13 +276,16 @@ public class Common
 			return true;
 
 		if (val instanceof String)
-			return "".equals(val);
+			return "".equals(((String)val).trim());
 
 		if (val instanceof Map)
 			return ((Map<?, ?>)val).isEmpty();
 
 		if (val instanceof List)
 			return ((List<?>)val).isEmpty();
+
+		if (val instanceof Object[])
+			return ((Object[])val).length == 0;
 
 		return false;
 	}

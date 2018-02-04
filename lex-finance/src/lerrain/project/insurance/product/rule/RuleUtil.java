@@ -2,12 +2,15 @@ package lerrain.project.insurance.product.rule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import lerrain.project.insurance.plan.Commodity;
 import lerrain.project.insurance.plan.Plan;
+import lerrain.project.insurance.plan.UnstableList;
 import lerrain.project.insurance.product.Insurance;
 import lerrain.project.insurance.product.Company;
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.FormulaUtil;
 
 public class RuleUtil
 {
@@ -15,8 +18,6 @@ public class RuleUtil
 	 * 校验产品的客户级产品规则
 	 * 在此产品被添加到投保计划前的预检测，检测规则较少，只检查和人有关的属性，比如年龄超标无法购买的情况。
 	 * 需要投保计划里的投保人和被保险人
-	 * @param product
-	 * @param insurant
 	 * @return
 	 */
 	public static List precheck(Insurance product, Plan plan)
@@ -48,47 +49,64 @@ public class RuleUtil
 	 */
 	public static List check(Commodity commodity)
 	{
-		List list = new ArrayList();
-		
 		List ruleList = commodity.getProduct().getRuleList();
-		for (int i = 0; ruleList != null && i < ruleList.size(); i++)
+		UnstableList children = commodity.getChildren();
+		if (children != null && children.size() > 0 && (ruleList == null || ruleList.isEmpty()))
 		{
-			Rule rule = (Rule)ruleList.get(i);
-			
-			//if (rule.getType() == Rule.TYPE_PRODUCT)
+			List r = new ArrayList();
+
+			for (Commodity c : (List<Commodity>)children.toList())
 			{
-				list.add(rule);
+				List cl = check(c);
+				if (cl != null)
+					r.addAll(cl);
 			}
+
+			return r;
 		}
-		
-		Company company = commodity.getCompany();
-		List idList = commodity.getProduct().getRuleSkippedIdList();
-		
-		List clist = company.getRuleList(Rule.TYPE_CUSTOMER);
-		if (clist != null)
+		else
 		{
-			for (int i=0;i<clist.size();i++)
+			List list = new ArrayList();
+
+			for (int i = 0; ruleList != null && i < ruleList.size(); i++)
 			{
-				Rule rule = (Rule)clist.get(i);
-				
-				if (idList != null && idList.indexOf(rule.getId()) < 0)
+				Rule rule = (Rule) ruleList.get(i);
+
+				//if (rule.getType() == Rule.TYPE_PRODUCT)
+				{
 					list.add(rule);
+				}
 			}
-		}
-		
-		clist = company.getRuleList(Rule.TYPE_PRODUCT);
-		if (clist != null)
-		{
-			for (int i=0;i<clist.size();i++)
+
+			Company company = commodity.getCompany();
+			List idList = commodity.getProduct().getRuleSkippedIdList();
+
+			List clist = company.getRuleList(Rule.TYPE_CUSTOMER);
+			if (clist != null)
 			{
-				Rule rule = (Rule)clist.get(i);
-				
-				if (idList == null || idList.indexOf(rule.getId()) < 0)
-					list.add(rule);
+				for (int i = 0; i < clist.size(); i++)
+				{
+					Rule rule = (Rule) clist.get(i);
+
+					if (idList != null && idList.indexOf(rule.getId()) < 0)
+						list.add(rule);
+				}
 			}
+
+			clist = company.getRuleList(Rule.TYPE_PRODUCT);
+			if (clist != null)
+			{
+				for (int i = 0; i < clist.size(); i++)
+				{
+					Rule rule = (Rule) clist.get(i);
+
+					if (idList == null || idList.indexOf(rule.getId()) < 0)
+						list.add(rule);
+				}
+			}
+
+			return checkRules(list, commodity.getFactors());
 		}
-		
-		return checkRules(list, commodity.getFactors());
 	}
 
 	/**
@@ -170,5 +188,82 @@ public class RuleUtil
 		}
 
 		return result;
+	}
+
+	public static void addRules(Insurance ins, List rs)
+	{
+		for (int i = 0; i < rs.size(); i++)
+		{
+			Map rp = (Map)rs.get(i);
+
+			List rules = (List)rp.get("rules");
+			if (rules == null)
+			{
+				ins.addRule(ruleOf(rp));
+			}
+			else
+			{
+				String group = (String) rp.get("group");
+				for (int j = 0; j < rules.size(); j++)
+				{
+					Map rj = (Map) rules.get(j);
+					ins.addRule(ruleOf(group, rj));
+				}
+			}
+		}
+	}
+
+	public static Rule ruleOf(Map rj)
+	{
+		return ruleOf(null, rj);
+	}
+
+	public static Rule ruleOf(String group, Map rj)
+	{
+		Rule rule = new Rule();
+
+		String id = (String)rj.get("id");
+		if (id != null)
+			rule.setId(id);
+
+		String condition = (String)rj.get("condition");
+		if (condition != null && !"".equals(condition))
+		{
+			String str = group == null ? condition : "(" + group + ") and (" + condition + ")";
+			rule.setCondition(FormulaUtil.formulaOf(str));
+
+			String desc = (String)rj.get("desc");
+			if (desc != null)
+				rule.setDesc(FormulaUtil.formulaOf(desc));
+			else
+				rule.setDesc((String)rj.get("text"));
+		}
+		else if (group == null) //自由型规则，不支持分类
+		{
+			rule.setCondition(FormulaUtil.formulaOf((String)rj.get("script")));
+		}
+
+		String level = (String)rj.get("level");
+		if ("alert".equalsIgnoreCase(level))
+			rule.setLevel(Rule.LEVEL_ALERT);
+
+		String type = (String)rj.get("type");
+		if ("customer".equalsIgnoreCase(type))
+			rule.setType(Rule.TYPE_CUSTOMER);
+		else if ("product".equalsIgnoreCase(type))
+			rule.setType(Rule.TYPE_PRODUCT);
+		else if ("plan".equalsIgnoreCase(type))
+			rule.setType(Rule.TYPE_PLAN);
+		else if ("proposal".equalsIgnoreCase(type))
+			rule.setType(Rule.TYPE_PROPOSAL);
+
+		String alert = (String)rj.get("alert");
+		if (alert != null)
+		{
+			for (String alertCol : alert.split(","))
+				rule.addAlert(alertCol);
+		}
+
+		return rule;
 	}
 }

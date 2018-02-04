@@ -42,8 +42,13 @@ public class ArithmeticParentheses extends CodeImpl
 			{
 				Object res = left.run(factors);
 
-				if (res instanceof Formula)
-					return ((Formula) res).run(factors);
+				if (!(res instanceof Function))
+				{
+					if (res instanceof Formula)
+						return ((Formula) res).run(factors);
+					else
+						return res;
+				}
 
 				Function val = (Function) res;
 

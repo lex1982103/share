@@ -64,7 +64,7 @@ public class ProductLoader
 
 		//根据最后修改时间，确定配置文件的版本
 		String lmd = n1.getAttribute("last_modify_date");
-		if (!isEmpty(sbd))
+		if (!isEmpty(lmd))
 		{
 			Date date = dateOf(lmd, "yyyy-MM-dd");
 			if (date.before(dateOf("2015-07-23", "yyyy-MM-dd")))

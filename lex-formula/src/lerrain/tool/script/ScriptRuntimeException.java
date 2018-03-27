@@ -6,36 +6,35 @@ import lerrain.tool.script.warlock.CodeImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.Map;
 
 public class ScriptRuntimeException extends RuntimeException
 {
 	Code code;
-	Factors stack;
+	Factors factors;
 
-	public ScriptRuntimeException(Code code, Factors stack, String detail, Exception e)
+	public ScriptRuntimeException(Code code, Factors factors, String detail, Exception e)
 	{
 		super(detail, e);
 
 		this.code = code;
-		this.stack = stack;
+		this.factors = factors;
 	}
 
-	public ScriptRuntimeException(Code code, Factors stack, String detail)
+	public ScriptRuntimeException(Code code, Factors factors, String detail)
 	{
 		super(detail);
 
 		this.code = code;
-		this.stack = stack;
+		this.factors = factors;
 	}
 
-	public ScriptRuntimeException(Code code, Factors stack, Exception e)
+	public ScriptRuntimeException(Code code, Factors factors, Exception e)
 	{
 		super(e);
 
 		this.code = code;
-		this.stack = stack;
+		this.factors = factors;
 	}
 
 	public Code getCode()
@@ -45,10 +44,15 @@ public class ScriptRuntimeException extends RuntimeException
 
 	public Map getStackMap()
 	{
-		if (stack instanceof Stack)
-			return ((Stack)stack).getStackMap();
+		if (factors instanceof Stack)
+			return ((Stack) factors).getStackMap();
 
 		return null;
+	}
+
+	public Factors getFactors()
+	{
+		return factors;
 	}
 
 	public String getMessage()

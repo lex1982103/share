@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.ScriptRuntimeException;
+import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.CodeImpl;

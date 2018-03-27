@@ -47,7 +47,7 @@ public class ArithmeticFunctionDim implements Code, Function
 	public Object run(Object[] v, Factors p)
 	{
 		Stack stack = new Stack(p);
-		
+
 		for (int i = 0; i < param.length && i < v.length; i++)
 		{
 			stack.declare(param[i]);

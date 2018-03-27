@@ -7,9 +7,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>lerrain.tool</groupId>
+			<groupId>lerrain</groupId>
 			<artifactId>document</artifactId>
-			<version>4.0.2</version>
+			<version>4.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.itext</groupId>

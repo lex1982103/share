@@ -58,8 +58,22 @@ public class ArithmeticPointKey extends CodeImpl implements Reference
 			return ((Factors)v).get(key);
 		if (v instanceof Map)
 			return ((Map)v).get(key);
-		if (v instanceof List)
-			return ((List)v).get(Integer.parseInt(key));
+
+//		if (v instanceof List)
+//		{
+//			List l = ((List)v);
+//			int index = Integer.parseInt(key);
+//
+//			return index < l.size() ? l.get(index) : null;
+//		}
+//
+//		if (v instanceof Object[])
+//		{
+//			Object[] l = ((Object[])v);
+//			int index = Integer.parseInt(key);
+//
+//			return index < l.length ? l[index] : null;
+//		}
 
 		try
 		{

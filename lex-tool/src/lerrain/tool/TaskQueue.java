@@ -1,23 +1,29 @@
 package lerrain.tool;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
-public abstract class TaskQueue implements Runnable
+public class TaskQueue implements Runnable
 {
 	public static final int MAX	= 100000;
 
-	Map<String, Runnable> list = new HashMap<>();
+	Map<String, Runnable> list = new LinkedHashMap<>();
 
 	Thread thread = new Thread(this);
 
+	public void add(Runnable runnable)
+	{
+		add(null, runnable);
+	}
+
 	public void add(String key, Runnable runnable)
 	{
+		if (key == null)
+			key = UUID.randomUUID().toString();
+
 		synchronized (list)
 		{
-			if (key == null || list.containsKey(key))
-				return;
-
 			if (list.size() < MAX)
 				list.put(key, runnable);
 
@@ -33,7 +39,7 @@ public abstract class TaskQueue implements Runnable
 
 	public void run()
 	{
-		Map<String, Runnable> pack = new HashMap<>();
+		Map<String, Runnable> pack = new LinkedHashMap<>();
 
 		while (true)
 		{

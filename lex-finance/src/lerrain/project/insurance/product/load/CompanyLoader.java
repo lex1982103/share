@@ -155,12 +155,19 @@ public class CompanyLoader
 		{
 			XmlNode n1 = (XmlNode)iter.next();
 			
-			if ("variable".equals(n1.getName()) || "function".equals(n1.getName()))
+			if ("variable".equals(n1.getName()))
 			{
 				String typeStr = n1.getAttribute("type");
 				VariableDefine interestVars = "plan".equals(typeStr) ? company.getPlanVars() : "product".equals(typeStr) ? company.getProductVars() : null;
 				if (interestVars != null)
-					preloadVariable(interestVars, n1);
+					preloadVariable(interestVars, n1, false);
+			}
+			else if ("function".equals(n1.getName()))
+			{
+				String typeStr = n1.getAttribute("type");
+				VariableDefine interestVars = "plan".equals(typeStr) ? company.getPlanVars() : "product".equals(typeStr) ? company.getProductVars() : null;
+				if (interestVars != null)
+					preloadVariable(interestVars, n1, true);
 			}
 //			else if ("function".equals(n1.getTagName()))
 //			{
@@ -239,7 +246,7 @@ public class CompanyLoader
 	/**
 	 * 初始化变量与对象映射
 	 */
-	private void preloadVariable(VariableDefine interestVar, XmlNode e)
+	private void preloadVariable(VariableDefine interestVar, XmlNode e, boolean func)
 	{
 		for (Iterator iter = e.getChildren("item").iterator(); iter.hasNext(); )
 		{
@@ -275,7 +282,7 @@ public class CompanyLoader
 			}
 			else if (!isEmpty(formula))
 			{
-				interestVar.add(new Variable(name, FormulaUtil.formulaOf(formula), isEmpty(param) ? null : param.split(","), false, desc));
+				interestVar.add(new Variable(name, FormulaUtil.formulaOf(formula), isEmpty(param) ? (func ? new String[] {} : null) : param.split(","), false, desc));
 			}
 			else if ("formula".equals(type) || isEmpty(type))
 			{
@@ -283,7 +290,7 @@ public class CompanyLoader
 				if (isEmpty(value))
 					value = n1.getText();
 
-				interestVar.add(new Variable(name, FormulaUtil.formulaOf(value), isEmpty(param) ? null : param.split(","), false, desc));
+				interestVar.add(new Variable(name, FormulaUtil.formulaOf(value), isEmpty(param) ? (func ? new String[] {} : null) : param.split(","), false, desc));
 			}
 		}
 	}

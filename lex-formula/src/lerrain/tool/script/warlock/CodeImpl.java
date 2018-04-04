@@ -7,6 +7,8 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CodeImpl implements Code
 {
@@ -37,19 +39,10 @@ public abstract class CodeImpl implements Code
 		return words.toString();
 	}
 
-//	private void print(Object ps, String c)
-//	{
-//		if (ps instanceof PrintStream)
-//			((PrintStream)ps).print(c);
-//		if (ps instanceof PrintWriter)
-//			((PrintWriter)ps).print(c);
-//	}
-//
-//	private void println(Object ps, String c)
-//	{
-//		print(ps, c);
-//		print(ps, "\n");
-//	}
+	public String getScriptName()
+	{
+		return words.getScriptName();
+	}
 
 	public void printAll(PrintStream ps, String msg)
 	{
@@ -63,16 +56,36 @@ public abstract class CodeImpl implements Code
 
 		int len = s.length();
 		int last = 0;
+		int max = 5;
 
-		for (int i=0;i<len;i++)
+		List<String> lines = new ArrayList<>();
+
+		for (int i=0,line=1;i<len;i++)
 		{
 			char c = s.charAt(i);
 			if (c == '\n')
 			{
-				ps.println(s.substring(last, i));
+				String code = String.format("%04d: ", line++) + s.substring(last, i);
+
+				if (lines == null)
+				{
+					ps.println(code);
+					max--;
+
+					if (max <= 0)
+						return;
+				}
+				else
+				{
+					lines.add(code);
+				}
 
 				if (p1 >= 0 && i > p1)
 				{
+					for (int f = Math.max(0, lines.size() - max); f < lines.size(); f++)
+						ps.println(lines.get(f));
+
+					ps.print("      ");
 					for (int j = last; j < p1; j++)
 					{
 						char c1 = s.charAt(j);
@@ -86,7 +99,9 @@ public abstract class CodeImpl implements Code
 					ps.println(msg);
 
 					p1 = -1;
+					lines = null;
 				}
+
 				last = i + 1;
 			}
 		}

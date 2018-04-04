@@ -71,11 +71,23 @@ public class Words
 	List d = new ArrayList();
 	List e = new ArrayList();
 
+	String scriptName;
 	String scriptStr;
 
-	public Words(String scriptStr)
+	public Words(String scriptName, String scriptStr)
 	{
+		this.scriptName = scriptName;
 		this.scriptStr = scriptStr;
+	}
+
+	public String getScriptName()
+	{
+		return scriptName;
+	}
+
+	public void setScriptName(String scriptName)
+	{
+		this.scriptName = scriptName;
 	}
 
 	public String getScript()
@@ -128,7 +140,7 @@ public class Words
 	
 	public Words cut(int from, int to)
 	{
-		Words ws = new Words(scriptStr);
+		Words ws = new Words(scriptName, scriptStr);
 		ws.add(this, from, to);
 		
 		return ws;
@@ -148,12 +160,17 @@ public class Words
 	{
 		return c.toString();
 	}
-	
+
 	public static Words wordsOf(String text)
+	{
+		return wordsOf(null, text);
+	}
+
+	public static Words wordsOf(String name, String text)
 	{
 		text = Text.cutComment(text);
 		
-		Words ws = new Words(text);
+		Words ws = new Words(name, text);
 		
 		int len = text.length();
 		for (int i = 0; i < len; i++)

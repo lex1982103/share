@@ -261,7 +261,15 @@ public class Script extends CodeImpl
 		if (text == null || "".equals(text.trim()))
 			return null;
 
-		return new Script(Words.wordsOf(text), true);
+		return new Script(Words.wordsOf(null, text), true);
+	}
+
+	public static Script scriptOf(String name, String text)
+	{
+		if (text == null || "".equals(text.trim()))
+			return null;
+
+		return new Script(Words.wordsOf(name, text), true);
 	}
 
 	public static void addFunction(String name, Function f)

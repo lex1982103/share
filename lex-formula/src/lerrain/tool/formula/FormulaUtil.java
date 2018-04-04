@@ -28,7 +28,7 @@ public class FormulaUtil
 					if (formula == null || "".equals(formula.trim()))
 						return null;
 
-					return new Script(Words.wordsOf(formula), true);
+					return new Script(Words.wordsOf(null, formula), true);
 				}
 			};
 

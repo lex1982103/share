@@ -56,6 +56,8 @@ public class ArithmeticFunction extends CodeImpl
 		Script.FUNCTIONS.put("str_index", new FunctionStrIndex());
 		Script.FUNCTIONS.put("str_split", new FunctionStrSplit());
 		Script.FUNCTIONS.put("str_len", new FunctionStrLen());
+		Script.FUNCTIONS.put("str_upper", new FunctionStrUpper());
+		Script.FUNCTIONS.put("str_lower", new FunctionStrLower());
 		Script.FUNCTIONS.put("str_right", new FunctionStrRight());
 		Script.FUNCTIONS.put("str_trim", new FunctionStrTrim());
 		Script.FUNCTIONS.put("str_replace", new FunctionStrReplace());

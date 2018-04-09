@@ -37,6 +37,10 @@ public class UnstableList implements Serializable
 				if (p.getProduct().isMain() && commodity.getProduct().getSequence() < p.getProduct().getSequence())
 				{
 					temp.add(i, commodity);
+
+					if (c != null)
+						cm.put(commodity, c);
+
 					return commodity;
 				}
 			}
@@ -51,6 +55,10 @@ public class UnstableList implements Serializable
 				if (p.getProduct().isMain() || (p.getProduct().isRider() && commodity.getProduct().getSequence() < p.getProduct().getSequence()))
 				{
 					temp.add(i, commodity);
+
+					if (c != null)
+						cm.put(commodity, c);
+
 					return commodity;
 				}
 			}

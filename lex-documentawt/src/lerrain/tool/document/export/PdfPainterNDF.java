@@ -212,7 +212,7 @@ public class PdfPainterNDF implements Painter
 				if (dImage.getLink() != null)
 					pdf.setAction(new PdfAction(dImage.getLink()), sx, sy + sh, sx + sw, sy);
 
-				document.add(image);
+				pdf.addImage(image);
 			}
 		}
 		else if (element instanceof DocumentText)

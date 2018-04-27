@@ -94,8 +94,8 @@ public class TypesetSheet extends TypesetElement
 
 		dPanel = new DocumentPanel();
 		dPanel.setSplit(this.isSplit());
-//		dPanel.setBorder(valueOf(getLeftBorder(), tvs), valueOf(getTopBorder(), tvs), valueOf(getRightBorder(), tvs), valueOf(getBottomBorder(), tvs));
-//		dPanel.setBorderColor(this.getBorderColor());
+		dPanel.setBorder(valueOf(getLeftBorder(), tvs), valueOf(getTopBorder(), tvs), valueOf(getRightBorder(), tvs), valueOf(getBottomBorder(), tvs));
+		dPanel.setBorderColor(this.getBorderColor());
 
 		if (this.getX() != null)
 			dPanel.setX(this.getX().value(tvs));
@@ -200,10 +200,6 @@ public class TypesetSheet extends TypesetElement
 	{
 		if (content == null || content.length == 0)
 			return 0;
-
-//		tableLine = 1;
-//		bgColor = LexColor.RED;
-//		borderColor = LexColor.RED;
 
 		int x = 0;
 		int width = 0, height = 0;
@@ -494,6 +490,17 @@ public class TypesetSheet extends TypesetElement
 			{
 				if (res[i][j] != null && (res[i][j].getCol() > 1 || res[i][j].getRow() > 1))
 				{
+					for (int x = j; x < j + res[i][j].getCol(); x++)
+					{
+						for (int y = i; y < i + res[i][j].getRow(); y++)
+						{
+							if (x > j || y > i)
+							{
+								res[y][x] = null;
+							}
+						}
+					}
+
 					int x = j + res[i][j].getCol() - 1;
 					int y = i + res[i][j].getRow() - 1;
 

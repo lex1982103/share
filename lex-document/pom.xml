@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>lerrain.tool</groupId>
 	<artifactId>document</artifactId>
-	<version>4.2.6</version>
+	<version>4.2.7</version>
 
 	<dependencies>
 		<dependency>
-			<groupId>lerrain.tool</groupId>
+			<groupId>lerrain</groupId>
 			<artifactId>formula</artifactId>
-			<version>5.0.0</version>
+			<version>6.6.2</version>
 		</dependency>
 	</dependencies>
 

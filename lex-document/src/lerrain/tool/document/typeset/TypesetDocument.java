@@ -137,6 +137,7 @@ public class TypesetDocument extends LexDocument
 			TypesetPanel body = tPaper.getBody();
 			int bodyX = body.getX().value(tvs);
 			int bodyY = body.getY().value(tvs);
+			int bodyWidth = tPaper.getBody().getWidth().value(tvs);
 			int bodyHeight = tPaper.getBody().getHeight().value(tvs);
 
 			//页面坐标
@@ -177,7 +178,7 @@ public class TypesetDocument extends LexDocument
 			int paraENum = list.size();
 			for (int j = 0; j < paraENum; j++)
 			{
-				addElement((LexElement)list.get(j), tvs, tPaper, bodyX, bodyY, bodyHeight);
+				addElement(null, (LexElement)list.get(j), tvs, tPaper, bodyX, bodyY, bodyWidth, bodyHeight);
 			}
 
 			//每一个章节的最后一页如果仅仅是指针移到该页,该页却没有任何内容的话,就移去该页.
@@ -216,26 +217,20 @@ public class TypesetDocument extends LexDocument
 	/**
 	 * 再LexPage上添加一个LexElement元素
 	 * 避免DocumentPanel过大，跨页时不可分割造成大片空白，所以拆除DocumentPanel，将上面的元素直接放在页面上
-	 * 
-	 * @param page
-	 * @param element
-	 * @param pageTop
-	 * @param pageBottom
-	 * @param tvs
-	 * @param tPaper
-	 * @param bodyX
-	 * @param bodyY
-	 * @param bodyHeight
-	 * @throws CalculateException
-	 * @throws TypesetElementBuildException
 	 */
-	private void addElement(LexElement element, TypesetParameters tvs, TypesetPaper tPaper, int bodyX, int bodyY, int bodyHeight)
+	private DocumentPanel addElement(DocumentPanel curr, LexElement element, TypesetParameters tvs, TypesetPaper tPaper, int bodyX, int bodyY, int bodyWidth, int bodyHeight)
 	{
 		if (element instanceof DocumentPanel && element.canSplit() && ((DocumentPanel)element).getType() == 0)
 		{
 			DocumentPanel dp = (DocumentPanel)element;
 			DocumentPanel title = (DocumentPanel)dp.getAdditional("title");
-			
+
+			DocumentPanel next = new DocumentPanel();
+			next.setAll(dp);
+			next.setY(bodyY + dp.getY());
+			next.setX(bodyX + dp.getX());
+			this.getPage(this.size() - 1).add(next);
+
 			int count = dp.getElementCount();
 			for (int k = 0; k < count; k++)
 			{
@@ -279,7 +274,7 @@ public class TypesetDocument extends LexDocument
 						DocumentPanel titleCopy = (DocumentPanel)title.copy();
 						titleCopy.setX(x);
 						titleCopy.setY(y);
-						addElement(titleCopy, tvs, tPaper, bodyX, bodyY, bodyHeight);
+						next = addElement(next, titleCopy, tvs, tPaper, bodyX, bodyY, bodyWidth, bodyHeight);
 
 						tvs.setWindage(tvs.getWindage() + title.getHeight());
 					}
@@ -326,25 +321,30 @@ public class TypesetDocument extends LexDocument
 						DocumentPanel titleCopy = (DocumentPanel)title.copy();
 						titleCopy.setX(x);
 						titleCopy.setY(y);
-						addElement(titleCopy, tvs, tPaper, bodyX, bodyY, bodyHeight);
+						next = addElement(next, titleCopy, tvs, tPaper, bodyX, bodyY, bodyWidth, bodyHeight);
 						
 						tvs.setWindage(tvs.getWindage() + title.getHeight());
 					}
 				}
-				
-				addElement(panelElement, tvs, tPaper, bodyX, bodyY, bodyHeight);
+
+				next = addElement(next, panelElement, tvs, tPaper, bodyX, bodyY, bodyWidth, bodyHeight);
 			}
 		}
 		else if (element instanceof DocumentPanel && element.canSplit() && element.getY() + element.getHeight() > tvs.getPageBottom())
 		{
 			DocumentPanel dp = (DocumentPanel) element;
+
+			DocumentPanel next = new DocumentPanel();
+			next.setAll(dp);
+			this.getPage(this.size() - 1).add(next);
+
 			int count = dp.getElementCount();
 			for (int k = 0; k < count; k++)
 			{
 				LexElement panelElement = (LexElement) dp.getElement(k);
 				panelElement.setX(panelElement.getX() + dp.getX());
 				panelElement.setY(panelElement.getY() + dp.getY());
-				addElement(panelElement, tvs, tPaper, bodyX, bodyY, bodyHeight);
+				next = addElement(next, panelElement, tvs, tPaper, bodyX, bodyY, bodyWidth, bodyHeight);
 			}
 		}
 		else if (element instanceof DocumentReset)
@@ -363,31 +363,78 @@ public class TypesetDocument extends LexDocument
 		}
 		else if (element != null)
 		{
-			LexElement lexElement = (LexElement)element;
-			lexElement.setY(lexElement.getY() + tvs.getWindage());
-			
-			if (lexElement.getY() + lexElement.getHeight() > tvs.getPageBottom())
+			if (curr == null)
 			{
-				tvs.setPageTop(lexElement.getY());
-				tvs.setPageBottom(tvs.getPageTop() + bodyHeight);
-				
-				newPage(tPaper, tvs);
+				if (element.isAbsFloat())
+				{
+					if (element.getX() >= 0)
+						element.setX(bodyX + element.getX());
+					else
+						element.setX(bodyX + bodyWidth - element.getWidth() + element.getX());
+
+					if (element.getY() >= 0)
+						element.setY(bodyY + element.getY());
+					else
+						element.setY(bodyY + bodyHeight - element.getHeight() + element.getY());
+
+					this.getPage(this.size() - 1).add(element);
+				}
+				else
+				{
+					element.setY(element.getY() + tvs.getWindage());
+
+					if (element.getY() + element.getHeight() > tvs.getPageBottom())
+					{
+						tvs.setPageTop(element.getY());
+						tvs.setPageBottom(tvs.getPageTop() + bodyHeight);
+
+						newPage(tPaper, tvs);
+					}
+
+					element.setX(bodyX + element.getX());
+					element.setY(bodyY + element.getY() - tvs.getPageTop());
+
+					this.getPage(this.size() - 1).add(element);
+				}
+			}
+			else
+			{
+				element.setY(element.getY() + tvs.getWindage());
+
+				if (element.getY() + element.getHeight() > tvs.getPageBottom())
+				{
+					tvs.setPageTop(element.getY());
+					tvs.setPageBottom(tvs.getPageTop() + bodyHeight);
+
+					newPage(tPaper, tvs);
+
+					DocumentPanel next = new DocumentPanel();
+					next.setAll(curr);
+					next.setY(bodyY);
+					this.getPage(this.size() - 1).add(next);
+
+					curr = next;
+				}
+
+				element.setX(bodyX + element.getX() - curr.getX());
+				element.setY(bodyY + element.getY() - tvs.getPageTop() - curr.getY());
+
+				if (element.getY() + element.getHeight() > curr.getHeight())
+					curr.setHeight(element.getY() + element.getHeight());
+
+				curr.add(element);
 			}
 
-			lexElement.setX(bodyX + lexElement.getX());
-//			int y = bodyY + lexElement.getY() - tvs.getPageTop();
-//			if (y < 0)
-//				y = 0;
-			
-			lexElement.setY(bodyY + lexElement.getY() - tvs.getPageTop());
-			this.getPage(this.size() - 1).add(lexElement);
-			
 			fill = true;
 		}
+
+		return curr;
 	}
 	
 	private void initParameter(TypesetParameters tvs)
 	{
+		tvs.setTypeset(typeset);
+
 		Map systemMap = new HashMap();
 		systemMap.put("PRINT_TIME", new Date().toString());
 		tvs.set("SYSTEM", systemMap);

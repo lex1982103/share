@@ -15,6 +15,8 @@ public class TypesetParameters extends Stack implements Factors, Serializable
 	private static final long serialVersionUID = 1L;
 	
 	TypesetPaper paper;
+
+	Typeset typeset;
 	
 	int y;					//当前最靠下的元素的坐标（相对于基准坐标）
 	int datum;				//当前的基准坐标，reset时，当前的y坐标会被重置为基准坐标，y则会被置0
@@ -37,6 +39,13 @@ public class TypesetParameters extends Stack implements Factors, Serializable
 	public TypesetParameters(Factors varSet)
 	{
 		super(varSet);
+
+		if (varSet instanceof TypesetParameters)
+		{
+			TypesetParameters tp = (TypesetParameters)varSet;
+			this.typeset = tp.typeset;
+			this.paper = tp.paper;
+		}
 
 //		stack = this;
 	}
@@ -173,6 +182,15 @@ public class TypesetParameters extends Stack implements Factors, Serializable
 		this.windage = windage;
 	}
 
+	public Typeset getTypeset()
+	{
+		return typeset;
+	}
+
+	public void setTypeset(Typeset typeset)
+	{
+		this.typeset = typeset;
+	}
 //	public Object get(String name)
 //	{
 //		if (stack == this)

@@ -1,6 +1,7 @@
 package lerrain.tool.document.typeset.element;
 
 import lerrain.tool.document.element.DocumentPanel;
+import lerrain.tool.document.element.DocumentText;
 import lerrain.tool.document.element.LexElement;
 import lerrain.tool.document.typeset.TypesetParameters;
 
@@ -42,85 +43,83 @@ public class TypesetLayout extends TypesetPanel
 
 		TypesetParameters tvs2 = pack(tvs);
 		tvs2.setStreamY(tvs.getStreamY() + dPanel.getY());
+
+		int ww = this.getWidth().value(tvs);
 		
 		int x = 0, y = 0, h = 0, p = 0;
-		for (int i=0;i<elementList.size();i++)
+		for (int i = 0; i < elementList.size(); i++)
 		{
 			TypesetElement iye = (TypesetElement)elementList.get(i);
 			if (iye.getFont() == null)
 				iye.setFont(this.getFont());
 			if (iye.getColor() == null)
 				iye.setColor(this.getColor());
-			if (iye.getWidth() == null)
-				iye.setWidth(this.getWidth());
-				
+
 			tvs2.set("text_x", new Integer(x));
 			tvs2.set("text_y", new Integer(y));
-			
+			tvs2.set("max", ww);
+
 			LexElement ile = iye.build(tvs2);
 			
 			if (ile == null)
 				continue;
-			if (ile instanceof DocumentPanel)
+
+			LexElement[] list;
+
+			if (iye.getWidth() != null || !(ile instanceof DocumentPanel))
 			{
-				DocumentPanel dp = (DocumentPanel)ile;
-				int s = dp.getElementCount();
-				for (int j=0;j<s;j++)
-				{
-					LexElement e = dp.getElement(j);
-					if (x + e.getWidth() > width || x + e.getWidth() > bodyWidth)
-					{
-						resetLastLine(dPanel, y, h);
-						
-						y += h;
-						e.setLocation(0, y);
-						
-						x = e.getWidth();
-						h = e.getHeight();
-						if (p < x)
-							p = x;
-					}
-					else
-					{
-						e.setLocation(x, y);
-						
-						x += e.getWidth();
-						if (p < x)
-							p = x;
-						if (h < e.getHeight())
-							h = e.getHeight();
-					}
-					dPanel.add(e);
-				}
+				list = new LexElement[1];
+				list[0] = ile;
 			}
 			else
 			{
-				if (x + ile.getWidth() > width || x + ile.getWidth() > bodyWidth)
+				DocumentPanel dp = (DocumentPanel) ile;
+				int s = dp.getElementCount();
+				list = new LexElement[s];
+				for (int j = 0; j < s; j++)
+					list[j] = dp.getElement(j);
+			}
+
+			for (LexElement e : list)
+			{
+//				System.out.print(e.getX() + " ");
+//				System.out.print(e.getY() + " ");
+//				System.out.print(e.getWidth() + " ");
+//				System.out.print(e.getHeight() + " ");
+//
+//				if (e instanceof DocumentText)
+//					System.out.print(((DocumentText)e).getText());
+//				else
+//					System.out.print(e);
+//
+//				System.out.println();
+
+				if (x + e.getWidth() > width || x + e.getWidth() > bodyWidth)
 				{
 					resetLastLine(dPanel, y, h);
-					
+
 					y += h;
-					ile.setLocation(0, y);
-					
-					x = ile.getWidth();
-					h = ile.getHeight();
+					e.setLocation(0, y);
+
+					x = e.getWidth();
+					h = e.getHeight();
 					if (p < x)
 						p = x;
 				}
 				else
 				{
-					ile.setLocation(x, y);
-					
-					x += ile.getWidth();
+					e.setLocation(x, y);
+
+					x += e.getWidth();
 					if (p < x)
 						p = x;
-					if (h < ile.getHeight())
-						h = ile.getHeight();
+					if (h < e.getHeight())
+						h = e.getHeight();
 				}
-				dPanel.add(ile);
+				dPanel.add(e);
 			}
 		}
-		
+
 		resetLastLine(dPanel, y, h);
 		y += h;
 		

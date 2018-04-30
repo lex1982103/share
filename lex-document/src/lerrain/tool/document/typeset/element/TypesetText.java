@@ -23,11 +23,8 @@ public class TypesetText extends TypesetElement
 
 	private LexElement buildFixed(final TypesetParameters tvs)
 	{
-		Integer textx = (Integer)tvs.get("text_x"); //layout偏移
-		Integer texty = (Integer)tvs.get("text_y"); //layout偏移
-		
-		int x = textx == null ? 0 : textx.intValue();
-		int y = texty == null ? 0 : texty.intValue();
+		int x = Value.intOf(tvs.get("text_x"), 0); //layout偏移
+		int y = Value.intOf(tvs.get("text_y"), 0); //layout偏移
 		int fullWidth = this.getWidth() == null ? 0 : this.getWidth().value(tvs);
 		int fullHeight = this.getHeight() == null ? 0 : this.getHeight().value(tvs);
 		
@@ -45,7 +42,17 @@ public class TypesetText extends TypesetElement
 		dPanel.setBorderColor(this.getBorderColor());
 		
 		final DocumentText e = new DocumentText();
+		e.setText(Value.stringOf(getValue(), tvs));
+		TypesetCoord tc = textDimension.getSize(font, e.getText());
 		e.setFont(this.getFont());
+		e.setLineHeight(lineHeight);
+		e.setX(x);
+		e.setY(y);
+		if (lineHeight <= 0)
+			lineHeight = tc.y;
+		e.setLineHeight(lineHeight);
+		e.setWidth(tc.x);
+		e.setHeight(lineHeight);
 		dPanel.add(e);
 		
 		e.setResetAtFinal(new Formula() 
@@ -53,11 +60,7 @@ public class TypesetText extends TypesetElement
 			@Override
 			public Object run(Factors factors)
 			{
-				int width = dPanel.getWidth();
-				int height = dPanel.getHeight();
-				
 				e.setText(Value.stringOf((Formula) getValue(), tvs));
-				
 				TypesetCoord tc = textDimension.getSize(font, e.getText());
 				
 				if (lineHeight <= 0)
@@ -66,13 +69,33 @@ public class TypesetText extends TypesetElement
 				e.setLineHeight(lineHeight);
 				e.setWidth(tc.x);
 				e.setHeight(lineHeight);
-				
+
+				if (getWidth() == null) //未设置宽度，在layout里，layout自动定位element
+					return null;
+
+				if (dPanel.getWidth() <= 0)
+					dPanel.setWidth(e.getWidth() + margin[0] + margin[2]);
+				if (dPanel.getHeight() <= 0)
+					dPanel.setHeight(e.getHeight() + margin[1] + margin[3]);
+
+				int width = dPanel.getWidth();
+				int height = dPanel.getHeight();
+
 				if (dPanel.getHorizontalAlign() == LexElement.ALIGN_CENTER)
+				{
 					e.setX(margin[0] + (width - e.getWidth()) / 2);
+					e.setHorizontalAlign(LexElement.ALIGN_CENTER);
+				}
 				else if (dPanel.getHorizontalAlign() == LexElement.ALIGN_RIGHT)
+				{
 					e.setX(margin[0] + width - e.getWidth());
+					e.setHorizontalAlign(LexElement.ALIGN_RIGHT);
+				}
 				else
+				{
 					e.setX(margin[0]);
+					e.setHorizontalAlign(LexElement.ALIGN_LEFT);
+				}
 
 				if (dPanel.getVerticalAlign() == LexElement.ALIGN_MIDDLE)
 					e.setY(margin[1] + (height - e.getHeight()) / 2);
@@ -96,14 +119,17 @@ public class TypesetText extends TypesetElement
 		boolean resetAtFinal = (this.getMode() & TypesetElement.MODE_RESET_AT_FINAL) > 0;
 		if (resetAtFinal)
 			return buildFixed(tvs);
-		
+
+		int textx = Value.intOf(tvs.get("text_x"), 0); //layout偏移
+		int texty = Value.intOf(tvs.get("text_y"), 0); //layout偏移
+
 		DocumentPanel dPanel = new DocumentPanel();
 		dPanel.setType(2);
 //		dPanel.setAdditional("type", "text");
 		dPanel.setColor(color);
 		dPanel.setBgColor(bgColor);
-		dPanel.setX(this.getX() == null ? 0 : this.getX().value(tvs));
-		dPanel.setY(tvs.getDatum() + (this.getY() == null ? 0 : this.getY().value(tvs)));
+		dPanel.setX((this.getX() == null ? 0 : this.getX().value(tvs)) + textx);
+		dPanel.setY((tvs.getDatum() + (this.getY() == null ? 0 : this.getY().value(tvs))) + texty);
 		dPanel.setHorizontalAlign(this.getAlign());
 		dPanel.setVerticalAlign(this.getVerticalAlign());
 		dPanel.setBorder(valueOf(getLeftBorder(), tvs), valueOf(getTopBorder(), tvs), valueOf(getRightBorder(), tvs), valueOf(getBottomBorder(), tvs));
@@ -111,6 +137,12 @@ public class TypesetText extends TypesetElement
 		
 		if (dPanel.getLeftBorder() >= 0 || dPanel.getRightBorder() >= 0)
 			dPanel.setSplit(false);
+
+		if (this.getWidth() != null)
+		{
+			textx = 0;
+			texty = 0;
+		}
 
 		boolean fixed = isFixed();
 		LexColor color = this.getColor();
@@ -155,7 +187,7 @@ public class TypesetText extends TypesetElement
 
 //		TypesetParameters tvs2 = pack(tvs);
 //		tvs2.setStreamY(tvs.getStreamY() + dPanel.getY());
-		
+
 		if (text == null)
 			text = "";
 		
@@ -164,12 +196,9 @@ public class TypesetText extends TypesetElement
 //		if ("null\n".equals(text))
 //			text = text + "";
 		
-		Integer textx = (Integer)tvs.get("text_x"); //layout偏移
-		Integer texty = (Integer)tvs.get("text_y"); //layout偏移
-		
 		String line = "";
-		int x = textx == null ? 0 : textx.intValue();
-		int y = texty == null ? 0 : texty.intValue();
+		int x = textx;
+		int y = texty;
 		int tw = 0;
 		int pWidth = 0;
 		int len = text.length();
@@ -216,6 +245,7 @@ public class TypesetText extends TypesetElement
 				tw = tc.x;
 				line += c;
 			}
+
 		}
 		
 //		//基准坐标可以作为推移画板的手段
@@ -230,17 +260,30 @@ public class TypesetText extends TypesetElement
 				height = y;
 		}
 
+//		if (fullWidth < width + margin[0] + margin[2])
+//			fullWidth = width + margin[0] + margin[2];
+
 		int s = dPanel.getElementCount();
 		for (int i=0;i<s;i++)
 		{
 			LexElement e = dPanel.getElement(i);
-			
+			//System.out.println(((DocumentText)e).getText());
+
 			if (this.getAlign() == LexElement.ALIGN_CENTER)
+			{
 				e.setX(margin[0] + (width - e.getWidth()) / 2);
+				e.setHorizontalAlign(LexElement.ALIGN_CENTER);
+			}
 			else if (this.getAlign() == LexElement.ALIGN_RIGHT)
+			{
 				e.setX(margin[0] + width - e.getWidth());
+				e.setHorizontalAlign(LexElement.ALIGN_RIGHT);
+			}
 			else
+			{
 				e.setX(margin[0]);
+				e.setHorizontalAlign(LexElement.ALIGN_LEFT);
+			}
 
 			if (this.getVerticalAlign() == LexElement.ALIGN_MIDDLE)
 				e.setY(margin[1] + (height - y) / 2 + e.getY());

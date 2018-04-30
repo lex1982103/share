@@ -193,6 +193,10 @@ public class ParserXml implements TypesetParser
 				}
 			}
 		}
+
+		String absFloat = node.getAttribute("float");
+		if (absFloat != null)
+			text.setAbsFloat("yes".equalsIgnoreCase(absFloat));
 		
 		String lineHeight = node.getAttribute("line-height");
 		if (!isEmpty(lineHeight)) text.setLineHeight(Integer.parseInt(lineHeight));

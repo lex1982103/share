@@ -38,6 +38,7 @@ public class TypesetImage extends TypesetElement
 	{
 		DocumentImage dImage = new DocumentImage();
 		dImage.setSign(sign);
+		dImage.setAbsFloat(this.isAbsFloat());
 
 		try
 		{
@@ -60,9 +61,16 @@ public class TypesetImage extends TypesetElement
 		}
 
 		dImage.setSize(this.getWidth().value(tvs), this.getHeight().value(tvs));
-		dImage.setLocation(this.getX().value(tvs), tvs.getDatum() + this.getY().value(tvs));
-		
-		resetY(tvs, dImage);
+
+		if (this.isAbsFloat())
+		{
+			dImage.setLocation(this.getX().value(tvs), this.getY().value(tvs));
+		}
+		else
+		{
+			dImage.setLocation(this.getX().value(tvs), tvs.getDatum() + this.getY().value(tvs));
+			resetY(tvs, dImage);
+		}
 
 		if (this.getLink() != null)
 		{

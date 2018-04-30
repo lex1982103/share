@@ -266,7 +266,7 @@ public class PdfPainterNDF implements Painter
 			float y2 = font.getBaseFont().getDescentPoint(text, scale(fontSize));
 			
 			ColumnText colText = new ColumnText(pdf);
-			int align = dText.getHorizontalAlign() == DocumentText.ALIGN_CENTER ? Element.ALIGN_CENTER : dText.getHorizontalAlign() == DocumentText.ALIGN_RIGHT ? Element.ALIGN_RIGHT : Element.ALIGN_CENTER;
+			int align = dText.getHorizontalAlign() == DocumentText.ALIGN_CENTER ? Element.ALIGN_CENTER : dText.getHorizontalAlign() == DocumentText.ALIGN_RIGHT ? Element.ALIGN_RIGHT : Element.ALIGN_LEFT;
 			colText.setAlignment(align);
 			colText.setSimpleColumn(new Phrase(text, font), sx, sy, sx + sw, sy + sh, (sh - (y1 - y2)) / 2 + y1, align);
 			colText.go();
@@ -297,32 +297,60 @@ public class PdfPainterNDF implements Painter
 			pdf.setColorStroke(translate(dPanel.getBorderColor()));
 			pdf.setLineWidth(scale(1));
 
-			if (dPanel.getLeftBorder() >= 0)
+			if (dPanel.getLeftBorder() == 0)
 			{
 				pdf.moveTo(sx, sy);
 				pdf.lineTo(sx, sy + sh);
 				pdf.stroke();
 			}
+			else if (dPanel.getLeftBorder() > 0)
+			{
+				float w = scale(dPanel.getLeftBorder());
+				pdf.setColorFill(translate(dPanel.getBorderColor()));
+				pdf.rectangle(sx, sy, w, sh);
+				pdf.fill();
+			}
 			
-			if (dPanel.getRightBorder() >= 0)
+			if (dPanel.getRightBorder() == 0)
 			{
 				pdf.moveTo(sx + sw, sy);
 				pdf.lineTo(sx + sw, sy + sh);
 				pdf.stroke();
 			}
-			
-			if (dPanel.getTopBorder() >= 0)
+			else if (dPanel.getRightBorder() > 0)
+			{
+				float w = scale(dPanel.getLeftBorder());
+				pdf.setColorFill(translate(dPanel.getBorderColor()));
+				pdf.rectangle(sx + sw - w, sy, w, sh);
+				pdf.fill();
+			}
+
+			if (dPanel.getTopBorder() == 0)
 			{
 				pdf.moveTo(sx, sy + sh);
 				pdf.lineTo(sx + sw, sy + sh);
 				pdf.stroke();
 			}
-			
-			if (dPanel.getBottomBorder() >= 0)
+			else if (dPanel.getTopBorder() > 0)
+			{
+				float w = scale(dPanel.getLeftBorder());
+				pdf.setColorFill(translate(dPanel.getBorderColor()));
+				pdf.rectangle(sx, sy + sh - w, sw, w);
+				pdf.fill();
+			}
+
+			if (dPanel.getBottomBorder() == 0)
 			{
 				pdf.moveTo(sx, sy);
 				pdf.lineTo(sx + sw, sy);
 				pdf.stroke();
+			}
+			else if (dPanel.getBottomBorder() > 0)
+			{
+				float w = scale(dPanel.getLeftBorder());
+				pdf.setColorFill(translate(dPanel.getBorderColor()));
+				pdf.rectangle(sx, sy, sw, w);
+				pdf.fill();
 			}
 
 			int count = dPanel.getElementCount();

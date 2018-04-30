@@ -1,6 +1,8 @@
 package lerrain.tool.document.typeset.element.sheet;
 
 import lerrain.tool.document.LexColor;
+import lerrain.tool.document.LexFont;
+import lerrain.tool.document.LexFontFamily;
 import lerrain.tool.document.element.DocumentPanel;
 import lerrain.tool.document.element.DocumentText;
 import lerrain.tool.document.element.LexElement;
@@ -113,20 +115,18 @@ public class TypesetSheet extends TypesetElement
 		double[] colsw = this.colWidth == null ? null : toArrayF(this.colWidth.run(tvs));
 		int[] cols = getCols(tvs, content[0].length, colsw);
 
-		int[] aligns = this.colAlign == null ? null : toArrayInt(this.colAlign.run(tvs));
-
 		LexColor color = this.getColor();
 		LexColor bgColor = this.getBgColor();
 
 		if (dPanel.canSplit())
 		{
 			dPanel.setAdditional("title", headerOf(pack(tvs), header, cols));
-			insertTable(pack(tvs), dPanel, 0, content, false, color != null ? color : this.getColor(), bgColor != null ? bgColor : this.getBgColor(), innerBorderColor == null ? -1 : 0, innerBorderColor, aligns, cols);
+			insertTable(pack(tvs), dPanel, 0, content, false, color != null ? color : this.getColor(), bgColor != null ? bgColor : this.getBgColor(), innerBorderColor == null ? -1 : 0, innerBorderColor, cols);
 		}
 		else
 		{
-			int y = insertTable(pack(tvs), dPanel, 0, header, true, headerColor, headerBgColor, headerPadding, headerBorderColor, null, cols);
-			insertTable(pack(tvs), dPanel, y, content, false, color != null ? color : this.getColor(), bgColor != null ? bgColor : this.getBgColor(), innerBorderColor == null ? -1 : 0, innerBorderColor, aligns, cols);
+			int y = insertTable(pack(tvs), dPanel, 0, header, true, headerColor, headerBgColor, headerPadding, headerBorderColor, cols);
+			insertTable(pack(tvs), dPanel, y, content, false, color != null ? color : this.getColor(), bgColor != null ? bgColor : this.getBgColor(), innerBorderColor == null ? -1 : 0, innerBorderColor, cols);
 		}
 
 		if (this.getWidth() != null)
@@ -191,12 +191,12 @@ public class TypesetSheet extends TypesetElement
 	{
 		DocumentPanel dPanel = new DocumentPanel();
 		dPanel.setSplit(false);
-		insertTable(tvs, dPanel, 0, content, true, headerColor, headerBgColor, headerPadding, headerBorderColor, null, cols);
+		insertTable(tvs, dPanel, 0, content, true, headerColor, headerBgColor, headerPadding, headerBorderColor, cols);
 
 		return dPanel;
 	}
 
-	private int insertTable(TypesetParameters tvs, DocumentPanel dPanel, int y, SheetBlank[][] content, boolean header, LexColor color, LexColor bgColor, int tableLine, LexColor borderColor, int[] aligns, int[] cols)
+	private int insertTable(TypesetParameters tvs, DocumentPanel dPanel, int y, SheetBlank[][] content, boolean header, LexColor color, LexColor bgColor, int tableLine, LexColor borderColor, int[] cols)
 	{
 		if (content == null || content.length == 0)
 			return 0;
@@ -218,20 +218,39 @@ public class TypesetSheet extends TypesetElement
 					int cs = t.getCol();
 					int rs = t.getRow();
 
+					LexFont font;
+					if (t.getFont() != null || t.getFontSize() > 0)
+					{
+						if (t.getFont() != null)
+						{
+							LexFontFamily family = tvs.getTypeset().getFontFamily(t.getFont());
+							font = family.derive(t.getFontSize() > 0 ? t.getFontSize() : this.getFont().getSize());
+						}
+						else
+						{
+							font = this.getFont().derive(t.getFontSize());
+						}
+					}
+					else
+					{
+						font = this.getFont();
+					}
+
 					for (int k=0;k<cs;k++)
 						ww += cols[j + k];
 
+					int[] margin = t.getMargin() == null ? colMargin : t.getMargin();
 					if (expand && rs == 1)
 					{
-						Object[] r = TypesetText.format(t.getText(), this.getFont(), ww, -1);
-						int cy = ((Integer)r[0]).intValue() + colMargin[1] + colMargin[3];
+						Object[] r = TypesetText.format(t.getText(), font, ww, -1);
+						int cy = ((Integer)r[0]).intValue() + margin[1] + margin[3];
 
 						if (lineH < cy)
 							lineH = cy;
 					}
 
 					TypesetText tx = new TypesetText();
-					tx.setMargin(colMargin);
+					tx.setMargin(margin);
 					tx.setX(x);
 					tx.setY(y);
 					tx.setWidth(ww);
@@ -240,12 +259,12 @@ public class TypesetSheet extends TypesetElement
 
 					tx.setFixed(false);
 					tx.setSplit(false);
-					tx.setAlign(getAlign(aligns == null ? 0 : aligns[j]));
-					tx.setVerticalAlign(getVerticalAlign(aligns == null ? 0 : aligns[j]));
 					tx.setColor(color);
 					tx.setBgColor(bgColor);
-					tx.setFont(this.getFont());
 					tx.setBorderColor(borderColor);
+					tx.setFont(font);
+					tx.setAlign(t.getAlign());
+					tx.setVerticalAlign(t.getVerticalAlign());
 
 					if (theme != null)
 					{
@@ -384,10 +403,29 @@ public class TypesetSheet extends TypesetElement
 			sb.setText((String) map.get("text"));
 			sb.setCol(Value.intOf(map.get("col"), 1));
 			sb.setRow(Value.intOf(map.get("row"), 1));
+			sb.setFont((String)map.get("font"));
+			sb.setFontSize(Value.intOf(map.get("fontSize"), 0));
+
+			int align = Value.intOf(map.get("align"), 0);
+			if (align > 0)
+				sb.setAlign(getAlign(align) | getVerticalAlign(align));
+			else
+				sb.setAlign(this.getAlign() | this.getVerticalAlign());
+
+			Object m = map.get("margin");
+			Object[] str = m instanceof List ? ((List)m).toArray() : (Object[])m;
+			if (str != null)
+			{
+				int[] margin = new int[4];
+				for (int i=0;i<4 && i<str.length;i++)
+					margin[i] = Value.intOf(str[i], 0);
+				sb.setMargin(margin);
+			}
 		}
 		else
 		{
 			sb.setText(obj == null ? null : obj.toString());
+			sb.setAlign(this.getAlign() | this.getVerticalAlign());
 		}
 		return sb;
 	}

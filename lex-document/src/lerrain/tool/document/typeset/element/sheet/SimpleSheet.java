@@ -6,10 +6,10 @@ public class SimpleSheet implements SheetTheme
 {
 	public void styleContent(TypesetSheet table, TypesetText tx, int i, int j)
 	{
-		tx.setLeftBorder(1);
-		tx.setTopBorder(1);
-		tx.setRightBorder(1);
-		tx.setBottomBorder(1);
+		tx.setLeftBorder(0);
+		tx.setTopBorder(0);
+		tx.setRightBorder(0);
+		tx.setBottomBorder(0);
 	}
 
 	public void styleTitle(TypesetSheet table, TypesetText tx, int i, int j)

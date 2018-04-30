@@ -67,4 +67,9 @@ public class TypesetNumber implements Serializable
 		else
 			return value;
 	}
+
+	public String toString()
+	{
+		return formula == null ? value + "" : formula.toString();
+	}
 }

@@ -34,13 +34,24 @@ public abstract class LexElement implements Serializable
 
 	boolean split	= true;
 	boolean extend	= true;
-	
+	boolean absFloat = false;
+
 	int horizontalAlign = LexElement.ALIGN_CENTER;
 	int verticalAlign = LexElement.ALIGN_MIDDLE;
 
 	String link;
 	
 	Formula resetAtFinal;
+
+	public boolean isAbsFloat()
+	{
+		return absFloat;
+	}
+
+	public void setAbsFloat(boolean absFloat)
+	{
+		this.absFloat = absFloat;
+	}
 
 	public String getLink()
 	{

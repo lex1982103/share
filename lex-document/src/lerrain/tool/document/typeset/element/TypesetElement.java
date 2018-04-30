@@ -21,6 +21,8 @@ public abstract class TypesetElement
 	TypesetNumber y;
 	TypesetNumber width;
 	TypesetNumber height;
+
+	boolean absFloat;
 	
 	LexFont font;
 	int lineHeight;
@@ -156,6 +158,16 @@ public abstract class TypesetElement
 	public void setMode(int mode)
 	{
 		this.mode = mode;
+	}
+
+	public boolean isAbsFloat()
+	{
+		return absFloat;
+	}
+
+	public void setAbsFloat(boolean absFloat)
+	{
+		this.absFloat = absFloat;
 	}
 
 	public void setAlign(String str)

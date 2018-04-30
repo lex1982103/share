@@ -270,7 +270,7 @@ public class PdfPainterSign implements Painter
 					if (dImage.getLink() != null)
 						pdf.setAction(new PdfAction(dImage.getLink()), sx, sy + sh, sx + sw, sy);
 
-					document.add(image);
+					pdf.addImage(image);
 				}
 			}
 		}
@@ -356,32 +356,60 @@ public class PdfPainterSign implements Painter
 			pdf.setColorStroke(translate(dPanel.getBorderColor()));
 			pdf.setLineWidth(scale(1));
 
-			if (dPanel.getLeftBorder() >= 0)
+			if (dPanel.getLeftBorder() == 0)
 			{
 				pdf.moveTo(sx, sy);
 				pdf.lineTo(sx, sy + sh);
 				pdf.stroke();
 			}
-			
-			if (dPanel.getRightBorder() >= 0)
+			else if (dPanel.getLeftBorder() > 0)
+			{
+				float w = scale(dPanel.getLeftBorder());
+				pdf.setColorFill(translate(dPanel.getBorderColor()));
+				pdf.rectangle(sx, sy, w, sh);
+				pdf.fill();
+			}
+
+			if (dPanel.getRightBorder() == 0)
 			{
 				pdf.moveTo(sx + sw, sy);
 				pdf.lineTo(sx + sw, sy + sh);
 				pdf.stroke();
 			}
-			
-			if (dPanel.getTopBorder() >= 0)
+			else if (dPanel.getRightBorder() > 0)
+			{
+				float w = scale(dPanel.getLeftBorder());
+				pdf.setColorFill(translate(dPanel.getBorderColor()));
+				pdf.rectangle(sx + sw - w, sy, w, sh);
+				pdf.fill();
+			}
+
+			if (dPanel.getTopBorder() == 0)
 			{
 				pdf.moveTo(sx, sy + sh);
 				pdf.lineTo(sx + sw, sy + sh);
 				pdf.stroke();
 			}
-			
-			if (dPanel.getBottomBorder() >= 0)
+			else if (dPanel.getTopBorder() > 0)
+			{
+				float w = scale(dPanel.getLeftBorder());
+				pdf.setColorFill(translate(dPanel.getBorderColor()));
+				pdf.rectangle(sx, sy + sh - w, sw, w);
+				pdf.fill();
+			}
+
+			if (dPanel.getBottomBorder() == 0)
 			{
 				pdf.moveTo(sx, sy);
 				pdf.lineTo(sx + sw, sy);
 				pdf.stroke();
+			}
+			else if (dPanel.getBottomBorder() > 0)
+			{
+				float w = scale(dPanel.getLeftBorder());
+				pdf.setColorFill(translate(dPanel.getBorderColor()));
+				pdf.rectangle(sx, sy, sw, w);
+				pdf.fill();
 			}
 
 			int count = dPanel.getElementCount();

@@ -9,12 +9,17 @@ public class SheetBlank
 {
     String text;
 
+    String font;
+    int fontSize;
+
     int align							= TypesetElement.ALIGN_LEFT | TypesetElement.ALIGN_MIDDLE;
 
     int col = 1;
     int row = 1;
 
     int x = -1, y = -1;
+
+    int[] margin;
 
     public SheetBlank()
     {
@@ -83,5 +88,40 @@ public class SheetBlank
     public int getVerticalAlign()
     {
         return align & 0xF0;
+    }
+
+    public int[] getMargin()
+    {
+        return margin;
+    }
+
+    public void setMargin(int[] margin)
+    {
+        this.margin = margin;
+    }
+
+    public void setAlign(int align)
+    {
+        this.align = align;
+    }
+
+    public String getFont()
+    {
+        return font;
+    }
+
+    public void setFont(String font)
+    {
+        this.font = font;
+    }
+
+    public int getFontSize()
+    {
+        return fontSize;
+    }
+
+    public void setFontSize(int fontSize)
+    {
+        this.fontSize = fontSize;
     }
 }

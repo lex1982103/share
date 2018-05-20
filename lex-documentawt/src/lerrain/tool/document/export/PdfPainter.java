@@ -261,12 +261,13 @@ public class PdfPainter implements Painter
 			
 			float y1 = font.getBaseFont().getAscentPoint(text, scale(fontSize));
 			float y2 = font.getBaseFont().getDescentPoint(text, scale(fontSize));
-			
+
 			ColumnText colText = new ColumnText(pdf);
-			colText.setAlignment(Element.ALIGN_MIDDLE);
-			colText.setSimpleColumn(new Phrase(text, font), sx, sy, sx + sw, sy + sh, (sh - (y1 - y2)) / 2 + y1, Element.ALIGN_CENTER);
+			int align = dText.getHorizontalAlign() == DocumentText.ALIGN_CENTER ? Element.ALIGN_CENTER : dText.getHorizontalAlign() == DocumentText.ALIGN_RIGHT ? Element.ALIGN_RIGHT : Element.ALIGN_LEFT;
+			colText.setAlignment(align);
+			colText.setSimpleColumn(new Phrase(text, font), sx, sy, sx + sw, sy + sh, (sh - (y1 - y2)) / 2 + y1, align);
 			colText.go();
-			
+
 			if (dText.getUnderline() != null)
 			{
 				pdf.setColorStroke(translate(dText.getColor()));

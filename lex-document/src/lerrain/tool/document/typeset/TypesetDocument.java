@@ -227,8 +227,9 @@ public class TypesetDocument extends LexDocument
 
 			DocumentPanel next = new DocumentPanel();
 			next.setAll(dp);
-			next.setY(bodyY + dp.getY());
+			next.setY(bodyY + dp.getY() - tvs.getPageTop());
 			next.setX(bodyX + dp.getX());
+			next.setHeight(0);
 			this.getPage(this.size() - 1).add(next);
 
 			int count = dp.getElementCount();
@@ -336,6 +337,9 @@ public class TypesetDocument extends LexDocument
 
 			DocumentPanel next = new DocumentPanel();
 			next.setAll(dp);
+			next.setY(bodyY + dp.getY() - tvs.getPageTop());
+			next.setX(bodyX + dp.getX());
+			next.setHeight(0);
 			this.getPage(this.size() - 1).add(next);
 
 			int count = dp.getElementCount();
@@ -344,6 +348,7 @@ public class TypesetDocument extends LexDocument
 				LexElement panelElement = (LexElement) dp.getElement(k);
 				panelElement.setX(panelElement.getX() + dp.getX());
 				panelElement.setY(panelElement.getY() + dp.getY());
+
 				next = addElement(next, panelElement, tvs, tPaper, bodyX, bodyY, bodyWidth, bodyHeight);
 			}
 		}
@@ -395,6 +400,17 @@ public class TypesetDocument extends LexDocument
 					element.setY(bodyY + element.getY() - tvs.getPageTop());
 
 					this.getPage(this.size() - 1).add(element);
+
+//					if (element instanceof DocumentPanel)
+//					{
+//						LexElement le = ((DocumentPanel) element).getElement(0);
+//						if (le instanceof DocumentText)
+//						{
+//							System.out.println(((DocumentText) le).getText());
+//							System.out.println(((DocumentText) le).getLeftBorder());
+//						}
+//					}
+//					System.out.println(element.getY() + ", " + element.getHeight() + ", " + this.size() + "," + element.toString());
 				}
 			}
 			else
@@ -411,18 +427,40 @@ public class TypesetDocument extends LexDocument
 					DocumentPanel next = new DocumentPanel();
 					next.setAll(curr);
 					next.setY(bodyY);
-					this.getPage(this.size() - 1).add(next);
+					next.setHeight(0);
+					this.lastPage().add(next);
+
+					curr = next;
+				}
+
+				if (this.lastPage().find(curr) < 0) //其他地方已经跨了页
+				{
+					DocumentPanel next = new DocumentPanel();
+					next.setAll(curr);
+					next.setY(bodyY);
+					next.setHeight(0);
+					this.lastPage().add(next);
 
 					curr = next;
 				}
 
 				element.setX(bodyX + element.getX() - curr.getX());
-				element.setY(bodyY + element.getY() - tvs.getPageTop() - curr.getY());
+				element.setY(bodyY + element.getY() - curr.getY() - tvs.getPageTop());
 
 				if (element.getY() + element.getHeight() > curr.getHeight())
 					curr.setHeight(element.getY() + element.getHeight());
 
 				curr.add(element);
+
+//				if (element instanceof DocumentPanel)
+//				{
+//					LexElement le = ((DocumentPanel) element).getElement(0);
+//					if (le instanceof DocumentText)
+//					{
+//						System.out.println(((DocumentText) le).getText());
+//					}
+//				}
+//				System.out.println(curr.toString() + ", " + element.getY() + ", " + element.getHeight() + ", " + this.size() + "," + element.toString());
 			}
 
 			fill = true;

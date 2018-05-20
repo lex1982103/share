@@ -33,9 +33,20 @@ public class Constant implements Code
 		else if (type == Words.NUMBER)
 		{
 			if (text.indexOf(".") >= 0)
+			{
 				v = new BigDecimal(text);
+			}
 			else
-				v = Integer.valueOf(text);
+			{
+				try
+				{
+					v = Integer.valueOf(text);
+				}
+				catch (Exception e)
+				{
+					v = new BigDecimal(text);
+				}
+			}
 		}
 		else if (type == Words.STRING)
 		{

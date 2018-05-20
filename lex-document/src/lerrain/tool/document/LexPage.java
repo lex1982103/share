@@ -49,4 +49,9 @@ public class LexPage implements Serializable
 	{
 		this.paper = paper;
 	}
+
+	public int find(LexElement element)
+	{
+		return elementList.indexOf(element);
+	}
 }

@@ -18,34 +18,41 @@ public class ArithmeticBrace implements Code
 	{
 		if (ws.getType(i) != Words.BRACE || ws.getType(ws.size() - 1) != Words.BRACE_R)
 			throw new SyntaxException("找不到数组的右括号");
-		
-		a = Expression.expressionOf(ws.cut(i + 1, ws.size() - 1));
+
+		if (ws.size() - 1 == i + 1 || ws.getType(i + 2) == Words.COLON)
+			a = Expression.expressionOf(ws.cut(i + 1, ws.size() - 1));
+		else
+			a = new StatementParagraph(ws.cut(i, ws.size()));
 	}
 
 	public Object run(Factors factors)
 	{
-		Map res = new LinkedHashMap();
-
 		if (a == null)
-			return res;
+			return new LinkedHashMap();;
 
 		Object r = a.run(factors);
 
 		if (r instanceof Wrap)
 		{
+			Map res = new LinkedHashMap();
 			for (Object val : ((Wrap)r).toList())
 			{
 				Code[] v = (Code[])val;
 				res.put(v[0].toString(), v[1].run(factors));
 			}
+
+			return res;
 		}
 		else if (r instanceof Code[])
 		{
+			Map res = new LinkedHashMap();
 			Code[] v = (Code[])r;
 			res.put(v[0].toString(), v[1].run(factors));
+
+			return res;
 		}
-		
-		return res;
+
+		return r;
 	}
 
 	public String toText(String space)

@@ -56,7 +56,7 @@ public class Words
 	public static final int NEGATIVE			= 280; 
 	public static final int MULTIPLY			= 281;  
 	public static final int DIVIDE				= 282; 
-	public static final int MOD					= 283; 
+	public static final int MOD					= 283;
 
 	public static final int NULLPT				= 290; 
 	public static final int KEYWORD				= 300;

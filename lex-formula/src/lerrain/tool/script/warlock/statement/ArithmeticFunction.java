@@ -71,6 +71,8 @@ public class ArithmeticFunction extends CodeImpl
 		Script.FUNCTIONS.put("type", new FunctionType());
 		Script.FUNCTIONS.put("trim", new FunctionTrim());
 		Script.FUNCTIONS.put("match", new FunctionMatch());
+		Script.FUNCTIONS.put("copy", new FunctionCopy());
+		Script.FUNCTIONS.put("contains", new FunctionContains());
 	}
 	
 	public ArithmeticFunction(Words ws, int i)

@@ -11,6 +11,7 @@ import lerrain.tool.formula.Function;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
+import lerrain.tool.script.warlock.statement.ArithmeticApprox;
 
 public class Test
 {
@@ -24,7 +25,8 @@ public class Test
 	{
 		try
 		{
-			final Script sc = Script.scriptOf("z", "x+y/k");
+			//final Script sc = Script.scriptOf("z", "x+y/k");
+			final Script sc = Script.scriptOf("z", "try({x+y/k}, 105)");
 
 			Function ff = new Function()
 			{
@@ -36,7 +38,7 @@ public class Test
 			};
 
 			Map map = new HashMap();
-			map.put("k", null);
+			map.put("k", 2);
 			map.put("x", new Integer(65));
 			map.put("y", new Integer(61));
 			map.put("z", ff);
@@ -50,7 +52,19 @@ public class Test
 			System.out.println(e.toStackString());
 		}
 	}
-	
+
+	public static void main2(String[] s)
+	{
+		HashMap m1 = new HashMap();
+		m1.put("10.0", "100");
+
+		HashMap m2 = new HashMap();
+		m2.put(10, "100.0");
+
+		System.out.println(ArithmeticApprox.compare(m1, m2));
+	}
+
+
 	static class TestParam implements Factors
 	{
 		Map map;

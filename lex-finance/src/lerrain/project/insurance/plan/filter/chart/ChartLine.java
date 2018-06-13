@@ -6,17 +6,14 @@ public class ChartLine implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	public static final int TYPE_LINE		= 1;
-	public static final int TYPE_BAR		= 2;
-	
 	double[] data = new double[200];	//对应数据
 	
-	int type;
+	String type;
 	
 	String name;
 	int color;
 	
-	public ChartLine(int type)
+	public ChartLine(String type)
 	{
 		this.type = type;
 	}
@@ -31,12 +28,12 @@ public class ChartLine implements Serializable
 		data[py] = value;
 	}
 
-	public int getType()
+	public String getType()
 	{
 		return type;
 	}
 	
-	public void setType(int type)
+	public void setType(String type)
 	{
 		this.type = type;
 	}

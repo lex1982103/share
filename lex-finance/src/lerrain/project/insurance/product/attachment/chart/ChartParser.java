@@ -53,24 +53,9 @@ public class ChartParser implements AttachmentParser, Serializable
 		for (Iterator i = e.getChildren().iterator(); i.hasNext(); )
 		{
 			XmlNode n1 = (XmlNode)i.next();
-			if ("item".equals(n1.getName()))
+			if (n1.getName() != null && !"".equals(n1.getName()))
 			{
-				String type = n1.getAttribute("type");
-				ChartItem item = new ChartItem("bar".equalsIgnoreCase(type) ? ChartItem.TYPE_BAR : ChartItem.TYPE_LINE, FormulaUtil.formulaOf(n1.getText()));
-				item.setName(n1.getAttribute("name"));
-				item.setColor(n1.getAttribute("color"));
-				chart.addItem(item);
-			}		
-			else if ("bar".equals(n1.getName()))
-			{
-				ChartItem item = new ChartItem(ChartItem.TYPE_BAR, FormulaUtil.formulaOf(n1.getText()));
-				item.setName(n1.getAttribute("name"));
-				item.setColor(n1.getAttribute("color"));
-				chart.addItem(item);
-			}
-			else if ("line".equals(n1.getName()))
-			{
-				ChartItem item = new ChartItem(ChartItem.TYPE_LINE, FormulaUtil.formulaOf(n1.getText()));
+				ChartItem item = new ChartItem(n1.getName(), FormulaUtil.formulaOf(n1.getText()));
 				item.setName(n1.getAttribute("name"));
 				item.setColor(n1.getAttribute("color"));
 				chart.addItem(item);

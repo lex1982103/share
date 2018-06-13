@@ -12,6 +12,9 @@ public class FunctionType implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{
+		if (v[0] == null)
+			return null;
+
 		if (v[0] instanceof String)
 			return "string";
 

@@ -67,11 +67,9 @@ public class ComboChartDefParser implements AttachmentParser, Serializable
 				"cover".equalsIgnoreCase(mode) ? ComboCol.MODE_COVER :
 				ComboCol.MODE_ADD;
 		
-		int t = "line".equalsIgnoreCase(type) ? ChartItem.TYPE_LINE : "bar".equalsIgnoreCase(mode) ? ChartItem.TYPE_BAR : ChartItem.TYPE_LINE;
-		
 		ComboChartCol col = new ComboChartCol(code, name != null ? FormulaUtil.formulaOf("'" + name.replaceAll("[\\\\][n]", "\n") + "'") : FormulaUtil.formulaOf(node.getText()), m);
 		col.setAddCol(add);
-		col.setType(t);
+		col.setType(type);
 		
 		return col;
 	}

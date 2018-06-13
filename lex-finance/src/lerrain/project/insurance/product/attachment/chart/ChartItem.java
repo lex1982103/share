@@ -7,28 +7,25 @@ import lerrain.tool.formula.Formula;
 public class ChartItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
-	public static final int TYPE_LINE	= 1;
-	public static final int TYPE_BAR	= 2;
-	
-	int type;
+
+	String type;
 	Formula formula;
 	
 	String name;
 	String color;
 	
-	public ChartItem(int type, Formula formula)
+	public ChartItem(String type, Formula formula)
 	{
 		this.type = type;
 		this.formula = formula;
 	}
 
-	public int getType()
+	public String getType()
 	{
 		return type;
 	}
 
-	public void setType(int type)
+	public void setType(String type)
 	{
 		this.type = type;
 	}

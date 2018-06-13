@@ -14,7 +14,7 @@ public class ComboChartCol implements Serializable
 	String addCol;
 	
 	int mode;
-	int type;
+	String type;
 	
 	public ComboChartCol(String code, Formula name, int mode)
 	{
@@ -47,12 +47,12 @@ public class ComboChartCol implements Serializable
 		return col.getCode().equals(code);
 	}
 
-	public int getType()
+	public String getType()
 	{
 		return type;
 	}
 
-	public void setType(int type)
+	public void setType(String type)
 	{
 		this.type = type;
 	}

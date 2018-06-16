@@ -12,15 +12,12 @@
 
 		<script src="../js/jquery.min.js"></script>
 		<script src="../js/common.js"></script>
+		<script src="../js/react.production.min.js"></script>
+		<script src="../js/react-dom.production.min.js"></script>
 		<script src="../js/apply.js"></script>
 		<script src="../js/app.js"></script>
 
-		<script>
-			var orderId = common.param("orderId")
-			if (orderId == null || orderId == "") APP.apply.fold(40066, r => {
-				document.location.href = "applicant.html?orderId=" + r
-			})
-		</script>
+		<script src="./product_editor.js"></script>
 	</head>
 
 	<body>

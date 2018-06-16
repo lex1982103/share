@@ -7,22 +7,13 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
-public class Layers extends RelativeLayout implements View.OnTouchListener
+public class Layers extends RelativeLayout
 {
-	Scroller scroller;
-
 	Layer layer;
-
-	boolean dragging = false;
-	float dragX;
 
 	public Layers(Context context)
 	{
 		super(context);
-
-		scroller = new Scroller(getContext(), new AccelerateDecelerateInterpolator());
-
-		this.setOnTouchListener(this);
 	}
 
 	public void setBaseLayer(Layer layout)
@@ -32,91 +23,23 @@ public class Layers extends RelativeLayout implements View.OnTouchListener
 
 	public void addLayout(Layer layer)
 	{
-		if (dragging)
-			return;
-
-		layer.setTranslationX(Ui.width);
 		layer.setBackButton(true);
 
+		this.layer = layer;
 		this.addView(layer);
 
-		this.layer = layer;
-		playEnter();
+		layer.playEnter();
 	}
 
-	public void back()
+	public void back(String val)
 	{
-		if (dragging)
-			return;
-
-		this.layer = (Layer)this.getChildAt(this.getChildCount() - 1);
-		playOut();
-	}
-
-	private void playEnter()
-	{
-		scroller.startScroll(Ui.width, 0, -Ui.width, 0, 300);
-
-		this.postInvalidate();
-	}
-
-	private void playOut()
-	{
-		scroller.startScroll(0, 0, Ui.width, 0, 300);
-
-		this.postInvalidate();
-	}
-
-	@Override
-	public void computeScroll()
-	{
-		if (layer != null)
+		if (this.getChildCount() >= 2)
 		{
-			if (scroller.computeScrollOffset())
-			{
-				this.postInvalidate();
-
-				int x = scroller.getCurrX();
-				layer.setTranslationX(x);
-			} else if (scroller.isFinished())
-			{
-				int x = scroller.getCurrX();
-				if (x > Ui.width / 2)
-					this.removeView(layer);
-				else
-					layer.setTranslationX(0);
-			}
+			Layer lastLayer = (Layer) this.getChildAt(this.getChildCount() - 2);
+			lastLayer.runJs("APP.callback(\"" + val + "\")");
 		}
 
-		super.computeScroll();
-	}
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event)
-	{
-		if (event.getAction() == MotionEvent.ACTION_MOVE)
-		{
-			if (dragging)
-			{
-				layer.setTranslationX(event.getX() - dragX);
-			}
-		}
-		else if (event.getAction() == MotionEvent.ACTION_DOWN)
-		{
-			dragging = true;
-			dragX = event.getX();
-
-			layer = (Layer)this.getChildAt(this.getChildCount() - 1);
-		}
-		else if (event.getAction() == MotionEvent.ACTION_UP)
-		{
-			if (dragging)
-			{
-				dragging = false;
-				layer.setTranslationX(0);
-			}
-		}
-
-		return false;
+		layer = (Layer)this.getChildAt(this.getChildCount() - 1);
+		layer.playOut();
 	}
 }

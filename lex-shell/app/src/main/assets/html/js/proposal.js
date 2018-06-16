@@ -9,8 +9,8 @@ var Proposal = {
       onSucc(r)
     })
   },
-  create(applicant, insurant, onSucc) {
-    Proposal.host.req('/proposal/create.json', { applicant: applicant, insurant: insurant }, r => {
+  create(applicant, insurants, onSucc) {
+    Proposal.host.req('/proposal/create.json', { applicant: applicant, insurants: insurants }, r => {
       onSucc(r)
     })
   },

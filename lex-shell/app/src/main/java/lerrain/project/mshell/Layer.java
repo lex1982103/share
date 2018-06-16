@@ -1,39 +1,45 @@
 package lerrain.project.mshell;
 
-import android.view.Gravity;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Scroller;
 
-public class Layer extends RelativeLayout
+public abstract class Layer extends RelativeLayout
 {
-	int topH = 52;
-
 	Main window;
-	
-	RelativeLayout top;
-	
-	TopButton[] tpb = new TopButton[4];
-	
-	TextView title;
+
+	RelativeLayout rl;
 
 	WebView wv;
 
 	WebViewClient wvc;
 
 	JsBridge adapter;
-	
-	public Layer(Main window)
+
+	Scroller scroller;
+
+	int mode;
+
+	public Layer(Main window, int top)
 	{
 		super(window);
 		
 		this.window = window;
-		this.setBackgroundColor(0xFFAAAAAA);
-		
-		init();
+		this.setBackgroundColor(0xC0000000);
+
+		rl = new RelativeLayout(window);
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		lp.setMargins(0, top, 0, 0);
+		super.addView(rl, lp);
+
+		scroller = new Scroller(getContext(), new AccelerateDecelerateInterpolator());
 	}
 
 	public Layers getRoot()
@@ -41,79 +47,8 @@ public class Layer extends RelativeLayout
 		return (Layers)this.getParent();
 	}
 
-	private void init()
+	protected WebView initWebView()
 	{
-		LayoutParams lp;
-		
-		if (topH > 0)
-		{
-			top = new RelativeLayout(window);
-			top.setBackgroundColor(0xFFFFFFFF);
-			lp = new LayoutParams(LayoutParams.MATCH_PARENT, Ui.dp(topH));
-			this.addView(top, lp);
-
-			tpb[0] = new TopButton(this, 0);
-			tpb[0].setImage("back");
-			tpb[0].setPadding(Ui.dp(7), Ui.dp(7), Ui.dp(7), Ui.dp(7));
-			tpb[0].setVisibility(View.INVISIBLE);
-			lp = new LayoutParams(Ui.dp(44), Ui.dp(44));
-			lp.setMargins(Ui.dp(6), Ui.dp(2), 0, 0);
-			lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			lp.addRule(RelativeLayout.CENTER_VERTICAL);
-			top.addView(tpb[0], lp);
-			
-			tpb[0].setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					adapter.back();
-				}
-			});
-			
-			title = new TextView(window);
-	//		title.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-			title.setGravity(Gravity.CENTER);
-			title.setTextSize(18);
-			title.setText("");
-			title.setTextColor(0xFF000000);
-			lp = new LayoutParams(Ui.dp(200), Ui.dp(topH - 4));
-	//		lp.setMargins(Ui.dp(60), 0, 0, 0);
-	//		lp.addRule(RelativeLayout.CENTER_VERTICAL);
-			lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-			top.addView(title, lp);
-			
-			title.setOnLongClickListener(new OnLongClickListener() 
-			{
-				@Override
-				public boolean onLongClick(View v)
-				{
-					openUrl("MF.pressTitle()");
-					return true;
-				}
-			});
-			
-			title.setOnClickListener(new OnClickListener() 
-			{
-				@Override
-				public void onClick(View v)
-				{
-					wv.reload();
-				}
-			});
-		
-			for (int i=1;i<=2;i++)
-			{
-				tpb[i] = new TopButton(this, i);
-				tpb[i].setPadding(Ui.dp(7), Ui.dp(7), Ui.dp(7), Ui.dp(7));
-				lp = new LayoutParams(Ui.dp(44), Ui.dp(44));
-				lp.setMargins(0, Ui.dp(2), Ui.dp(44 * i - 38), 0);
-				lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				lp.addRule(RelativeLayout.CENTER_VERTICAL);
-				top.addView(tpb[i], lp);
-			}
-		}
-
 		wv = new WebView(getContext());
 		wv.setBackgroundColor(0xFFCCCCCC);
 		wv.getSettings().setLoadsImagesAutomatically(true);
@@ -121,22 +56,21 @@ public class Layer extends RelativeLayout
 		wv.getSettings().setSupportZoom(false);
 		wv.getSettings().setUseWideViewPort(true);
 		wv.getSettings().setAllowUniversalAccessFromFileURLs(true);
-		wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+		wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
 		adapter = new JsBridge(this);
 		wv.addJavascriptInterface(adapter, "MF");
 
 		wvc = new WebViewClient()
 		{
-//			@Override
-//			public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request)
-//			{
-//				String url = request.getUrl().toString();
-//				if (url != null && url.startsWith("fm://"))
-//					return true;
-//
-//				return false;
-//			}
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url)
+			{
+				if (url != null && url.startsWith("fm://"))
+					return true;
+
+				return false;
+			}
 
 			@Override
 			public void onPageFinished(WebView view, String url)
@@ -145,15 +79,20 @@ public class Layer extends RelativeLayout
 		};
 
 		wv.setWebViewClient(wvc);
-		lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		lp.setMargins(0, Ui.dp(topH), 0, 0);
-		this.addView(wv, lp);
+		return wv;
+	}
+
+	public void addView(View v, LayoutParams lp)
+	{
+		rl.addView(v, lp);
 	}
 
 	public void setBackButton(boolean b)
 	{
-		if (tpb[0] != null)
-			tpb[0].setVisibility(b ? View.VISIBLE : View.INVISIBLE);
+	}
+
+	public void setTitle(String text)
+	{
 	}
 
 	public void runJs(String js)
@@ -170,4 +109,65 @@ public class Layer extends RelativeLayout
 	{
 		wv.loadUrl("file:///android_asset/html/" + uri);
 	}
+
+	protected abstract void playEnter();
+
+	protected abstract void playOut();
+
+	protected void play(int x, int y, int dx, int dy, int mode)
+	{
+		this.mode = mode;
+
+		scroller.startScroll(x, y, dx, dy, 300);
+
+		this.postInvalidate();
+	}
+
+	@Override
+	public void computeScroll()
+	{
+		if (scroller.computeScrollOffset())
+		{
+			this.postInvalidate();
+
+			if (Math.abs(scroller.getFinalX() - scroller.getStartX()) > 0)
+			{
+				int alpha = mode == 1 ?
+					Math.abs((scroller.getCurrX() - scroller.getStartX()) * 192 / (scroller.getFinalX() - scroller.getStartX())):
+					Math.abs((scroller.getCurrX() - scroller.getFinalX()) * 192 / (scroller.getFinalX() - scroller.getStartX()));
+
+				Layer.this.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
+			}
+			else if (Math.abs(scroller.getFinalY() - scroller.getStartY()) > 0)
+			{
+				int alpha = mode == 1 ?
+					Math.abs((scroller.getCurrY() - scroller.getStartY()) * 192 / (scroller.getFinalY() - scroller.getStartY())):
+					Math.abs((scroller.getCurrY() - scroller.getFinalY()) * 192 / (scroller.getFinalY() - scroller.getStartY()));
+
+				Layer.this.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
+			}
+
+			rl.setTranslationX(scroller.getCurrX());
+			rl.setTranslationY(scroller.getCurrY());
+		}
+		else if (scroller.isFinished())
+		{
+			if (mode == 1)
+			{
+				rl.setTranslationX(0);
+				rl.setTranslationY(0);
+
+				Layer.this.setBackgroundColor(0xC0000000);
+			}
+			else if (mode == 2)
+			{
+				((Layers) Layer.this.getParent()).removeView(Layer.this);
+			}
+
+			mode = 0;
+		}
+
+		super.computeScroll();
+	}
+
 }

@@ -92,42 +92,6 @@ public class TopButton extends ImageView implements OnClickListener
 		{
 			if ("back".equals(str))
 				this.setImageResource(R.drawable.arrow_left);
-//			else if ("search".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.search);
-//			else if ("left".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.left);
-//			else if ("right".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.right);
-//			else if ("add".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.add);
-//			else if ("edit".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.edit);
-//			else if ("star".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.star);
-//			else if ("list".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.list);
-//			else if ("progress".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.progress);
-//			else if ("trash".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.trash);
-//			else if ("book".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.book);
-//			else if ("document".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.document);
-//			else if ("person".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.person);
-//			else if ("home".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.home);
-//			else if ("zoomIn".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.zoom_in);
-//			else if ("zoomOut".equals(str))
-//				this.setImageResource(com.lerrain.www.aframe.R.drawable.zoom_out);
-//			else if ("checked".equals(str))
-//				this.setImageResource(R.drawable.checked);
-//			else if ("unchecked".equals(str))
-//				this.setImageResource(R.drawable.unchecked);
-//			else if ("detail".equals(str))
-//				this.setImageResource(R.drawable.detail);
 		}
 	}
 

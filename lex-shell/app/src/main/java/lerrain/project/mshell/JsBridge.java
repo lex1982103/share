@@ -32,7 +32,7 @@ public class JsBridge
             @Override
             public void run()
             {
-                layer.title.setText(title);
+                layer.setTitle(title);
             }
         });
     }
@@ -45,23 +45,40 @@ public class JsBridge
             @Override
             public void run()
             {
-                Layer newLayer = new Layer(layer.window);
-                newLayer.openLocal(url);
-
+                Layer newLayer = new PageLayer(layer.window);
                 layer.getRoot().addLayout(newLayer);
+
+                newLayer.openLocal(url);
             }
         });
     }
 
     @JavascriptInterface
-    public void back()
+    public void pop(final String url, final int percent)
     {
         layer.post(new Runnable()
         {
             @Override
             public void run()
             {
-                layer.getRoot().back();
+                Layer newLayer = new PopLayer(layer.window, Common.intOf(percent, 75));
+                layer.getRoot().addLayout(newLayer);
+
+                newLayer.openLocal(url);
+            }
+        });
+    }
+
+
+    @JavascriptInterface
+    public void back(final String val)
+    {
+        layer.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                layer.getRoot().back(val);
             }
         });
     }
@@ -73,6 +90,8 @@ public class JsBridge
         {
             Object[] keys;
             String[] items;
+
+            Log.i("mshell", json);
 
             try
             {
@@ -98,8 +117,18 @@ public class JsBridge
 
                 for (int i=0;i<list.size();i++)
                 {
-                    keys[i] = i;
-                    items[i] = Common.trimStringOf(list.get(i));
+                    Object val = list.get(i);
+                    if (val instanceof JSONArray)
+                    {
+                        JSONArray ja = (JSONArray)val;
+                        keys[i] = ja.get(0);
+                        items[i] = Common.trimStringOf(ja.get(1));
+                    }
+                    else
+                    {
+                        keys[i] = i;
+                        items[i] = Common.trimStringOf(list.get(i));
+                    }
                 }
             }
 
@@ -136,6 +165,5 @@ public class JsBridge
 
     public void toast()
     {
-
     }
 }

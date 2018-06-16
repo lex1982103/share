@@ -26,20 +26,11 @@ public class Main extends Activity
 		layers.setBaseLayer(base);
 		
 		this.setContentView(layers);
-
-//		layers.postDelayed(new Runnable()
-//		{
-//			@Override
-//			public void run()
-//			{
-//				base.adapter.naviTo(Network.ADDRESS + "/iyb/ware.mobile?wareId=19&accountId=50003565005");
-//			}
-//		}, 3000);
 	}
 	
 	protected Layer createBaseLayer()
 	{
-		Layer layer = new Layer(this);
+		PageLayer layer = new PageLayer(this);
 		//layer.openUrl("http://www.lerrain.com:7701/nci/apply/plan.html");
 		layer.openLocal("apply/start.html");
 

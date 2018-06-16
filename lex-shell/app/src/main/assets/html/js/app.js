@@ -15,6 +15,13 @@ var APP = {
         APP.onSucc = onSucc
         MF.pick(type, JSON.stringify(vals))
     },
+    pop(uri, height, onSucc) {
+        APP.onSucc = onSucc
+        MF.pop(uri, height)
+    },
+    back(val) {
+        MF.back(val)
+    },
     dict(code, onSucc) {
         Host.req("/dict/view.json", { company: "nci", name: code }, onSucc)
     }

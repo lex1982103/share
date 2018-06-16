@@ -1,22 +1,23 @@
-var Main = React.createClass({
-    getInitialState() {
-        return {
+class Main extends React.Component {
+    constructor() {
+        super()
+        this.state = {
             applicant: {
                 name: "王志军"
             },
             pay: {}
         }
-    },
+    }
     componentDidMount() {
         MF.setTitle("缴费信息")
-    },
+    }
     next() {
-        MF.navi("apply/preview.html")
-    },
+        MF.navi("apply/success.html")
+    }
     onValChange(key, val) {
         this.state.pay[key] = val
         this.setState({ pay: this.state.pay })
-    },
+    }
     render() {
         let pay = this.state.pay;
         return (
@@ -68,13 +69,12 @@ var Main = React.createClass({
                 </div>
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
-                    <div style={{textAlign:"right", paddingRight:"30px", width:"750px"}} onClick={this.next}>下一步</div>
+                    <div style={{textAlign:"right", paddingRight:"30px", width:"750px"}} onClick={this.next.bind(this)}>下一步</div>
                 </div>
             </div>
 		)
     }
-})
-
+}
 
 $(document).ready( function() {
 	ReactDOM.render(

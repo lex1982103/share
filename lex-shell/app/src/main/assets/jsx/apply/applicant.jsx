@@ -119,7 +119,7 @@ class Main extends React.Component {
                     </div>
                     <div className="divx text16" style={{height:"80px", borderTop:"#e6e6e6 solid 1px"}}>
                         <div style={{width:"700px", height:"65px", textAlign:"right"}}>
-                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save}/>
+                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                         </div>
                     </div>
                 </div> }
@@ -174,7 +174,7 @@ class Main extends React.Component {
                     </div>
                     <div className="divx text16" style={{height:"80px", borderTop:"#e6e6e6 solid 1px"}}>
                         <div style={{width:"700px", height:"65px", textAlign:"right"}}>
-                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save}/>
+                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                         </div>
                     </div>
                 </div> }
@@ -243,7 +243,7 @@ class Main extends React.Component {
                     </div>
                     <div className="divx text16" style={{height:"80px", borderTop:"#e6e6e6 solid 1px"}}>
                         <div style={{width:"700px", height:"65px", textAlign:"right"}}>
-                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save}/>
+                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                         </div>
                     </div>
                 </div> }
@@ -255,14 +255,14 @@ class Main extends React.Component {
                 { this.state.mode != 4 ? null : <div className="div bg-white">
                     <div className="divx text16" style={{height:"80px", borderTop:"#e6e6e6 solid 1px"}}>
                         <div style={{width:"700px", height:"65px", textAlign:"right"}}>
-                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save}/>
+                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                         </div>
                     </div>
                 </div> }
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
                     <div style={{paddingLeft:"30px", width:"600px"}}></div>
-                    <div style={{textAlign:"right", paddingRight:"30px", width:"150px"}} onClick={this.next}>下一步</div>
+                    <div style={{textAlign:"right", paddingRight:"30px", width:"150px"}} onClick={this.next.bind(this)}>下一步</div>
                 </div>
             </div>
 		)

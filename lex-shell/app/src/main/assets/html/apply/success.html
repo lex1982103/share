@@ -8,7 +8,7 @@
 			document.write('<meta name="viewport" content="width=750, initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no, minimal-ui">')
 		</script>
 
-		<link href="../css/common.css" rel="stylesheet"/>
+        <link href="../css/common.css" rel="stylesheet"/>
 
 		<script src="../js/jquery.min.js"></script>
 		<script src="../js/common.js"></script>
@@ -17,22 +17,10 @@
 		<script src="../js/apply.js"></script>
 		<script src="../js/app.js"></script>
 
-		<script src="./home.js"></script>
-		<script>
-			MF.setTitle("烘焙鸡")
-			var newApply = function() {
-				MF.navi("apply/start.html")
-			}
-			var openApply = function(orderId) {
-				MF.navi("apply/start.html?orderId=" + orderId)
-			}
-		</script>
+		<script src="./success.js"></script>
 	</head>
 
 	<body>
-		<div id="root">
-			<div onClick="newApply()">新的投保</div>
-			<div onClick="openApply(40066)">打开投保单1</div>
-		</div>
+		<div id="root"></div>
 	</body>
 </html>

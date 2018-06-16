@@ -1,6 +1,8 @@
-var Main = React.createClass({
-    getInitialState() {
-        return {
+class Main extends React.Component {
+    constructor() {
+        super()
+
+        this.state = {
             orderId: common.param("orderId"),
             genderDict: {"M":"男", "F":"女"},
             nationDict: {},
@@ -11,7 +13,7 @@ var Main = React.createClass({
             mode: 0,
             cust: [{}]
         }
-    },
+    }
     componentDidMount() {
         MF.setTitle("被保险人")
 
@@ -28,7 +30,7 @@ var Main = React.createClass({
             let cust = r.detail ? r.detail.insurants : null
             this.setState({ cust: cust ? cust : [{}] })
         })
-    },
+    }
     save() {
         let c = this.state.cust[this.state.index]
 
@@ -48,22 +50,22 @@ var Main = React.createClass({
         APP.apply.save({ id: this.state.orderId, detail: { insurants: this.state.cust } }, v => {
             this.setState({ mode: 0, cust: this.state.cust })
         })
-    },
+    }
     next() {
         this.save()
         MF.navi("apply/plan.html?orderId=" + this.state.orderId)
-    },
+    }
     newInsurant() {
         this.state.cust.push({})
         this.setState({ cust: this.state.cust })
-    },
+    }
     onInsurantSwitch(i) {
         this.setState({ mode: 0, index: i })
-    },
+    }
     onValChange(key, val) {
         this.state.cust[this.state.index][key] = val
         this.setState({ cust: this.state.cust })
-    },
+    }
     render() {
         let cust = this.state.cust[this.state.index];
         return (
@@ -75,7 +77,7 @@ var Main = React.createClass({
                         </div>
                     )}
                     { this.state.cust.length >= 3 ? null :
-                        <div style={{width:750-250*this.state.cust.length+"px", height:"80px", textAlign:"right"}} onClick={this.newInsurant}>
+                        <div style={{width:750-250*this.state.cust.length+"px", height:"80px", textAlign:"right"}} onClick={this.newInsurant.bind(this)}>
                             <img style={{width:"60px", height:"60px", margin:"10px", opacity: "0.7"}} src="../images/file-add.png"></img>
                         </div>
                     }
@@ -138,7 +140,7 @@ var Main = React.createClass({
                     </div>
                     <div className="divx text16" style={{height:"80px", borderTop:"#e6e6e6 solid 1px"}}>
                         <div style={{width:"700px", height:"65px", textAlign:"right"}}>
-                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save}/>
+                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                         </div>
                     </div>
                 </div> }
@@ -193,7 +195,7 @@ var Main = React.createClass({
                     </div>
                     <div className="divx text16" style={{height:"80px", borderTop:"#e6e6e6 solid 1px"}}>
                         <div style={{width:"700px", height:"65px", textAlign:"right"}}>
-                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save}/>
+                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                         </div>
                     </div>
                 </div> }
@@ -262,7 +264,7 @@ var Main = React.createClass({
                     </div>
                     <div className="divx text16" style={{height:"80px", borderTop:"#e6e6e6 solid 1px"}}>
                         <div style={{width:"700px", height:"65px", textAlign:"right"}}>
-                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save}/>
+                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                         </div>
                     </div>
                 </div> }
@@ -274,7 +276,7 @@ var Main = React.createClass({
                 { this.state.mode != 4 ? null : <div className="div bg-white">
                     <div className="divx text16" style={{height:"80px", borderTop:"#e6e6e6 solid 1px"}}>
                         <div style={{width:"700px", height:"65px", textAlign:"right"}}>
-                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save}/>
+                            <img style={{width:"100px", height:"50px", marginTop:"15px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                         </div>
                     </div>
                 </div> }
@@ -288,13 +290,12 @@ var Main = React.createClass({
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
                     <div style={{paddingLeft:"30px", width:"600px"}}></div>
-                    <div style={{textAlign:"right", paddingRight:"30px", width:"150px"}} onClick={this.next}>下一步</div>
+                    <div style={{textAlign:"right", paddingRight:"30px", width:"150px"}} onClick={this.next.bind(this)}>下一步</div>
                 </div>
             </div>
 		)
     }
-})
-
+}
 
 $(document).ready( function() {
 	ReactDOM.render(

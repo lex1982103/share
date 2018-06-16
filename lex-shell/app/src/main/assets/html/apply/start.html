@@ -17,9 +17,15 @@
 
 		<script>
 			var orderId = common.param("orderId")
-			if (orderId == null || orderId == "") APP.apply.fold(40066, r => {
-				document.location.href = "applicant.html?orderId=" + r
-			})
+			if (orderId != null && orderId != "") {
+				APP.apply.fold(orderId, r => {
+					document.location.href = "applicant.html?orderId=" + r
+				})
+			} else {
+				APP.apply.create(r => {
+					document.location.href = "applicant.html?orderId=" + r.id
+				})
+			}
 		</script>
 	</head>
 

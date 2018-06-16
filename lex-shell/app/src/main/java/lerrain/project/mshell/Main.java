@@ -32,7 +32,7 @@ public class Main extends Activity
 	{
 		PageLayer layer = new PageLayer(this);
 		//layer.openUrl("http://www.lerrain.com:7701/nci/apply/plan.html");
-		layer.openLocal("apply/start.html");
+		layer.openLocal("home/home.html");
 
 		return layer;
 	}

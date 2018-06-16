@@ -1,12 +1,13 @@
-var Main = React.createClass({
-    getInitialState() {
-        return {
+class Main extends React.Component {
+    constructor() {
+        super()
+        this.state = {
             orderId: common.param("orderId"),
             ages: [],
             index: 0,
             now: common.dateStr(new Date())
         }
-    },
+    }
     componentDidMount() {
         let ages = []
         for (let i=0;i<70;i++)
@@ -20,7 +21,7 @@ var Main = React.createClass({
                 this.onInsurantSwitch(0)
             })
         })
-    },
+    }
     onInsurantSwitch(i) {
         if (this.state.order.detail.insurants.length > i) {
             let planId = this.state.order.detail.insurants[i].planId;
@@ -35,58 +36,54 @@ var Main = React.createClass({
                 })
             }
         }
-    },
-    onShow() {
-        let opt = APP.passport();
-        if (opt) {
-            if (opt.productId) {
-                APP.proposal.addProduct(plan.planId, null, opt.productId, (r) => {
-                    this.setState({ plan: r })
-                })
-            }
-            if (opt.proposalId) {
-                APP.proposal.load(opt.proposalId, (r) => {
-                    this.setState({ proposal: r, index: 0 }, this.onProposal)
-                })
-            }
-        }
-    },
+    }
     onGenderChange(e) {
         this.state.order.detail.insurants[this.state.index].gender = e
         this.refreshInsurant()
-    },
+    }
     onAgeChange(e) {
         this.state.order.detail.insurants[this.state.index].age = e
         this.state.order.detail.insurants[this.state.index].birthday = null
         this.refreshInsurant()
-    },
+    }
     onBirthdayChange(e) {
         this.state.order.detail.insurants[this.state.index].birthday = e.detail.value
         this.refreshInsurant()
-    },
+    }
     refreshInsurant() {
         APP.apply.refreshInsurant(this.state.plan.planId, this.state.order.detail.insurants[this.state.index], (r) => {
             this.setState({ plan: r })
         })
-    },
+    }
     addProduct() {
-        MF.navi("proposal/product_list")
-    },
+        APP.pop("apply/product_list.html", 75, r => {
+            if (r != null) {
+                APP.apply.addProduct(this.state.plan.planId, null, r, r => {
+                    this.setState({ plan: r })
+                })
+            }
+        })
+    }
     editProduct(e) {
-        MF.pop("apply/product_editor.html?planId=" + this.state.plan.planId + "&index=" + e, 75)
-    },
+        APP.pop("apply/product_editor.html?planId=" + this.state.plan.planId + "&index=" + e, 75, r => {
+            APP.apply.viewPlan(this.state.plan.planId, plan => {
+                console.log(JSON.stringify(plan))
+                this.setState({ plan: plan })
+            })
+        })
+    }
     deleteProduct(i) {
         APP.apply.deleteProduct(this.state.plan.planId, i, null, r => {
             this.setState({ plan: r })
         })
-    },
+    }
     next() {
-        MF.navi("apply/pay.html")
-    },
+        MF.navi("apply/preview.html")
+    }
     showBenefit() {
         MF.pop("apply/product_editor.html?planId=" + this.state.plan.planId + "&index=" + 0, 75)
         //MF.navi("proposal/benefit?planId=" + plan.planId)
-    },
+    }
     render() {
         let plan = this.state.plan
         let insurant = this.state.order ? this.state.order.detail.insurants[this.state.index] : null;
@@ -126,7 +123,7 @@ var Main = React.createClass({
                             v.parent == null ?
                                 <div className="product product-main text16" style={{marginTop:"10px"}} onClick={this.editProduct.bind(this, i)}>
                                     <div style={{height:"70px", display:"flex"}}>
-                                        <img style={{width:"60px", height:"60px", margin: "10px 10px 0 10px"}} src={plan.icons[v.vendor]}></img>
+                                        <img style={{width:"60px", height:"60px", margin:"10px 10px 0 10px"}} src={plan.icons[v.vendor]}></img>
                                         <div style={{width:"600px", marginTop:"10px"}}>
                                             <text className="text20 eclipse">{v.name}</text>
                                         </div>
@@ -142,11 +139,11 @@ var Main = React.createClass({
                                             <text style={{color:"#000"}}>{v.premium}元</text>
                                         </div>
                                     </div>
-                                    <div style="height:10px;"></div>
+                                    <div style={{height:"10px"}}></div>
                                 </div> :
                                 <div className="product product-rider text16">
                                     <div className="left">
-                                        <text style="color:#0a0;">附</text>
+                                        <text style={{color:"#0a0"}}>附</text>
                                     </div>
                                     <div className="middle eclipse">
                                         <text style={{color:"#000", marginRight:"10px"}}>{v.abbrName}</text>
@@ -162,12 +159,12 @@ var Main = React.createClass({
                                 <text className="text16">合计：{plan.premium}元</text>
                             </div> : null
                         }
-                        <div className="btn-fl text18" style={{color:"#fff", backgroundColor:"#1aad19"}} onClick={this.addProduct}>添加险种</div>
+                        <div className="btn-fl text18" style={{color:"#fff", backgroundColor:"#1aad19"}} onClick={this.addProduct.bind(this)}>添加险种</div>
                     </div>
                 </div>
                 <div style={{height:"120px"}}></div>
                 <div className="bottom">
-                    <div className="btn-img" onClick={this.showBenefit}>
+                    <div className="btn-img" onClick={this.showBenefit.bind(this)}>
                         <img src="../images/md-levels-alt.png"></img>
                         <text>利益</text>
                     </div>
@@ -182,7 +179,7 @@ var Main = React.createClass({
                     <div style={{width:"60px", height:"100px"}}>
                         <img style={{width:"60px", height:"60px", marginTop:"20px"}} src="../images/arrow-4-up.png"></img>
                     </div>
-                    <div className="btn-img" onClick={this.next}>
+                    <div className="btn-img" onClick={this.next.bind(this)}>
                         <img src="../images/arrow-1-right.png"></img>
                         <text>继续</text>
                     </div>
@@ -190,8 +187,7 @@ var Main = React.createClass({
             </div>
 		)
     }
-})
-
+}
 
 $(document).ready( function() {
 	ReactDOM.render(

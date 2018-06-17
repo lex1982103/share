@@ -138,7 +138,8 @@ input {
   display: flex;
   height: 80px;
   line-height: 80px;
-  margin-bottom: 1px;
+  background-color: #ffffff;
+  margin-top: 1px;
 }
 
 .form-item-label {
@@ -149,7 +150,6 @@ input {
 .form-item-widget {
   width: 430px;
   display: flex;
-  flex-direction: row-reverse;
   margin-right: 20px;
 }
 
@@ -190,6 +190,10 @@ input {
   color: #ffffff;
 }
 
+.tc-red {
+  color: #ff0000;
+}
+
 .bg-primary {
   background-color: #00aff9;
 }
@@ -214,6 +218,10 @@ input {
   line-height: 100px;
 }
 
+.ml-0 {
+  margin-left: 0;
+}
+
 .ml-1 {
   margin-left: 10px;
 }
@@ -224,6 +232,14 @@ input {
 
 .ml-3 {
   margin-left: 30px;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.mr-0 {
+  margin-right: 0;
 }
 
 .mr-1 {
@@ -238,6 +254,10 @@ input {
   margin-right: 30px;
 }
 
+.mr-auto {
+  margin-right: auto;
+}
+
 .mt-1 {
   margin-top: 10px;
 }
@@ -246,12 +266,20 @@ input {
   margin-top: 20px;
 }
 
+.mt-3 {
+  margin-top: 30px;
+}
+
 .mb-1 {
   margin-bottom: 10px;
 }
 
 .mb-2 {
   margin-bottom: 20px;
+}
+
+.mb-3 {
+  margin-bottom: 30px;
 }
 
 .pl-1 {

@@ -59,6 +59,11 @@ var Apply = {
       onSucc(r)
     })
   },
+  format(planId, style, onSucc) {
+    Apply.host.req('/proposal/plan/format.json', { planId: planId, style: style }, r => {
+      onSucc(r)
+    })
+  },
   viewPlan(planId, onSucc) {
     Apply.host.req('/proposal/plan/view.json', { planId: planId }, r => {
       onSucc(r)

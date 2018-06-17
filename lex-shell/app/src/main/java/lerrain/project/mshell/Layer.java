@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -69,7 +70,7 @@ public abstract class Layer extends RelativeLayout
 				if (url != null && url.startsWith("fm://"))
 					return true;
 
-				return false;
+				return super.shouldOverrideUrlLoading(view, url);
 			}
 
 			@Override
@@ -93,6 +94,14 @@ public abstract class Layer extends RelativeLayout
 
 	public void setTitle(String text)
 	{
+	}
+
+	public void openPage(String link)
+	{
+		int p1 = link.lastIndexOf("/");
+		int p2 = link.lastIndexOf("?");
+		String js = link.substring(p1 < 0 ? 0 : p1 + 1, p2 < 0 ? link.length() : p2);
+		wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.template.replace("<!-- JS -->", js), "application/html", "utf-8", null);
 	}
 
 	public void runJs(String js)

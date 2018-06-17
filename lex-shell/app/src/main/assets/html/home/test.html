@@ -12,15 +12,40 @@
 
 		<script src="../js/jquery.min.js"></script>
 		<script src="../js/common.js"></script>
+		<script src="../js/browser.min.js"></script>
 		<script src="../js/react.production.min.js"></script>
 		<script src="../js/react-dom.production.min.js"></script>
 		<script src="../js/apply.js"></script>
 		<script src="../js/app.js"></script>
 
 		<script src="./home.js"></script>
-</head>
+		<script type="text/babel">
+class Main extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+    }
+  }
+  componentDidMount() {
+  }
+  onTouch(e) {
+  	console.log(e)
+  }
+  render() {
+    return (
+      <div style={{width:"100%", height:"100%"}} onMouseDown={this.onTouch} onMouseMove={this.onTouch}>
+      </div>
+    )
+  }
+}
+
+$(document).ready( function() {
+  ReactDOM.render(<Main/>, document.getElementById("root"))
+})
+		</script>
+	</head>
 
 	<body>
-		<div id="root"></div>
+		<div id="root" style="width:100%; height:100%;"></div>
 	</body>
 </html>

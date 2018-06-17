@@ -1,14 +1,17 @@
 package lerrain.project.mshell;
 
 import android.content.Context;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.util.Log;
 import android.widget.RelativeLayout;
-import android.widget.Scroller;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Layers extends RelativeLayout
 {
+	Map<String, String> env = new HashMap<>();
+
 	Layer layer;
 
 	public Layers(Context context)

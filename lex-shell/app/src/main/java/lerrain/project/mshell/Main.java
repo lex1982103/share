@@ -3,15 +3,29 @@ package lerrain.project.mshell;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
+
+import java.io.InputStream;
 
 
 public class Main extends Activity
 {
 	Layers layers;
 
+	String template;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		try (InputStream is = this.getAssets().open("html/template.html"))
+		{
+			template = Common.stringOf(is, "utf-8");
+		}
+		catch (Exception e)
+		{
+			Log.e("mshell", e.toString());
+		}
+
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		Ui.dp = metrics.density;
@@ -31,8 +45,7 @@ public class Main extends Activity
 	protected Layer createBaseLayer()
 	{
 		PageLayer layer = new PageLayer(this);
-		//layer.openUrl("http://www.lerrain.com:7701/nci/apply/plan.html");
-		layer.openLocal("home/home.html");
+		layer.openPage("home/login");
 
 		return layer;
 	}

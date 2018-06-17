@@ -1,7 +1,5 @@
 package lerrain.project.mshell;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
@@ -9,7 +7,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import lerrain.tool.Common;
+import java.util.Date;
+
+import lerrain.project.mshell.component.DatePicker;
+import lerrain.project.mshell.component.OnSelectListener;
+import lerrain.project.mshell.component.SelectPicker;
 
 /**
  * Created by lerrain on 2018/6/13.
@@ -22,6 +24,18 @@ public class JsBridge
     public JsBridge(Layer layer)
     {
         this.layer = layer;
+    }
+
+    @JavascriptInterface
+    public String env(String key)
+    {
+        return layer.getRoot().env.get(key);
+    }
+
+    @JavascriptInterface
+    public void setEnv(String key, String val)
+    {
+        layer.getRoot().env.put(key, val);
     }
 
     @JavascriptInterface
@@ -38,6 +52,19 @@ public class JsBridge
     }
 
     @JavascriptInterface
+    public void direct(final String url)
+    {
+        layer.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                layer.openPage(url);
+            }
+        });
+    }
+
+    @JavascriptInterface
     public void navi(final String url)
     {
         layer.post(new Runnable()
@@ -48,7 +75,7 @@ public class JsBridge
                 Layer newLayer = new PageLayer(layer.window);
                 layer.getRoot().addLayout(newLayer);
 
-                newLayer.openLocal(url);
+                newLayer.openPage(url);
             }
         });
     }
@@ -64,7 +91,7 @@ public class JsBridge
                 Layer newLayer = new PopLayer(layer.window, Common.intOf(percent, 75));
                 layer.getRoot().addLayout(newLayer);
 
-                newLayer.openLocal(url);
+                newLayer.openPage(url);
             }
         });
     }
@@ -124,6 +151,12 @@ public class JsBridge
                         keys[i] = ja.get(0);
                         items[i] = Common.trimStringOf(ja.get(1));
                     }
+                    else if (val instanceof JSONObject)
+                    {
+                        JSONObject ja = (JSONObject)val;
+                        keys[i] = ja.getString("code");
+                        items[i] = ja.getString("text");
+                    }
                     else
                     {
                         keys[i] = i;
@@ -134,36 +167,48 @@ public class JsBridge
 
             final Object[] kkk = keys;
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(layer.getContext(), 3);
-            builder.setTitle("列表");
-            builder.setIcon(R.mipmap.ic_launcher);
-            builder.setItems(items, new DialogInterface.OnClickListener()
+            SelectPicker sp = new SelectPicker(layer);
+            sp.show(items, new OnSelectListener()
             {
                 @Override
-                public void onClick(DialogInterface dialog, final int which)
+                public void select(Object item)
                 {
-                    layer.post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            Object select = kkk[which];
-                            if (!(select instanceof Number))
-                                select = "\"" + Common.trimStringOf(select) + "\"";
+                    Object select = kkk[(int)item];
+                    if (!(select instanceof Number))
+                        select = "\"" + Common.trimStringOf(select) + "\"";
 
-                            Log.i("mshell", "select " + select);
-                            layer.runJs("APP.callback(" + select + ")");
-                        }
-                    });
-
-                    dialog.dismiss();
+                    Log.i("mshell", "select " + select);
+                    layer.runJs("APP.callback(" + select + ")");
                 }
             });
-            builder.create().show();
         }
-    }
+        else if ("date".equals(type))
+        {
+            Date begin = null;
+            Date end = null;
+            Date now = new Date();
 
-    public void toast()
-    {
+            try
+            {
+                JSONObject obj = JSON.parseObject(json);
+                begin = obj.getDate("begin");
+                end = obj.getDate("end");
+                now = obj.getDate("now");
+            }
+            catch (Exception e)
+            {
+            }
+
+            DatePicker dpw = new DatePicker(layer, begin, end, now);
+            dpw.show(new OnSelectListener()
+            {
+                @Override
+                public void select(Object time)
+                {
+                    Log.i("mshell", "select " + time);
+                    layer.runJs("APP.callback(\"" + time + "\")");
+                }
+            });
+        }
     }
 }

@@ -6,10 +6,10 @@ class Main extends React.Component {
         MF.setTitle("首页")
     }
     openApply(orderId) {
-        MF.navi("apply/start?orderId=" + orderId)
+        MF.navi("apply/start.html?orderId=" + orderId)
     }
     newApply() {
-        MF.navi("apply/start")
+        MF.navi("apply/start.html")
     }
     render() {
         return (

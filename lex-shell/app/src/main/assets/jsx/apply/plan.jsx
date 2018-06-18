@@ -58,7 +58,7 @@ class Main extends React.Component {
         })
     }
     addProduct() {
-        APP.pop("apply/product_list", 60, r => {
+        APP.pop("apply/product_list.html", 60, r => {
             if (r != null) {
                 APP.apply.addProduct(this.state.plan.planId, null, r, r => {
                     this.setState({ plan: r })
@@ -67,7 +67,7 @@ class Main extends React.Component {
         })
     }
     editProduct(e) {
-        APP.pop("apply/product_editor?planId=" + this.state.plan.planId + "&index=" + e, 80, r => {
+        APP.pop("apply/product_editor.html?planId=" + this.state.plan.planId + "&index=" + e, 80, r => {
             APP.apply.viewPlan(this.state.plan.planId, plan => {
                 console.log(JSON.stringify(plan))
                 this.setState({ plan: plan })
@@ -80,10 +80,10 @@ class Main extends React.Component {
         })
     }
     next() {
-        MF.navi("apply/health?orderId=" + this.state.orderId)
+        MF.navi("apply/health.html?orderId=" + this.state.orderId)
     }
     showBenefit() {
-        MF.pop("apply/benefit?planId=" + this.state.plan.planId, 90)
+        MF.pop("apply/benefit.html?planId=" + this.state.plan.planId, 90)
     }
     render() {
         let plan = this.state.plan
@@ -128,7 +128,7 @@ class Main extends React.Component {
                                         <div style={{width:"600px", marginTop:"10px"}}>
                                             <text className="text20 eclipse">{v.name}</text>
                                         </div>
-                                        <img style={{width:"50px", height:"50px", padding:"10px 10px 10px 10px", opacity:"0.4"}} src="../images/stop.png" onClick={this.deleteProduct.bind(this, i)}/>
+                                        <img className="mt-1 mr-1 mb-1 ml-1" style={{width:"50px", height:"50px", opacity:"0.4"}} src="../images/stop.png" onClick={this.deleteProduct.bind(this, i)}/>
                                     </div>
                                     <div style={{height:"60px", display:"flex"}}>
                                         <div className="left">
@@ -164,33 +164,12 @@ class Main extends React.Component {
                     </div>
                 </div>
                 <div style={{height:"120px"}}></div>
-                <div className="bottom">
-                    <div className="btn-img" onClick={this.showBenefit.bind(this)}>
-                        <img src="../images/md-levels-alt.png"></img>
-                        <text>利益</text>
-                    </div>
-                    <div style={{width:"490px", padding:"6px 20px 6px 20px", lineHeight:"44px",margin:"0"}}>
-                        <div>
-                            <text className="text16" style={{color:"#fff"}}>首年保费：{plan.premium}元</text>
-                        </div>
-                        <div>
-                            <text className="text16" style={{color:"#fff"}}>点击查看年度保费明细</text>
-                        </div>
-                    </div>
-                    <div style={{width:"60px", height:"100px"}}>
-                        <img style={{width:"60px", height:"60px", marginTop:"20px"}} src="../images/arrow-4-up.png"></img>
-                    </div>
-                    <div className="btn-img" onClick={this.next.bind(this)}>
-                        <img src="../images/arrow-1-right.png"></img>
-                        <text>健康告知</text>
-                    </div>
-                </div>
                 <div className="bottom text18 tc-primary">
-                    <div className="ml-0 mr-0" style={{width:"300px"}} onClick={this.showBenefit.bind(this)}>
-                        利益责任
+                    <div className="ml-3 mr-0" style={{width:"300px"}} onClick={this.showBenefit.bind(this)}>
+                        查看利益责任
                     </div>
-                    <div className="divx" style={{width:"390px"}} onClick={this.next.bind(this)}>
-                        <div className="ml-0 mr-0" style={{textAlign:"right"}}>
+                    <div className="divx" onClick={this.next.bind(this)}>
+                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             健康告知
                         </div>
                         <div className="ml-1 mr-2" style={{width:"30px"}}>

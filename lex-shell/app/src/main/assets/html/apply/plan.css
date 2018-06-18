@@ -41,18 +41,6 @@
   margin-right: 30px;
 }
 
-.bottom {
-  width: 100%;
-  display: flex;
-  border-top: #ddd solid 1px;
-  height: 100px;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  background-color: coral;
-  line-height: 50px;
-}
-
 .btn-img {
   width: 100px;
   height: 100px;

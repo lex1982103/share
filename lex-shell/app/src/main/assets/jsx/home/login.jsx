@@ -9,7 +9,7 @@ class Main extends React.Component {
     login() {
         APP.login(this.refs.loginName.value, this.refs.password.value, r => {
             MF.setEnv("userKey", r.userKey)
-            MF.navi("home/home")
+            MF.navi("home/home.html")
         }, r => {
             this.setState({ login: "fail" })
         })

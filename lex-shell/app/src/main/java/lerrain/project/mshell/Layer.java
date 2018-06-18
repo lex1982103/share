@@ -96,26 +96,27 @@ public abstract class Layer extends RelativeLayout
 	{
 	}
 
-	public void openPage(String link)
-	{
-		int p2 = link.lastIndexOf("?");
-		String uri = p2 < 0 ? link : link.substring(0, p2);
-
-		if (window.pages.containsKey(uri))
-		{
-			Log.i("mshell", "open local: "+ link);
-
-			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.pages.get(uri), "application/html", "utf-8", null);
-		}
-		else
-		{
-			Log.i("mshell", "open link: "+ link);
-
-			int p1 = uri.lastIndexOf("/");
-			String js = p1 < 0 ? uri : uri.substring(p1 + 1);
-			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.template.replace("<!-- JS -->", js), "application/html", "utf-8", null);
-		}
-	}
+//	public void openPage(String link)
+//	{
+//		int p2 = link.lastIndexOf("?");
+//		String uri = p2 < 0 ? link : link.substring(0, p2);
+//
+//		if (window.pages.containsKey(uri))
+//		{
+//			Log.i("mshell", "open local: "+ link);
+//
+//			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.pages.get(uri), "application/html", "utf-8", null);
+//		}
+//		else
+//		{
+//			Log.i("mshell", "open link: "+ link);
+//
+//			int m = uri.lastIndexOf("/");
+//			int n = uri.lastIndexOf(".");
+//			String js = uri.substring(m < 0 ? 0 : m + 1, n < 0 ? uri.length() : n);
+//			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.template.replace("<!-- JS -->", js), "application/html", "utf-8", null);
+//		}
+//	}
 
 	public void runJs(String js)
 	{

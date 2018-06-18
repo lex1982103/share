@@ -18,15 +18,9 @@ public class Main extends Activity
 {
 	Layers layers;
 
-	String template;
-
-	Map<String, String> pages = new HashMap<>();
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		initHtml();
-
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		Ui.dp = metrics.density;
@@ -42,61 +36,61 @@ public class Main extends Activity
 		
 		this.setContentView(layers);
 	}
-
-	private void initHtml()
-	{
-		AssetManager am = this.getAssets();
-
-		try (InputStream is = am.open("html/template.html"))
-		{
-			template = Common.stringOf(is, "utf-8");
-		}
-		catch (Exception e)
-		{
-			Log.e("mshell", e.toString());
-		}
-
-		try
-		{
-			loadHtml(am, "html");
-			Log.i("mshell", pages.keySet().toString());
-		}
-		catch (Exception e)
-		{
-			Log.e("mshell", e.toString());
-		}
-	}
-
-	private void loadHtml(AssetManager am, String path) throws IOException
-	{
-		String[] files = am.list(path);
-		if (files.length > 0)
-		{
-			for (String str : files)
-				loadHtml(am, path + "/" + str);
-		}
-		else
-		{
-			if (path.endsWith(".html"))
-			{
-				try (InputStream is = am.open(path))
-				{
-					String html = Common.stringOf(is, "utf-8");
-					pages.put(path.substring(5, path.length() - 5), html);
-				}
-				catch (Exception e)
-				{
-					Log.e("mshell", e.toString());
-				}
-			}
-		}
-
-	}
+//
+//	private void initHtml()
+//	{
+//		AssetManager am = this.getAssets();
+//
+//		try (InputStream is = am.open("html/template.html"))
+//		{
+//			template = Common.stringOf(is, "utf-8");
+//		}
+//		catch (Exception e)
+//		{
+//			Log.e("mshell", e.toString());
+//		}
+//
+//		try
+//		{
+//			loadHtml(am, "html");
+//			Log.i("mshell", pages.keySet().toString());
+//		}
+//		catch (Exception e)
+//		{
+//			Log.e("mshell", e.toString());
+//		}
+//	}
+//
+//	private void loadHtml(AssetManager am, String path) throws IOException
+//	{
+//		String[] files = am.list(path);
+//		if (files.length > 0)
+//		{
+//			for (String str : files)
+//				loadHtml(am, path + "/" + str);
+//		}
+//		else
+//		{
+//			if (path.endsWith(".html"))
+//			{
+//				try (InputStream is = am.open(path))
+//				{
+//					String html = Common.stringOf(is, "utf-8");
+//					pages.put(path.substring(5, path.length() - 5), html);
+//				}
+//				catch (Exception e)
+//				{
+//					Log.e("mshell", e.toString());
+//				}
+//			}
+//		}
+//
+//	}
 	
 	protected Layer createBaseLayer()
 	{
 		PageLayer layer = new PageLayer(this);
-		layer.openPage("home/login");
+		layer.openLocal("home/login.html");
 
 		return layer;
 	}

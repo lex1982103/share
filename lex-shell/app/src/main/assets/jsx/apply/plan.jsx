@@ -14,7 +14,7 @@ class Main extends React.Component {
             ages.push(i)
         this.setState({ ages: ages })
 
-        MF.setTitle("建议书")
+        MF.setTitle("投保计划")
 
         APP.apply.view(this.state.orderId, r => {
             this.setState({ order: r }, () => {
@@ -32,7 +32,9 @@ class Main extends React.Component {
             } else {
                 APP.apply.createPlan(this.state.order.detail.applicant, this.state.order.detail.insurants[i], r => {
                     this.state.order.detail.insurants[i].planId = r.planId
-                    this.setState({ index: i, plan: r })
+                    APP.apply.save({ id: this.state.orderId, detail: { insurants: this.state.order.detail.insurants } }, v => {
+                        this.setState({ index: i, plan: r })
+                    })
                 })
             }
         }
@@ -47,7 +49,7 @@ class Main extends React.Component {
         this.refreshInsurant()
     }
     onBirthdayChange(e) {
-        this.state.order.detail.insurants[this.state.index].birthday = e.detail.value
+        this.state.order.detail.insurants[this.state.index].birthday = e
         this.refreshInsurant()
     }
     refreshInsurant() {
@@ -56,7 +58,7 @@ class Main extends React.Component {
         })
     }
     addProduct() {
-        APP.pop("apply/product_list.html", 75, r => {
+        APP.pop("apply/product_list", 60, r => {
             if (r != null) {
                 APP.apply.addProduct(this.state.plan.planId, null, r, r => {
                     this.setState({ plan: r })
@@ -65,7 +67,7 @@ class Main extends React.Component {
         })
     }
     editProduct(e) {
-        APP.pop("apply/product_editor.html?planId=" + this.state.plan.planId + "&index=" + e, 75, r => {
+        APP.pop("apply/product_editor?planId=" + this.state.plan.planId + "&index=" + e, 80, r => {
             APP.apply.viewPlan(this.state.plan.planId, plan => {
                 console.log(JSON.stringify(plan))
                 this.setState({ plan: plan })
@@ -78,15 +80,14 @@ class Main extends React.Component {
         })
     }
     next() {
-        MF.navi("apply/preview.html")
+        MF.navi("apply/health?orderId=" + this.state.orderId)
     }
     showBenefit() {
-        MF.pop("apply/product_editor.html?planId=" + this.state.plan.planId + "&index=" + 0, 75)
-        //MF.navi("proposal/benefit?planId=" + plan.planId)
+        MF.pop("apply/benefit?planId=" + this.state.plan.planId, 90)
     }
     render() {
         let plan = this.state.plan
-        let insurant = this.state.order ? this.state.order.detail.insurants[this.state.index] : null;
+        let insurant = plan ? plan.insurant : null;
         return plan == null || insurant == null ? null : (
             <div>
                 <div>
@@ -110,11 +111,11 @@ class Main extends React.Component {
                         <div className="card-content-line">
                             <div className="card-content-label text17">年龄</div>
                             <div className="card-content-widget">
-                                <div style={{display:"flex"}} onClick={v => {APP.pick("select", this.state.ages, this.onAgeChange)}}>
+                                <div style={{display:"flex"}} onClick={v => {APP.pick("select", this.state.ages, this.onAgeChange.bind(this))}}>
                                     <div className="text17">{insurant.age}周岁</div>
-                                    <img style={{width:"60px", height:"60px", margin:"10px 0 10px 10px"}} src="../images/arrow-7-right.png"></img>
+                                    <img style={{display:"none", width:"60px", height:"60px", margin:"10px 0 10px 10px"}} src="../images/arrow-7-right.png"></img>
                                 </div>
-                                <img style={{width:"60px", height:"60px", margin:"10px 30px 10px 10px"}} src="../images/calendar.png"/>
+                                <img style={{width:"60px", height:"60px", margin:"10px 30px 10px 10px"}} src="../images/calendar.png" onClick={v => {APP.pick("date", {}, this.onBirthdayChange.bind(this))}}/>
                             </div>
                         </div>
                     </div>
@@ -127,7 +128,7 @@ class Main extends React.Component {
                                         <div style={{width:"600px", marginTop:"10px"}}>
                                             <text className="text20 eclipse">{v.name}</text>
                                         </div>
-                                        <img style={{width:"50px", height:"50px", padding:"10px 10px 10px 10px", opacity:"0.4"}} src="../images/stop.png" onClick={this.deleteProduct.bind(this,i)}/>
+                                        <img style={{width:"50px", height:"50px", padding:"10px 10px 10px 10px", opacity:"0.4"}} src="../images/stop.png" onClick={this.deleteProduct.bind(this, i)}/>
                                     </div>
                                     <div style={{height:"60px", display:"flex"}}>
                                         <div className="left">
@@ -181,7 +182,20 @@ class Main extends React.Component {
                     </div>
                     <div className="btn-img" onClick={this.next.bind(this)}>
                         <img src="../images/arrow-1-right.png"></img>
-                        <text>继续</text>
+                        <text>健康告知</text>
+                    </div>
+                </div>
+                <div className="bottom text18 tc-primary">
+                    <div className="ml-0 mr-0" style={{width:"300px"}} onClick={this.showBenefit.bind(this)}>
+                        利益责任
+                    </div>
+                    <div className="divx" style={{width:"390px"}} onClick={this.next.bind(this)}>
+                        <div className="ml-0 mr-0" style={{textAlign:"right"}}>
+                            健康告知
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
+                        </div>
                     </div>
                 </div>
             </div>

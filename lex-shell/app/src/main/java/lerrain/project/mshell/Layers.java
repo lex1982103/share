@@ -38,8 +38,12 @@ public class Layers extends RelativeLayout
 	{
 		if (this.getChildCount() >= 2)
 		{
+			if (val != null)
+				val = "\"" + val.replaceAll("\"", "\\\\\"") + "\"";
+			Log.i("mshell", "callback: " + val);
+
 			Layer lastLayer = (Layer) this.getChildAt(this.getChildCount() - 2);
-			lastLayer.runJs("APP.callback(\"" + val + "\")");
+			lastLayer.runJs("APP.callback(" + val + ")");
 		}
 
 		layer = (Layer)this.getChildAt(this.getChildCount() - 1);

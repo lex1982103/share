@@ -26,7 +26,7 @@ class Main extends React.Component {
                     }
                     plan.product.map((r3, i) => {
                         if (r3.productId == v.code && r3.parent == this.state.index) {
-                            APP.apply.editProduct(this.state.plan.planId, i, r4 => {
+                            APP.apply.editProduct(this.state.planId, i, r4 => {
                                 prdForm.form = this.formOf(r4.factors)
                                 this.setState({ form: this.state.form })
                             })

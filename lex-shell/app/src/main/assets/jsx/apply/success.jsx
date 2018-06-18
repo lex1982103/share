@@ -6,17 +6,27 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("投保成功")
+        MF.setTitle("投保结果")
     }
     next() {
-        MF.navi("home/home.html")
+        MF.navi("home/home")
     }
     render() {
         return (
             <div>
+                <div className="ml-auto mr-auto" style={{textAlign:"center", marginTop:"20%"}}>
+                    <img style={{width:"300", height:"300px"}} src="../images/success.png"/>
+                </div>
+                <div className="text19 ml-auto mr-auto mt-3" style={{textAlign:"center"}}>
+                    投保成功<br/>保单号：123456789012345678
+                </div>
                 <div className="bottom text18 tc-primary">
-                    <div style={{paddingLeft:"30px", width:"600px"}}></div>
-                    <div style={{textAlign:"right", paddingRight:"30px", width:"150px"}} onClick={this.next.bind(this)}>返回</div>
+                    <div className="ml-0 mr-0" style={{width:"690px", textAlign:"right"}} onClick={this.next.bind(this)}>
+                        返回首页
+                    </div>
+                    <div className="ml-1 mr-2" style={{width:"30px"}}>
+                        <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
+                    </div>
                 </div>
             </div>
 		)

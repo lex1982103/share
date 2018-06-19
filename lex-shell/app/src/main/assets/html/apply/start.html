@@ -2,7 +2,11 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=750, initial-scale=0.552, maximum-scale=0.552, minimum-scale=0.552, user-scalable=no, minimal-ui">
+
+		<script>
+			var scale = window.screen.width / 750
+			document.write('<meta name="viewport" content="width=750, initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no, minimal-ui">')
+		</script>
 
         <link href="../css/common.css" rel="stylesheet"/>
 
@@ -13,9 +17,15 @@
 
 		<script>
 			var orderId = common.param("orderId")
-			if (orderId == null || orderId == "") APP.apply.fold(40066, r => {
-				document.location.href = "applicant.html?orderId=" + r
-			})
+			if (orderId != null && orderId != "") {
+				APP.apply.fold(orderId, r => {
+					MF.direct("apply/applicant.html?orderId=" + r)
+				})
+			} else {
+				APP.apply.create(r => {
+					MF.direct("apply/applicant.html?orderId=" + r.id)
+				})
+			}
 		</script>
 	</head>
 

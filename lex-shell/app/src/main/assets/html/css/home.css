@@ -199,6 +199,7 @@ a {
   display: block;
   position: absolute;
   top: .8em;
+  left: 3em;
 }
 .shortcut-row2 .sr2-right {
   display: flex;

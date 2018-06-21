@@ -58,10 +58,10 @@ class Main extends React.Component {
     }
 
     openApply(orderId) {
-        // MF.navi("apply/start.html?orderId=" + orderId)
+        window.MF &&  MF.navi("apply/start.html?orderId=" + orderId)
     }
     newApply() {
-        // MF.navi("apply/start.html")
+        window.MF &&  MF.navi("apply/start.html")
     }
     render() {
         return (
@@ -90,7 +90,7 @@ class Main extends React.Component {
                     </div>
                 </div>
                 <div className="shortcut-row1">
-                    <a className="srow-item">
+                    <a className="srow-item" href="javascript:void(0)" onClick={this.newApply.bind(this)}>
                         <div>
                             <img src="../images/home/oneKey.png"/>
                         </div>
@@ -102,7 +102,7 @@ class Main extends React.Component {
                         </div>
                         <span>建议书</span>
                     </a>
-                    <a className="srow-item">
+                    <a className="srow-item" href="javascript:void(0)" onClick={this.openApply.bind(this, 40066)}>
                         <div>
                             <img src="../images/home/insurePolicy.png"/>
                         </div>
@@ -163,8 +163,8 @@ class Main extends React.Component {
                     </div>
 
                 </div>
-                <div className="btn-fl text18 tc-white bg-primary" onClick={this.newApply.bind(this)}>新的投保</div>
-                <div className="btn-fl text18 tc-white bg-primary" onClick={this.openApply.bind(this, 40066)}>打开测试投保单</div>
+                {/*<div className="btn-fl text18 tc-white bg-primary" onClick={this.newApply.bind(this)}>新的投保</div>*/}
+                {/*<div className="btn-fl text18 tc-white bg-primary" onClick={this.openApply.bind(this, 40066)}>打开测试投保单</div>*/}
 
 
             </div>

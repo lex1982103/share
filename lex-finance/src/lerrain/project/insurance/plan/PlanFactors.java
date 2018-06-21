@@ -22,7 +22,7 @@ public class PlanFactors implements FactorsSupport, Serializable
 	Plan plan;
 	Company assurer;
 	
-	Map vars = null;
+	Map vars = new HashMap();
 
 	CustomerFactors applicantFactors, insurantFactors;
 	
@@ -113,14 +113,12 @@ public class PlanFactors implements FactorsSupport, Serializable
 			else
 				return r;
 		}
-		
+
+		//跨公司的计划这里是有问题的，直接用外部set，set后这里不再触发
 		if (assurer == null && !plan.isEmpty())
 		{
 			assurer = plan.primaryCommodity().getCompany();
-			
-			if (vars == null)
-				vars = new HashMap();
-			
+
 //			Iterator iter = assurer.getPlanVars().toList().iterator();
 //			while (iter.hasNext())
 //			{

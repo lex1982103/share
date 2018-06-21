@@ -73,7 +73,16 @@ public class Plan implements Serializable
 //		this.insureTime = new Date();
 		this.prefix = new Date().getTime() + "_" + new Random().nextInt(10000);
 		
-//		factors = new PlanFactors(this); 考虑投被保人更换的问题，这里的factors经常需要变化。
+		factors = new PlanFactors(this);
+	}
+
+	/**
+	 * 计划为空时
+	 */
+	public void setCompany(Company c)
+	{
+		factors.assurer = c;
+		factors.vars.putAll(c.getPlanVars().getAllVars());
 	}
 	
 	public InsuranceCustomer getInsurant()
@@ -241,7 +250,7 @@ public class Plan implements Serializable
 				if (bindMap.containsKey(productId))
 				{
 					Formula c = (Formula)bindMap.get(productId);
-					pass = Value.booleanOf(c, commodity.getFactors());
+					pass = Value.booleanOf(c, factors);
 				}
 				
 				if (pass)
@@ -452,7 +461,6 @@ public class Plan implements Serializable
 	public void removeAll()
 	{
 		commodityList.clear();
-		factors = null;
 	}
 	
 	/**
@@ -466,9 +474,6 @@ public class Plan implements Serializable
 	
 	public FactorsSupport getFactors()
 	{
-		if (factors == null)
-			factors = new PlanFactors(this);
-
 		return factors;
 	}
 
@@ -531,7 +536,7 @@ public class Plan implements Serializable
 	
 	public Object getFactor(String factorName)
 	{
-		return getFactors().get(factorName);
+		return factors.get(factorName);
 	}
 	
 	/**
@@ -608,7 +613,7 @@ public class Plan implements Serializable
 	
 	public void clearCache()
 	{
-		getFactors().clearCache();
+		factors.clearCache();
 		
 		for (int i = 0; i < commodityList.size(); i++)
 			getCommodity(i).clearCache();

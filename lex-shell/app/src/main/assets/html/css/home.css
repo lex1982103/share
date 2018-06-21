@@ -1,0 +1,305 @@
+#ppp {
+  width: 30.83333333rem;
+  border-left-width: 30.83333333rem;
+  height: calc(101em);
+}
+/* common */
+html {
+  font-size: 3.2vw;
+}
+body {
+  background: #f7f8fa;
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Tahoma, Arial, heitilight, "PingFang SC", "Hiragino Sans GB", "Heiti SC", STXihei, "Microsoft YaHei", SimHei, "WenQuanYi Micro Hei";
+  font-size: 3.2vw;
+  text-size-adjust: 100% !important;
+}
+body *:not(input):not(textarea) {
+  user-select: none;
+}
+ul,
+dl,
+ol,
+figure,
+h1,
+p,
+h2,
+h3,
+h4,
+h5,
+h6,
+input {
+  padding: 0;
+  margin: 0;
+  font-size: 1em;
+  font-weight: 400;
+}
+li,
+dd {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+img,
+input,
+textarea,
+button {
+  vertical-align: middle;
+  appearance: none;
+  border-radius: 0;
+}
+hr {
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-top: #eee solid 1px;
+}
+a {
+  text-decoration: none;
+  color: #202020;
+}
+/** 首页布局 */
+.banner-wrap {
+  position: relative;
+}
+.banner-wrap .banner-header {
+  position: absolute;
+  z-index: 10;
+  top: 1.5em;
+  left: 1.5em;
+  right: 1.5em;
+  display: flex;
+  align-items: center;
+}
+.banner-wrap .banner-header .banner-logo {
+  color: #fff;
+}
+.banner-wrap .banner-header .banner-logo img {
+  width: 3em;
+}
+.banner-wrap .banner-header .banner-search {
+  flex: 1;
+  position: relative;
+  display: flex;
+  background: #d8e1f1;
+  color: #7d849a;
+  height: 2.5em;
+  font-size: .9em;
+  border-radius: 1.25em;
+  margin: 0 1em;
+  justify-content: center;
+  align-items: center;
+}
+.banner-wrap .banner-header .banner-search img {
+  width: 1.4em;
+  height: 1.4em;
+}
+.banner-wrap .banner-header .banner-search > div :first-child {
+  margin-right: .2em;
+}
+.banner-wrap .banner-header .banner-search input {
+  position: absolute;
+  display: block;
+  text-align: center;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+.banner-wrap .banner-header .banner-msg {
+  position: relative;
+}
+.banner-wrap .banner-header .banner-msg img {
+  width: 2em;
+}
+.banner-wrap .banner-header .banner-msg em {
+  display: block;
+  position: absolute;
+  width: .6em;
+  height: .6em;
+  border-radius: .3em;
+  background: red;
+  top: .1em;
+  right: -0.1em;
+}
+.swiper-container {
+  width: 100%;
+  height: 16.5em;
+}
+.swiper-container .swiper-pagination {
+  position: absolute;
+  left: 0;
+  text-align: center;
+  bottom: 5px;
+  width: 100%;
+  z-index: 999;
+}
+.swiper-container .swiper-pagination-bullet {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  opacity: 1;
+  border-radius: 10px;
+  background: white;
+  margin: 0 3px;
+  cursor: pointer;
+  transition: width 0.3s ease-in-out;
+}
+.swiper-container .swiper-pagination-bullet-active {
+  background: #fdd000;
+  width: 12px;
+}
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+}
+.shortcut-row1 {
+  padding: 1em .6em;
+  background: #fff;
+}
+.shortcut-row1 a.srow-item {
+  width: 20%;
+  display: inline-block;
+  color: #9b9b9b;
+  font-size: .9em;
+}
+.shortcut-row1 a.srow-item > div {
+  text-align: center;
+}
+.shortcut-row1 a.srow-item > div img {
+  width: 3.5em;
+  height: 3.5em;
+}
+.shortcut-row1 a.srow-item span {
+  display: block;
+  text-align: center;
+  margin-top: .4em;
+}
+.shortcut-row2 {
+  display: flex;
+  margin-top: 1em;
+}
+.shortcut-row2 .sr2-left {
+  display: flex;
+  flex: 1;
+  height: 13em;
+  position: relative;
+  background: #fff;
+  margin-left: .6em;
+  padding-top: 1em;
+  justify-content: center;
+  align-items: center;
+}
+.shortcut-row2 .sr2-left img {
+  width: 6em;
+  height: 8em;
+  margin-top: 1em;
+}
+.shortcut-row2 .sr2-left span {
+  display: block;
+  position: absolute;
+  top: .8em;
+  left: 3em;
+}
+.shortcut-row2 .sr2-right {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  margin-left: .6em;
+  margin-right: .6em;
+  height: 13em;
+}
+.shortcut-row2 .sr2-right .sr2-top {
+  display: flex;
+  align-content: flex-end;
+  flex: 1;
+  position: relative;
+  background: #fff;
+}
+.shortcut-row2 .sr2-right .sr2-top img {
+  width: 5em;
+  height: 4em;
+  position: absolute;
+  right: 2.5em;
+  top: 1em;
+}
+.shortcut-row2 .sr2-right .sr2-top span {
+  display: block;
+  position: absolute;
+  left: 2em;
+  top: .8em;
+}
+.shortcut-row2 .sr2-right .sr2-bottom {
+  display: flex;
+  flex: 1;
+  margin-top: .6em;
+}
+.shortcut-row2 .sr2-right .sr2-bottom img {
+  width: 3em;
+  height: 3em;
+  margin-top: .6em;
+  align-self: center;
+}
+.shortcut-row2 .sr2-right .sr2-bottom > a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  padding-top: .6em;
+}
+.shortcut-row2 .sr2-right .sr2-bottom :first-child {
+  margin-right: .6em;
+}
+.promote {
+  background: #fff;
+  margin-top: .6em;
+}
+.promote .p-title {
+  display: flex;
+  height: 3em;
+  line-height: 3em;
+  margin: 0 1em;
+}
+.promote .p-title span {
+  flex: 1;
+  font-size: 1.3em;
+}
+.promote .p-title a {
+  color: #9b9b9b;
+}
+.promote .p-content {
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-bottom: .6em;
+}
+.promote .p-content a {
+  display: inline-block;
+  box-sizing: border-box;
+  flex-direction: column;
+  width: 40%;
+  margin-left: 1em;
+}
+.promote .p-content a img {
+  width: 100%;
+  display: block;
+  height: 8em;
+}
+.promote .p-content a span {
+  display: block;
+  margin-top: .6em;
+}
+.promote .p-content a i {
+  display: block;
+  margin-top: .3em;
+  font-style: normal;
+  color: #9b9b9b;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.promote .p-content :last-child {
+  margin-right: 1em;
+}

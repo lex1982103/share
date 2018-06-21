@@ -63,6 +63,9 @@ class Main extends React.Component {
     newApply() {
         window.MF &&  MF.navi("apply/start.html")
     }
+    openProposal() {
+        window.MF && MF.navi("proposal/plan.html")
+    }
     render() {
         return (
             <div className="home-container">
@@ -96,7 +99,7 @@ class Main extends React.Component {
                         </div>
                         <span>一键投保</span>
                     </a>
-                    <a className="srow-item" href="#">
+                    <a className="srow-item" href="javascript:void(0)" onClick={this.openProposal.bind(this)}>
                         <div>
                             <img src="../images/home/proposal.png"/>
                         </div>

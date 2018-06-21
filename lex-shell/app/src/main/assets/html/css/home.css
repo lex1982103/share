@@ -60,6 +60,9 @@ a {
   color: #202020;
 }
 /** 首页布局 */
+.home-container {
+  padding-bottom: 5em;
+}
 .banner-wrap {
   position: relative;
 }

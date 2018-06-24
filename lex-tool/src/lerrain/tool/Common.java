@@ -270,6 +270,14 @@ public class Common
 		return defoult;
 	}
 
+	public static boolean isBlank(String val)
+	{
+		if (val == null)
+			return true;
+
+		return "".equals(val.trim());
+	}
+
 	public static boolean isEmpty(Object val)
 	{
 		if (val == null)
@@ -290,7 +298,7 @@ public class Common
 		return false;
 	}
 
-	static List<String> listOf(Object val)
+	public static List<String> listOf(Object val)
 	{
 		if (val instanceof List)
 		{

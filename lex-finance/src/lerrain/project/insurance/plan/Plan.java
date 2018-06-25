@@ -84,6 +84,17 @@ public class Plan implements Serializable
 		factors.assurer = c;
 		factors.vars.putAll(c.getPlanVars().getAllVars());
 	}
+
+	public Company getCompany()
+	{
+		if (factors.assurer != null)
+			return factors.assurer;
+
+		if (!this.isEmpty())
+			return this.primaryCommodity().getCompany();
+
+		return null;
+	}
 	
 	public InsuranceCustomer getInsurant()
 	{
@@ -192,7 +203,7 @@ public class Plan implements Serializable
 	 * 新增一个主险
 	 * 主险可以绑定投保自己的附加险
 	 * 
-	 * @param define 产品定义
+	 * @param product 产品定义
 	 * @return 产品
 	 */
 	public Commodity newCommodity(Insurance product)
@@ -268,7 +279,6 @@ public class Plan implements Serializable
 	
 	/**
 	 * 新增一个附加险
-	 * @param define 产品定义
 	 * @return 产品
 	 */
 	public Commodity newCommodity(Commodity parent, Insurance product)
@@ -494,8 +504,8 @@ public class Plan implements Serializable
 	
 	public boolean hasFormat(String attachmentName)
 	{
-		Company ic = this.primaryCommodity().getCompany();
-		return ic.getAttachment(attachmentName) != null;
+		Company ic = this.getCompany();
+		return ic == null ? false : ic.getAttachment(attachmentName) != null;
 	}
 	
 	public Object format(String attachmentName)
@@ -505,12 +515,9 @@ public class Plan implements Serializable
 	
 	public Object format(String attachmentName, Object value)
 	{
-		if (this.primaryCommodity() == null)
-			return null;
+		Company ic = this.getCompany();
 		
-		Company ic = this.primaryCommodity().getCompany();
-		
-		if (ic.getAttachment(attachmentName) == null)
+		if (ic == null || ic.getAttachment(attachmentName) == null)
 			return null;
 		
 		FilterPlan filter = ic.getPlanFilter(ic.getAttachmentFilterName(attachmentName));
@@ -527,7 +534,9 @@ public class Plan implements Serializable
 	 */
 	public Object filtrate(String filterName)
 	{
-		FilterPlan filter = this.primaryCommodity().getCompany().getPlanFilter(filterName);
+		Company company = this.getCompany();
+
+		FilterPlan filter = company == null ? null : company.getPlanFilter(filterName);
 		if (filter != null)
 			return filter.filtrate(this, filterName); //以前要求attachmentName和filterName同名，所以可以这么写，现在用format了
 		
@@ -542,7 +551,7 @@ public class Plan implements Serializable
 	/**
 	 * 注意：不是都可以保存，只能保存基本对象，字符串和数字等。其他对象重新读取后会消失。
 	 * @param name
-	 * @param value
+	 * @param v
 	 */
 	public void setValue(String name, Object v)
 	{

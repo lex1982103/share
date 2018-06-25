@@ -42,14 +42,14 @@ public class XmlNode
 			text = e.getTextContent();
 	}
 	
-	public List getChildren()
+	public List<XmlNode> getChildren()
 	{
 		return children;
 	}
 	
-	public List getChildren(String name)
+	public List<XmlNode> getChildren(String name)
 	{
-		List r = new ArrayList();
+		List<XmlNode> r = new ArrayList<>();
 		
 		for (Iterator iter = children.iterator(); iter.hasNext(); )
 		{

@@ -1,0 +1,190 @@
+#ppp {
+  width: 30.83333333rem;
+  border-left-width: 30.83333333rem;
+  height: calc(101em);
+}
+/* common */
+html {
+  font-size: 3.2vw;
+}
+body {
+  background: #f7f8fa;
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Tahoma, Arial, heitilight, "PingFang SC", "Hiragino Sans GB", "Heiti SC", STXihei, "Microsoft YaHei", SimHei, "WenQuanYi Micro Hei";
+  font-size: 3.2vw;
+  text-size-adjust: 100% !important;
+}
+body *:not(input):not(textarea) {
+  user-select: none;
+}
+ul,
+dl,
+ol,
+figure,
+h1,
+p,
+h2,
+h3,
+h4,
+h5,
+h6,
+input {
+  padding: 0;
+  margin: 0;
+  font-size: 1em;
+  font-weight: 400;
+}
+li,
+dd {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+img,
+input,
+textarea,
+button {
+  vertical-align: middle;
+  appearance: none;
+  border-radius: 0;
+}
+hr {
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-top: #eee solid 1px;
+}
+a {
+  text-decoration: none;
+  color: #202020;
+}
+/** 客户管理 */
+.client-container {
+  font-size: 1.2em;
+}
+.client-container .remind-wrap {
+  display: flex;
+  margin-top: 1em;
+  background: #fff;
+  padding: 1em 0;
+}
+.client-container .remind-wrap a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.client-container .remind-wrap a img {
+  width: 4em;
+  height: 4em;
+}
+.client-container .remind-wrap a span {
+  display: block;
+  text-align: center;
+  margin-top: .5em;
+}
+.client-container .remind-wrap a em {
+  position: absolute;
+  top: -0.5em;
+  right: 3.8em;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+  border-radius: 1.25em;
+  background: #e60012;
+  color: #fff;
+  text-align: center;
+  font-style: normal;
+}
+.client-container .remind-wrap > span {
+  display: block;
+  width: 1px;
+  background: #efefef;
+}
+.client-container .c-list {
+  padding-bottom: 3em;
+}
+.client-container .c-list .cl-title {
+  display: flex;
+  background: #fff;
+  margin-top: 1em;
+  padding: 1em 1em;
+}
+.client-container .c-list .cl-title h3 {
+  flex: 1;
+}
+.client-container .c-list .cl-title h3 i {
+  color: #9b9b9b;
+  font-style: normal;
+}
+.client-container .c-list .cl-title .cl-edit {
+  color: #3398db;
+  margin-right: 1em;
+}
+.client-container .cl-section dt {
+  padding: .6em 1.2em;
+}
+.client-container .cl-section dd.cl-line {
+  height: 1px;
+  background: #efefef;
+  margin: 0 1em;
+}
+.client-container .cl-section dd {
+  display: flex;
+  padding: 0 .6em;
+  background: #fff;
+}
+.client-container .cl-section dd > a {
+  flex: 1;
+  padding: .6em 0;
+}
+.client-container .cl-section dd > a i {
+  font-style: normal;
+}
+.client-container .cl-section dd > a em {
+  font-style: normal;
+  margin-left: .6em;
+}
+.client-container .cl-section dd span {
+  padding: .6em;
+}
+.client-container .cl-section dd span a {
+  margin-left: .6em;
+  color: #4a4a4a;
+  border: solid 1px #9b9b9b;
+  font-size: .9em;
+  padding: .4em;
+  border-radius: .2em;
+}
+.client-container .c-alphabet {
+  position: fixed;
+  right: .3em;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.client-container .c-alphabet a {
+  font-size: .7em;
+  display: block;
+  padding: .2em;
+  color: #4a4a4a;
+}
+.client-container .c-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: .8em 1em;
+  background: #fff;
+  display: flex;
+  justify-content: flex-end;
+  border-top: solid 1px #efefef;
+}
+.client-container .c-footer a {
+  color: #3398db;
+}

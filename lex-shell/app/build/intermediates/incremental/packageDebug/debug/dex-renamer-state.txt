@@ -1,4 +1,4 @@
-#Thu Jun 28 18:52:42 CST 2018
+#Thu Jun 28 18:54:22 CST 2018
 base.0=/Users/xindong/Documents/apache-tomcat-8.5.24/webapps/NewPoc/tools/lex-shell/app/build/intermediates/transforms/dexMerger/debug/0
 path.0=classes.dex
 renamed.0=classes.dex

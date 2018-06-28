@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/xindong/Documents/apache-tomcat-8.5.24/webapps/NewPoc/tools/lex-shell/app/libs"><file name="fastjson-1.1.34.jar" path="/Users/xindong/Documents/apache-tomcat-8.5.24/webapps/NewPoc/tools/lex-shell/app/libs/fastjson-1.1.34.jar"/></source></dataSet><dataSet config="debug"><source path="/Users/xindong/Documents/apache-tomcat-8.5.24/webapps/NewPoc/tools/lex-shell/app/src/debug/jniLibs"/></dataSet></merger>

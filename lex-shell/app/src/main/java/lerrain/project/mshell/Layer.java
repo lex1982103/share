@@ -76,6 +76,7 @@ public abstract class Layer extends RelativeLayout
 			@Override
 			public void onPageFinished(WebView view, String url)
 			{
+                onShow();
 			}
 		};
 
@@ -117,6 +118,11 @@ public abstract class Layer extends RelativeLayout
 //			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.template.replace("<!-- JS -->", js), "application/html", "utf-8", null);
 //		}
 //	}
+
+	public void onShow()
+	{
+		runJs("if (APP.onShow) { APP.onShow() }");
+	}
 
 	public void runJs(String js)
 	{

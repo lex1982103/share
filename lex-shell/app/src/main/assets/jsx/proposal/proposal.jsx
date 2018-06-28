@@ -88,7 +88,7 @@ class Main extends React.Component {
         return plan == null || insurant == null ? null : (
             <div>
                 <div>
-                    <div style={{display:"flex", position:"fixed", zIndex:"50", top:"0", backgroundColor:"#e6e6e6"}}>
+                    <div className="divx" style={{position:"fixed", zIndex:"50", top:"0", backgroundColor:"#dddddd", width:"100%"}}>
                         { this.state.proposal.detail.map((v, i) =>
                             <div className={"tab " + (i == this.state.index ? 'tab-focus' : 'tab-blur')} key={i} style={{width:"250px"}} onClick={this.onInsurantSwitch.bind(this, i)}>
                                 <text className="text18">{ "计划" + (i+1) }</text>
@@ -106,13 +106,10 @@ class Main extends React.Component {
                     </div>
                     <div className="card-content">
                         <div className="card-content-line bg-white">
-                            <div className="card-content-label text17">年龄</div>
-                            <div className="card-content-widget">
-                                <div style={{display:"flex"}} onClick={v => {APP.pick("select", this.state.ages, this.onAgeChange.bind(this))}}>
-                                    <div className="text17">{insurant.age}周岁</div>
-                                    <img style={{display:"none", width:"60px", height:"60px", margin:"10px 0 10px 10px"}} src="../images/arrow-7-right.png"></img>
-                                </div>
-                                <img style={{width:"60px", height:"60px", margin:"10px 30px 10px 10px"}} src="../images/calendar.png" onClick={v => {APP.pick("date", {}, this.onBirthdayChange.bind(this))}}/>
+                            <div className="card-content-label text17">{insurant.birthday?"出生日期":"年龄"}</div>
+                            <div className="card-content-widget" onClick={e => { APP.pick("select", this.state.ages, this.onAgeChange.bind(this)) }}>
+                                <img className="mt-1 ml-2" style={{width:"60px", height:"60px"}} src="../images/calendar.png" onClick={e => { e.stopPropagation(); APP.pick("date", { begin: "1900-01-01", end: new Date() }, this.onBirthdayChange.bind(this)) }}/>
+                                <div className="text17">{ insurant.birthday }{ insurant.birthday && insurant.age ? " / " : "" }{ insurant.age ? insurant.age + "周岁" : "" }</div>
                             </div>
                         </div>
                     </div>
@@ -125,7 +122,7 @@ class Main extends React.Component {
                                         <div style={{width:"600px", marginTop:"10px"}}>
                                             <text className="text20 eclipse">{v.name}</text>
                                         </div>
-                                        <img className="mt-1 mr-1 mb-1 ml-1" style={{width:"50px", height:"50px", opacity:"0.4"}} src="../images/stop.png" onClick={this.deleteProduct.bind(this, i)}/>
+                                        <img className="mt-1 mr-1 mb-1 ml-1" style={{width:"50px", height:"50px", opacity:"0.4"}} src="../images/stop.png" onClick={ e => { e.stopPropagation(); this.deleteProduct(i); } }/>
                                     </div>
                                     <div style={{height:"60px", display:"flex"}}>
                                         <div className="left">
@@ -167,7 +164,7 @@ class Main extends React.Component {
                     </div>
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
-                            信息补充
+                            预览建议书
                         </div>
                         <div className="ml-1 mr-2" style={{width:"30px"}}>
                             <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>

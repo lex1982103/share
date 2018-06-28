@@ -44,6 +44,7 @@ public class Layers extends RelativeLayout
 
 			Layer lastLayer = (Layer) this.getChildAt(this.getChildCount() - 2);
 			lastLayer.runJs("APP.callback(" + val + ")");
+			lastLayer.onShow();
 		}
 
 		layer = (Layer)this.getChildAt(this.getChildCount() - 1);

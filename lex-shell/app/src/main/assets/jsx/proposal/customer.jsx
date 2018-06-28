@@ -21,6 +21,10 @@ class Main extends React.Component {
                 this.setState({proposal:r, plan:plan, cust:this.state.cust})
             })
         })
+        APP.onShow = () => {
+            console.log("refresh...")
+            this.forceUpdate
+        }
     }
     select(index) {
         this.state.cust[index] = {

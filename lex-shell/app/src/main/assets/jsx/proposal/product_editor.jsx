@@ -69,6 +69,7 @@ class Main extends React.Component {
             })
             return {
                 widget: w.widget,
+                varName: w.name,
                 label: w.label,
                 detail: r,
                 value: w.value
@@ -76,8 +77,10 @@ class Main extends React.Component {
         })
     }
     onValChange(opt, prdIndex, formIndex, val) {
+        console.log(JSON.stringify(opt))
+        console.log(JSON.stringify(val))
         let vals = {};
-        vals[opt.name] = opt.detail[val]
+        vals[opt.varName] = val
         APP.proposal.saveProduct(this.state.planId, prdIndex, vals, r => {
             this.state.form[prdIndex].form[formIndex].value = val
             this.setState({ form: this.state.form })
@@ -117,6 +120,6 @@ class Main extends React.Component {
     }
 }
 
-$(document).ready( function() {
+$(document).ready(() => {
     ReactDOM.render(<Main/>, document.getElementById("root"))
 })

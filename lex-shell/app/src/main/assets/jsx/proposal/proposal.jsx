@@ -2,7 +2,7 @@ class Main extends React.Component {
     constructor() {
         super()
         this.state = {
-            orderId: common.param("orderId"),
+            proposalId: common.param("proposalId"),
             ages: [],
             index: 0,
             now: common.dateStr(new Date())
@@ -14,76 +14,73 @@ class Main extends React.Component {
             ages.push(i)
         this.setState({ ages: ages })
 
-        MF.setTitle("投保计划")
+        MF.setTitle("建议书")
 
-        APP.apply.view(this.state.orderId, r => {
-            this.setState({ order: r }, () => {
+        APP.proposal.view(this.state.proposalId, r => {
+            this.setState({ proposal: r }, () => {
                 this.onInsurantSwitch(0)
             })
         })
     }
     onInsurantSwitch(i) {
-        if (this.state.order.detail.insurants.length > i) {
-            let planId = this.state.order.detail.insurants[i].planId;
+        if (this.state.proposal.detail.length > i) {
+            let planId = this.state.proposal.detail[i];
             if (planId != null && planId != "") {
-                APP.apply.viewPlan(planId, r => {
+                APP.proposal.viewPlan(planId, r => {
                     this.setState({ index: i, plan: r })
-                })
-            } else {
-                APP.apply.createPlan(this.state.order.detail.applicant, this.state.order.detail.insurants[i], r => {
-                    this.state.order.detail.insurants[i].planId = r.planId
-                    APP.apply.save({ id: this.state.orderId, detail: { insurants: this.state.order.detail.insurants } }, v => {
-                        this.setState({ index: i, plan: r })
-                    })
                 })
             }
         }
     }
     onGenderChange(e) {
-        this.state.order.detail.insurants[this.state.index].gender = e
+        this.state.plan.insurant.gender = e
         this.refreshInsurant()
     }
     onAgeChange(e) {
-        this.state.order.detail.insurants[this.state.index].age = e
-        this.state.order.detail.insurants[this.state.index].birthday = null
+        this.state.plan.insurant.age = e
+        this.state.plan.insurant.birthday = null
         this.refreshInsurant()
     }
     onBirthdayChange(e) {
-        this.state.order.detail.insurants[this.state.index].birthday = e
+        this.state.plan.insurant.birthday = e
         this.refreshInsurant()
     }
     refreshInsurant() {
-        APP.apply.refreshInsurant(this.state.plan.planId, this.state.order.detail.insurants[this.state.index], (r) => {
+        APP.proposal.refreshInsurant(this.state.plan.planId, this.state.plan.insurant, r => {
             this.setState({ plan: r })
         })
     }
     addProduct() {
-        APP.pop("apply/product_list.html", 60, r => {
+        APP.pop("proposal/product_list.html", 60, r => {
             if (r != null) {
-                APP.apply.addProduct(this.state.plan.planId, null, r, r => {
+                APP.proposal.addProduct(this.state.plan.planId, null, r, r => {
                     this.setState({ plan: r })
                 })
             }
         })
     }
     editProduct(e) {
-        APP.pop("apply/product_editor.html?planId=" + this.state.plan.planId + "&index=" + e, 80, r => {
-            APP.apply.viewPlan(this.state.plan.planId, plan => {
-                console.log(JSON.stringify(plan))
+        APP.pop("proposal/product_editor.html?planId=" + this.state.plan.planId + "&index=" + e, 80, r => {
+            APP.proposal.viewPlan(this.state.plan.planId, plan => {
                 this.setState({ plan: plan })
             })
         })
     }
     deleteProduct(i) {
-        APP.apply.deleteProduct(this.state.plan.planId, i, null, r => {
+        APP.proposal.deleteProduct(this.state.plan.planId, i, null, r => {
             this.setState({ plan: r })
         })
     }
-    next() {
-        MF.navi("apply/health.html?orderId=" + this.state.orderId)
-    }
     showBenefit() {
-        MF.pop("apply/benefit.html?planId=" + this.state.plan.planId, 90)
+        APP.pop("proposal/benefit.html?planId=" + this.state.plan.planId, 90)
+    }
+    popCustomer() {
+        APP.pop("client/client_selector.html?pop=1", 90)
+    }
+    next() {
+        APP.proposal.save(this.state.proposalId, r => {
+            MF.navi("proposal/preview.html?proposalId=" + this.state.proposalId)
+        })
     }
     render() {
         let plan = this.state.plan
@@ -92,14 +89,14 @@ class Main extends React.Component {
             <div>
                 <div>
                     <div style={{display:"flex", position:"fixed", zIndex:"50", top:"0", backgroundColor:"#e6e6e6"}}>
-                        { this.state.order.detail.insurants.map((v, i) =>
+                        { this.state.proposal.detail.map((v, i) =>
                             <div className={"tab " + (i == this.state.index ? 'tab-focus' : 'tab-blur')} key={i} style={{width:"250px"}} onClick={this.onInsurantSwitch.bind(this, i)}>
-                                <text className="text18">{ v.name == null || v.name == "" ? "被保险人" + (i+1) : v.name }</text>
+                                <text className="text18">{ "计划" + (i+1) }</text>
                             </div>
                         )}
                     </div>
                     <div className="card-content" style={{marginTop:"80px"}}>
-                        <div className="card-content-line">
+                        <div className="card-content-line bg-white">
                             <div className="card-content-label text17">性别</div>
                             <div className="card-content-widget text17">
                                 <div className={"btn-sm text17 " + (insurant.gender == "F" ? "btn-sel" : "")} onClick={this.onGenderChange.bind(this, "F")}>女</div>
@@ -108,7 +105,7 @@ class Main extends React.Component {
                         </div>
                     </div>
                     <div className="card-content">
-                        <div className="card-content-line">
+                        <div className="card-content-line bg-white">
                             <div className="card-content-label text17">年龄</div>
                             <div className="card-content-widget">
                                 <div style={{display:"flex"}} onClick={v => {APP.pick("select", this.state.ages, this.onAgeChange.bind(this))}}>
@@ -122,7 +119,7 @@ class Main extends React.Component {
                     <div className="card-content" style={{marginTop:"10px"}}>
                         { plan.product.map((v,i) =>
                             v.parent == null ?
-                                <div className="product product-main text16" style={{marginTop:"10px"}} onClick={this.editProduct.bind(this, i)}>
+                                <div className="product product-main bg-white text16" style={{marginTop:"10px"}} onClick={this.editProduct.bind(this, i)}>
                                     <div style={{height:"70px", display:"flex"}}>
                                         <img style={{width:"60px", height:"60px", margin:"10px 10px 0 10px"}} src={plan.icons[v.vendor]}></img>
                                         <div style={{width:"600px", marginTop:"10px"}}>
@@ -142,7 +139,7 @@ class Main extends React.Component {
                                     </div>
                                     <div style={{height:"10px"}}></div>
                                 </div> :
-                                <div className="product product-rider text16">
+                                <div className="product product-rider bg-white text16">
                                     <div className="left">
                                         <text style={{color:"#0a0"}}>附</text>
                                     </div>
@@ -156,7 +153,7 @@ class Main extends React.Component {
                                 </div>
                         )}
                         { plan.product && plan.product.length > 0 ?
-                            <div className="card-content-line" style={{padding:"0 20px 0 20px", display:"block", marginTop:"10px", textAlign:"right", color:"#09bb07"}}>
+                            <div className="card-content-line bg-white" style={{padding:"0 20px 0 20px", display:"block", marginTop:"10px", textAlign:"right", color:"#09bb07"}}>
                                 <text className="text16">合计：{plan.premium}元</text>
                             </div> : null
                         }
@@ -170,7 +167,7 @@ class Main extends React.Component {
                     </div>
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
-                            健康告知
+                            信息补充
                         </div>
                         <div className="ml-1 mr-2" style={{width:"30px"}}>
                             <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>

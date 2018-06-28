@@ -24,8 +24,19 @@ var Proposal = {
       onSucc(r)
     })
   },
+  save(proposalId, onSucc) {
+    Proposal.host.req('/proposal/save.json', { proposalId: proposalId }, r => {
+      onSucc(r)
+    })
+  },
   view(proposalId, onSucc) {
     Proposal.host.req('/proposal/view.json', { proposalId: proposalId }, r => {
+      onSucc(r)
+    })
+  },
+  supply(proposalId, info, onSucc) {
+    info.proposalId = proposalId
+    Proposal.host.req('/proposal/supply.json', info, r => {
       onSucc(r)
     })
   },
@@ -36,6 +47,11 @@ var Proposal = {
   },
   refreshInsurant(planId, ins, onSucc) {
     Proposal.host.req('/proposal/plan/customer.json', { planId: planId, insurant: ins }, r => {
+      onSucc(r)
+    })
+  },
+  refreshCust(proposalId, applicant, insurants, onSucc) {
+    Proposal.host.req('/proposal/customer.json', { proposalId: proposalId, applicant: applicant, insurants: insurants }, r => {
       onSucc(r)
     })
   },

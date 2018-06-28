@@ -118,7 +118,7 @@ public class PageLayer extends Layer
 	}
 
 	@Override
-	public boolean onInterceptTouchEvent(MotionEvent event)
+	public boolean onTouchEvent(MotionEvent event)
 	{
 		if (event.getAction() == MotionEvent.ACTION_MOVE)
 		{

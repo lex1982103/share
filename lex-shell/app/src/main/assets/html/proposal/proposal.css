@@ -23,7 +23,6 @@
 }
 
 .card-content-line {
-  background-color: #fff;
   height: 80px;
   margin-bottom: 1px;
   display: flex;
@@ -39,18 +38,6 @@
   display: flex;
   flex-direction: row-reverse;
   margin-right: 30px;
-}
-
-.bottom {
-  width: 100%;
-  display: flex;
-  border-top: #ddd solid 1px;
-  height: 100px;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  background-color: coral;
-  line-height: 50px;
 }
 
 .btn-img {
@@ -85,7 +72,6 @@
 }
 
 .product {
-  background-color: #fff;
   margin-bottom: 1px;
   padding: 0;
 }
@@ -107,10 +93,18 @@
 }
 
 .product .middle {
-  width: 500px;
+  width: 480px;
 }
 
 .product .right {
   width: 150px;
   text-align: right;
+}
+
+.title {
+  background-color: #00aff9;
+  border-radius: 20px;
+  line-height: 40px;
+  padding: 0 16px 0 16px;
+  color: #ffffff;
 }

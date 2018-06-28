@@ -9,6 +9,11 @@ var Host = {
     }
 }
 
+//var MF = {
+//    env: () => {},
+//    setTitle: () => {}
+//}
+
 var APP = {
     callback(val) {
         if (APP.onSucc)
@@ -42,6 +47,11 @@ var APP = {
             return dict
         }
     }
+}
+
+if (typeof Customer == "object") {
+    Customer.host = Host;
+    APP.customer = Customer;
 }
 
 if (typeof Proposal == "object") {

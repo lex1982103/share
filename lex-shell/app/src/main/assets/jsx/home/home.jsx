@@ -1,4 +1,4 @@
-import Swiper from '../components/Swiper'
+import Swiper from '../components/Swiper.jsx'
 
 
 const serverUrl = 'http://47.104.13.159/boot';
@@ -56,15 +56,17 @@ class Main extends React.Component {
             dataType:"json"
         });
     }
-
     openApply(orderId) {
-        window.MF &&  MF.navi("apply/start.html?orderId=" + orderId)
+        window.MF && MF.navi("apply/start.html?orderId=" + orderId)
     }
     newApply() {
-        window.MF &&  MF.navi("apply/start.html")
+        window.MF && MF.navi("apply/start.html")
     }
     openProposal() {
-        window.MF && MF.navi("proposal/plan.html")
+        window.MF && MF.navi("proposal/proposal_list.html")
+    }
+    openCustomer() {
+        window.MF && MF.navi("client/client_list.html")
     }
     render() {
         return (
@@ -119,7 +121,7 @@ class Main extends React.Component {
                     </a>
                     <a className="srow-item">
                         <div>
-                            <img src="../images/home/customer.png"/>
+                            <img src="../images/home/customer.png" onClick={this.openCustomer.bind(this)}/>
                         </div>
                         <span>客户管理</span>
                     </a>

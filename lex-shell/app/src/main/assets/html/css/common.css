@@ -10,7 +10,7 @@ html {
 
 body {
   justify-content: space-between;
-  background-color: #e6e6e6;
+  background-color: #dddddd;
 }
 
 .text40 {
@@ -203,7 +203,11 @@ input {
 }
 
 .bg-gray {
-  background-color: #cccccc;
+  background-color: #aaaaaa;
+}
+
+.bg-dark {
+  background-color: #334455;
 }
 
 .bottom {
@@ -216,6 +220,10 @@ input {
   bottom: 0;
   background-color: #ffffff;
   line-height: 100px;
+}
+
+.m-3 {
+  margin: 30px;
 }
 
 .ml-0 {
@@ -282,6 +290,10 @@ input {
   margin-bottom: 30px;
 }
 
+.p-2 {
+  padding: 20px;
+}
+
 .pl-1 {
   padding-left: 10px;
 }
@@ -322,6 +334,10 @@ input {
   padding-bottom: 20px;
 }
 
+.pb-3 {
+  padding-bottom: 30px;
+}
+
 .list-item {
   height: 100px;
   background-color: #fff;
@@ -342,4 +358,60 @@ input {
 
 .list-item-content {
   margin: 10px 20px 10px 10px;
+}
+
+.lh-80 {
+  line-height: 80px;
+}
+
+.lh-70 {
+  line-height: 70px;
+}
+
+.lh-60 {
+  line-height: 60px;
+}
+
+.lh-50 {
+  line-height: 50px;
+}
+
+.lh-40 {
+  line-height: 40px;
+}
+
+.lh-30 {
+  line-height: 30px;
+}
+
+.h-80 {
+  height: 80px;
+}
+
+.h-70 {
+  height: 70px;
+}
+
+.h-60 {
+  height: 60px;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.br-tl-gray {
+  border-top: #dddddd solid 2px;
+}
+
+.br-tl-primary {
+  border-top: #00aff9 solid 2px;
+}
+
+.br-bl-primary {
+  border-bottom: #00aff9 solid 2px;
 }

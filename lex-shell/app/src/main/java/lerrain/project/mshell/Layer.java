@@ -106,7 +106,7 @@ public abstract class Layer extends RelativeLayout
 //		{
 //			Log.i("mshell", "open local: "+ link);
 //
-//			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.pages.get(uri), "application/html", "utf-8", null);
+//			wv.loadDataWithBaseURL("file:///android_asset/phone.html/" + link, window.pages.get(uri), "application/phone.html", "utf-8", null);
 //		}
 //		else
 //		{
@@ -115,7 +115,7 @@ public abstract class Layer extends RelativeLayout
 //			int m = uri.lastIndexOf("/");
 //			int n = uri.lastIndexOf(".");
 //			String js = uri.substring(m < 0 ? 0 : m + 1, n < 0 ? uri.length() : n);
-//			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.template.replace("<!-- JS -->", js), "application/html", "utf-8", null);
+//			wv.loadDataWithBaseURL("file:///android_asset/phone.html/" + link, window.template.replace("<!-- JS -->", js), "application/phone.html", "utf-8", null);
 //		}
 //	}
 

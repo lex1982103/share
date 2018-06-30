@@ -226,6 +226,14 @@ input {
   line-height: 100px;
 }
 
+.m-1 {
+  margin: 10px;
+}
+
+.m-2 {
+  margin: 20px;
+}
+
 .m-3 {
   margin: 30px;
 }

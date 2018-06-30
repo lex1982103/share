@@ -26,6 +26,10 @@ class Main extends React.Component {
         this.state.liability[i].detail[j].detail[k].show = !this.state.liability[i].detail[j].detail[k].show
         this.setState({ liability: this.state.liability })
     }
+    showCoverageDetail(i, j) {
+        this.state.coverage[i].content[j].show = !this.state.coverage[i].content[j].show
+        this.setState({ coverage: this.state.coverage })
+    }
     render() {
         if (!this.state.proposal || !this.state.plan || !this.state.proposal.other)
             return null
@@ -51,7 +55,7 @@ class Main extends React.Component {
                 <div className="bg-white">
                     <div className="divx pt-3 pl-2 pr-2 pb-2">
                         <div className="bg-primary" style={{width:"20px", height:"40px"}}></div>
-                        <div className="ml-1 lh-40">保障计划</div>
+                        <div className="ml-1 lh-40">我的计划</div>
                         { plan ? <div className="ml-auto lh-40">首年保费：<span className="tc-red">{plan.premium}</span>元</div> : null }
                     </div>
                     <div className="ml-1 mr-1">
@@ -99,7 +103,7 @@ class Main extends React.Component {
 
                     <div className="divx mt-1 p-2">
                         <div className="bg-primary" style={{width:"20px", height:"40px"}}></div>
-                        <div className="ml-1 lh-40">保险责任</div>
+                        <div className="ml-1 lh-40">我的保障</div>
                     </div>
                     <div className="ml-1 mr-1 pt-2 pb-2 bg-white" style={{border:"#dddddd 1px solid"}}>
                         { !this.state.liability ? null : this.state.liability.map((v, i) => !v.detail ? null :
@@ -107,7 +111,10 @@ class Main extends React.Component {
                                 <div className="text17 lh-60 center pl-3 pr-3 ml-3 mr-3 mt-1 mb-2 tc-primary bg-white" style={{border:"#00aff9 1px solid", borderRadius:"30px"}}>{v.name}</div>
                                 { v.detail.map((w, j) =>
                                     <div className="div text17 pl-1 pr-1 pb-1" key={j}>
-                                        <div className="lh-60 pl-1 tc-primary">★ {w.name}</div>
+                                        <div className="divx">
+                                            <div className="mt-1 mb-1 lh-40 center bg-primary tc-white" style={{width:"40px", borderRadius:"20px"}}>{j+1}</div>
+                                            <div className="ml-1 lh-60 tc-primary">{w.name}</div>
+                                        </div>
                                         { w.detail.map((x, k) =>
                                             <div className="lh-40" key={k}>
                                                 <div className="divx pb-1" onClick={this.showLiabDetail.bind(this, i, j, k)}>
@@ -117,7 +124,7 @@ class Main extends React.Component {
                                                 { x.detail.map((y, l) => !x.show || !x.detail ? null :
                                                     <div className="divx text15 lh-30 tc-dark pb-1" key={l}>
                                                         <div className="center" style={{width:"40px"}}></div>
-                                                        <div className="divx"><div className="title">{y.productAbbrName}</div> <div>{y.text}</div></div>
+                                                        <div className="divx lh-40"><div className="title mr-1">{y.productAbbrName}</div> <div>{y.text}</div></div>
                                                     </div>
                                                 )}
                                             </div>
@@ -141,6 +148,36 @@ class Main extends React.Component {
                                 </div>
                             </div>
                         )}
+                    </div>
+
+                    <div className="divx mt-1 p-2">
+                        <div className="bg-primary" style={{width:"20px", height:"40px"}}></div>
+                        <div className="ml-1 lh-40">责任条款</div>
+                    </div>
+                    <div className="ml-1 mr-1 pt-2 pb-2 bg-white" style={{border:"#dddddd 1px solid"}}>
+                      { !this.state.coverage ? null : this.state.coverage.map((v, i) =>
+                        <div className="pl-2 pr-2 bg-white">
+                          <div style={{marginTop:(i!=0?10:0)+"px"}}>
+                            <div className="text17 lh-60 center pl-3 pr-3 ml-3 mr-3 mt-1 mb-2 tc-primary bg-white" style={{border:"#00aff9 1px solid", borderRadius:"30px"}}>{v.productName}</div>
+                          </div>
+                          { v.content.map((x, j) =>
+                            <div style={{background:"#fff"}}>
+                              <div className="divx h-60" onClick={this.showCoverageDetail.bind(this, i, j)}>
+                                <div className="text17 mt-1 mb-1 lh-40 center bg-primary tc-white" style={{width:"40px", borderRadius:"20px"}}>{j+1}</div>
+                                <div className="text17 ml-1 lh-60 tc-primary">{x.title}</div>
+                                <div className="ml-auto mr-1 pt-1 pm-1">
+                                    <img style={{width:"40px",height:"40px"}} src={x.show?"../images/arrow-7-up.png":"../images/arrow-7-down.png"}/>
+                                </div>
+                              </div>
+                              { !x.show ? null : x.content.map((y, k) =>
+                                <div className="text16">　　{y.text}</div>
+                              )}
+                              <div style={{height:"10px"}}></div>
+                            </div>
+                          )}
+                          <div style={{height:"10px"}}></div>
+                        </div>
+                      )}
                     </div>
 
                     <div className="divx mt-1 p-2">

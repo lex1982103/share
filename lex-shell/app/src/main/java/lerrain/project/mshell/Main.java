@@ -41,7 +41,7 @@ public class Main extends Activity
 //	{
 //		AssetManager am = this.getAssets();
 //
-//		try (InputStream is = am.open("html/template.html"))
+//		try (InputStream is = am.open("phone.html/template.phone.html"))
 //		{
 //			template = Common.stringOf(is, "utf-8");
 //		}
@@ -52,7 +52,7 @@ public class Main extends Activity
 //
 //		try
 //		{
-//			loadHtml(am, "html");
+//			loadHtml(am, "phone.html");
 //			Log.i("mshell", pages.keySet().toString());
 //		}
 //		catch (Exception e)
@@ -71,12 +71,12 @@ public class Main extends Activity
 //		}
 //		else
 //		{
-//			if (path.endsWith(".html"))
+//			if (path.endsWith(".phone.html"))
 //			{
 //				try (InputStream is = am.open(path))
 //				{
-//					String html = Common.stringOf(is, "utf-8");
-//					pages.put(path.substring(5, path.length() - 5), html);
+//					String phone.html = Common.stringOf(is, "utf-8");
+//					pages.put(path.substring(5, path.length() - 5), phone.html);
 //				}
 //				catch (Exception e)
 //				{

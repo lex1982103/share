@@ -8,6 +8,7 @@ class Main extends React.Component {
             marriageDict: {},
             certTypeDict: {},
             relationDict: {"00":"本人", "01":"夫妻"},
+            verify: {},
             mode: 0,
             cust: null
         }
@@ -40,6 +41,17 @@ class Main extends React.Component {
             this.setState({ cust: cust ? cust : {} })
         })
     }
+    verify(c) {
+        let v = {}
+        if (!c.certNo) {
+            v.certNo = "该项必填"
+        } else {
+            if (c.certType == 1 && c.certNo.length != 18)
+                v.certNo = "身份证号需要为18位"
+        }
+        this.setState({ verify: v })
+        return Object.keys(c).length == 0
+    }
     save() {
         let c = this.state.cust
 
@@ -67,9 +79,11 @@ class Main extends React.Component {
             c.mode4 = true
         }
 
-        APP.apply.save({ id: this.state.orderId, detail: { applicant: c } }, v => {
-            this.setState({ mode: 0, cust: c})
-        })
+        if (this.verify(c)) {
+            APP.apply.save({ id: this.state.orderId, detail: { applicant: c } }, v => {
+                this.setState({ mode: 0, cust: c})
+            })
+        }
     }
     next() {
         this.save()
@@ -85,11 +99,14 @@ class Main extends React.Component {
         }
         this.setState({ cust: this.state.cust })
     }
+    switchMode(mode) {
+        this.setState({ mode:this.state.mode==mode?0:mode, verify:{} })
+    }
     render() {
         let cust = this.state.cust;
         return cust == null ? null : (
             <div>
-                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==1?0:1 }) }}>
+                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={this.switchMode.bind(this, 1)}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==1?"sub":"add")+".png"}/>基本信息
                     </div>
@@ -140,7 +157,10 @@ class Main extends React.Component {
                     <div className="form-item text16">
                         <div className="form-item-label">证件号码</div>
                         <div className="form-item-widget">
-                            <input className="mt-1" ref="certNo" defaultValue={cust.certNo} placeholder="请输入证件号码"/>
+                            <div>
+                                <input className="mt-1" ref="certNo" defaultValue={cust.certNo} placeholder="请输入证件号码"/>
+                                { this.state.verify.certNo ? <div className="form-alert">{this.state.verify.certNo}</div> : null }
+                            </div>
                         </div>
                     </div>
                     <div className="form-item text16">
@@ -154,7 +174,7 @@ class Main extends React.Component {
                         <img className="mt-1 ml-auto mr-3" style={{width:"120px", height:"60px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                     </div>
                 </div> }
-                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==2?0:2 }) }}>
+                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={this.switchMode.bind(this, 2)}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==2?"sub":"add")+".png"}/>职业信息
                     </div>
@@ -209,7 +229,7 @@ class Main extends React.Component {
                         <img className="mt-1 ml-auto mr-3" style={{width:"120px", height:"60px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                     </div>
                 </div> }
-                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==3?0:3 }) }}>
+                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={this.switchMode.bind(this, 3)}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==3?"sub":"add")+".png"}/>联系方式
                     </div>
@@ -277,7 +297,7 @@ class Main extends React.Component {
                         <img className="mt-1 ml-auto mr-3" style={{width:"120px", height:"60px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                     </div>
                 </div> }
-                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==4?0:4 }) }}>
+                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={this.switchMode.bind(this, 4)}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==4?"sub":"add")+".png"}/>其他信息
                     </div>

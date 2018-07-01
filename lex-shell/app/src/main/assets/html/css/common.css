@@ -136,7 +136,7 @@ input {
 
 .form-item {
   display: flex;
-  height: 80px;
+  min-height: 80px;
   line-height: 80px;
   background-color: #ffffff;
   margin-top: 1px;
@@ -151,6 +151,17 @@ input {
   width: 430px;
   display: flex;
   margin-right: 20px;
+}
+
+.form-item-widget .form-alert {
+  color: #ff0000;
+  font-size: 0.7rem;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  line-height: 30px;
+  height: 30px;
+  border: #ff0000 1px solid;
+  background-color: #ffdddd;
 }
 
 .btn-sm {
@@ -418,6 +429,10 @@ input {
 
 .h-60 {
   height: 60px;
+}
+
+.h-40 {
+  height: 40px;
 }
 
 .center {

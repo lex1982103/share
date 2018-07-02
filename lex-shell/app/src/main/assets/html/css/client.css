@@ -1,7 +1,7 @@
 #ppp {
   width: 30.83333333rem;
   border-left-width: 30.83333333rem;
-  height: calc(101em);
+  height: calc(1em + 100px);
 }
 /* common */
 html {

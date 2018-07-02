@@ -31,30 +31,44 @@ class Main extends React.Component {
         }else if(this.refs.password.value == ''){
             alert('登录密码不能为空!')
         }else{
-            // MF.navi("home/home.html")
-            // APP.login(this.state.loginName, this.state.passWord, r => {
-            //     // MF.setEnv("userKey", r.userKey)
-            //     // MF.navi("home/home.html")
-            // }, r => {
-            //     this.setState({ login: "fail" })
-            //     MF.navi("home/home.html")
-            // })
-            ajax('/user/login.json', {
+             /*APP.login(this.refs.loginName.value, this.refs.password.value, r => {
+                 MF.setEnv("userKey", r.content.userKey)
+                 MF.navi("home/home.html")
+             }, r => {
+                 that.setState({ login: "fail" })
+                 // MF.navi("home/home.html")
+             })*/
+             $.ajax({
+                    contentType: 'application/json',
+                    type:'POST',
+                    url:"http://192.168.1.218:7666/user/login.json",
+                    // url:"http://114.112.96.61:7666/user/login.json",
+                    data:JSON.stringify({
+                        "loginName":this.refs.loginName.value,
+                        "password":this.refs.password.value
+                    }),
+                    success(data){
+                         MF.setEnv("userKey", data.content.userKey)
+                        MF.navi("home/home.html")
+                    },
+                    error(err){
+                        console.log(err,'err');
+                    }
+                })
+            /*ajax('/user/login.json', {
                 "loginName":this.refs.loginName.value,
                 "password":this.refs.password.value
             },(data)=>{
+
                 if(data.result == 'success'){
-                    location.href = 'home.html'
+                        MF.setEnv("userKey", data.userKey)
+                        MF.navi("home/home.html")
                 }else{
                     alert('登录出错！')
                 }
-                // ajax('/customer/list.json',{
-                //     "from":0,
-                //     "number":10
-                // },(res)=>{
-                //     console.log(res,'res')
-                // })
-            })
+
+            })*/
+
         }
     }
     render() {

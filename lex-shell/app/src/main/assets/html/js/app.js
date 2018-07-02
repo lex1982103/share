@@ -36,6 +36,12 @@ var APP = {
     dict(code, onSucc) {
         Host.req("/dict/view.json", { company: "nciapp", name: code }, onSucc)
     },
+   list(url, postData, onSucc) {
+      Host.req(url, postData, onSucc)
+    },
+    openApply(url, onSucc) {
+        Host.req(url, {type: 2}, onSucc)
+    },
     toMapDict(dict) {
         if (dict instanceof Array) {
             var r = {}

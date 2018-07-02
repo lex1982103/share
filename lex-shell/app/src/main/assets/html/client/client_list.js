@@ -1,1 +1,170 @@
-!function(e){var t={};function n(a){if(t[a])return t[a].exports;var r=t[a]={i:a,l:!1,exports:{}};return e[a].call(r.exports,r,r.exports,n),r.l=!0,r.exports}n.m=e,n.c=t,n.d=function(e,t,a){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:a})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var a=Object.create(null);if(n.r(a),Object.defineProperty(a,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var r in e)n.d(a,r,function(t){return e[t]}.bind(null,r));return a},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=1)}([,function(e,t,n){"use strict";var a=function(){function e(e,t){for(var n=0;n<t.length;n++){var a=t[n];a.enumerable=a.enumerable||!1,a.configurable=!0,"value"in a&&(a.writable=!0),Object.defineProperty(e,a.key,a)}}return function(t,n,a){return n&&e(t.prototype,n),a&&e(t,a),t}}();var r=function(e){function t(){!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,t);var e=function(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}(this,(t.__proto__||Object.getPrototypeOf(t)).call(this));return e.state={edit:!1,clientCount:4,clientList:[{alpha:"Z",list:[{name:"钟大伟"},{name:"张大全"}]},{alpha:"L",list:[{name:"李欣欣"},{name:"赖星星"}]}]},e}return function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}(t,React.Component),a(t,[{key:"componentDidMount",value:function(){window.MF&&MF.setTitle("客户管理"),this.fetchClientList()}},{key:"fetchClientList",value:function(){var e=[{name:"信东"},{name:"马成虎"},{name:"任超"},{name:"范若宇"},{name:"叶晓琪"}].map(function(e){var t=pinyinUtil.getFirstLetter(e.name,!1).substring(0,1);return console.log("speel",t.toUpperCase()),e.alpha=t.toUpperCase(),e}),t=[];e.map(function(n){if(!t.filter(function(e){return e.alpha===n.alpha}).length){var a={alpha:n.alpha},r=e.filter(function(e){return e.alpha===n.alpha});a.list=r,t.push(a)}});for(var n=0;n<t.length;n++)for(var a=n+1;a<e.length;a++)if(t[n].alpha>e[a].alpha){var r=t[n];t[n]=t[a],t[a]=r}this.setState({clientList:t})}},{key:"onAlphaClick",value:function(e){this.props.onAlphaClick&&this.props.onAlphaClick(key),document.getElementById(e).scrollIntoView()}},{key:"render",value:function(){var e=this,t=this.state.edit;return React.createElement("div",{className:"client-container"},React.createElement("div",{className:"remind-wrap"},React.createElement("a",{className:"remind-birthday"},React.createElement("img",{src:"../images/client/remind-birthday.png"}),React.createElement("span",null,"生日提醒"),React.createElement("em",null,"2")),React.createElement("span",null),React.createElement("a",{className:"remind-renew"},React.createElement("img",{src:"../images/client/remind-renew.png"}),React.createElement("span",null,"续期提醒"))),React.createElement("div",{className:"c-list"},React.createElement("div",{className:"cl-title"},React.createElement("h3",null,"所有客户",React.createElement("i",null,"（",this.state.clientCount,"人）")),React.createElement("a",{className:"cl-edit",onClick:function(){return e.setState({edit:!t})}},t?"取消":"编辑")),this.state.clientList.map(function(t){return React.createElement("dl",{className:"cl-section",id:"sec"+t.alpha},React.createElement("dt",null,t.alpha),t.list.map(function(t){return React.createElement("dd",null,React.createElement("a",null,React.createElement("span",null,t.name),React.createElement("i",null,"男"),React.createElement("em",null,"1990-03-23")),e.state.edit&&React.createElement("span",null,React.createElement("a",null,"编辑"),React.createElement("a",null,"删除")),React.createElement("span",{className:"cl-line"}))}))})),React.createElement("div",{className:"c-alphabet"},this.state.clientList.map(function(t){return React.createElement("a",{href:"javascript:void(0)",onClick:function(){return e.onAlphaClick("sec"+t.alpha)}},t.alpha)})),React.createElement("div",{className:"c-footer"},React.createElement("a",{href:"create_client.html"},"新建客户")))}}]),t}();$(document).ready(function(){ReactDOM.render(React.createElement(r,null),document.getElementById("root"))})}]);
+// const serverUrl = 'http://192.168.1.218:7666/'
+const serverUrl = 'http://114.112.96.61:7666/'
+///save.json
+class ClientList extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            edit: false,
+            // clientCount: 4,
+            clientList: [],
+            mockData: []
+
+        }
+    }
+    componentDidMount() {
+        window.MF && MF.setTitle("客户管理")
+        this.fetchClientList();
+    }
+    fetchClientList(){
+        /** 按首字母分组
+         * [{
+         *     A:[ {
+         *       name: ''
+         *     }]
+         * }]
+         * */
+        APP.list("/customer/list.json",{ from:0, number:10 },r => {
+            this.setState({mockData: r.list}, () => {
+                const data = this.state.mockData.map(d=>{
+                let pinyinStr = pinyinUtil.getFirstLetter(d.name, false);
+                let firstAlpha = pinyinStr.substring(0, 1);
+                // console.log('speel', firstAlpha.toUpperCase());
+                d.alpha = firstAlpha.toUpperCase();
+                return d;
+                })
+                /** 按首字母排序 */
+                for(let i = 0; i < data.length - 1; i++){
+                for(let j = i+1; j < data.length - 1; j++){
+                if(data[i].alpha > data[j].alpha){
+                let temp = data[i];
+                data[i] = data[j];
+                data[j] = temp;
+                }
+                }
+                }
+                /**根据字母分组*/
+                let sortArr = [];
+                data.map(d=>{
+                // 检查该字母是否已处理过
+                if(!sortArr.filter(item=>item.alpha === d.alpha).length){
+                let alphaObj = {
+                alpha: d.alpha
+                };
+                let arr = data.filter(item=>item.alpha === d.alpha);
+                alphaObj.list = arr;
+                sortArr.push(alphaObj);
+                }
+
+                });
+                this.setState({
+                clientList: sortArr
+                })
+                })
+        })
+    }
+    onAlphaClick(id){
+        this.props.onAlphaClick && this.props.onAlphaClick(key);
+        let el=document.getElementById(id);
+        el.scrollIntoView();
+    }
+    /*编辑客户操作*/
+    editClient (data) {
+//        const ss = sessionStorage;
+//        ss.setItem("clientData",JSON.stringify([data]));
+         APP.list('/customer/view.json', {"customerId":data.id,}, r => {
+                 window.MF && MF.navi("client/create_client.html?customerMsg=" + JSON.stringify(r));
+            })
+    }
+    /*删除客户操作*/
+    deleteClient (data) {
+         APP.list('/customer/delete.json', {"customerId":data.id,}, r => {
+                    this.fetchClientList();//刷新
+         })
+    }
+    /*获取性别函数*/
+    getSex(code) {
+        return code == "M"? "男" : "女";
+    }
+    render(){
+        const {
+            edit
+        } = this.state;
+        return (
+            <div className="client-container">
+                <div className="remind-wrap">
+                    <a className="remind-birthday">
+                        <img src="../images/client/remind-birthday.png"/>
+                        <span>生日提醒</span>
+                        <em>2</em>
+                    </a>
+                    <span></span>
+                    <a className="remind-renew">
+                        <img src="../images/client/remind-renew.png"/>
+                        <span>续期提醒</span>
+                    </a>
+                </div>
+                <div className="c-list">
+                    <div className="cl-title">
+                        <h3>当前页客户<i>{this.state.mockData && this.state.mockData.length}人</i></h3>
+                        <a className="cl-edit" onClick={()=>this.setState({edit: !edit})}>{edit ? '取消': '编辑'}</a>
+                    </div>
+                    {
+                        this.state.clientList.map(item=>{
+                            return (
+                                <dl className="cl-section" id={'sec'+item.alpha}>
+                                    <dt>{item.alpha}</dt>
+                                    {
+                                        item.list.map(c=>{
+                                            return (
+
+                                                <dd>
+                                                    <a>
+                                                        <span>{c.name}</span>
+                                                        <i>{this.getSex(c.gender)}</i>
+                                                        <em>{c.birthday}</em>
+                                                    </a>
+                                                    {
+                                                        this.state.edit && (
+                                                            <span>
+                    <a onClick = {() => {this.editClient(c)}}>编辑</a>
+                    <a onClick = {() => {this.deleteClient(c)}}>删除</a>
+                    </span>
+                                                        )
+                                                    }
+                                                    <span className="cl-line"></span>
+                                                </dd>
+
+                                            )
+                                        })
+                                    }
+
+                                </dl>
+
+                            )
+                        })
+                    }
+                </div>
+                <div className="c-alphabet">
+                    {
+                        this.state.clientList.map(c=>{
+                            return (
+                                <a href="javascript:void(0)" onClick={()=>this.onAlphaClick('sec' + c.alpha)}>{c.alpha}</a>
+                            )
+                        })
+                    }
+
+                </div>
+                <div className="c-footer">
+                    <a onClick = {() => {
+//                        sessionStorage.setItem("clientData",JSON.stringify([{}]));
+                         window.MF && MF.navi("client/create_client.html");
+                    }}>新建客户</a>
+                </div>
+            </div>
+        )
+    }
+}
+
+
+ReactDOM.render(<ClientList/>, document.getElementById("root"))

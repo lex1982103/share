@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -93,5 +94,21 @@ public class Main extends Activity
 		layer.openLocal("home/login2.html");
 
 		return layer;
+	}
+
+	public void stat(final String action)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				JSONObject json = new JSONObject();
+				json.put("userKey", layers.env.get("userKey"));
+				json.put("action", action);
+
+				Network.request("util/stat.json", json.toJSONString(), 1000);
+			}
+		}).start();
 	}
 }

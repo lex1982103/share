@@ -1,6 +1,7 @@
 package lerrain.project.mshell;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +25,7 @@ public class PageLayer extends Layer
 
 	boolean dragging = false;
 
-	float dragX;
+	float dragX, dragY;
 
 	public PageLayer(Main window)
 	{
@@ -124,19 +125,27 @@ public class PageLayer extends Layer
 		{
 			if (dragging)
 			{
-				if (event.getX() > dragX)
+				if (event.getY() > dragY)
 				{
-					int alpha = (int)Math.abs((event.getX() - dragX) * 192 / Ui.width);
+					int alpha = (int) Math.abs((event.getY() - dragY) * 192 / Ui.height);
 
-					this.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
-					rl.setTranslationX(event.getX() - dragX);
+					this.setBackgroundColor(Color.argb(192 - alpha, 0, 0, 0));
+					rl.setTranslationY(event.getY() - dragY);
 				}
+
+				return true;
 			}
 		}
 		else if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			dragging = true;
 			dragX = event.getX();
+			dragY = event.getY();
+
+			for (int i = 2; i < this.getRoot().getChildCount() - 1; i++)
+				this.getRoot().getChildAt(i).setVisibility(View.INVISIBLE);
+
+			return true;
 		}
 		else if (event.getAction() == MotionEvent.ACTION_UP)
 		{
@@ -144,19 +153,40 @@ public class PageLayer extends Layer
 			{
 				dragging = false;
 
-				if (event.getX() - dragX > Ui.width / 2)
+				if (event.getY() > Ui.height * 2 / 5)
 				{
-					this.getRoot().back(null);
+					this.getRoot().home();
 				}
 				else
 				{
-					int x = (int)rl.getTranslationX();
-					play(x, 0, -x, 0, 1);
+					int y = (int)rl.getTranslationY();
+					play(0, y, 0, -y, 4);
 				}
+
+				return true;
 			}
 		}
 
-		return false;
+		return super.onInterceptTouchEvent(event);
+	}
+
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent event)
+	{
+		if (event.getAction() == MotionEvent.ACTION_DOWN && event.getY() <= Ui.dp(topH) && event.getX() > title.getX() && this.getRoot().getChildCount() > 2)
+		{
+			dragging = true;
+
+			dragX = event.getX();
+			dragY = event.getY();
+
+			for (int i = 2; i < this.getRoot().getChildCount() - 1; i++)
+				this.getRoot().getChildAt(i).setVisibility(View.INVISIBLE);
+
+			return true;
+		}
+
+		return super.onInterceptTouchEvent(event);
 	}
 
 	protected void playEnter()
@@ -164,9 +194,17 @@ public class PageLayer extends Layer
 		play(Ui.width, 0, -Ui.width, 0, 1);
 	}
 
-	protected void playOut()
+	protected void playOut(int mode)
 	{
-		int x = (int)rl.getTranslationX();
-		play(x, 0, Ui.width - x, 0, 2);
+		if (mode == 2)
+		{
+			int x = (int) rl.getTranslationX();
+			play(x, 0, Ui.width - x, 0, mode);
+		}
+		else if (mode == 4)
+		{
+			int y = (int) rl.getTranslationY();
+			play(0, y, 0, Ui.height - y, mode);
+		}
 	}
 }

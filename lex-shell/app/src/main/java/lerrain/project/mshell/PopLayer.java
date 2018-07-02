@@ -38,9 +38,9 @@ public class PopLayer extends Layer
 		play(0, Ui.height * percent / 100, 0, -Ui.height * percent / 100, 1);
 	}
 
-	protected void playOut()
+	protected void playOut(int mode)
 	{
-		play(0, 0, 0, Ui.height * percent / 100, 2);
+		play(0, 0, 0, Ui.height * percent / 100, mode);
 	}
 
 }

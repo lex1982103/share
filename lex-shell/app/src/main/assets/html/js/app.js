@@ -27,6 +27,10 @@ var APP = {
         APP.onSucc = onSucc
         MF.pop(uri, height)
     },
+    alert(title, text, onYes, onNo) {
+        APP.onSucc = function(r) { if (r) { onYes() } else { onNo() }}
+        MF.alert(title, text, onNo ? "是" : "确定", onNo ? "否" : null)
+    },
     back(val) {
         MF.back(val)
     },

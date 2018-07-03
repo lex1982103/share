@@ -81,9 +81,6 @@ class Main extends React.Component {
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             预览建议书
                         </div>
-                        <div className="ml-1 mr-2" style={{width:"30px"}}>
-                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
-                        </div>
                     </div>
                 </div>
             </div>

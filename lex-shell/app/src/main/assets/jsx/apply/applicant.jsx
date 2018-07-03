@@ -43,14 +43,43 @@ class Main extends React.Component {
     }
     verify(c) {
         let v = {}
-        if (!c.certNo) {
-            v.certNo = "该项必填"
-        } else {
-            if (c.certType == 1 && c.certNo.length != 18)
-                v.certNo = "身份证号需要为18位"
+
+        if (this.state.mode == 1) {
+            if (!c.name) {
+                v.name = "该项必填"
+            } else {
+                if (c.name.length > 60)
+                    v.name = "姓名太长"
+                else if (c.name.indexOf(" ") > 0)
+                    v.name = "姓名中不能有空格"
+            }
+
+            if (!c.birthday) {
+                v.birthday = "该项必填"
+            } else {
+                if (c.birthday > common.dateStr(new Date()))
+                    v.birthday = "生日不能大于当前日期"
+            }
+
+            if (!c.certNo) {
+                v.certNo = "该项必填"
+            } else {
+                if (c.certType == 1 && c.certNo.length != 18)
+                    v.certNo = "身份证号需要为18位"
+            }
         }
+
+        if (this.state.mode == 3) {
+            if (!c.zipcode) {
+                v.zipcode = "该项必填"
+            } else {
+                if (!/^[0-9][0-9]{5}$/.test(c.zipcode))
+                    v.zipcode = "邮政编码需要为6位数字"
+            }
+        }
+
         this.setState({ verify: v })
-        return Object.keys(c).length == 0
+        return Object.keys(v).length == 0
     }
     save() {
         let c = this.state.cust
@@ -110,7 +139,7 @@ class Main extends React.Component {
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==1?"sub":"add")+".png"}/>基本信息
                     </div>
-                    <div style={{width:"65px"}}>{ cust.mode1 ? <img style={{width:"65px", height:"50px", marginTop:"25px", float:"right"}} src={"../images/filled.png"}/> : null }</div>
+                    <div style={{width:"65px"}}>{ cust.mode1 ? <img style={{width:"39px", height:"30px", marginTop:"35px", float:"right"}} src="../images/filled.png"/> : null }</div>
                 </div>
                 { this.state.mode != 1 ? null : <div className="div">
                     <div className="form-item text16">
@@ -119,6 +148,7 @@ class Main extends React.Component {
                             <input className="mt-1" ref="name" defaultValue={cust.name} placeholder="请输入投保人姓名"/>
                         </div>
                     </div>
+                    { this.state.verify.name ? <div className="form-alert">{this.state.verify.name}</div> : null }
                     <div className="form-item text16">
                         <div className="form-item-label">性别</div>
                         <div className="form-item-widget" onClick={v => {APP.pick("select", this.state.genderDict, this.onValChange.bind(this, "gender"))}}>
@@ -140,6 +170,7 @@ class Main extends React.Component {
                             <img className="mt-2 mr-0" style={{width:"27px", height:"39px"}} src="../images/right.png"/>
                         </div>
                     </div>
+                    { this.state.verify.birthday ? <div className="form-alert">{this.state.verify.birthday}</div> : null }
                     <div className="form-item text16">
                         <div className="form-item-label">婚姻状况</div>
                         <div className="form-item-widget" onClick={v => {APP.pick("select", this.state.marriageDict, this.onValChange.bind(this, "marriage"))}}>
@@ -157,12 +188,10 @@ class Main extends React.Component {
                     <div className="form-item text16">
                         <div className="form-item-label">证件号码</div>
                         <div className="form-item-widget">
-                            <div>
-                                <input className="mt-1" ref="certNo" defaultValue={cust.certNo} placeholder="请输入证件号码"/>
-                                { this.state.verify.certNo ? <div className="form-alert">{this.state.verify.certNo}</div> : null }
-                            </div>
+                            <input className="mt-1" ref="certNo" defaultValue={cust.certNo} placeholder="请输入证件号码"/>
                         </div>
                     </div>
+                    { this.state.verify.certNo ? <div className="form-alert">{this.state.verify.certNo}</div> : null }
                     <div className="form-item text16">
                         <div className="form-item-label">证件有效期</div>
                         <div className="form-item-widget" onClick={v => {APP.pick("date", { begin: new Date() }, this.onValChange.bind(this, "certValidDate"))}}>
@@ -178,7 +207,7 @@ class Main extends React.Component {
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==2?"sub":"add")+".png"}/>职业信息
                     </div>
-                    <div style={{width:"65px"}}>{ cust.mode2 ? <img style={{width:"65px", height:"50px", marginTop:"25px", float:"right"}} src={"../images/filled.png"}/> : null }</div>
+                    <div style={{width:"65px"}}>{ cust.mode2 ? <img style={{width:"39px", height:"30px", marginTop:"35px", float:"right"}} src="../images/filled.png"/> : null }</div>
                 </div>
                 { this.state.mode != 2 ? null : <div className="div">
                     <div className="form-item text16">
@@ -233,7 +262,7 @@ class Main extends React.Component {
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==3?"sub":"add")+".png"}/>联系方式
                     </div>
-                    <div style={{width:"65px"}}>{ cust.mode3 ? <img style={{width:"65px", height:"50px", marginTop:"25px", float:"right"}} src={"../images/filled.png"}/> : null }</div>
+                    <div style={{width:"65px"}}>{ cust.mode3 ? <img style={{width:"39px", height:"30px", marginTop:"35px", float:"right"}} src="../images/filled.png"/> : null }</div>
                 </div>
                 { this.state.mode != 3 ? null : <div className="div">
                     <div className="form-item text16">
@@ -260,6 +289,7 @@ class Main extends React.Component {
                             <input className="mt-1" ref="zipcode" defaultValue={cust.zipcode} placeholder="请输入邮政编码"/>
                         </div>
                     </div>
+                    { this.state.verify.zipcode ? <div className="form-alert">{this.state.verify.zipcode}</div> : null }
                     <div className="form-item text16">
                         <div className="form-item-label" style={{width:"670px"}}>联系方式（手机或者电话二者选其一）</div>
                     </div>
@@ -301,7 +331,7 @@ class Main extends React.Component {
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==4?"sub":"add")+".png"}/>其他信息
                     </div>
-                    <div style={{width:"65px"}}>{ cust.mode4 ? <img style={{width:"65px", height:"50px", marginTop:"25px", float:"right"}} src={"../images/filled.png"}/> : null }</div>
+                    <div style={{width:"65px"}}>{ cust.mode4 ? <img style={{width:"39px", height:"30px", marginTop:"35px", float:"right"}} src="../images/filled.png"/> : null }</div>
                 </div>
                 { this.state.mode != 4 ? null : <div className="div">
                     <div className="form-item text16">
@@ -314,9 +344,6 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             被保险人信息
-                        </div>
-                        <div className="ml-1 mr-2" style={{width:"30px"}}>
-                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

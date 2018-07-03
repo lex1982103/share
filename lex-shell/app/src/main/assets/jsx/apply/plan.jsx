@@ -91,7 +91,7 @@ class Main extends React.Component {
         return plan == null || insurant == null ? null : (
             <div>
                 <div>
-                    <div style={{display:"flex", position:"fixed", zIndex:"50", top:"0", backgroundColor:"#e6e6e6"}}>
+                    <div className="bg-desk" style={{display:"flex", position:"fixed", zIndex:"50", top:"0"}}>
                         { this.state.order.detail.insurants.map((v, i) =>
                             <div className={"tab " + (i == this.state.index ? 'tab-focus' : 'tab-blur')} key={i} style={{width:"250px"}} onClick={this.onInsurantSwitch.bind(this, i)}>
                                 <text className="text18">{ v.name == null || v.name == "" ? "被保险人" + (i+1) : v.name }</text>
@@ -171,9 +171,6 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             健康告知
-                        </div>
-                        <div className="ml-1 mr-2" style={{width:"30px"}}>
-                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

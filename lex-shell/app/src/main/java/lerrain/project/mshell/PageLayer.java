@@ -160,7 +160,7 @@ public class PageLayer extends Layer
 				else
 				{
 					int y = (int)rl.getTranslationY();
-					play(0, y, 0, -y, 4);
+					play(0, y, 0, -y, 3);
 				}
 
 				return true;

@@ -6,7 +6,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("健康告知")
+        window.MF&&MF.setTitle("健康告知")
         APP.apply.view(this.state.orderId, r => {
             this.setState({ order: r })
         })
@@ -15,7 +15,12 @@ class Main extends React.Component {
         this.next()
     }
     next() {
-        MF.navi("apply/beneficiary.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/beneficiary.html?orderId=" + this.state.orderId)
+        }else {
+            "apply/beneficiary.html?orderId=" + this.state.orderId
+        }
+
     }
     render() {
         return (
@@ -37,6 +42,9 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             受益人
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

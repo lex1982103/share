@@ -1,7 +1,61 @@
+.footNav {
+  width: 100%;
+  box-shadow: 5px 5px 5px #000;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background: #fff;
+  height: 4.08333333rem;
+}
+.footNav .actHome {
+  background: url("../images/homeC.png") center center no-repeat;
+  color: #3398DB;
+}
+.footNav .actMine {
+  background: url("../images/mineB.png") center center no-repeat;
+  color: #3398DB;
+}
+.footNav li {
+  width: 25%;
+  padding-top: 2.5rem;
+  font-size: 0.83333333rem;
+  cursor: pointer;
+  color: #4A4A4A;
+  text-align: center;
+  background: url("../images/homeC2.png") center center no-repeat;
+  float: left;
+  display: block;
+  background-size: 2rem;
+}
+.footNav li:nth-child(2) {
+  background: url("../images/gerenC.png") center center no-repeat;
+}
+.footNav li:nth-child(3) {
+  background: url("../images/teamC.png") center center no-repeat;
+}
+.footNav li:nth-child(4) {
+  background: url("../images/mineC.png") center center no-repeat;
+}
+.footNav li:nth-child(1):hover {
+  background: url("../images/homeC.png") center center no-repeat;
+  color: #3398DB;
+}
+.footNav li:nth-child(2):hover {
+  background: url("../images/gerenB.png") center center no-repeat;
+  color: #3398DB;
+}
+.footNav li:nth-child(3):hover {
+  background: url("../images/teamB.png") center center no-repeat;
+  color: #3398DB;
+}
+.footNav li:nth-child(4):hover {
+  background: url("../images/mineB.png") center center no-repeat;
+  color: #3398DB;
+}
 #ppp {
   width: 30.83333333rem;
   border-left-width: 30.83333333rem;
-  height: calc(101em);
+  height: calc(1em + 100px);
 }
 /* common */
 html {
@@ -158,13 +212,17 @@ a {
 }
 .shortcut-row1 {
   padding: 1em .6em;
+  display: flex;
   background: #fff;
 }
 .shortcut-row1 a.srow-item {
   width: 20%;
-  display: inline-block;
+  display: flex;
   color: #9b9b9b;
+  flex: 1;
   font-size: .9em;
+  justify-content: center;
+  flex-direction: column;
 }
 .shortcut-row1 a.srow-item > div {
   text-align: center;

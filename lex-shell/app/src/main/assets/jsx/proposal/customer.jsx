@@ -13,7 +13,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("选择客户")
+        window.MF&&MF.setTitle("选择客户")
         APP.proposal.view(this.state.proposalId, r => {
             APP.proposal.viewPlan(r.detail[0], plan => {
                 this.state.cust[0] = r.applicant
@@ -35,7 +35,12 @@ class Main extends React.Component {
     }
     next() {
         APP.proposal.refreshCust(this.state.proposal.proposalId, this.state.cust[0], [this.state.cust[1]], r => {
-            MF.navi("proposal/proposal.html?proposalId=" + this.state.proposalId)
+            if(window.MF){
+                MF.navi("proposal/proposal.html?proposalId=" + this.state.proposalId)
+            }else{
+                location.href = "proposal/proposal.html?proposalId=" + this.state.proposalId
+            }
+
         })
     }
     onValChange(index, key, e) {
@@ -88,6 +93,9 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             投保计划
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

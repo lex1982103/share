@@ -14,7 +14,7 @@ class Main extends React.Component {
             ages.push(i)
         this.setState({ ages: ages })
 
-        MF.setTitle("投保计划")
+        window.MF&&MF.setTitle("投保计划")
 
         APP.apply.view(this.state.orderId, r => {
             this.setState({ order: r }, () => {
@@ -80,7 +80,11 @@ class Main extends React.Component {
         })
     }
     next() {
-        MF.navi("apply/health.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/health.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/health.html?orderId=" + this.state.orderId
+        }
     }
     showBenefit() {
         MF.pop("apply/benefit.html?planId=" + this.state.plan.planId, 90)
@@ -91,7 +95,7 @@ class Main extends React.Component {
         return plan == null || insurant == null ? null : (
             <div>
                 <div>
-                    <div className="bg-desk" style={{display:"flex", position:"fixed", zIndex:"50", top:"0"}}>
+                    <div style={{display:"flex", position:"fixed", zIndex:"50", top:"0", backgroundColor:"#e6e6e6"}}>
                         { this.state.order.detail.insurants.map((v, i) =>
                             <div className={"tab " + (i == this.state.index ? 'tab-focus' : 'tab-blur')} key={i} style={{width:"250px"}} onClick={this.onInsurantSwitch.bind(this, i)}>
                                 <text className="text18">{ v.name == null || v.name == "" ? "被保险人" + (i+1) : v.name }</text>
@@ -171,6 +175,9 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             健康告知
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

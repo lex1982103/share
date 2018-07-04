@@ -87,3 +87,18 @@ body {
 input::-webkit-input-placeholder {
   color: #d1d1d1;
 }
+.conpanyIn {
+  width: 100%;
+}
+.conpanyIn li {
+  width: 100%;
+}
+.conpanyIn li img {
+  width: 100%;
+}
+.PlayerMain {
+  width: 100%;
+}
+.PlayerMain video {
+  width: 100%;
+}

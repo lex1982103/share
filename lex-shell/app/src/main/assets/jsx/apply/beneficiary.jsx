@@ -8,7 +8,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("受益人")
+        window.MF&&MF.setTitle("受益人")
         APP.dict("cert,relation", r => {
             this.setState({
                 certTypeDict: r.cert,
@@ -33,7 +33,12 @@ class Main extends React.Component {
     }
     next() {
         this.save()
-        MF.navi("apply/announce.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/announce.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/announce.html?orderId=" + this.state.orderId
+        }
+
     }
     delete(i, j) {
         this.state.order.detail.insurants[i].beneficiary.splice(j, 1)
@@ -83,6 +88,9 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             声明及授权
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

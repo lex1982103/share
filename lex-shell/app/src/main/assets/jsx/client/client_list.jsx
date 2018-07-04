@@ -1,119 +1,88 @@
-const serverUrl = 'http://47.104.13.159:31001'
 class ClientList extends React.Component {
     constructor() {
         super();
         this.state = {
             edit: false,
-            clientCount: 4,
-            clientList: [
-                {
-                    alpha: 'Z',
-                    list: [
-                        {
-                            name: '钟大伟',
-                        },
-                        {
-                            name: '张大全'
-                        }
-                    ]
-                },
-                {
-                    alpha: 'L',
-                    list: [
-                        {
-                            name: '李欣欣'
-                        },
-                        {
-                            name: '赖星星'
-                        }
-                    ]
-                }
-            ]
+            // clientCount: 4,
+            clientList: [],
+            mockData: [],
+            pageSize: 1,
+            pageNumber: 10,
         }
     }
     componentDidMount() {
         window.MF && MF.setTitle("客户管理")
-
         this.fetchClientList();
     }
-
     fetchClientList(){
-        const mockData = [
-            {
-                name: '信东',
-            },
-            {
-                name: '马成虎',
-            },
-            {
-                name: '任超'
-            },
-            {
-                name: '范若宇'
-            },
-            {
-                name: '叶晓琪'
-            }
-        ]
-        /** 按首字母分组 */
-        const data = mockData.map(d=>{
-            let pinyinStr = pinyinUtil.getFirstLetter(d.name, false);
-            let firstAlpha = pinyinStr.substring(0, 1);
-            console.log('speel', firstAlpha.toUpperCase());
-            d.alpha = firstAlpha.toUpperCase()
-            return d;
-        })
-        let sortArr = []
-        data.map(d=>{
-            // 检查该字母是否已处理过
-            if(!sortArr.filter(item=>item.alpha === d.alpha).length){
-                let alphaObj = {
-                    alpha: d.alpha
-                };
-                let arr = data.filter(item=>item.alpha === d.alpha);
-                alphaObj.list = arr;
-                sortArr.push(alphaObj);
-            }
-
-        })
-        /** 按首字母排序 */
-        for(let i = 0; i < sortArr.length; i++){
-            for(let j = i+1; j < data.length; j++){
-                if(sortArr[i].alpha > data[j].alpha){
-                    let temp = sortArr[i];
-                    sortArr[i] = sortArr[j];
-                    sortArr[j] = temp;
+        /** 按首字母分组
+         * [{
+         *     A:[ {
+         *       name: ''
+         *     }]
+         * }]
+         * */
+        APP.list("/customer/list.json",{ from:0, number:10 },r => {
+            this.setState({mockData: r.list}, () => {
+                const data = this.state.mockData.map(d=>{
+                    let pinyinStr = pinyinUtil.getFirstLetter(d.name, false);
+                    let firstAlpha = pinyinStr.substring(0, 1);
+                    // console.log('speel', firstAlpha.toUpperCase());
+                    d.alpha = firstAlpha.toUpperCase();
+                    return d;
+                })
+                /** 按首字母排序 */
+                for(let i = 0; i < data.length; i++){
+                    for(let j = i+1; j < data.length; j++){
+                        if(data[i].alpha > data[j].alpha){
+                            let temp = data[i];
+                            data[i] = data[j];
+                            data[j] = temp;
+                        }
+                    }
                 }
-            }
-        }
+                /**根据字母分组*/
+                let sortArr = [];
+                data.map(d=>{
+                    // 检查该字母是否已处理过
+                    if(!sortArr.filter(item=>item.alpha === d.alpha).length){
+                        let alphaObj = {
+                            alpha: d.alpha
+                        };
+                        let arr = data.filter(item=>item.alpha === d.alpha);
+                        alphaObj.list = arr;
+                        sortArr.push(alphaObj);
+                    }
 
-        this.setState({
-            clientList: sortArr
+                });
+                this.setState({
+                    clientList: sortArr
+                })
+            })
         })
-        // $.ajax({
-        //     url: serverUrl + '/customerInfo/QueryCustomerList',
-        //     type:"POST",
-        //     contentType: 'application/json',
-        //     data: {
-        //         "endTime": "2018-06-30 00:00:00",
-        //         "name": "",
-        //         "startTime": "2018-06-01 00:00:00"
-        //     },
-        //     xhrFields: { withCredentials: false },
-        //     success:(r) => {
-        //         console.log(r)
-        //
-        //     },
-        //     fail: function(r) {
-        //     },
-        //     dataType:"json"
-        // });
     }
     onAlphaClick(id){
         this.props.onAlphaClick && this.props.onAlphaClick(key);
         let el=document.getElementById(id);
         el.scrollIntoView();
-
+    }
+    /*编辑客户操作*/
+    editClient (data) {
+//        const ss = sessionStorage;
+//        ss.setItem("clientData",JSON.stringify([data]));
+        APP.list('/customer/view.json', {"customerId":data.id,}, r => {
+            window.MF && MF.navi("client/create_client.html?customerMsg=" + JSON.stringify(r));
+        })
+    }
+    /*删除客户操作*/
+    deleteClient (data) {
+        APP.list('/customer/delete.json', {"customerId":data.id,}, r => {
+            this.fetchClientList();//刷新
+        })
+    }
+    /*获取性别函数*/
+    getSex(code) {
+        return code == "M"? "男" : "女";
     }
     render(){
         const {
@@ -135,7 +104,7 @@ class ClientList extends React.Component {
                 </div>
                 <div className="c-list">
                     <div className="cl-title">
-                        <h3>所有客户<i>（{this.state.clientCount}人）</i></h3>
+                        <h3>当前页客户<i>{this.state.mockData && this.state.mockData.length}人</i></h3>
                         <a className="cl-edit" onClick={()=>this.setState({edit: !edit})}>{edit ? '取消': '编辑'}</a>
                     </div>
                     {
@@ -150,15 +119,15 @@ class ClientList extends React.Component {
                                                 <dd>
                                                     <a>
                                                         <span>{c.name}</span>
-                                                        <i>男</i>
-                                                        <em>1990-03-23</em>
+                                                        <i>{this.getSex(c.gender)}</i>
+                                                        <em>{c.birthday}</em>
                                                     </a>
                                                     {
                                                         this.state.edit && (
                                                             <span>
-                                                                <a>编辑</a>
-                                                                <a>删除</a>
-                                                            </span>
+                    <a onClick = {() => {this.editClient(c)}}>编辑</a>
+                    <a onClick = {() => {this.deleteClient(c)}}>删除</a>
+                    </span>
                                                         )
                                                     }
                                                     <span className="cl-line"></span>
@@ -184,8 +153,16 @@ class ClientList extends React.Component {
                     }
 
                 </div>
+                <div className="c-pagement">
+                    {
+
+                    }
+                </div>
                 <div className="c-footer">
-                    <a href="create_client.html">新建客户</a>
+                    <a onClick = {() => {
+//                        sessionStorage.setItem("clientData",JSON.stringify([{}]));
+                        window.MF && MF.navi("client/create_client.html?customerMsg=" + JSON.stringify({}));
+                    }}>新建客户</a>
                 </div>
             </div>
         )

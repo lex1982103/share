@@ -31,7 +31,11 @@
 .swiper-wrapper {
   position: relative;
   width: 100%;
+<<<<<<< HEAD
   height: 90%;
+=======
+  height: 100%;
+>>>>>>> master
   z-index: 1;
   display: -webkit-box;
   display: -webkit-flex;

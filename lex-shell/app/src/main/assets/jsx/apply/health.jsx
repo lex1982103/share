@@ -6,7 +6,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("健康告知")
+        window.MF&&MF.setTitle("健康告知")
         APP.apply.view(this.state.orderId, r => {
             this.setState({ order: r })
         })
@@ -15,7 +15,12 @@ class Main extends React.Component {
         this.next()
     }
     next() {
-        MF.navi("apply/beneficiary.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/beneficiary.html?orderId=" + this.state.orderId)
+        }else {
+            "apply/beneficiary.html?orderId=" + this.state.orderId
+        }
+
     }
     render() {
         return (

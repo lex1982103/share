@@ -13,7 +13,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("选择客户")
+        window.MF&&MF.setTitle("选择客户")
         APP.proposal.view(this.state.proposalId, r => {
             APP.proposal.viewPlan(r.detail[0], plan => {
                 this.state.cust[0] = r.applicant
@@ -21,6 +21,10 @@ class Main extends React.Component {
                 this.setState({proposal:r, plan:plan, cust:this.state.cust})
             })
         })
+        APP.onShow = () => {
+            console.log("refresh...")
+            this.forceUpdate
+        }
     }
     select(index) {
         this.state.cust[index] = {
@@ -31,7 +35,12 @@ class Main extends React.Component {
     }
     next() {
         APP.proposal.refreshCust(this.state.proposal.proposalId, this.state.cust[0], [this.state.cust[1]], r => {
-            MF.navi("proposal/proposal.html?proposalId=" + this.state.proposalId)
+            if(window.MF){
+                MF.navi("proposal/proposal.html?proposalId=" + this.state.proposalId)
+            }else{
+                location.href = "proposal/proposal.html?proposalId=" + this.state.proposalId
+            }
+
         })
     }
     onValChange(index, key, e) {

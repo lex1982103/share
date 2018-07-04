@@ -14,7 +14,7 @@ class Main extends React.Component {
             ages.push(i)
         this.setState({ ages: ages })
 
-        MF.setTitle("投保计划")
+        window.MF&&MF.setTitle("投保计划")
 
         APP.apply.view(this.state.orderId, r => {
             this.setState({ order: r }, () => {
@@ -80,7 +80,11 @@ class Main extends React.Component {
         })
     }
     next() {
-        MF.navi("apply/health.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/health.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/health.html?orderId=" + this.state.orderId
+        }
     }
     showBenefit() {
         MF.pop("apply/benefit.html?planId=" + this.state.plan.planId, 90)

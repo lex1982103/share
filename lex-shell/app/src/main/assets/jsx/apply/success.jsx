@@ -6,10 +6,15 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("投保结果")
+        window.MF&&MF.setTitle("投保结果")
     }
     next() {
-        MF.navi("home/home.html")
+        if(window.MF){
+            MF.navi("home/home.html")
+        }else{
+            location.href = "home/home.html"
+        }
+
     }
     render() {
         return (

@@ -6,10 +6,15 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("影像")
+        window.MF&&MF.setTitle("影像")
     }
     next() {
-        MF.navi("apply/preview.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/preview.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/preview.html?orderId=" + this.state.orderId
+        }
+
     }
     render() {
         return (

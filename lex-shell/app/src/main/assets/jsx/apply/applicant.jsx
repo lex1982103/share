@@ -13,7 +13,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("投保人")
+        window.MF&&MF.setTitle("投保人")
         APP.dict("cert,marriage,nation,occupation", r => {
             let occMap = {}
             let occRank = {}
@@ -73,7 +73,12 @@ class Main extends React.Component {
     }
     next() {
         this.save()
-        MF.navi("apply/insurant.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/insurant.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/insurant.html?orderId=" + this.state.orderId
+        }
+
     }
     onValChange(key, val) {
         this.state.cust[key] = val

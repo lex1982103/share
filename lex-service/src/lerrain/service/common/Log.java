@@ -230,4 +230,9 @@ public class Log
         if(write_error)
             print("ERROR", null, e);
     }
+
+    public static void stat(String str)
+    {
+        print("STAT", str, null);
+    }
 }

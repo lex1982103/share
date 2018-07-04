@@ -1,5 +1,7 @@
 package lerrain.project.mshell;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
@@ -211,4 +213,47 @@ public class JsBridge
             });
         }
     }
+
+    @JavascriptInterface
+    public void alert(String title, String text, String left, String right)
+    {
+        AlertDialog.Builder builder  = new AlertDialog.Builder(layer.window);
+        builder.setTitle(title);
+        builder.setMessage(text);
+
+        if (left != null) builder.setPositiveButton(left, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                layer.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        layer.runJs("APP.callback(true)");
+                    }
+                });
+            }
+        });
+
+        if (right != null) builder.setNegativeButton(right, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                layer.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        layer.runJs("APP.callback(false)");
+                    }
+                });
+            }
+        });
+
+        builder.show();
+    }
+
 }

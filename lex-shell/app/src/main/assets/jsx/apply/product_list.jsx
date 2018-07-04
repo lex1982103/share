@@ -6,7 +6,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        APP.apply.queryProduct(null, "fosun", null, r => {
+        APP.apply.queryProduct(null, "nci", null, r => {
           this.setState({ list: r })
         })
     }

@@ -1,23 +1,25 @@
 package lerrain.project.mshell;
 
-import android.webkit.CookieManager;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class Network
 {
-//	public static String ADDRESS = "http://58.247.38.198:8089/sirius/";
-//	public static String ADDRESS = "http://192.168.0.2:8089/phone/";
-	public static String ADDRESS = "http://www.lerrain.com:7701";
-//	public static String ADDRESS = "http://218.244.143.11:8080/solar-phone/";
-	
+	public static String ADDRESS = "http://www.lerrain.com:7666/app/";
+
 	public static String urlOf(String url)
 	{
 		if (url.startsWith("file://"))
@@ -26,129 +28,86 @@ public class Network
 		return Network.ADDRESS + url;
 	}
 
-	public static boolean download(String urlstr, File dstFile)
+	public static String request(String urlstr, String req, int timeout)
 	{
-		File dir = dstFile.getParentFile();
-		if (!dir.exists())
-		{
-			if (!dir.mkdirs())
-				return false;
-		}
-		
-		if (!dir.isDirectory())
-			return false;
-		
+		String res = null;
+
 		HttpURLConnection conn = null;
-		InputStream in = null;
-		OutputStream out = null;
 		try
 		{
-			URL url = new URL(urlstr);
-			conn = (HttpURLConnection)url.openConnection();
-			in = conn.getInputStream();
-			out = new FileOutputStream(dstFile);
+			URL url = new URL(urlOf(urlstr));
+			byte[] info = req == null ? null : req.getBytes("UTF-8");
 
-			byte[] b = new byte[2048];
-			int c;
-			while ((c = in.read(b)) >= 0)
+			conn = (HttpURLConnection)url.openConnection();
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setConnectTimeout(timeout);
+			conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+
+			if (conn instanceof HttpsURLConnection)
 			{
-				out.write(b, 0, c);
+				SSLContext sslContext = SSLContext.getInstance("SSL");
+				TrustManager[] tm = {new MyX509TrustManager()};
+				sslContext.init(null, tm, new java.security.SecureRandom());;
+				SSLSocketFactory ssf = sslContext.getSocketFactory();
+				((HttpsURLConnection) conn).setSSLSocketFactory(ssf);
 			}
+
+			if (info != null)
+			{
+				conn.setRequestProperty("Content-Length", String.valueOf(info.length));
+
+				try (OutputStream out = conn.getOutputStream())
+				{
+					out.write(info);
+					out.flush();
+				}
+			}
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try (InputStream in = conn.getInputStream())
+			{
+				byte[] b = new byte[1024];
+				int c = 0;
+				while ((c = in.read(b)) >= 0)
+				{
+					baos.write(b, 0, c);
+				}
+			}
+			baos.close();
+
+			res = baos.toString("utf-8");
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			return false;
+			Log.e("mshell", String.format("request: %s - %s", urlstr, e.toString()));
 		}
 		finally
 		{
-			try
-			{
-	        	if (in != null)
-	        		in.close();
-			}
-			catch (IOException e)
-			{
-			}
-        	
-			try
-			{
-	        	if (out != null)
-	        		out.close();
-			}
-			catch (IOException e)
-			{
-			}
-
 			if (conn != null)
 				conn.disconnect();
 		}
-		
-		return true;
+
+		return res;
 	}
-	
-	public static String downloadStr(String uri)
+
+	private static class MyX509TrustManager implements X509TrustManager
 	{
-		String urlstr = urlOf(uri);
-		
-//		CookieManager cookieManager = CookieManager.getInstance();
-//		String cookie = cookieManager.getCookie(Network.SERVICE_ADDRESS);
-//		cookieManager.setCookie(Network.SERVICE_ADDRESS, value);
-		
-		HttpURLConnection conn = null;
-		InputStream in = null;
-		ByteArrayOutputStream out = null;
-		try
+		@Override
+		public void checkClientTrusted(X509Certificate[] chain, String authType)  throws CertificateException
 		{
-			URL url = new URL(urlstr);
-			conn = (HttpURLConnection)url.openConnection();
-//			conn.addRequestProperty("Cookie", cookie);
-			in = conn.getInputStream();
-			
-			String cookie = conn.getHeaderField("Set-Cookie");
-			CookieManager cookieManager = CookieManager.getInstance();
-			cookieManager.setCookie(Network.ADDRESS, cookie);
-			
-			out = new ByteArrayOutputStream();
+		}
 
-			byte[] b = new byte[2048];
-			int c;
-			while ((c = in.read(b)) >= 0)
-			{
-				out.write(b, 0, c);
-			}
-		}
-		catch (Exception e)
+		@Override
+		public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
 		{
-			e.printStackTrace();
-			return "";
 		}
-		finally
-		{
-			try
-			{
-	        	if (in != null)
-	        		in.close();
-			}
-			catch (IOException e)
-			{
-			}
-        	
-			try
-			{
-	        	if (out != null)
-	        		out.close();
-			}
-			catch (IOException e)
-			{
-			}
 
-			if (conn != null)
-				conn.disconnect();
+		@Override
+		public X509Certificate[] getAcceptedIssuers()
+		{
+			return null;
 		}
-		
-//		System.out.println("MSG: " + out.toString());
-		
-		return out.toString();
 	}
 }

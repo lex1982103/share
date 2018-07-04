@@ -8,7 +8,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("受益人")
+        window.MF&&MF.setTitle("受益人")
         APP.dict("cert,relation", r => {
             this.setState({
                 certTypeDict: r.cert,
@@ -33,7 +33,12 @@ class Main extends React.Component {
     }
     next() {
         this.save()
-        MF.navi("apply/announce.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/announce.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/announce.html?orderId=" + this.state.orderId
+        }
+
     }
     delete(i, j) {
         this.state.order.detail.insurants[i].beneficiary.splice(j, 1)

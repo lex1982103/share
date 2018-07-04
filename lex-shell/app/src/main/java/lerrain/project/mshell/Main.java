@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +42,7 @@ public class Main extends Activity
 //	{
 //		AssetManager am = this.getAssets();
 //
-//		try (InputStream is = am.open("html/template.html"))
+//		try (InputStream is = am.open("phone.html/template.phone.html"))
 //		{
 //			template = Common.stringOf(is, "utf-8");
 //		}
@@ -52,7 +53,7 @@ public class Main extends Activity
 //
 //		try
 //		{
-//			loadHtml(am, "html");
+//			loadHtml(am, "phone.html");
 //			Log.i("mshell", pages.keySet().toString());
 //		}
 //		catch (Exception e)
@@ -71,12 +72,12 @@ public class Main extends Activity
 //		}
 //		else
 //		{
-//			if (path.endsWith(".html"))
+//			if (path.endsWith(".phone.html"))
 //			{
 //				try (InputStream is = am.open(path))
 //				{
-//					String html = Common.stringOf(is, "utf-8");
-//					pages.put(path.substring(5, path.length() - 5), html);
+//					String phone.html = Common.stringOf(is, "utf-8");
+//					pages.put(path.substring(5, path.length() - 5), phone.html);
 //				}
 //				catch (Exception e)
 //				{
@@ -90,8 +91,24 @@ public class Main extends Activity
 	protected Layer createBaseLayer()
 	{
 		PageLayer layer = new PageLayer(this);
-		layer.openLocal("home/login.html");
+		layer.openLocal("home/login2.html");
 
 		return layer;
+	}
+
+	public void stat(final String action)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				JSONObject json = new JSONObject();
+				json.put("userKey", layers.env.get("userKey"));
+				json.put("action", action);
+
+				Network.request("util/stat.json", json.toJSONString(), 1000);
+			}
+		}).start();
 	}
 }

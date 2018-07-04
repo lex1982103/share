@@ -6,7 +6,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("投保单预览")
+        window.MF&&MF.setTitle("投保单预览")
         APP.apply.view(this.state.orderId, r => {
             this.setState({ order: r })
         })
@@ -15,7 +15,12 @@ class Main extends React.Component {
         this.next()
     }
     next() {
-        MF.navi("apply/success.html?orderId=" + this.state.orderId)
+        if(windwo.MF){
+            MF.navi("apply/success.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/success.html?orderId=" + this.state.orderId
+        }
+
     }
     render() {
         return (

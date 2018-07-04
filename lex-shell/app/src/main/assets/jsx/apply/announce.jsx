@@ -6,10 +6,15 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("客户声明及授权")
+        window.MF&&MF.setTitle("客户声明及授权")
     }
     next() {
-        MF.navi("apply/pay.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/pay.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/pay.html?orderId=" + this.state.orderId
+        }
+
     }
     render() {
         return (

@@ -28,6 +28,8 @@ public abstract class Layer extends RelativeLayout
 
 	int mode;
 
+	String currentUrl;
+
 	public Layer(Main window, int top)
 	{
 		super(window);
@@ -76,6 +78,7 @@ public abstract class Layer extends RelativeLayout
 			@Override
 			public void onPageFinished(WebView view, String url)
 			{
+                onShow();
 			}
 		};
 
@@ -105,7 +108,7 @@ public abstract class Layer extends RelativeLayout
 //		{
 //			Log.i("mshell", "open local: "+ link);
 //
-//			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.pages.get(uri), "application/html", "utf-8", null);
+//			wv.loadDataWithBaseURL("file:///android_asset/phone.html/" + link, window.pages.get(uri), "application/phone.html", "utf-8", null);
 //		}
 //		else
 //		{
@@ -114,9 +117,14 @@ public abstract class Layer extends RelativeLayout
 //			int m = uri.lastIndexOf("/");
 //			int n = uri.lastIndexOf(".");
 //			String js = uri.substring(m < 0 ? 0 : m + 1, n < 0 ? uri.length() : n);
-//			wv.loadDataWithBaseURL("file:///android_asset/html/" + link, window.template.replace("<!-- JS -->", js), "application/html", "utf-8", null);
+//			wv.loadDataWithBaseURL("file:///android_asset/phone.html/" + link, window.template.replace("<!-- JS -->", js), "application/phone.html", "utf-8", null);
 //		}
 //	}
+
+	public void onShow()
+	{
+		runJs("if (APP.onShow) { APP.onShow() }");
+	}
 
 	public void runJs(String js)
 	{
@@ -125,17 +133,29 @@ public abstract class Layer extends RelativeLayout
 
 	public void openUrl(String url)
 	{
+		if (url != null)
+		{
+			int p2 = url.lastIndexOf("?");
+			window.stat("open:" + (p2 < 0 ? url : url.substring(0, p2)));
+		}
+
 		wv.loadUrl(url);
 	}
 
 	public void openLocal(String uri)
 	{
+		if (uri != null)
+		{
+			int p2 = uri.lastIndexOf("?");
+			window.stat("open:" + (p2 < 0 ? uri : uri.substring(0, p2)));
+		}
+
 		wv.loadUrl("file:///android_asset/html/" + uri);
 	}
 
 	protected abstract void playEnter();
 
-	protected abstract void playOut();
+	protected abstract void playOut(int mode);
 
 	protected void play(int x, int y, int dx, int dy, int mode)
 	{
@@ -163,7 +183,7 @@ public abstract class Layer extends RelativeLayout
 			}
 			else if (Math.abs(scroller.getFinalY() - scroller.getStartY()) > 0)
 			{
-				int alpha = mode == 1 ?
+				int alpha = mode == 1 || mode == 3 ?
 					Math.abs((scroller.getCurrY() - scroller.getStartY()) * 192 / (scroller.getFinalY() - scroller.getStartY())):
 					Math.abs((scroller.getCurrY() - scroller.getFinalY()) * 192 / (scroller.getFinalY() - scroller.getStartY()));
 
@@ -175,16 +195,26 @@ public abstract class Layer extends RelativeLayout
 		}
 		else if (scroller.isFinished())
 		{
-			if (mode == 1)
+			//1取消回退一页，2回退一页，3取消回退到首页，4回退到首页
+			if (mode == 1 || mode == 3)
 			{
 				rl.setTranslationX(0);
 				rl.setTranslationY(0);
 
 				Layer.this.setBackgroundColor(0xC0000000);
+
+				if (mode == 3)
+					for (int i = this.getChildCount() - 1; i > 1; i--)
+						((Layers) Layer.this.getParent()).getChildAt(i).setVisibility(View.VISIBLE);
 			}
 			else if (mode == 2)
 			{
 				((Layers) Layer.this.getParent()).removeView(Layer.this);
+			}
+			else if (mode == 4)
+			{
+				Layers root = (Layers) Layer.this.getParent();
+				root.removeViews(2, root.getChildCount() - 2);
 			}
 
 			mode = 0;

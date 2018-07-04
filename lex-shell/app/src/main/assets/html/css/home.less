@@ -19,6 +19,10 @@
 .fontSize(){
   font-size: 1em;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 .inputFont(){
   font-size: 1.1em;
 }
@@ -34,7 +38,64 @@
 .fixTop(){
   padding-top: 3.65em;
 }
+<<<<<<< HEAD
 
+=======
+.footNav{
+  width: 100%;
+  box-shadow: 5px 5px 5px #000;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background: #fff;
+  .px2rem(height,98);
+  .actHome{
+    background: url("../images/homeC.png") center center no-repeat;
+    color:#3398DB;
+  }
+  .actMine{
+    background: url("../images/mineB.png") center center no-repeat;
+    color:#3398DB;
+  }
+  li{
+    width: 100/4%;
+    .px2rem(padding-top,60);
+    .px2rem(font-size,20);
+    cursor: pointer;
+    color: #4A4A4A;
+    text-align: center;
+    background: url("../images/homeC2.png") center center no-repeat;
+    float: left;
+    display: block;
+    .px2rem(background-size,48);
+    &:nth-child(2){
+      background: url("../images/gerenC.png") center center no-repeat;
+    }
+    &:nth-child(3){
+      background: url("../images/teamC.png") center center no-repeat;
+    }
+    &:nth-child(4){
+      background: url("../images/mineC.png") center center no-repeat;
+    }
+    &:nth-child(1):hover{
+      background: url("../images/homeC.png") center center no-repeat;
+      color:#3398DB;
+    }
+    &:nth-child(2):hover{
+      background: url("../images/gerenB.png") center center no-repeat;
+      color:#3398DB;
+    }
+    &:nth-child(3):hover{
+      background: url("../images/teamB.png") center center no-repeat;
+      color:#3398DB;
+    }
+    &:nth-child(4):hover{
+      background: url("../images/mineB.png") center center no-repeat;
+      color:#3398DB;
+    }
+  }
+}
+>>>>>>> master
 
 
 #ppp{
@@ -168,13 +229,26 @@ a{ text-decoration: none; color: @black}
 }
 .shortcut-row1{
   padding: 1em .6em;
+<<<<<<< HEAD
+=======
+  display: flex;
+>>>>>>> master
 
   background: #fff;
   a.srow-item{
     width: 20%;
+<<<<<<< HEAD
     display: inline-block;
     color: @gray;
     font-size:.9em;
+=======
+    display: flex;
+    color: @gray;
+    flex: 1;
+    font-size:.9em;
+    justify-content:center;
+    flex-direction: column;
+>>>>>>> master
     > div{
       text-align: center;
       img{ width: 3.5em; height: 3.5em; }

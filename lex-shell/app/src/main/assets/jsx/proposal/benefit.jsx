@@ -12,7 +12,7 @@ class Main extends React.Component {
     }
   }
   componentDidMount() {
-    MF.setTitle("利益演示")
+    window.MF&&MF.setTitle("利益演示")
     APP.proposal.format(this.state.planId, "coverage,benefit_chart", r => {
       this.setState({coverage:r.coverage, chart:r.benefit_chart}, this.onRepaint)
     })
@@ -67,9 +67,9 @@ class Main extends React.Component {
           : this.state.mode == 0 ?
             <div style={{display:"flex", flexDirection:"column", marginTop:"80px"}}>
               { this.state.chart.map((v, i) => v.content == null ? null :
-                <div className="pl-1">
+                <div className="pl-1 bg-white">
                   <div class="eclipse text18" style={{width:"660px", textAlign:"center", marginLeft:"35px", height:"80px", lineHeight:"80px", borderBottom:"#ddd solid 1px"}}>
-                    {this.state.productName}
+                    {v.productName}
                   </div>
                   <BenefitChart ref={"benefitChart"+i} id={"benefitChart"+i} chart={v} years={[-2,-1,0,1,2]}/> 
                   <div style={{height:"10px", backgroundColor:"#e6e6e6"}}/>

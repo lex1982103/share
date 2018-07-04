@@ -9,7 +9,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("信息补充")
+        window.MF&&MF.setTitle("信息补充")
         APP.proposal.view(this.state.proposalId, r => {
             let cust = [r.applicant]
             r.detail.map(planId => {
@@ -27,7 +27,12 @@ class Main extends React.Component {
     }
     next() {
         APP.proposal.save(this.state.proposalId, v => {
-            MF.navi("proposal/preview.html?proposalId=" + this.state.proposalId)
+            if(window.MF){
+                MF.navi("proposal/preview.html?proposalId=" + this.state.proposalId)
+            }else{
+                location.href = "proposal/preview.html?proposalId=" + this.state.proposalId
+            }
+
         })
     }
     onValChange(index, key, e) {

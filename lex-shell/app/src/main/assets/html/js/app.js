@@ -39,8 +39,13 @@ var APP = {
    list(url, postData, onSucc) {
       Host.req(url, postData, onSucc)
     },
+<<<<<<< HEAD
     openApply(url, onSucc) {
         Host.req(url, {type: 2}, onSucc)
+=======
+    openApply(url, postData, onSucc) {
+        Host.req(url, postData, onSucc)
+>>>>>>> master
     },
     toMapDict(dict) {
         if (dict instanceof Array) {

@@ -175,6 +175,13 @@ a {
   padding: .2em;
   color: #4a4a4a;
 }
+.client-container .c-pagement {
+  position: fixed;
+  bottom: 1em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .client-container .c-footer {
   position: fixed;
   bottom: 0;

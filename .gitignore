@@ -3,5 +3,6 @@
 */**/.*
 out/*
 test/*
-*/build
+*/build/*
 */target/*
+*.class

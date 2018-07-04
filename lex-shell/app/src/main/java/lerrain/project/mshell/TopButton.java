@@ -23,6 +23,7 @@ public class TopButton extends ImageView implements OnClickListener
 		this.index = index;
 
 		this.setOnClickListener(this);
+		this.setPadding(Ui.dp(6), Ui.dp(6), Ui.dp(6), Ui.dp(6));
 		
 		scroller = new Scroller(getContext());
 	}
@@ -91,7 +92,7 @@ public class TopButton extends ImageView implements OnClickListener
 		else
 		{
 			if ("back".equals(str))
-				this.setImageResource(R.drawable.arrow_left);
+				this.setImageResource(R.drawable.arrow_left_1);
 		}
 	}
 

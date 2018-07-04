@@ -1,0 +1,112 @@
+
+body{
+	width: 750px;background: #fff;padding-bottom: 4em;
+}
+ul{
+	list-style: none;
+}
+
+/*--fontSize:1em;*/
+
+div.home-container{
+	font-size:.5em;background: #fff;padding: 0 5%;
+}
+
+
+div.receipt-header{
+	text-align: center;padding: 1em 0;font-weight: bold;
+}
+
+
+div.receipt-block1{
+	position: relative;
+}
+
+div.receipt-block1 h1{
+	font-size: 1em;height: 2.5em;line-height: 2.5em;
+}
+
+div.receipt-block1 ul li{
+	height: 2em;line-height: 2em;
+}
+
+div.receipt-block1 div.right-box{
+	font-size: 1em;
+	width: 15em;
+	border: 1px dashed #000;
+	position: absolute;
+	top: 2em;right: 0;
+}
+
+
+div.receipt-block2{
+	position: relative;margin-top: 2em;
+}
+
+div.receipt-block2 h1{
+	font-size: 1em;height: 2em;line-height: 2em;font-weight: normal;
+}
+
+div.receipt-block2 ul{
+	font-size: 1em;padding: 1em 2em 1em;
+}
+div.receipt-block2 ul li{
+	line-height: 1.5em;position: relative;
+}
+div.receipt-block2 ul li span{
+	position: absolute;left: -1em;
+}
+
+div.receipt-block3{
+	position: relative;
+}
+
+div.receipt-block3 h1{
+	font-size: 1em;height: 2em;line-height: 2em;font-weight: normal;
+}
+
+div.receipt-block3 ul{
+	font-size: 1em;padding: 1em 2em 1em;
+}
+div.receipt-block3 ul li{
+	line-height: 1.5em;position: relative;
+}
+div.receipt-block3 ul li.item{
+	line-height: 1.5em;position: relative;text-decoration: underline;
+}
+div.receipt-block3 ul li span.num{
+	position: absolute;left: -1em;
+}
+div.receipt-block3 ul li>b{
+	display:inline-block;padding:0 1em;border-bottom:1px solid #000; font-weight: normal;
+}
+input{
+	 width: auto; 
+     height: auto; 
+     /*box-sizing: border-box; */
+     /*padding: 0 10px 0 10px; */
+     /*border: 0; */
+    /*font-size: 1rem;*/
+}
+
+
+
+div.receipt-block4{
+	position: relative;margin-top: 3em;
+}
+div.receipt-block4 ul{
+	height: 3em;
+}
+div.receipt-block4 ul li{
+	width: 45%;text-align: left;float: right;
+}
+div.receipt-block4 ul li span{
+	color:#666;display: inline-block;vertical-align: middle;border: .5em solid #eee;height: 4em;width:10em;text-align:center;line-height: 3em;
+}
+
+div.receipt-block4 ul li img{
+	width: 6em;height: 6em;vertical-align: middle;
+}
+div.receipt-block5{
+	position: relative;margin-top: 8em;
+}

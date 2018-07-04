@@ -41,12 +41,21 @@ class Main extends React.Component {
              $.ajax({
                     contentType: 'application/json',
                     type:'POST',
+<<<<<<< HEAD
+                    url:"http://192.168.1.218:7666/user/login.json",
+                    // url:"http://114.112.96.61:7666/user/login.json",
+=======
                     url:"http://114.112.96.61:7666/app/user/login.json",
+>>>>>>> master
                     data:JSON.stringify({
                         "loginName":this.refs.loginName.value,
                         "password":this.refs.password.value
                     }),
                     success(data){
+<<<<<<< HEAD
+                         MF.setEnv("userKey", data.content.userKey)
+                        MF.navi("home/home.html")
+=======
                         if(window.MF){
                             MF.setEnv("userKey", data.content.userKey)
                             MF.setEnv("orgId", data.content.orgId)
@@ -54,6 +63,7 @@ class Main extends React.Component {
                         }else{
                             location.href = 'home.html'
                         }
+>>>>>>> master
                     },
                     error(err){
                         console.log(err,'err');

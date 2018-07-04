@@ -87,6 +87,8 @@ body {
 input::-webkit-input-placeholder {
   color: #d1d1d1;
 }
+<<<<<<< HEAD
+=======
 .conpanyIn {
   width: 100%;
 }
@@ -102,3 +104,4 @@ input::-webkit-input-placeholder {
 .PlayerMain video {
   width: 100%;
 }
+>>>>>>> master

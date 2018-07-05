@@ -91,7 +91,7 @@ public class Main extends Activity
 	protected Layer createBaseLayer()
 	{
 		PageLayer layer = new PageLayer(this);
-		layer.openLocal("home/login.html");
+		layer.openLocal("home/login2.html");
 
 		return layer;
 	}

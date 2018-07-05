@@ -7,7 +7,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        window.MF&&MF.setTitle("编辑受益人")
+        MF.setTitle("编辑受益人")
         APP.dict("cert,relation", r => {
             this.setState({
                 certTypeDict: r.cert,
@@ -19,10 +19,7 @@ class Main extends React.Component {
         this.state.cust.name = this.refs.name.value
         this.state.cust.certNo = this.refs.certNo.value
         this.state.cust.scale = this.refs.scale.value
-        if(window.MF){
-            MF.back(JSON.stringify(this.state.cust))
-        }
-
+        MF.back(JSON.stringify(this.state.cust))
     }
     onValChange(key, val) {
         this.state.cust[key] = val

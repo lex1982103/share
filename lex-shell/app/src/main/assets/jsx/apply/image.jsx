@@ -6,17 +6,10 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        window.MF&&MF.setTitle("影像")
+        MF.setTitle("影像")
     }
     next() {
-        if(window.MF){
-            // MF.navi("apply/preview.html?orderId=" + this.state.orderId)
-            MF.navi("xinhua_lx/autograph_xh.html?orderId=" + this.state.orderId)
-        }else{
-            // location.href = "apply/preview.html?orderId=" + this.state.orderId
-            location.href = "xinhua_lx/autograph_xh.html?orderId=" + this.state.orderId
-        }
-
+        MF.navi("apply/preview.html?orderId=" + this.state.orderId)
     }
     render() {
         return (
@@ -26,9 +19,6 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             预览
-                        </div>
-                        <div className="ml-1 mr-2" style={{width:"30px"}}>
-                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

@@ -117,9 +117,10 @@ var Main = function (_React$Component) {
             $.ajax({
                 url: 'http://114.112.96.61:7666/app/user/qrymodule.json',
                 type: "POST",
-                data: JSON.stringify({
-                    "orgId": this.state.orgId }),
+                data: {
+                    "orgId": "10200" },
                 success: function success(data) {
+                    console.log(JSON.stringify(data));
                     that.setState({
                         LabelDta: data.content
                     });

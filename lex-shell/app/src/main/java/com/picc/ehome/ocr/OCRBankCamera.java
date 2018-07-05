@@ -1,4 +1,4 @@
-package com.polysoft.nci.ocr;
+package com.picc.ehome.ocr;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,11 +8,11 @@ import com.intsig.ccrengine.CCREngine;
 import com.intsig.ccrengine.CCREngine.ResultData;
 import com.intsig.ccrengine.CommonUtil;
 import com.intsig.ccrengine.ISCardScanActivity;
-import com.polysoft.nci.interf.Callback;
-import com.polysoft.nci.interf.IActivity;
-import com.polysoft.nci.interf.IActivityResult;
-import com.polysoft.nci.ocr.OCRData.OCRBankData;
-import com.polysoft.nci.utils.BitmapUtil;
+import com.picc.ehome.interf.Callback;
+import com.picc.ehome.interf.IActivity;
+import com.picc.ehome.interf.IActivityResult;
+import com.picc.ehome.ocr.OCRData.OCRBankData;
+import com.picc.ehome.utils.BitmapUtil;
 
 public class OCRBankCamera implements IActivityResult {
 

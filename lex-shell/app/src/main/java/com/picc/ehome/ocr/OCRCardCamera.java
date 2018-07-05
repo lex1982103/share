@@ -1,4 +1,4 @@
-package com.polysoft.nci.ocr;
+package com.picc.ehome.ocr;
 
 import java.io.File;
 
@@ -11,12 +11,12 @@ import com.intsig.idcardscan.sdk.CommonUtil;
 import com.intsig.idcardscan.sdk.IDCardScanSDK;
 import com.intsig.idcardscan.sdk.ISCardScanActivity;
 import com.intsig.idcardscan.sdk.ResultData;
-import com.polysoft.nci.interf.Callback;
-import com.polysoft.nci.interf.IActivity;
-import com.polysoft.nci.interf.IActivityResult;
-import com.polysoft.nci.ocr.OCRData.OCRBackData;
-import com.polysoft.nci.ocr.OCRData.OCRFrontData;
-import com.polysoft.nci.utils.BitmapUtil;
+import com.picc.ehome.interf.Callback;
+import com.picc.ehome.interf.IActivity;
+import com.picc.ehome.interf.IActivityResult;
+import com.picc.ehome.ocr.OCRData.OCRBackData;
+import com.picc.ehome.ocr.OCRData.OCRFrontData;
+import com.picc.ehome.utils.BitmapUtil;
 
 public class OCRCardCamera implements IActivityResult {
 

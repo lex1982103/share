@@ -1,8 +1,8 @@
-package com.polysoft.nci.application;
+package com.picc.ehome.application;
 
 import android.app.Application;
 
-import com.polysoft.nci.utils.CtxUtil;
+import com.picc.ehome.utils.CtxUtil;
 
 public class MyApplication extends Application {
 	

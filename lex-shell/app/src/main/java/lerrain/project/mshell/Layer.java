@@ -3,11 +3,8 @@ package lerrain.project.mshell;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.webkit.CookieManager;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -16,9 +13,9 @@ import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
-import com.polysoft.nci.ocr.IOCRScript;
-import com.polysoft.nci.ocr.OCRCallJavaScriptImpl;
-import com.polysoft.nci.ocr.OCRNativeApi;
+import com.picc.ehome.ocr.IOCRScript;
+import com.picc.ehome.ocr.OCRCallJavaScriptImpl;
+import com.picc.ehome.ocr.OCRNativeApi;
 
 public abstract class Layer extends RelativeLayout
 {

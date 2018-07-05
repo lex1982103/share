@@ -1,4 +1,4 @@
-package com.polysoft.nci.interf;
+package com.picc.ehome.interf;
 
 public interface Callback<T> {
 

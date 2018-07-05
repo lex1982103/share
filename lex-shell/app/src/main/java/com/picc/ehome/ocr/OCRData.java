@@ -1,4 +1,4 @@
-package com.polysoft.nci.ocr;
+package com.picc.ehome.ocr;
 
 import com.google.gson.annotations.SerializedName;
 import com.intsig.idcardscan.sdk.ResultData;

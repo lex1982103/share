@@ -1,4 +1,4 @@
-package com.polysoft.nci.ocr;
+package com.picc.ehome.ocr;
 
 
 

@@ -1,9 +1,9 @@
-package com.polysoft.nci.ocr;
+package com.picc.ehome.ocr;
 
 import android.webkit.JavascriptInterface;
 
-import com.polysoft.nci.interf.Callback;
-import com.polysoft.nci.interf.IActivity;
+import com.picc.ehome.interf.Callback;
+import com.picc.ehome.interf.IActivity;
 
 public class OCRNativeApi {
 

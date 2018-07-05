@@ -18,17 +18,7 @@
 		<script>
 			var proposalId = common.param("proposalId")
 			if (proposalId != null && proposalId != "") {
-<<<<<<< HEAD
 				MF.direct("proposal/customer.html?proposalId=" + proposalId)
-			} else {
-				APP.proposal.create({name:"投保人", age:20, gender:"M"}, [{name:"被保险人", age:20, gender:"M"}], r => {
-					MF.direct("proposal/customer.html?proposalId=" + r.proposalId)
-=======
-			    if(window.MF){
-                    MF.direct("proposal/customer.html?proposalId=" + proposalId)
-				}else{
-			        location.href = "proposal/customer.html?proposalId=" + proposalId
-				}
 			} else {
 				APP.proposal.create({name:"投保人", age:20, gender:"M"}, [{name:"被保险人", age:20, gender:"M"}], r => {
 					if(window.MF){
@@ -36,7 +26,6 @@
 					}else{
 					    location.href = "proposal/customer.html?proposalId=" + r.proposalId
 					}
->>>>>>> master
 				})
 			}
 		</script>

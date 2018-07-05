@@ -6,13 +6,14 @@ class ClientList extends React.Component {
             // clientCount: 4,
             clientList: [],
             mockData: [],
-            pageSize: 1,
-            pageNumber: 10,
+            number: 10,
+            pageNumber: 1,
         }
     }
     componentDidMount() {
-        window.MF && MF.setTitle("客户管理")
+        window.MF && MF.setTitle("客户管理");
         this.fetchClientList();
+
     }
     fetchClientList(){
         /** 按首字母分组
@@ -22,7 +23,7 @@ class ClientList extends React.Component {
          *     }]
          * }]
          * */
-        APP.list("/customer/list.json",{ from:0, number:10 },r => {
+        APP.list("/customer/list.json",{ from:0, number:this.state.number },r => {
             this.setState({mockData: r.list}, () => {
                 const data = this.state.mockData.map(d=>{
                     let pinyinStr = pinyinUtil.getFirstLetter(d.name, false);
@@ -68,8 +69,6 @@ class ClientList extends React.Component {
     }
     /*编辑客户操作*/
     editClient (data) {
-//        const ss = sessionStorage;
-//        ss.setItem("clientData",JSON.stringify([data]));
         APP.list('/customer/view.json', {"customerId":data.id,}, r => {
             window.MF && MF.navi("client/create_client.html?customerMsg=" + JSON.stringify(r));
         })
@@ -110,7 +109,7 @@ class ClientList extends React.Component {
                     {
                         this.state.clientList.map(item=>{
                             return (
-                                <dl className="cl-section" id={'sec'+item.alpha}>
+                                <dl className="cl-section list-group-item" id={'sec'+item.alpha}>
                                     <dt>{item.alpha}</dt>
                                     {
                                         item.list.map(c=>{
@@ -125,9 +124,9 @@ class ClientList extends React.Component {
                                                     {
                                                         this.state.edit && (
                                                             <span>
-                    <a onClick = {() => {this.editClient(c)}}>编辑</a>
-                    <a onClick = {() => {this.deleteClient(c)}}>删除</a>
-                    </span>
+                                                                                            <a onClick = {() => {this.editClient(c)}}>编辑</a>
+                                                                                            <a onClick = {() => {this.deleteClient(c)}}>删除</a>
+                                                                                            </span>
                                                         )
                                                     }
                                                     <span className="cl-line"></span>
@@ -153,14 +152,8 @@ class ClientList extends React.Component {
                     }
 
                 </div>
-                <div className="c-pagement">
-                    {
-
-                    }
-                </div>
                 <div className="c-footer">
                     <a onClick = {() => {
-//                        sessionStorage.setItem("clientData",JSON.stringify([{}]));
                         window.MF && MF.navi("client/create_client.html?customerMsg=" + JSON.stringify({}));
                     }}>新建客户</a>
                 </div>

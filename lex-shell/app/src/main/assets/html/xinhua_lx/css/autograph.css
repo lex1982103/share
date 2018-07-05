@@ -1,22 +1,73 @@
-
-html,body,#autograph{
-    width: 1200px;
-    height: auto;
-    margin: 0 auto;
+#ppp {
+    width: 30.83333333rem;
+    border-left-width: 30.83333333rem;
+    height: calc(1em + 100px);
 }
-ul,ol{
+/* common */
+html {
+    font-size: 3.2vw;
+}
+body {
+    background: #f7f8fa;
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, Tahoma, Arial, heitilight, "PingFang SC", "Hiragino Sans GB", "Heiti SC", STXihei, "Microsoft YaHei", SimHei, "WenQuanYi Micro Hei";
+    font-size: 3.2vw;
+    text-size-adjust: 100% !important;
+}
+body *:not(input):not(textarea) {
+    user-select: none;
+}
+ul,
+dl,
+ol,
+figure,
+h1,
+p,
+h2,
+h3,
+h4,
+h5,
+h6,
+input {
+    padding: 0;
+    margin: 0;
+    font-size: 1em;
+    font-weight: 400;
+}
+li,
+dd {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
-b{
-    font-weight: normal;
+img,
+input,
+textarea,
+button {
+    vertical-align: middle;
+    appearance: none;
+    border-radius: 0;
+}
+hr {
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-top: #eee solid 1px;
+}
+a {
+    text-decoration: none;
+    color: #202020;
 }
 div p, span{
     font-size: 15px;
 }
+/*投保单*/
 .autograph-table{ 
     background: #fff;
-    width: 1200px;
+    max-width: 1200px;
     height: auto;
+    padding: 0 1em;
 }
 .table-head{
     display: flex;
@@ -35,6 +86,7 @@ div p, span{
 .autograph-topLeft,.beneficiary-left,.matter-left,.especially-left{
     width: 5%;
     text-align: center;
+    font-size: 23px;
 }
 .autograph-topRight,.beneficiary-right{
     flex: 1;
@@ -42,14 +94,23 @@ div p, span{
 .autograph-topRight>p:first-child{
     font-weight: bold;
 }
-.autograph-topRight p{
+.autograph-topRight ul, .autograph-topRight p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.autograph-topRight ul li, .autograph-topRight p span{
+    flex: 1;
+}
+.autograph-topRight ul li {
     display: flex;
 }
-.autograph-topRight span{
-    text-align: center;
+.autograph-topRight ul li p {
+    flex:1;
+}
+.autograph-topRight p{
     line-height: 40px;
     border: 1px solid #333;
-    flex: 1;
 }
 .autograph-title p:first-child{
     width: 7%;

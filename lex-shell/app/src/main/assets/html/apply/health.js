@@ -109,13 +109,33 @@ var Main = function (_React$Component) {
             this.next();
         }
     }, {
+        key: "getIdCardImg",
+        value: function getIdCardImg() {
+            // 证件扫描
+            this.setState({
+                IdCardImg: {}
+            });
+        }
+    }, {
         key: "next",
         value: function next() {
+            var everyState = JSON.parse(localStorage.everyState);
+            var stateData = this.state;
+            everyState.health = stateData;
+            localStorage.everyState = JSON.stringify(everyState);
             if (window.MF) {
                 MF.navi("apply/beneficiary.html?orderId=" + this.state.orderId);
             } else {
                 "apply/beneficiary.html?orderId=" + this.state.orderId;
             }
+        }
+    }, {
+        key: "getIdCardImg",
+        value: function getIdCardImg() {
+            // 证件扫描
+            this.setState({
+                IdCardImg: {}
+            });
         }
     }, {
         key: "render",
@@ -154,6 +174,11 @@ var Main = function (_React$Component) {
                 React.createElement(
                     "div",
                     { className: "bottom text18 tc-primary" },
+                    React.createElement(
+                        "div",
+                        { className: "form-item-widget" },
+                        React.createElement("img", { className: "mt-1", style: { width: "220px", height: "60px" }, src: "../images/btn-scan.png", onClick: this.getIdCardImg.bind(this) })
+                    ),
                     React.createElement("div", { className: "ml-3 mr-0", style: { width: "300px" } }),
                     React.createElement(
                         "div",

@@ -1,6 +1,3 @@
-// import Swiper from '../components/Swiper'
-
-
 const serverUrl = 'http://47.104.13.159/boot';
 class Main extends React.Component {
     constructor() {
@@ -10,16 +7,11 @@ class Main extends React.Component {
             searchInputting: false,
             searchText: '',
             products: [],
-            clickProps:{
-                display:'block',
-            },
             apiInstance:'',
         }
     }
     componentDidMount() {
-        window.MF && MF.setTitle("保单签收回执")
-        // this.fetchBanner();
-        // this.fetchProduct();
+        window.MF && MF.setTitle("保单签收回执");
     }
 testPopupDialog1(id){
     // var oHead = document.getElementsByTagName('HEAD').item(0);
@@ -31,73 +23,15 @@ testPopupDialog1(id){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-    fetchProduct(){
-        // $.ajax({
-        //     url: serverUrl + '/client/queryPage',
-        //     type:"GET",
-        //     xhrFields: { withCredentials: false },
-        //     success:(r) => {
-        //         this.setState({
-        //             products: r.rows || []
-        //         })
-        //     },
-        //     fail: function(r) {
-        //     },
-        //     dataType:"json"
-        // });
-    }
-
-    fetchBanner(){
-        // $.ajax({
-        //     url: serverUrl + '/client/queryAdverPage',
-        //     type:"GET",
-        //     xhrFields: { withCredentials: false },
-        //     success:(r) => {
-        //         let imageData = r.rows.map(row=>{
-        //             return {
-        //                 url: serverUrl + row.url,
-        //                 link: serverUrl + row.link
-        //             }
-        //         })
-        //         this.setState({
-        //             images: imageData
-        //         })
-        //         // console.log(r);
-        //     },
-        //     fail: function(r) {
-        //     },
-        //     dataType:"json"
-        // });
-    }
-
-    // openApply(orderId) {
-    //     window.MF &&  MF.navi("apply/start.html?orderId=" + orderId)
-    // }
-    // newApply() {
-    //     window.MF &&  MF.navi("apply/start.html")
-    // }
-    // openProposal() {
-    //     window.MF && MF.navi("proposal/plan.html")
-    // }
     render() {
         return (
-            <div className="home-container"  style={{'display':this.state.clickProps.display}}>
+            <div className="home-container">
             <div id="other">
                 <div className="receipt-header">保险单签收回执</div>
                 <div className="receipt-block1">
                     <div className="left-list">
                         <h1>UN004</h1>
-                        <ul>  
+                        <ul>
                             <li>保单号：880001100003</li>
                             <li>划款协议书号：99992014103006</li>
                             <li>销售机构号：0102120006</li>
@@ -130,24 +64,24 @@ testPopupDialog1(id){
                         <li>投保人：</li>
                         <li>联系电话：13652632521　　　续期划款账号：600100000000000</li>
                         <li>通讯地址：北京市东城区是的广泛地鬼地方个（110000）</li>
-                        <li>□变更地址及邮编：</li>
-                        <li>□变更联系电话：</li>
-                        <li>□变更交费形式（如需变更此项，请您提供存折、身份证的复印件）</li>
+                        <li>□ 变更地址及邮编：</li>
+                        <li>□ 变更联系电话：</li>
+                        <li>□ 变更交费形式（如需变更此项，请您提供存折、身份证的复印件）</li>
                         <li>
-                            <label>
-                                <input type="radio" value="客户自交"/>客户自交
-                                <input type="radio" value="上门收取"/>上门收取
-                                <input type="radio" value="委托银行转账"/>委托银行转账
-                            </label>
+                            <form name="from1">
+                                <input type="radio" value="客户自交" name="chose"/><label>客户自交</label>
+                                <input type="radio" value="上门收取" name="chose"/><label>上门收取</label>
+                                <input type="radio" value="委托银行转账" name="chose"/><label>委托银行转账</label>
+                            </form>
                         </li>
-                        <li>户名：<b>Davie</b>　　开户银行：<b>北京银行</b></li>
-                        <li>账号：<b>600100000000000</b></li>
+                        <li className="line">户名：<b>Davie</b>　　开户银行：<b>北京银行</b></li>
+                        <li className="line">账号：<b>600100000000000</b></li>
                     </ul>
                     <p>　　声明：投保人同意委托   （身份证号码：130199009098877     ）办理上述信息变更，并同意新华人寿保险股份有限公司将续期保费或保全保费从投保人指定的活期储蓄存款账户划至新华人寿保险股份有限公司银行存款账户。</p>
                     <p>　　为确保您的基本信息发生变化时，我公司能及时和您取得联系，送达续期交费凭证、分红业绩报告书等重要资料，请填写您最信赖的或最有爱心和责任心的两位亲友的信息：</p>
                     <ul>
-                        <li>姓名：<b>friend1</b>     性别：<b>男</b>     年龄：<b>25</b>     电话：<b>13333333333</b>  </li>
-                        <li>姓名：<b>friend2</b>     性别：<b>女</b>     年龄：<b>36</b>     电话：<b>13344445555</b>  </li>
+                        <li>姓名：<b>friend1</b>   性别：<b>男</b>  年龄：<b>25</b>     电话：<b>13333333333</b></li>
+                        <li>姓名：<b>friend2</b>   性别：<b>女</b>  年龄：<b>36</b>     电话：<b>13344445555</b></li>
                     </ul>
                     <p>　　再次感谢您的支持！若您的地址、电话、邮编等发生变更或有任何疑问和建议，请随时拨打我公司的服务热线 95567，我们将以最为优质的服务来答谢您的信任！</p>
                     <p>　　祝您工作顺利、身体健康、万事如意！</p>
@@ -161,8 +95,17 @@ testPopupDialog1(id){
 
                 <div className="receipt-block5">
                     <ul>
-                        <li>保单号：880001100003　　　　投保人：188投保</li>
-                        <li>业务员姓名：张海宾　　　　　　业务员工号：36272261　　　　回单日期：2018-05-22</li>
+                        <li>
+                            <span>保单号：880001100003</span>
+                            <span>业务员姓名：张海宾</span>
+                            <span>回单日期：2018-05-22</span>
+                        </li>
+                        <li>
+                            <span>投保人：188投保</span>
+                            <span>业务员工号：36272261</span>
+                            <span> </span>
+                        </li>
+
                     </ul>
                 </div>
                 <div className="receipt-aside"></div>
@@ -180,11 +123,7 @@ testPopupDialog1(id){
                         }
                     </div>
                 </div>
-                {/*<div className="btn-fl text18 tc-white bg-primary" onClick={this.newApply.bind(this)}>新的投保</div>*/}
-                {/*<div className="btn-fl text18 tc-white bg-primary" onClick={this.openApply.bind(this, 40066)}>打开测试投保单</div>*/}
-
             <div id="dialog" style={{ display:'none'}}>
-                       
                 <div id="anysign_title" style={{color:'#333333'}} width="100%" height="10%">请投保人<span style={{fontize:'20pt'}}> 李 元 </span>签名</div>
                 <div id="container" onmousedown="return false;">
                     <canvas id="anysignCanvas" width="2"></canvas>
@@ -195,7 +134,7 @@ testPopupDialog1(id){
                     <div id="leftView">
                         <p id="comment_title"></p>
                         <div id="signImage" className="signImagecss"></div>
-                    
+
                     </div>
 
                     <div id="tmpcanvascss" className="tmpcanvascss">

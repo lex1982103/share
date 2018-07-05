@@ -3,14 +3,9 @@
 var that = this
 const ajax = (url,para,callback,mask,msg,sync)=>{
     let param={...para},
-<<<<<<< HEAD
-        baseUrl='http://114.112.96.61:7666';
+        baseUrl='http://114.112.96.61:7666/app';
         // baseUrl='http://192.168.1.218:7666';
-=======
-        // baseUrl='http://114.112.96.61:7666';
-        baseUrl='http://114.112.96.61:7666';
-        // baseUrl='http://114.112.96.61:7666';
->>>>>>> master
+
 
 
     if(url.indexOf('http')!=0) url=baseUrl+url;

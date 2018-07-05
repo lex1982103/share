@@ -5,81 +5,81 @@ class Autograph extends React.Component {
             autographlistTop: [  // 基本信息
                 {
                     name: '姓名',
-                    value: '测试'
+                    value: 'name'
                 },
                 {
-                    name: '出生日期/性别',
-                    value: '测试'
+                    name: '性别',
+                    value: 'gender'
+                },
+                {
+                    name: '出生日期',
+                    value: 'birthday'
                 },
                 {
                     name: '证件类型',
-                    value: '测试'
+                    value: 'certType'
                 },
                 {
                     name: '证件号码',
-                    value: '测试'
+                    value: 'certNo'
                 },
                 {
                     name: '证件有效期限',
-                    value: '测试'
+                    value: 'certValidDate'
                 },
                 {
                     name: '国籍',
-                    value: '测试'
+                    value: 'nation'
                 },
                 {
                     name: '婚姻及子女情况',
-                    value: '测试'
+                    value: 'marriage'
                 },
                 {
                     name: '与被保险人关系',
-                    value: '测试'
+                    value: 'relation'
                 },
                 {
                     name: '工作单位',
-                    value: '测试'
+                    value: 'company'
                 },
                 {
                     name: '职位名称',
-                    value: '测试'
+                    value: 'workJob'
                 },
                 {
                     name: '职业编码',
-                    value: '测试'
+                    value: 'occupation'
                 },
                 {
                     name: '移动电话',
-                    value: '测试'
+                    value: 'mobile'
                 },
                 {
                     name: '固定电话',
-                    value: '测试'
+                    value: 'telephone'
                 }
             ],
             autographlistBom: [  // 基本信息
                 {
                     name: '通讯(常住)地址',
-                    value: '是的风格环境和规范'
+                    value: 'address'
                 },
                 {
                     name: '邮编',
-                    value: '测试'
+                    value: 'zipcode'
                 },
                 {
                     name: '每年可支配收入',
-                    value: '测试'
-                },
-                {
-                    name: '主要收入来源',
-                    value: '测试'
+                    value: 'income'
                 },
                 {
                     name: '居民类型',
-                    value: '测试'
+                    value: 'myType'
                 },
                 {
                     name: '是否参加基本医保保障',
-                    value: '测试'
+                    value: 'hospital'
                 },
                 {
                     name: '税收居民身份',
@@ -150,7 +150,8 @@ class Autograph extends React.Component {
                     value: '否'
                 }
             ],
-            isElectronics: true // 是否电子签名
+            isElectronics: true, // 是否电子签名
+            cust: {}
         }
     }
     testPopupDialog1(id,isT){
@@ -163,7 +164,17 @@ class Autograph extends React.Component {
         sessionStorage.setItem('ist',isT)
         testPopupDialog(id)
     }
+    componentDidMount() {
+        window.MF && MF.setTitle("投保单预览");
+        APP.apply.view(common.param("orderId"), r => {
+            console.log(JSON.stringify(r.detail))
+            this.setState({
+                cust: r.detail
+            })
+        })
+    }
     render() {
+        const { cust } = this.state;
         return (
             <div className="autograph-table">
                 <div id="other">
@@ -184,17 +195,36 @@ class Autograph extends React.Component {
                                 <span>投保人</span>
                                 <span>被保险人</span>
                             </p>
-                            {
-                                this.state.autographlistTop.map(item => {
-                                return (
-                                        <p>
-                                            <span>{item.name}</span>
-                                            <span>测试</span>
-                                            <span>11</span>
-                                        </p>
-                                )
-                            }) 
-                            }
+                            <ul>
+                                <li>
+                                    {
+                                        this.state.autographlistTop.map(item => {
+                                            return (
+                                                <p>{item.name}</p>
+                                            )
+                                        })
+                                    }
+                                </li>
+                                <li>
+                                    {
+                                        this.state.autographlistTop.map(item => {
+                                            return (
+                                                <p>{Object.keys(cust).length && cust.applicant[item.value] || ''}</p>
+                                            )
+                                        })
+                                    }
+                                </li>
+                                <li>
+                                    {
+                                        this.state.autographlistTop.map(item => {
+                                            return (
+                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value] || ''}</p>
+                                            )
+                                        })
+                                    }
+                                </li>
+                            </ul>
+
                             <p className="autograph-email">
                                 <span>
                                     电子邮箱

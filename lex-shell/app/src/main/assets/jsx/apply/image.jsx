@@ -10,9 +10,11 @@ class Main extends React.Component {
     }
     next() {
         if(window.MF){
-            MF.navi("apply/preview.html?orderId=" + this.state.orderId)
+            // MF.navi("apply/preview.html?orderId=" + this.state.orderId)
+            MF.navi("xinhua_lx/autograph_xh.html?orderId=" + this.state.orderId)
         }else{
-            location.href = "apply/preview.html?orderId=" + this.state.orderId
+            // location.href = "apply/preview.html?orderId=" + this.state.orderId
+            location.href = "xinhua_lx/autograph_xh.html?orderId=" + this.state.orderId
         }
 
     }

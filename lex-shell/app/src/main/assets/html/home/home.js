@@ -84,7 +84,7 @@
 
         function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-        var serverUrl = 'http://114.112.96.30:10003/';
+        var serverUrl = 'http://114.112.96.61:7666/';
 
         var Main = function (_React$Component) {
             _inherits(Main, _React$Component);
@@ -115,7 +115,7 @@
                     this.fetchProduct();
 
                     $.ajax({
-                        url: 'http://114.112.96.30:10003/app/user/qrymodule.json',
+                        url: 'http://114.112.96.61:7666/app/user/qrymodule.json',
                         type: "POST",
                         data: {
                             "orgId": '10200' },

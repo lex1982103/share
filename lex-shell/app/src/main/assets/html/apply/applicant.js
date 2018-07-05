@@ -171,6 +171,10 @@ var Main = function (_React$Component) {
         key: "next",
         value: function next() {
             this.save();
+            console.log(0)
+            localStorage.everyState = JSON.stringify({ applicant: this.state }); // 存放每个界面state数据
+            console.log(1)
+            // localStorage.OcrArr = JSON.stringify(this.state.IdCardImg); // 存放ocr对象
             if (window.MF) {
                 MF.navi("apply/insurant.html?orderId=" + this.state.orderId);
             } else {
@@ -180,14 +184,24 @@ var Main = function (_React$Component) {
     }, {
         key: "onValChange",
         value: function onValChange(key, val) {
-            this.state.cust[key] = val;
-            if (key == "occupation1") {
-                this.state.cust.occupation = null;
-                this.state.cust.occupationLevel = null;
-            } else if (key == "occupation") {
-                this.state.cust.occupationLevel = this.state.occRank[this.state.cust.occupation];
+            if (key == "IdCardImg") {} else {
+                this.state.cust[key] = val;
+                if (key == "occupation1") {
+                    this.state.cust.occupation = null;
+                    this.state.cust.occupationLevel = null;
+                } else if (key == "occupation") {
+                    this.state.cust.occupationLevel = this.state.occRank[this.state.cust.occupation];
+                }
+                this.setState({ cust: this.state.cust });
             }
-            this.setState({ cust: this.state.cust });
+        }
+    }, {
+        key: "getIdCardImg",
+        value: function getIdCardImg() {
+            // 证件扫描
+            this.setState({
+                IdCardImg: {}
+            });
         }
     }, {
         key: "render",
@@ -715,6 +729,11 @@ var Main = function (_React$Component) {
                 React.createElement(
                     "div",
                     { className: "bottom text18 tc-primary" },
+                    React.createElement(
+                        "div",
+                        { className: "form-item-widget" },
+                        React.createElement("img", { className: "mt-1", style: { width: "220px", height: "60px" }, src: "../images/btn-scan.png", onClick: this.getIdCardImg.bind(this) })
+                    ),
                     React.createElement("div", { className: "ml-3 mr-0", style: { width: "300px" } }),
                     React.createElement(
                         "div",

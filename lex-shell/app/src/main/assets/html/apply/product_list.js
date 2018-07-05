@@ -98,7 +98,7 @@ var Main = function (_React$Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
-            APP.apply.queryProduct(null, "fosun", null, function (r) {
+            APP.apply.queryProduct(null, "nci", null, function (r) {
                 _this2.setState({ list: r });
             });
         }

@@ -87,8 +87,6 @@ body{
 }
 input::-webkit-input-placeholder{
   color:#d1d1d1;
-<<<<<<< HEAD
-=======
 }
 .conpanyIn{
   width: 100%;
@@ -104,5 +102,107 @@ input::-webkit-input-placeholder{
   video{
     width: 100%;
   }
->>>>>>> master
+}
+.insuranceMain{
+   background:rgba(245,245,245,1);
+  width: 100%;
+  height: 100%;
+  padding-top: 10/@rem;
+  .insuranceBox{
+    width: 100%;
+    background: #FAFAFA;
+    margin-bottom: 10/@rem;
+    .insuranceTile{
+      padding: 15/@rem 0;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      img{
+        width: 14/@rem;
+        height: 15/@rem;
+        margin: 0 12/@rem;
+      }
+      font{
+        font-size: 16/@rem;
+      }
+      span{
+        font-size: 14/@rem;
+        color:#999999;
+        margin-left: 12/@rem;
+      }
+      p{
+        flex:1;
+        text-align: right;
+        padding-right: 15/@rem;
+        font-size:14/@rem;
+        font-family:PingFangSC-Regular;
+        color:rgba(51,152,219,1);
+      }
+    }
+    section {
+      width: 100%;
+      background: rgba(250,250,250,1);
+      padding: 5/@rem 13/@rem;
+      dl:first-child{
+        margin-bottom: 13@rem;
+      }
+      dl{
+        display: flex;
+        padding: 6/@rem 0;
+        dt {
+          display: flex;
+          align-items: center;
+          width: 80/@rem;
+          height: 80/@rem;
+          div{
+            width: 80/@rem;
+            height: 80/@rem;
+            background: #4faef9;
+          }
+        }
+        dd{
+          padding: 0 12/@rem;
+          h2{
+            font-size: 16/@rem;
+            font-weight: bold;
+            color: #333;
+            font-family:PingFangSC-Regular;
+          }
+          p{
+            font-size:12/@rem;
+            font-family:PingFangSC-Regular;
+            color:rgba(153,153,153,1);
+            width:316/@rem;
+            height:34/@rem;
+          }
+        }
+      }
+    }
+    .insurancePremium{
+      padding: 15/@rem ;
+      display: flex;
+      justify-content: flex-end;
+      background: #fff;
+      font{
+        font-size: 16/@rem;
+      }
+    }
+    .insuranceButton{
+      padding: 15/@rem ;
+      display: flex;
+      justify-content: flex-end;
+      background: #fff;
+      border-top: 1px solid rgba(240,240,240,1);
+      span{
+        padding: 5/@rem 15/@rem;
+        background:rgba(255,255,255,1);
+        border-radius:15/@rem;
+        border:1px solid rgba(176,176,176,1);
+        font-family:PingFangSC-Regular;
+        color:rgba(68,68,68,1);
+        font-size:14/@rem;
+        margin-left: 5/@rem;
+      }
+    }
+  }
 }

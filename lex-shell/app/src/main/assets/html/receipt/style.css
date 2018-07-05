@@ -1,15 +1,71 @@
-
-body{
-	width: 750px;background: #fff;padding-bottom: 4em;
+#ppp {
+	width: 30.83333333rem;
+	border-left-width: 30.83333333rem;
+	height: calc(1em + 100px);
 }
-ul{
+/* common */
+html {
+	font-size: 3.2vw;
+}
+body {
+	background: #f7f8fa;
+	margin: 0;
+	padding: 0;
+	font-family: Helvetica, Tahoma, Arial, heitilight, "PingFang SC", "Hiragino Sans GB", "Heiti SC", STXihei, "Microsoft YaHei", SimHei, "WenQuanYi Micro Hei";
+	font-size: 3.2vw;
+	text-size-adjust: 100% !important;
+}
+body *:not(input):not(textarea) {
+	user-select: none;
+}
+ul,
+dl,
+ol,
+figure,
+h1,
+p,
+h2,
+h3,
+h4,
+h5,
+h6,
+input {
+	padding: 0;
+	margin: 0;
+	font-size: 1em;
+	font-weight: 400;
+}
+li,
+dd {
 	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+img,
+input,
+textarea,
+button {
+	vertical-align: middle;
+	appearance: none;
+	border-radius: 0;
+}
+hr {
+	padding: 0;
+	margin: 0;
+	border: none;
+	border-top: #eee solid 1px;
+}
+a {
+	text-decoration: none;
+	color: #202020;
 }
 
 /*--fontSize:1em;*/
 
 div.home-container{
-	font-size:.5em;background: #fff;padding: 0 5%;
+	font-size: .9em;
+	background: #fff;
+	padding: 0 1em;
 }
 
 
@@ -48,7 +104,7 @@ div.receipt-block2 h1{
 }
 
 div.receipt-block2 ul{
-	font-size: 1em;padding: 1em 2em 1em;
+	font-size: 1em;padding: 1em;
 }
 div.receipt-block2 ul li{
 	line-height: 1.5em;position: relative;
@@ -66,7 +122,7 @@ div.receipt-block3 h1{
 }
 
 div.receipt-block3 ul{
-	font-size: 1em;padding: 1em 2em 1em;
+	font-size: 1em;padding: 1em;
 }
 div.receipt-block3 ul li{
 	line-height: 1.5em;position: relative;
@@ -78,11 +134,20 @@ div.receipt-block3 ul li span.num{
 	position: absolute;left: -1em;
 }
 div.receipt-block3 ul li>b{
-	display:inline-block;padding:0 1em;border-bottom:1px solid #000; font-weight: normal;
+	display:inline-block;
+	padding:0 .5em;
+	border-bottom:1px solid #000;
+	font-weight: normal;
+}
+div.receipt-block3 ul li label {
+	margin: 0 .5em;
+}
+div.receipt-block3 ul li.line {
+	margin-top: .5em
 }
 input{
-	 width: auto; 
-     height: auto; 
+	 width: auto;
+     height: auto;
      /*box-sizing: border-box; */
      /*padding: 0 10px 0 10px; */
      /*border: 0; */
@@ -92,7 +157,7 @@ input{
 
 
 div.receipt-block4{
-	position: relative;margin-top: 3em;
+	position: relative;margin-top: 2em;
 }
 div.receipt-block4 ul{
 	height: 3em;
@@ -108,5 +173,14 @@ div.receipt-block4 ul li img{
 	width: 6em;height: 6em;vertical-align: middle;
 }
 div.receipt-block5{
-	position: relative;margin-top: 8em;
+	position: relative;margin-top: 6em;
+}
+div.receipt-block5 ul {
+	display: flex;
+	justify-content: space-around;
+}
+div.receipt-block5 ul li {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
 }

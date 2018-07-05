@@ -18,6 +18,9 @@ class Notice extends React.Component {
         sessionStorage.setItem('ist',isT)
         testPopupDialog(id)
     }
+    submit() {
+        console.log("提交");
+    }
     render() {
         return (
             <div className="notice-wrap">
@@ -145,6 +148,17 @@ class Notice extends React.Component {
                             <input id="btnCancel" type="button" className="button orange" value="取 消" onClick={cancelSign}/>
                         </div>
 
+                    </div>
+                </div>
+                <div className="bottom text18 tc-primary">
+                    <div className="ml-3 mr-0" style={{width:"300px"}}></div>
+                    <div className="divx" onClick={this.submit.bind(this)}>
+                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
+                            提交
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
+                        </div>
                     </div>
                 </div>
             </div>

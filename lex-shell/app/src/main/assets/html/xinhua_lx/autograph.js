@@ -346,7 +346,7 @@ var Autograph = function (_React$Component) {
                                         return React.createElement(
                                             'p',
                                             null,
-                                            Object.keys(cust).length && cust.insurants[0][item.value] || '无'
+                                            Object.keys(cust).length && cust.insurants[0][item.value]
                                         );
                                     })
                                 )
@@ -1027,7 +1027,11 @@ var Autograph = function (_React$Component) {
                             React.createElement(
                                 'li',
                                 null,
-                                '1\u3001\u672C\u4EBA\u6295\u4FDD\u7684\u9669\u79CD\uFF0C\u6548\u529B\u56E0\u53D1\u751F\u8D23\u4EFB\u514D\u9664\u3001\u89E3\u9664\u7B49\u4E8B\u9879\u7EC8\u6B62\u65F6\uFF0C\u9669\u79CD\uFF0C\u7684\u9644\u52A0\u9669\uFF0C\u5176\u6548\u529B\u4E0D\u53D7\u672C\u4FDD\u9669\u5355\u7684\u5176\u4ED6\u9669\u79CD\u6548\u529B\u7684\u5F71\u54CD\u3002'
+                                React.createElement(
+                                    'p',
+                                    null,
+                                    '1\u3001\u672C\u4EBA\u6295\u4FDD\u7684\u9669\u79CD\uFF0C\u6548\u529B\u56E0\u53D1\u751F\u8D23\u4EFB\u514D\u9664\u3001\u89E3\u9664\u7B49\u4E8B\u9879\u7EC8\u6B62\u65F6\uFF0C\u9669\u79CD\uFF0C\u7684\u9644\u52A0\u9669\uFF0C\u5176\u6548\u529B\u4E0D\u53D7\u672C\u4FDD\u9669\u5355\u7684\u5176\u4ED6\u9669\u79CD\u6548\u529B\u7684\u5F71\u54CD\u3002'
+                                )
                             ),
                             React.createElement(
                                 'li',

@@ -13,7 +13,7 @@ class Main extends React.Component {
     componentDidMount() {
         window.MF && MF.setTitle("保单签收回执");
     }
-testPopupDialog1(id){
+    testPopupDialog1(id){
     // var oHead = document.getElementsByTagName('HEAD').item(0);
     // var oScript= document.createElement("script");
     // oScript.type = "text/javascript";
@@ -22,7 +22,9 @@ testPopupDialog1(id){
     testPopupDialog(id)
 }
 
-
+    submit() {
+         console.log("提交");
+    }
     render() {
         return (
             <div className="home-container">
@@ -166,6 +168,17 @@ testPopupDialog1(id){
                 </div>
 
             </div>
+                <div className="bottom text18 tc-primary">
+                    <div className="ml-3 mr-0" style={{width:"300px"}}></div>
+                    <div className="divx" onClick={this.submit.bind(this)}>
+                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
+                            提交
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
+                        </div>
+                    </div>
+                </div>
         </div>
         )
     }

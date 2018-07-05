@@ -230,7 +230,7 @@ class Autograph extends React.Component {
                                     {
                                         this.state.autographlistTop.map(item => {
                                             return (
-                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value] ||'无'}</p>
+                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value]}</p>
                                             )
                                         })
                                     }
@@ -488,7 +488,7 @@ class Autograph extends React.Component {
                             特别申请
                         </div>
                         <ul className='especially-right'>
-                            <li>1、本人投保的险种，效力因发生责任免除、解除等事项终止时，险种，的附加险，其效力不受本保险单的其他险种效力的影响。</li>
+                            <li><p>1、本人投保的险种，效力因发生责任免除、解除等事项终止时，险种，的附加险，其效力不受本保险单的其他险种效力的影响。</p></li>
                             <li>
                                 <p>本人申清贵公司在本人生存至周岁保单生效对应日时将“’基本保险金额</p>
                                 <p>在该保单生效对应日，本保险单及所附批单下所有保险期间为一年的险种的累计保险金额。</p>

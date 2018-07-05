@@ -2,7 +2,6 @@ class Insurance extends React.Component {
     constructor() {
         super();
         this.state = {
-            edit: false,
             insuranceList: [{
                 "applicant": {
                     "address": "啦啦啦啦啦啦啦啦啦啦",
@@ -174,13 +173,13 @@ class Insurance extends React.Component {
                 insuranceList: res.content.list
             })
         })*/
-        APP.openApply('/order/list.json', {type: '2', from: 0, number: 10},(res) => {
+        /*APP.openApply('/order/list.json', {type: '2', from: 0, number: 10},(res) => {
             this.setState({
                 applicant: res.list
             }, () => {
                 console.log(JSON.stringify(res.list))
             })
-        })
+        })*/
     }
     /*编辑操作*/
     editClient (data) {}
@@ -191,10 +190,8 @@ class Insurance extends React.Component {
     getLocalTime(nS) {
         return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
     }
+
     render(){
-        const {
-            edit
-        } = this.state;
         return (
             <div className="insuranceMain">
                 <ul>

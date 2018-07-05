@@ -8,13 +8,12 @@ class Main extends React.Component {
             marriageDict: {},
             certTypeDict: {},
             relationDict: {"00":"本人", "01":"夫妻"},
-            verify: {},
             mode: 0,
-            cust: null
+            cust: null,
         }
     }
     componentDidMount() {
-        MF.setTitle("投保人")
+        window.MF&&MF.setTitle("投保人")
         APP.dict("cert,marriage,nation,occupation", r => {
             let occMap = {}
             let occRank = {}
@@ -40,46 +39,6 @@ class Main extends React.Component {
             let cust = r.detail ? r.detail.applicant : null
             this.setState({ cust: cust ? cust : {} })
         })
-    }
-    verify(c) {
-        let v = {}
-
-        if (this.state.mode == 1) {
-            if (!c.name) {
-                v.name = "该项必填"
-            } else {
-                if (c.name.length > 60)
-                    v.name = "姓名太长"
-                else if (c.name.indexOf(" ") > 0)
-                    v.name = "姓名中不能有空格"
-            }
-
-            if (!c.birthday) {
-                v.birthday = "该项必填"
-            } else {
-                if (c.birthday > common.dateStr(new Date()))
-                    v.birthday = "生日不能大于当前日期"
-            }
-
-            if (!c.certNo) {
-                v.certNo = "该项必填"
-            } else {
-                if (c.certType == 1 && c.certNo.length != 18)
-                    v.certNo = "身份证号需要为18位"
-            }
-        }
-
-        if (this.state.mode == 3) {
-            if (!c.zipcode) {
-                v.zipcode = "该项必填"
-            } else {
-                if (!/^[0-9][0-9]{5}$/.test(c.zipcode))
-                    v.zipcode = "邮政编码需要为6位数字"
-            }
-        }
-
-        this.setState({ verify: v })
-        return Object.keys(v).length == 0
     }
     save() {
         let c = this.state.cust
@@ -108,38 +67,50 @@ class Main extends React.Component {
             c.mode4 = true
         }
 
-        if (this.verify(c)) {
-            APP.apply.save({ id: this.state.orderId, detail: { applicant: c } }, v => {
-                this.setState({ mode: 0, cust: c})
-            })
-        }
+        APP.apply.save({ id: this.state.orderId, detail: { applicant: c } }, v => {
+            this.setState({ mode: 0, cust: c})
+        })
     }
     next() {
-        this.save()
-        MF.navi("apply/insurant.html?orderId=" + this.state.orderId)
+        this.save();
+        localStorage.everyState = JSON.stringify({applicant: this.state});// 存放每个界面state数据
+        // localStorage.OcrArr = JSON.stringify(this.state.IdCardImg); // 存放ocr对象
+        if(window.MF){
+            MF.navi("apply/insurant.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/insurant.html?orderId=" + this.state.orderId
+        }
+
     }
     onValChange(key, val) {
-        this.state.cust[key] = val
-        if (key == "occupation1") {
-            this.state.cust.occupation = null
-            this.state.cust.occupationLevel = null
-        } else if (key == "occupation") {
-            this.state.cust.occupationLevel = this.state.occRank[this.state.cust.occupation]
+        if (key == "IdCardImg") {
+
+        } else {
+            this.state.cust[key] = val
+            if (key == "occupation1") {
+                this.state.cust.occupation = null
+                this.state.cust.occupationLevel = null
+            } else if (key == "occupation") {
+                this.state.cust.occupationLevel = this.state.occRank[this.state.cust.occupation]
+            }
+            this.setState({ cust: this.state.cust })
         }
-        this.setState({ cust: this.state.cust })
+
     }
-    switchMode(mode) {
-        this.setState({ mode:this.state.mode==mode?0:mode, verify:{} })
+    getIdCardImg () {// 证件扫描
+        this.setState({
+            IdCardImg: {}
+        })
     }
     render() {
         let cust = this.state.cust;
         return cust == null ? null : (
             <div>
-                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={this.switchMode.bind(this, 1)}>
+                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==1?0:1 }) }}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==1?"sub":"add")+".png"}/>基本信息
                     </div>
-                    <div style={{width:"65px"}}>{ cust.mode1 ? <img style={{width:"39px", height:"30px", marginTop:"35px", float:"right"}} src="../images/filled.png"/> : null }</div>
+                    <div style={{width:"65px"}}>{ cust.mode1 ? <img style={{width:"65px", height:"50px", marginTop:"25px", float:"right"}} src={"../images/filled.png"}/> : null }</div>
                 </div>
                 { this.state.mode != 1 ? null : <div className="div">
                     <div className="form-item text16">
@@ -148,7 +119,6 @@ class Main extends React.Component {
                             <input className="mt-1" ref="name" defaultValue={cust.name} placeholder="请输入投保人姓名"/>
                         </div>
                     </div>
-                    { this.state.verify.name ? <div className="form-alert">{this.state.verify.name}</div> : null }
                     <div className="form-item text16">
                         <div className="form-item-label">性别</div>
                         <div className="form-item-widget" onClick={v => {APP.pick("select", this.state.genderDict, this.onValChange.bind(this, "gender"))}}>
@@ -170,7 +140,6 @@ class Main extends React.Component {
                             <img className="mt-2 mr-0" style={{width:"27px", height:"39px"}} src="../images/right.png"/>
                         </div>
                     </div>
-                    { this.state.verify.birthday ? <div className="form-alert">{this.state.verify.birthday}</div> : null }
                     <div className="form-item text16">
                         <div className="form-item-label">婚姻状况</div>
                         <div className="form-item-widget" onClick={v => {APP.pick("select", this.state.marriageDict, this.onValChange.bind(this, "marriage"))}}>
@@ -191,7 +160,6 @@ class Main extends React.Component {
                             <input className="mt-1" ref="certNo" defaultValue={cust.certNo} placeholder="请输入证件号码"/>
                         </div>
                     </div>
-                    { this.state.verify.certNo ? <div className="form-alert">{this.state.verify.certNo}</div> : null }
                     <div className="form-item text16">
                         <div className="form-item-label">证件有效期</div>
                         <div className="form-item-widget" onClick={v => {APP.pick("date", { begin: new Date() }, this.onValChange.bind(this, "certValidDate"))}}>
@@ -203,11 +171,11 @@ class Main extends React.Component {
                         <img className="mt-1 ml-auto mr-3" style={{width:"120px", height:"60px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                     </div>
                 </div> }
-                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={this.switchMode.bind(this, 2)}>
+                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==2?0:2 }) }}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==2?"sub":"add")+".png"}/>职业信息
                     </div>
-                    <div style={{width:"65px"}}>{ cust.mode2 ? <img style={{width:"39px", height:"30px", marginTop:"35px", float:"right"}} src="../images/filled.png"/> : null }</div>
+                    <div style={{width:"65px"}}>{ cust.mode2 ? <img style={{width:"65px", height:"50px", marginTop:"25px", float:"right"}} src={"../images/filled.png"}/> : null }</div>
                 </div>
                 { this.state.mode != 2 ? null : <div className="div">
                     <div className="form-item text16">
@@ -258,11 +226,11 @@ class Main extends React.Component {
                         <img className="mt-1 ml-auto mr-3" style={{width:"120px", height:"60px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                     </div>
                 </div> }
-                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={this.switchMode.bind(this, 3)}>
+                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==3?0:3 }) }}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==3?"sub":"add")+".png"}/>联系方式
                     </div>
-                    <div style={{width:"65px"}}>{ cust.mode3 ? <img style={{width:"39px", height:"30px", marginTop:"35px", float:"right"}} src="../images/filled.png"/> : null }</div>
+                    <div style={{width:"65px"}}>{ cust.mode3 ? <img style={{width:"65px", height:"50px", marginTop:"25px", float:"right"}} src={"../images/filled.png"}/> : null }</div>
                 </div>
                 { this.state.mode != 3 ? null : <div className="div">
                     <div className="form-item text16">
@@ -289,7 +257,6 @@ class Main extends React.Component {
                             <input className="mt-1" ref="zipcode" defaultValue={cust.zipcode} placeholder="请输入邮政编码"/>
                         </div>
                     </div>
-                    { this.state.verify.zipcode ? <div className="form-alert">{this.state.verify.zipcode}</div> : null }
                     <div className="form-item text16">
                         <div className="form-item-label" style={{width:"670px"}}>联系方式（手机或者电话二者选其一）</div>
                     </div>
@@ -327,11 +294,11 @@ class Main extends React.Component {
                         <img className="mt-1 ml-auto mr-3" style={{width:"120px", height:"60px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                     </div>
                 </div> }
-                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={this.switchMode.bind(this, 4)}>
+                <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==4?0:4 }) }}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==4?"sub":"add")+".png"}/>其他信息
                     </div>
-                    <div style={{width:"65px"}}>{ cust.mode4 ? <img style={{width:"39px", height:"30px", marginTop:"35px", float:"right"}} src="../images/filled.png"/> : null }</div>
+                    <div style={{width:"65px"}}>{ cust.mode4 ? <img style={{width:"65px", height:"50px", marginTop:"25px", float:"right"}} src={"../images/filled.png"}/> : null }</div>
                 </div>
                 { this.state.mode != 4 ? null : <div className="div">
                     <div className="form-item text16">
@@ -340,10 +307,16 @@ class Main extends React.Component {
                 </div> }
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
+                    <div className="form-item-widget">
+                        <img className="mt-1" style={{width:"220px", height:"60px"}} src="../images/btn-scan.png" onClick={this.getIdCardImg.bind(this)}/>
+                    </div>
                     <div className="ml-3 mr-0" style={{width:"300px"}}></div>
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             被保险人信息
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

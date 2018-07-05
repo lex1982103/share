@@ -261,7 +261,7 @@ class Main extends React.Component {
     }
   }
   componentDidMount() {
-    MF.setTitle("利益演示")
+    window.MF&&MF.setTitle("利益演示")
     APP.apply.format(this.state.planId, "coverage,benefit_chart", r => {
       this.setState({coverage:r.coverage, chart:r.benefit_chart}, this.onRepaint)
     })

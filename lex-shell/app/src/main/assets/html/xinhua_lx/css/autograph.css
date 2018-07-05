@@ -1,0 +1,390 @@
+#ppp {
+    width: 30.83333333rem;
+    border-left-width: 30.83333333rem;
+    height: calc(1em + 100px);
+}
+/* common */
+html {
+    font-size: 1em;
+}
+body {
+    background: #f7f8fa;
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, Tahoma, Arial, heitilight, "PingFang SC", "Hiragino Sans GB", "Heiti SC", STXihei, "Microsoft YaHei", SimHei, "WenQuanYi Micro Hei";
+    font-size: 1em;
+    text-size-adjust: 100% !important;
+}
+body *:not(input):not(textarea) {
+    user-select: none;
+}
+ul,
+dl,
+ol,
+figure,
+h1,
+p,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+input {
+    padding: 0;
+    margin: 0;
+    font-size: 1em;
+    font-weight: 400;
+}
+li,
+dd {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+img,
+input,
+textarea,
+button {
+    vertical-align: middle;
+    appearance: none;
+    border-radius: 0;
+}
+hr {
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-top: #eee solid 1px;
+}
+a {
+    text-decoration: none;
+    color: #202020;
+}
+/*投保单*/
+.autograph-table{ 
+    background: #fff;
+    max-width: 1200px;
+    height: auto;
+    padding: 0 1em;
+    margin-bottom: 6em;
+}
+.table-head{
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    padding: 5px 2px;
+    justify-content: space-between;
+}
+/* 基本信息 */
+.autograph-top{
+    display: flex;
+    border: 1px solid #333;
+    align-items: center;
+    text-align: center;
+}
+.autograph-topLeft,.beneficiary-left,.matter-left,.especially-left{
+    width: 5%;
+    text-align: center;
+    font-size: 24px;
+}
+.autograph-topRight,.beneficiary-right{
+    flex: 1;
+}
+.autograph-topRight>p:first-child{
+    font-weight: bold;
+}
+.autograph-topRight ul, .autograph-topRight p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.autograph-topRight ul li, .autograph-topRight>p span{
+    flex: 1;
+}
+.autograph-topRight p{
+    line-height: 40px;
+    border: 1px solid #333;
+}
+.autograph-title p:first-child{
+    width: 7%;
+    border: none;
+}
+.autograph-email{
+    display: flex;
+}
+.autograph-email>span{
+    width: 33.5%;
+    line-height: 78px;
+}
+.autograph-email>div{
+   width: 66.5%;
+}
+.autograph-email div span{
+    text-align: left;
+    padding-left: 10px;
+    
+}
+
+.autograph-mid{
+    display: flex;
+    border: 1px solid #333;
+    align-items: center;
+    text-align: center;
+    border-top: 0;
+}
+.autograph-mid .autograph-topLeft{
+    border-right: 1px solid #333;
+}
+.autograph-mid>div:last-child{
+    flex: 1;
+}
+
+/* 身故保险金受益人 */
+.autograph-beneficiary{
+    display: flex;
+}
+.beneficiary-right>li{
+    display: flex;
+}
+.beneficiary-right>li>div:first-child{
+    width: 4%;
+    border: 1px solid #333;
+    text-align: center;
+    border-right: none;
+    line-height: 207px;
+}
+.beneficiary-left{
+    border: 1px solid #333;
+    padding-top: 200px;
+}
+.beneficiary-right>li>div{
+    width: 48%;
+}
+.beneficiary-right>li>div>p{
+    line-height: 42px;
+    display: flex;
+}
+.beneficiary-right>li>div>p>div{
+    flex: 1;
+    border: 1px solid #333;
+}
+.beneficiary-right>li>div>p>div:nth-child(2){
+    border-left: 1px solid #333;
+}
+.beneficiary-right .beneficiary-address{
+    display: block;
+    line-height:43px;
+}
+.beneficiary-right .beneficiary-address>div:first-child{
+    border-bottom: none;
+}
+.beneficiary-right .beneficiary-address>div:last-child{
+    border-top: none;
+    text-align: right;
+}
+
+/* 投保事项 */
+.matter-main{
+    display: flex;
+}
+.matter-main>div{
+    border: 1px solid #333;
+}
+.matter-left{
+    padding-top: 200px;
+}
+.matter-bom>li>div,.matter-total{
+    font-size: 15px;
+}
+.matter-main ul{
+    flex: 1;
+}
+.matter-main ul>li{
+    min-height: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+.matter-main ul>li>span{
+    border: 1px solid #333;
+    flex: 1;
+    min-height: 40px;
+    line-height:40px;
+    text-align: center;
+}
+.matter-main ul>li:first-child>span{
+    line-height:24px;
+}
+.matter-total>div{
+    width: 100%;
+    display: flex;
+    border: 1px solid #333;
+}
+.matter-main .matter-total  h6{
+    width: 50%;
+    line-height: 38px;
+}
+.matter-bom>li{
+    display: flex;
+    border: 1px solid #333;
+}
+.matter-bom>li>div:first-child{
+    width: 7%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.matter-bom>li>div:last-child{
+    flex: 1;
+    line-height: 25px;
+}
+.matter-bom>li>div>div{
+    border: 1px solid #333;
+    border-top: none;
+    border-bottom: none;
+}
+.matter-bom>li>div>div:last-child{
+    border-top: 1px solid #333;
+}
+.matter-bom>li>div:last-child h6{
+    width: 50%;
+    display: inline-block;
+}
+
+/* 领取信息 */
+.receive-msg>div{
+    display: flex;
+    
+    border-top: none;
+}
+.receive-msg>div>div{
+    border: 1px solid #333;
+    border-top: none;
+}
+.receive-msg>div>div:first-child{
+    width: 10%;
+}
+.receive-msg>div>div:last-child{
+    width: 90%;
+}
+.receive-price{
+    display: flex;
+}
+.receive-price>div{
+    width: 22%;
+}
+.text-center{
+    text-align: center;
+     border: 1px solid #333;
+}
+.text-left{
+    text-align: left;
+    font-size: 15px;
+    border: 1px solid #333;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 5px;
+}
+/* 特别申请 */
+.especially-main{
+    display: flex;
+    font-size: 20px;
+}
+.especially-left{
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+}
+.especially-right{
+    font-size: 15px;
+    width: 95%;
+}
+.especially-main>div{
+    border: 1px solid #333;
+}
+.especially-right>li{
+    border: 1px solid #333;
+    width: 100%;
+    height: 85px;
+}
+.especially-list{
+    font-size: 15px;
+}
+.especially-list>li{
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+}
+.especially-list>li>div{
+    border: 1px solid #333;
+}
+.especially-list>li>div:first-child{
+    text-align: center;
+    width: 4%;
+}
+.especially-list>li>div:last-child{
+    width: 96%;
+}
+.especially-list>li>div:last-child>span{
+    padding-left: 5px;
+}
+/* 投保告知 */
+ul>li,.separate-box{
+    font-size: 15px;
+}
+.inform-main>li>div{
+    border: 1px solid #333;
+    height:35px;
+    line-height:35px;
+}
+.statement-list,.statement-list-kh,.copy-mian{
+    border: 1px solid #333;
+    line-height: 25px;
+}
+.statement-list>li{
+    text-indent:20px;
+}
+.statement-list>li>b{
+    font-weight: bold;
+}
+/* 签名 */
+.separate-box{
+    display: flex;
+    line-height: 25px;
+}
+.separate-box>div{
+    width: 10%;
+    text-align: center;
+    border: 1px solid #333;
+}
+.separate-box>ol{
+    width: 90%;
+    display: flex;
+    border: 1px solid #333;
+}
+.separate-box>ol>li{
+    width: 30%;
+}
+.sign-box{
+    height: 100px;
+    border: 1px solid #333;
+    display: flex;
+    line-height: 100px;
+    width: 100%;
+
+}
+.sign-box>li{
+    width: 32%;
+    display: flex;
+}
+.sign-box>li>span{
+    vertical-align: middle;
+}
+.sign-box>li>span>img{
+    margin-top: 15px;
+    margin-left: 5px;
+}
+.adress-msg{
+    display: flex;
+    padding: 30px 0;
+    justify-content: space-between;
+}

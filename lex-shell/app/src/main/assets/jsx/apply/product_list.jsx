@@ -6,7 +6,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        APP.apply.queryProduct(null, "fosun", null, r => {
+        APP.apply.queryProduct(null, "nci", null, r => {
           this.setState({ list: r })
         })
     }
@@ -19,7 +19,6 @@ class Main extends React.Component {
     render() {
         return (
             <div>
-                <div className="lh-80 h-80 center">选择产品</div>
                 { this.state.list.map((v, i) =>
                     <div className="list-item" onClick={this.addToPlan.bind(this, v.code)} key={i}>
                         <div className="list-item-icon">

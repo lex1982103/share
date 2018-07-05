@@ -87,3 +87,121 @@ body {
 input::-webkit-input-placeholder {
   color: #d1d1d1;
 }
+.conpanyIn {
+  width: 100%;
+}
+.conpanyIn li {
+  width: 100%;
+}
+.conpanyIn li img {
+  width: 100%;
+}
+.PlayerMain {
+  width: 100%;
+}
+.PlayerMain video {
+  width: 100%;
+}
+.insuranceMain {
+  background: #f5f5f5;
+  width: 100%;
+  height: 100%;
+  padding-top: 0.625rem;
+}
+.insuranceMain .insuranceBox {
+  width: 100%;
+  background: #FAFAFA;
+  margin-bottom: 0.625rem;
+}
+.insuranceMain .insuranceBox .insuranceTile {
+  padding: 0.9375rem 0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+}
+.insuranceMain .insuranceBox .insuranceTile img {
+  width: 0.875rem;
+  height: 0.9375rem;
+  margin: 0 0.75rem;
+}
+.insuranceMain .insuranceBox .insuranceTile font {
+  font-size: 1rem;
+}
+.insuranceMain .insuranceBox .insuranceTile span {
+  font-size: 0.875rem;
+  color: #999999;
+  margin-left: 0.75rem;
+}
+.insuranceMain .insuranceBox .insuranceTile p {
+  flex: 1;
+  text-align: right;
+  padding-right: 0.9375rem;
+  font-size: 0.875rem;
+  font-family: PingFangSC-Regular;
+  color: #3398db;
+}
+.insuranceMain .insuranceBox section {
+  width: 100%;
+  background: #fafafa;
+  padding: 0.3125rem 0.8125rem;
+}
+.insuranceMain .insuranceBox section dl:first-child {
+  margin-bottom: 26 32rem;
+}
+.insuranceMain .insuranceBox section dl {
+  display: flex;
+  padding: 0.375rem 0;
+}
+.insuranceMain .insuranceBox section dl dt {
+  display: flex;
+  align-items: center;
+  width: 5rem;
+  height: 5rem;
+}
+.insuranceMain .insuranceBox section dl dt div {
+  width: 5rem;
+  height: 5rem;
+  background: #4faef9;
+}
+.insuranceMain .insuranceBox section dl dd {
+  padding: 0 0.75rem;
+}
+.insuranceMain .insuranceBox section dl dd h2 {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  font-family: PingFangSC-Regular;
+}
+.insuranceMain .insuranceBox section dl dd p {
+  font-size: 0.75rem;
+  font-family: PingFangSC-Regular;
+  color: #999999;
+  width: 19.75rem;
+  height: 2.125rem;
+}
+.insuranceMain .insuranceBox .insurancePremium {
+  padding: 0.9375rem;
+  display: flex;
+  justify-content: flex-end;
+  background: #fff;
+}
+.insuranceMain .insuranceBox .insurancePremium font {
+  font-size: 1rem;
+}
+.insuranceMain .insuranceBox .insuranceButton {
+  padding: 0.9375rem;
+  display: flex;
+  justify-content: flex-end;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+}
+.insuranceMain .insuranceBox .insuranceButton span {
+  padding: 0.3125rem 0.9375rem;
+  background: #ffffff;
+  border-radius: 0.9375rem;
+  border: 1px solid #b0b0b0;
+  font-family: PingFangSC-Regular;
+  color: #444444;
+  font-size: 0.875rem;
+  margin-left: 0.3125rem;
+}

@@ -8,7 +8,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("受益人")
+        window.MF&&MF.setTitle("受益人")
         APP.dict("cert,relation", r => {
             this.setState({
                 certTypeDict: r.cert,
@@ -29,11 +29,26 @@ class Main extends React.Component {
         }
     }
     save() {
-        APP.apply.save({ id: this.state.orderId, detail: { insurants: this.state.order.detail.insurants } }, v => {})
+        APP.apply.save({ id: this.state.orderId, detail: { insurants: this.state.order.detail.insurants } }, v => {
+        })
+    }
+    getIdCardImg () {// 证件扫描
+        this.setState({
+            IdCardImg: {}
+        })
     }
     next() {
-        this.save()
-        MF.navi("apply/announce.html?orderId=" + this.state.orderId)
+        this.save();
+        let everyState = JSON.parse(localStorage.everyState);
+        let stateData = this.state;
+        everyState.beneficiary = stateData;
+        localStorage.everyState = JSON.stringify(everyState)
+        if(window.MF){
+            MF.navi("apply/announce.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/announce.html?orderId=" + this.state.orderId
+        }
+
     }
     delete(i, j) {
         this.state.order.detail.insurants[i].beneficiary.splice(j, 1)
@@ -79,10 +94,16 @@ class Main extends React.Component {
                     </div>
                 })}
                 <div className="bottom text18 tc-primary">
+                    <div className="form-item-widget">
+                        <img className="mt-1" style={{width:"220px", height:"60px"}} src="../images/btn-scan.png" onClick={this.getIdCardImg.bind(this)}/>
+                    </div>
                     <div className="ml-3 mr-0" style={{width:"300px"}}></div>
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             声明及授权
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

@@ -6,7 +6,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        window.MF&&MF.setTitle("投保单预览")
+        MF.setTitle("投保单预览")
         APP.apply.view(this.state.orderId, r => {
             this.setState({ order: r })
         })
@@ -15,12 +15,7 @@ class Main extends React.Component {
         this.next()
     }
     next() {
-        if(windwo.MF){
-            MF.navi("apply/success.html?orderId=" + this.state.orderId)
-        }else{
-            location.href = "apply/success.html?orderId=" + this.state.orderId
-        }
-
+        MF.navi("apply/success.html?orderId=" + this.state.orderId)
     }
     render() {
         return (
@@ -30,9 +25,6 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.submit.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             提交
-                        </div>
-                        <div className="ml-1 mr-2" style={{width:"30px"}}>
-                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

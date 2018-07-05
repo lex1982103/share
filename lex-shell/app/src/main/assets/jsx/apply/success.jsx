@@ -6,15 +6,10 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        window.MF&&MF.setTitle("投保结果")
+        MF.setTitle("投保结果")
     }
     next() {
-        if(window.MF){
-            MF.navi("home/home.html")
-        }else{
-            location.href = "home/home.html"
-        }
-
+        MF.navi("home/home.html")
     }
     render() {
         return (
@@ -30,9 +25,6 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             返回首页
-                        </div>
-                        <div className="ml-1 mr-2" style={{width:"30px"}}>
-                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

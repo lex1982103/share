@@ -1,7 +1,7 @@
 #ppp {
   width: 30.83333333rem;
   border-left-width: 30.83333333rem;
-  height: calc(1em + 100px);
+  height: calc(101em);
 }
 /* common */
 html {
@@ -174,13 +174,6 @@ a {
   display: block;
   padding: .2em;
   color: #4a4a4a;
-}
-.client-container .c-pagement {
-  position: fixed;
-  bottom: 1em;
-  width: 100%;
-  display: flex;
-  justify-content: center;
 }
 .client-container .c-footer {
   position: fixed;

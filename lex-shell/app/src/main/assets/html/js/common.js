@@ -4,12 +4,9 @@ var common = {};
 
 common.url = function(url) {
     // return "http://www.lerrain.com:7666/" + url;
-<<<<<<< HEAD
     //  return 'http://192.168.1.218:7666/' + url;
-=======
     //  return 'http://114.112.96.61:7666/' + url;
->>>>>>> master
-   return "http://114.112.96.61:7666/" + url;
+   return "http://114.112.96.30:10003/" + url;
 
     var host = location.host;
     var server;

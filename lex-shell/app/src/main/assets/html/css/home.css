@@ -217,6 +217,7 @@ a {
 }
 .shortcut-row1 a.srow-item {
   width: 20%;
+  display: inline-block;
   display: flex;
   color: #9b9b9b;
   flex: 1;

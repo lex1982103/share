@@ -7,26 +7,17 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        window.MF&&MF.setTitle("我的建议书")
+        MF.setTitle("我的建议书")
         APP.proposal.query(r => {
-            window.MF&&MF.setTitle("我的建议书（" + r.total + "）");
+            MF.setTitle("我的建议书（" + r.total + "）");
             this.setState({ list: r.list, total: r.total })
         })
     }
     create() {
-        if(window.MF){
-            MF.navi("proposal/start.html")
-        }else{
-            location.href = "proposal/start.html"
-        }
-
+        MF.navi("proposal/start.html")
     }
     open(proposalId) {
-        if(window.MF){
-            MF.navi("proposal/start.html?proposalId=" + proposalId)
-        }else{
-            location.href = "proposal/start.html?proposalId=" + proposalId
-        }
+        MF.navi("proposal/start.html?proposalId=" + proposalId)
     }
     close() {
         APP.back()

@@ -8,7 +8,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        window.MF&&MF.setTitle("缴费信息")
+        MF.setTitle("缴费信息")
         APP.dict("pay", r => {
             let bankMap = {}
             let payDict = r.pay.datas.map(v => {
@@ -38,12 +38,7 @@ class Main extends React.Component {
     }
     next() {
         this.save()
-        if(window.MF){
-            MF.navi("apply/image.html?orderId=" + this.state.orderId)
-        }else{
-            location.href = "apply/image.html?orderId=" + this.state.orderId
-        }
-
+        MF.navi("apply/image.html?orderId=" + this.state.orderId)
     }
     onValChange(key, val) {
         if (key == "payMode")
@@ -106,9 +101,6 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             确认支付
-                        </div>
-                        <div className="ml-1 mr-2" style={{width:"30px"}}>
-                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

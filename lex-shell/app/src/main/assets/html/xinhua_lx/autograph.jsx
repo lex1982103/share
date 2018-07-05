@@ -178,7 +178,7 @@ class Autograph extends React.Component {
         this.next()
     }
     next() {
-        if(windwo.MF){
+        if(window.MF){
             MF.navi("apply/success.html?orderId=" + this.state.orderId)
         }else{
             location.href = "../apply/success.html?orderId=" + this.state.orderId
@@ -221,7 +221,7 @@ class Autograph extends React.Component {
                                     {
                                         this.state.autographlistTop.map(item => {
                                             return (
-                                                <p>{Object.keys(cust).length && cust.applicant[item.value]}</p>
+                                                <p>{Object.keys(cust).length && cust.applicant[item.value] || '无'}</p>
                                             )
                                         })
                                     }
@@ -230,7 +230,7 @@ class Autograph extends React.Component {
                                     {
                                         this.state.autographlistTop.map(item => {
                                             return (
-                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value]}</p>
+                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value] ||'无'}</p>
                                             )
                                         })
                                     }

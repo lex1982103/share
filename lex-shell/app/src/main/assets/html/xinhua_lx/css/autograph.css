@@ -99,7 +99,7 @@ div p, span{
     justify-content: center;
     align-items: center;
 }
-.autograph-topRight ul li, .autograph-topRight >p span{
+.autograph-topRight ul li, .autograph-topRight>p span{
     flex: 1;
 }
 .autograph-topRight p{

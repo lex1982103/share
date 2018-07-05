@@ -239,7 +239,7 @@ var Autograph = function (_React$Component) {
     }, {
         key: 'next',
         value: function next() {
-            if (windwo.MF) {
+            if (window.MF) {
                 MF.navi("apply/success.html?orderId=" + this.state.orderId);
             } else {
                 location.href = "../apply/success.html?orderId=" + this.state.orderId;
@@ -335,7 +335,7 @@ var Autograph = function (_React$Component) {
                                         return React.createElement(
                                             'p',
                                             null,
-                                            Object.keys(cust).length && cust.applicant[item.value]
+                                            Object.keys(cust).length && cust.applicant[item.value] || '无'
                                         );
                                     })
                                 ),
@@ -346,7 +346,7 @@ var Autograph = function (_React$Component) {
                                         return React.createElement(
                                             'p',
                                             null,
-                                            Object.keys(cust).length && cust.insurants[0][item.value]
+                                            Object.keys(cust).length && cust.insurants[0][item.value] || '无'
                                         );
                                     })
                                 )

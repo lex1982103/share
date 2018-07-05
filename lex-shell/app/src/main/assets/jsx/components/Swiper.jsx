@@ -42,7 +42,7 @@ export default class PolySwiper extends React.Component{
                     {
                         this.state.images.map((item,index)=>{
                             return (
-                                <div className="swiper-slide" key={'banner'+index}><a href={item.link || ''}><img src={item.url}/></a></div>
+                                <div className="swiper-slide" key={'banner'+index}><a><img src={item.url}/></a></div>
                             )
                         })
                     }

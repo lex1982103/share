@@ -177,7 +177,7 @@ class Main extends React.Component {
                     </div>
                 </div>
                 <div style={{height:"120px"}}></div>
-                <div className="bottom text18 tc-primary"style={{display: "flex", justifyContent: "spaceAround"}}>
+                <div className="bottom text18 tc-primary"style={{display: "flex", justifyContent: "spaceBetween" ,alignItems: "center"}}>
                     <div className="form-item-widget" style={{flex:1}}>
                         <img className="mt-1" style={{width:"220px", height:"60px"}} src="../images/btn-scan.png" onClick={this.getIdCardImg.bind(this)}/>
                     </div>

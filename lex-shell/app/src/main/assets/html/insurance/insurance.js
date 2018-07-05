@@ -163,8 +163,8 @@ class Insurance extends React.Component {
         this.fetchClientList();
     }
     fetchClientList(){
-        let that = this
-       /* ajax('/order/list.json',{
+       /* let that = this
+        ajax('/order/list.json',{
             type: '2',
             from: 0,
             number: 10,
@@ -174,11 +174,13 @@ class Insurance extends React.Component {
                 insuranceList: res.content.list
             })
         })*/
-        // APP.openApply('/order/list.json', {type: '2', from: 0, number: 10},(res) => {
-        //     this.setState({
-        //         applicant: res.list
-        //     })
-        // })
+        APP.openApply('/order/list.json', {type: '2', from: 0, number: 10},(res) => {
+            this.setState({
+                applicant: res.list
+            }, () => {
+                console.log(JSON.stringify(res.list))
+            })
+        })
     }
     /*编辑操作*/
     editClient (data) {}

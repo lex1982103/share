@@ -60,12 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 8:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -425,7 +424,7 @@ var Main = function (_React$Component) {
                 React.createElement("div", { style: { height: "120px" } }),
                 React.createElement(
                     "div",
-                    { className: "bottom text18 tc-primary", style: { display: "flex", justifyContent: "spaceAround" } },
+                    { className: "bottom text18 tc-primary", style: { display: "flex", justifyContent: "spaceBetween" } },
                     React.createElement(
                         "div",
                         { className: "form-item-widget", style: { flex: 1 } },
@@ -463,5 +462,4 @@ $(document).ready(function () {
 });
 
 /***/ })
-
-/******/ });
+/******/ ]);

@@ -41,7 +41,7 @@ public abstract class Layer extends RelativeLayout
 	public Layer(Main window, int top)
 	{
 		super(window);
-		
+
 		this.window = window;
 		this.setBackgroundColor(0xC0000000);
 

@@ -1,16 +1,24 @@
 package lerrain.project.mshell;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.CookieManager;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
+
+import com.polysoft.nci.ocr.IOCRScript;
+import com.polysoft.nci.ocr.OCRCallJavaScriptImpl;
+import com.polysoft.nci.ocr.OCRNativeApi;
 
 public abstract class Layer extends RelativeLayout
 {
@@ -73,6 +81,10 @@ public abstract class Layer extends RelativeLayout
         wv.getSettings().setDatabaseEnabled(true);
 		adapter = new JsBridge(this);
 		wv.addJavascriptInterface(adapter, "MF");
+
+		IOCRScript iScript = new OCRCallJavaScriptImpl(wv);
+		wv.addJavascriptInterface(new OCRNativeApi(this.window, iScript), "OCR");
+		setWebViewLoadListener(wv);
 
 		wvc = new WebViewClient()
 		{
@@ -233,4 +245,34 @@ public abstract class Layer extends RelativeLayout
 		super.computeScroll();
 	}
 
+	private static void setWebViewLoadListener(WebView webView) {
+		WebChromeClient listener = new WebChromeClient() {
+			@Override
+			public void onProgressChanged(WebView view, int newProgress) {
+				// TODO Auto-generated method stub
+				super.onProgressChanged(view, newProgress);
+				if (newProgress == 100) {
+
+				}
+			}
+
+			@Override
+			public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+				// TODO Auto-generated method stub
+				AlertDialog.Builder b = new AlertDialog.Builder(view.getContext());
+				b.setTitle("Alert");
+				b.setMessage(message);
+				b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						result.confirm();
+					}
+				});
+				b.setCancelable(false);
+				b.create().show();
+				return true;
+			}
+		};
+		webView.setWebChromeClient(listener);
+	}
 }

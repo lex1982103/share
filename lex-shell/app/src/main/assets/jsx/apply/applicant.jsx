@@ -9,7 +9,7 @@ class Main extends React.Component {
             certTypeDict: {},
             relationDict: {"00":"本人", "01":"夫妻"},
             mode: 0,
-            cust: null
+            cust: null,
         }
     }
     componentDidMount() {
@@ -72,7 +72,9 @@ class Main extends React.Component {
         })
     }
     next() {
-        this.save()
+        this.save();
+        localStorage.everyState = JSON.stringify({applicant: this.state});// 存放每个界面state数据
+        // localStorage.OcrArr = JSON.stringify(this.state.IdCardImg); // 存放ocr对象
         if(window.MF){
             MF.navi("apply/insurant.html?orderId=" + this.state.orderId)
         }else{
@@ -81,14 +83,24 @@ class Main extends React.Component {
 
     }
     onValChange(key, val) {
-        this.state.cust[key] = val
-        if (key == "occupation1") {
-            this.state.cust.occupation = null
-            this.state.cust.occupationLevel = null
-        } else if (key == "occupation") {
-            this.state.cust.occupationLevel = this.state.occRank[this.state.cust.occupation]
+        if (key == "IdCardImg") {
+
+        } else {
+            this.state.cust[key] = val
+            if (key == "occupation1") {
+                this.state.cust.occupation = null
+                this.state.cust.occupationLevel = null
+            } else if (key == "occupation") {
+                this.state.cust.occupationLevel = this.state.occRank[this.state.cust.occupation]
+            }
+            this.setState({ cust: this.state.cust })
         }
-        this.setState({ cust: this.state.cust })
+
+    }
+    getIdCardImg () {// 证件扫描
+        this.setState({
+            IdCardImg: {}
+        })
     }
     render() {
         let cust = this.state.cust;
@@ -295,6 +307,9 @@ class Main extends React.Component {
                 </div> }
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
+                    <div className="form-item-widget">
+                        <img className="mt-1" style={{width:"220px", height:"60px"}} src="../images/btn-scan.png" onClick={this.getIdCardImg.bind(this)}/>
+                    </div>
                     <div className="ml-3 mr-0" style={{width:"300px"}}></div>
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>

@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 9:
+/***/ 8:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -198,8 +198,20 @@ var Main = function (_React$Component) {
             });
         }
     }, {
+        key: "getIdCardImg",
+        value: function getIdCardImg() {
+            // 证件扫描
+            this.setState({
+                IdCardImg: {}
+            });
+        }
+    }, {
         key: "next",
         value: function next() {
+            var everyState = JSON.parse(localStorage.everyState);
+            var stateData = this.state;
+            everyState.plan = stateData;
+            localStorage.everyState = JSON.stringify(everyState);
             if (window.MF) {
                 MF.navi("apply/health.html?orderId=" + this.state.orderId);
             } else {
@@ -413,18 +425,23 @@ var Main = function (_React$Component) {
                 React.createElement("div", { style: { height: "120px" } }),
                 React.createElement(
                     "div",
-                    { className: "bottom text18 tc-primary" },
+                    { className: "bottom text18 tc-primary", style: { display: "flex", justifyContent: "spaceAround" } },
                     React.createElement(
                         "div",
-                        { className: "ml-3 mr-0", style: { width: "300px" }, onClick: this.showBenefit.bind(this) },
+                        { className: "form-item-widget", style: { flex: 1 } },
+                        React.createElement("img", { className: "mt-1", style: { width: "220px", height: "60px" }, src: "../images/btn-scan.png", onClick: this.getIdCardImg.bind(this) })
+                    ),
+                    React.createElement(
+                        "div",
+                        { className: "ml-3 mr-0", onClick: this.showBenefit.bind(this), style: { flex: 1 } },
                         "\u67E5\u770B\u5229\u76CA\u8D23\u4EFB"
                     ),
                     React.createElement(
                         "div",
-                        { className: "divx", onClick: this.next.bind(this) },
+                        { className: "divx", onClick: this.next.bind(this), style: { flex: 1 } },
                         React.createElement(
                             "div",
-                            { className: "ml-0 mr-0", style: { width: "390px", textAlign: "right" } },
+                            { className: "ml-0 mr-0", style: { textAlign: "right" } },
                             "\u5065\u5EB7\u544A\u77E5"
                         ),
                         React.createElement(

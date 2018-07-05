@@ -5,6 +5,9 @@ class Notice extends React.Component {
             ce: '111'
         }
     }
+    componentDidMount() {
+        window.MF && MF.setTitle("通知书");
+    }
     testPopupDialog1(id,isT){
         // var oHead = document.getElementsByTagName('HEAD').item(0);
         // var oScript= document.createElement("script");

@@ -74,8 +74,18 @@ class Main extends React.Component {
             this.setState({ mode: 0, cust: this.state.cust })
         })
     }
+    getIdCardImg () {// 证件扫描
+        this.setState({
+            IdCardImg: {}
+        })
+    }
     next() {
-        this.save()
+        this.save();
+        let everyState = JSON.parse(localStorage.everyState);
+        let stateData = this.state;
+        everyState.insurant = stateData;
+        localStorage.everyState = JSON.stringify(everyState)
+
         if(window.MF){
             MF.navi("apply/plan.html?orderId=" + this.state.orderId)
         }else{
@@ -100,6 +110,7 @@ class Main extends React.Component {
         }
         this.setState({ cust: this.state.cust })
     }
+
     render() {
         let cust = this.state.cust[this.state.index];
         return (
@@ -325,6 +336,10 @@ class Main extends React.Component {
                 </div>
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
+
+                    <div className="form-item-widget">
+                        <img className="mt-1" style={{width:"220px", height:"60px"}} src="../images/btn-scan.png" onClick={this.getIdCardImg.bind(this)}/>
+                    </div>
                     <div className="ml-3 mr-0" style={{width:"300px"}}></div>
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>

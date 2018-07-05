@@ -1,6 +1,7 @@
 #notice{
     background: #fff;
     margin: 0 auto;
+    max-width: 1200px;
 }
 .notice-wrap{
     width: 100%;
@@ -79,9 +80,8 @@ ul,ol{
     justify-content: space-between;
 }
 .salesman-data>p{
-    width: 250px;
     text-align: left;
-    margin-left: 700px;
+    margin-left: 70%;
 }
 /* 意见 */
 .opinion-wrap{

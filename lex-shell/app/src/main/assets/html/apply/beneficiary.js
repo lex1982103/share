@@ -128,9 +128,21 @@ var Main = function (_React$Component) {
             APP.apply.save({ id: this.state.orderId, detail: { insurants: this.state.order.detail.insurants } }, function (v) {});
         }
     }, {
+        key: "getIdCardImg",
+        value: function getIdCardImg() {
+            // 证件扫描
+            this.setState({
+                IdCardImg: {}
+            });
+        }
+    }, {
         key: "next",
         value: function next() {
             this.save();
+            var everyState = JSON.parse(localStorage.everyState);
+            var stateData = this.state;
+            everyState.beneficiary = stateData;
+            localStorage.everyState = JSON.stringify(everyState);
             if (window.MF) {
                 MF.navi("apply/announce.html?orderId=" + this.state.orderId);
             } else {
@@ -232,6 +244,11 @@ var Main = function (_React$Component) {
                 React.createElement(
                     "div",
                     { className: "bottom text18 tc-primary" },
+                    React.createElement(
+                        "div",
+                        { className: "form-item-widget" },
+                        React.createElement("img", { className: "mt-1", style: { width: "220px", height: "60px" }, src: "../images/btn-scan.png", onClick: this.getIdCardImg.bind(this) })
+                    ),
                     React.createElement("div", { className: "ml-3 mr-0", style: { width: "300px" } }),
                     React.createElement(
                         "div",

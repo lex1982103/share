@@ -14,7 +14,7 @@ class Main extends React.Component {
             ages.push(i)
         this.setState({ ages: ages })
 
-        window.MF&&MF.setTitle("投保计划")
+        window.MF&&MF.setTitle("投保计划");
 
         APP.apply.view(this.state.orderId, r => {
             this.setState({ order: r }, () => {
@@ -79,7 +79,16 @@ class Main extends React.Component {
             this.setState({ plan: r })
         })
     }
+    getIdCardImg () {// 证件扫描
+        this.setState({
+            IdCardImg: {}
+        })
+    }
     next() {
+        let everyState = JSON.parse(localStorage.everyState);
+        let stateData = this.state;
+        everyState.plan = stateData;
+        localStorage.everyState = JSON.stringify(everyState)
         if(window.MF){
             MF.navi("apply/health.html?orderId=" + this.state.orderId)
         }else{
@@ -168,12 +177,15 @@ class Main extends React.Component {
                     </div>
                 </div>
                 <div style={{height:"120px"}}></div>
-                <div className="bottom text18 tc-primary">
-                    <div className="ml-3 mr-0" style={{width:"300px"}} onClick={this.showBenefit.bind(this)}>
+                <div className="bottom text18 tc-primary"style={{display: "flex", justifyContent: "spaceAround"}}>
+                    <div className="form-item-widget" style={{flex:1}}>
+                        <img className="mt-1" style={{width:"220px", height:"60px"}} src="../images/btn-scan.png" onClick={this.getIdCardImg.bind(this)}/>
+                    </div>
+                    <div className="ml-3 mr-0" onClick={this.showBenefit.bind(this)} style={{flex:1}}>
                         查看利益责任
                     </div>
-                    <div className="divx" onClick={this.next.bind(this)}>
-                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
+                    <div className="divx" onClick={this.next.bind(this)} style={{flex:1}}>
+                        <div className="ml-0 mr-0" style={{textAlign:"right"}}>
                             健康告知
                         </div>
                         <div className="ml-1 mr-2" style={{width:"30px"}}>

@@ -1,4 +1,74 @@
-'use strict';
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -20,63 +90,63 @@ var Autograph = function (_React$Component) {
             autographlistTop: [// 基本信息
             {
                 name: '姓名',
-                value: '测试'
+                value: 'name'
             }, {
-                name: '出生日期/性别',
-                value: '测试'
+                name: '性别',
+                value: 'gender'
+            }, {
+                name: '出生日期',
+                value: 'birthday'
             }, {
                 name: '证件类型',
-                value: '测试'
+                value: 'certType'
             }, {
                 name: '证件号码',
-                value: '测试'
+                value: 'certNo'
             }, {
                 name: '证件有效期限',
-                value: '测试'
+                value: 'certValidDate'
             }, {
                 name: '国籍',
-                value: '测试'
+                value: 'nation'
             }, {
                 name: '婚姻及子女情况',
-                value: '测试'
+                value: 'marriage'
             }, {
                 name: '与被保险人关系',
-                value: '测试'
+                value: 'relation'
             }, {
                 name: '工作单位',
-                value: '测试'
+                value: 'company'
             }, {
                 name: '职位名称',
-                value: '测试'
+                value: 'workJob'
             }, {
                 name: '职业编码',
-                value: '测试'
+                value: 'occupation'
             }, {
                 name: '移动电话',
-                value: '测试'
+                value: 'mobile'
             }, {
                 name: '固定电话',
-                value: '测试'
+                value: 'telephone'
             }],
             autographlistBom: [// 基本信息
             {
                 name: '通讯(常住)地址',
-                value: '是的风格环境和规范'
+                value: 'address'
             }, {
                 name: '邮编',
-                value: '测试'
+                value: 'zipcode'
             }, {
                 name: '每年可支配收入',
-                value: '测试'
-            }, {
-                name: '主要收入来源',
-                value: '测试'
+                value: 'income'
             }, {
                 name: '居民类型',
-                value: '测试'
+                value: 'myType'
             }, {
                 name: '是否参加基本医保保障',
-                value: '测试'
+                value: 'hospital'
             }, {
                 name: '税收居民身份',
                 value: '测试'
@@ -130,7 +200,8 @@ var Autograph = function (_React$Component) {
                 name: '在过去的1年内，您是否因出现症状或身体不适而接受治疗或被医生建议治疗，或因此连续服药超过1个月?',
                 value: '否'
             }],
-            isElectronics: true // 是否电子签名
+            isElectronics: true, // 是否电子签名
+            cust: {}
         };
         return _this;
     }
@@ -148,8 +219,23 @@ var Autograph = function (_React$Component) {
             testPopupDialog(id);
         }
     }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            window.MF && MF.setTitle("投保单预览");
+            APP.apply.view(common.param("orderId"), function (r) {
+                console.log(JSON.stringify(r.detail));
+                _this2.setState({
+                    cust: r.detail
+                });
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var cust = this.state.cust;
+
             return React.createElement(
                 'div',
                 { className: 'autograph-table' },
@@ -214,27 +300,43 @@ var Autograph = function (_React$Component) {
                                     '\u88AB\u4FDD\u9669\u4EBA'
                                 )
                             ),
-                            this.state.autographlistTop.map(function (item) {
-                                return React.createElement(
-                                    'p',
+                            React.createElement(
+                                'ul',
+                                null,
+                                React.createElement(
+                                    'li',
                                     null,
-                                    React.createElement(
-                                        'span',
-                                        null,
-                                        item.name
-                                    ),
-                                    React.createElement(
-                                        'span',
-                                        null,
-                                        '\u6D4B\u8BD5'
-                                    ),
-                                    React.createElement(
-                                        'span',
-                                        null,
-                                        '11'
-                                    )
-                                );
-                            }),
+                                    this.state.autographlistTop.map(function (item) {
+                                        return React.createElement(
+                                            'p',
+                                            null,
+                                            item.name
+                                        );
+                                    })
+                                ),
+                                React.createElement(
+                                    'li',
+                                    null,
+                                    Object.keys(cust).length && this.state.autographlistTop.map(function (item) {
+                                        return React.createElement(
+                                            'p',
+                                            null,
+                                            cust.applicant[item.value] || ''
+                                        );
+                                    })
+                                ),
+                                React.createElement(
+                                    'li',
+                                    null,
+                                    Object.keys(cust).length && this.state.autographlistTop.map(function (item) {
+                                        return React.createElement(
+                                            'p',
+                                            null,
+                                            cust.insurants[0][item.value] || ''
+                                        );
+                                    })
+                                )
+                            ),
                             React.createElement(
                                 'p',
                                 { className: 'autograph-email' },
@@ -1454,3 +1556,6 @@ var Autograph = function (_React$Component) {
 $(document).ready(function () {
     ReactDOM.render(React.createElement(Autograph, null), document.getElementById("autograph"));
 });
+
+/***/ })
+/******/ ]);

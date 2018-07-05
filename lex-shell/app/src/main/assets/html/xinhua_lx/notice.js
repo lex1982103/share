@@ -23,6 +23,11 @@ var Notice = function (_React$Component) {
     }
 
     _createClass(Notice, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            window.MF && MF.setTitle("通知书");
+        }
+    },{
         key: 'testPopupDialog1',
         value: function testPopupDialog1(id, isT) {
             // var oHead = document.getElementsByTagName('HEAD').item(0);

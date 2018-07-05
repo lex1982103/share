@@ -41,7 +41,7 @@ class Main extends React.Component {
             $.ajax({
                 contentType: 'application/json',
                 type:'POST',
-                url:"http://114.112.96.30:10003/app/user/login.json",
+                url:"http://114.112.96.61:7666/app/user/login.json",
                 data:JSON.stringify({
                     "loginName":this.refs.loginName.value,
                     "password":this.refs.password.value

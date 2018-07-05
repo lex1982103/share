@@ -60,7 +60,17 @@ public abstract class Layer extends RelativeLayout
 		wv.getSettings().setUseWideViewPort(true);
 		wv.getSettings().setAllowUniversalAccessFromFileURLs(true);
 		wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        //允许JavaScript执行
+        wv.getSettings().setJavaScriptEnabled(true);
 
+        // 开启DOM缓存，开启LocalStorage存储（html5的本地存储方式）
+        wv.getSettings().setDomStorageEnabled(true);
+        wv.getSettings().setDatabaseEnabled(true);//允许JavaScript执行
+        wv.getSettings().setJavaScriptEnabled(true);
+
+        // 开启DOM缓存，开启LocalStorage存储（html5的本地存储方式）
+        wv.getSettings().setDomStorageEnabled(true);
+        wv.getSettings().setDatabaseEnabled(true);
 		adapter = new JsBridge(this);
 		wv.addJavascriptInterface(adapter, "MF");
 

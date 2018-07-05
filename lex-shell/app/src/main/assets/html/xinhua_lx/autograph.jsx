@@ -173,6 +173,18 @@ class Autograph extends React.Component {
             })
         })
     }
+
+    submit() {
+        this.next()
+    }
+    next() {
+        if(windwo.MF){
+            MF.navi("apply/success.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "../apply/success.html?orderId=" + this.state.orderId
+        }
+
+    }
     render() {
         const { cust } = this.state;
         return (
@@ -209,7 +221,7 @@ class Autograph extends React.Component {
                                     {
                                         this.state.autographlistTop.map(item => {
                                             return (
-                                                <p>{Object.keys(cust).length && cust.applicant[item.value] || ''}</p>
+                                                <p>{Object.keys(cust).length && cust.applicant[item.value]}</p>
                                             )
                                         })
                                     }
@@ -218,7 +230,7 @@ class Autograph extends React.Component {
                                     {
                                         this.state.autographlistTop.map(item => {
                                             return (
-                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value] || ''}</p>
+                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value]}</p>
                                             )
                                         })
                                     }
@@ -650,6 +662,17 @@ class Autograph extends React.Component {
                             <input id="btnCancel" type="button" className="button orange" value="取 消" onClick={cancelSign}/>
                         </div>
 
+                    </div>
+                </div>
+                <div className="bottom text18 tc-primary">
+                    <div className="ml-3 mr-0" style={{width:"300px"}}></div>
+                    <div className="divx" onClick={this.submit.bind(this)}>
+                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
+                            提交
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
+                        </div>
                     </div>
                 </div>
             </div>

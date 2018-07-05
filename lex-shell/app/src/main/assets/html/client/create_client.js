@@ -89,7 +89,6 @@
 
                 var _this = _possibleConstructorReturn(this, (CreateClient.__proto__ || Object.getPrototypeOf(CreateClient)).call(this));
 
-
                 _this.state = {
                     orderId: common.param("orderId"),
                     genderDict: { "M": "男", "F": "女" },
@@ -855,10 +854,5 @@
             ReactDOM.render(React.createElement(CreateClient, null), document.getElementById("root"));
         });
 
-<<<<<<< HEAD
-/***/ })
-/******/ ]);
-=======
         /***/ })
     /******/ ]);
->>>>>>> 0d1493b18c610d23603afa6d7e21fd52f8a9e320

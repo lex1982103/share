@@ -1,16 +1,21 @@
 package lerrain.project.mshell;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.webkit.CookieManager;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
+
+import com.picc.ehome.ocr.IOCRScript;
+import com.picc.ehome.ocr.OCRCallJavaScriptImpl;
+import com.picc.ehome.ocr.OCRNativeApi;
 
 public abstract class Layer extends RelativeLayout
 {
@@ -33,7 +38,7 @@ public abstract class Layer extends RelativeLayout
 	public Layer(Main window, int top)
 	{
 		super(window);
-		
+
 		this.window = window;
 		this.setBackgroundColor(0xC0000000);
 
@@ -60,9 +65,23 @@ public abstract class Layer extends RelativeLayout
 		wv.getSettings().setUseWideViewPort(true);
 		wv.getSettings().setAllowUniversalAccessFromFileURLs(true);
 		wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        //允许JavaScript执行
+        wv.getSettings().setJavaScriptEnabled(true);
 
+        // 开启DOM缓存，开启LocalStorage存储（html5的本地存储方式）
+        wv.getSettings().setDomStorageEnabled(true);
+        wv.getSettings().setDatabaseEnabled(true);//允许JavaScript执行
+        wv.getSettings().setJavaScriptEnabled(true);
+
+        // 开启DOM缓存，开启LocalStorage存储（html5的本地存储方式）
+        wv.getSettings().setDomStorageEnabled(true);
+        wv.getSettings().setDatabaseEnabled(true);
 		adapter = new JsBridge(this);
 		wv.addJavascriptInterface(adapter, "MF");
+
+		IOCRScript iScript = new OCRCallJavaScriptImpl(wv);
+		wv.addJavascriptInterface(new OCRNativeApi(this.window, iScript), "OCR");
+		setWebViewLoadListener(wv);
 
 		wvc = new WebViewClient()
 		{
@@ -223,4 +242,34 @@ public abstract class Layer extends RelativeLayout
 		super.computeScroll();
 	}
 
+	private static void setWebViewLoadListener(WebView webView) {
+		WebChromeClient listener = new WebChromeClient() {
+			@Override
+			public void onProgressChanged(WebView view, int newProgress) {
+				// TODO Auto-generated method stub
+				super.onProgressChanged(view, newProgress);
+				if (newProgress == 100) {
+
+				}
+			}
+
+			@Override
+			public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+				// TODO Auto-generated method stub
+				AlertDialog.Builder b = new AlertDialog.Builder(view.getContext());
+				b.setTitle("Alert");
+				b.setMessage(message);
+				b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						result.confirm();
+					}
+				});
+				b.setCancelable(false);
+				b.create().show();
+				return true;
+			}
+		};
+		webView.setWebChromeClient(listener);
+	}
 }

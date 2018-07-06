@@ -6,10 +6,15 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("客户声明及授权")
+        window.MF&&MF.setTitle("客户声明及授权")
     }
     next() {
-        MF.navi("apply/pay.html?orderId=" + this.state.orderId)
+        if(window.MF){
+            MF.navi("apply/pay.html?orderId=" + this.state.orderId)
+        }else{
+            location.href = "apply/pay.html?orderId=" + this.state.orderId
+        }
+
     }
     render() {
         return (
@@ -29,6 +34,9 @@ class Main extends React.Component {
                     <div className="divx" onClick={this.next.bind(this)}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             支付信息
+                        </div>
+                        <div className="ml-1 mr-2" style={{width:"30px"}}>
+                            <img className="mt-3" style={{width:"27px", height:"39px"}} src="../images/blueright.png"/>
                         </div>
                     </div>
                 </div>

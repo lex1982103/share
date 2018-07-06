@@ -1,24 +1,22 @@
 package lerrain.project.mshell;
 
 import android.app.Activity;
-import android.content.res.AssetManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.picc.ehome.interf.IActivity;
+import com.picc.ehome.interf.IActivityResult;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class Main extends Activity
+public class Main extends Activity implements IActivity
 {
 	Layers layers;
-
+	Map<String, IActivityResult> cacheMap = new HashMap<String, IActivityResult>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -27,14 +25,14 @@ public class Main extends Activity
 		Ui.dp = metrics.density;
 		Ui.width = metrics.widthPixels;
 		Ui.height = metrics.heightPixels;
-		
+
 		super.onCreate(savedInstanceState);
-		
+
 		layers = new Layers(this);
 
 		final Layer base = createBaseLayer();
 		layers.setBaseLayer(base);
-		
+
 		this.setContentView(layers);
 	}
 //
@@ -87,12 +85,12 @@ public class Main extends Activity
 //		}
 //
 //	}
-	
+
 	protected Layer createBaseLayer()
 	{
 		PageLayer layer = new PageLayer(this);
-		layer.openLocal("home/login2.html");
-
+//		layer.openLocal("home/ocr/html/demo.html");
+		layer.openLocal("ocr/html/demo.html");
 		return layer;
 	}
 
@@ -110,5 +108,28 @@ public class Main extends Activity
 				Network.request("util/stat.json", json.toJSONString(), 1000);
 			}
 		}).start();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		String key = String.valueOf(requestCode);
+		IActivityResult iResult = this.cacheMap.get(key);
+		if (null != iResult) {
+			this.cacheMap.remove(key);
+			iResult.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
+	public void startActivityForResult(Intent intent, int requestCode, IActivityResult iResult) {
+		super.startActivityForResult(intent, requestCode);
+		String key = String.valueOf(requestCode);
+		this.cacheMap.put(key, iResult);
+	}
+
+	@Override
+	public Activity getActivity() {
+		return this;
 	}
 }

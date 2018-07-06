@@ -1,20 +1,26 @@
 var Host = {
     req: function(url, param, onSucc, onFail) {
-        if (param != null) {
-            param.userKey = MF.env("userKey")
+        if (param == null)
+            param = {}
+        APP.onSucc = null
+        var userKey = MF.env(key)
+        if (userKey) {
+            param.userKey = userKey
+            common.req("app" + url, param, onSucc, onFail)
         } else {
-            param = { userKey: MF.env("userKey") }
+            APP.onSucc = function(userKey) {
+                param.userKey = userKey
+                common.req("app" + url, param, onSucc, onFail)
+            }
         }
-        common.req("app" + url, param, onSucc, onFail)
     }
 }
 
-//var MF = {
-//    env: () => {},
-//    setTitle: () => {}
-//}
-
 var APP = {
+    env(key, onSucc) {
+        APP.onSucc = onSucc
+        MF.env(key)
+    },
     callback(val) {
         if (APP.onSucc)
             APP.onSucc(val)

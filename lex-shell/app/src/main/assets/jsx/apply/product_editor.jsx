@@ -8,12 +8,12 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        this.state.form = []
+        this.state.form = [{}]
         APP.apply.editProduct(this.state.planId, this.state.index, r => {
-            this.state.form.push({
+            this.state.form[0] = {
                 name: r.name,
                 form: this.formOf(r.factors)
-            })
+            }
             this.setState({ form: this.state.form })
         })
         APP.apply.viewPlan(this.state.planId, plan => {

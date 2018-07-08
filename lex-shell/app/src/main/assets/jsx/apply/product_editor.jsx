@@ -98,7 +98,7 @@ class Main extends React.Component {
                                 <div className="form-item-label text17" style={{width:"300px", margin:"10px 0 0 20px"}}>{v.label}</div>
                                 <div className="form-item-widget" style={{width:"410px", margin:"10px 20px 0 0", textAlign:"right"}}>
                                     {
-                                        v.widget == "number" ? <input type="number" placeholder={"请输入"+v.label}/> :
+                                        v.widget == "number" ? <input type="number" placeholder={"请输入"+v.label} onChange={ e => { this.onValChange(v, i, j, e.target.value) } }/> :
                                         v.widget == "switch" || v.widget == "select" ?
                                             <div style={{display:"flex"}} onClick={x => { APP.pick("select", v.detail, this.onValChange.bind(this, v, i, j)) }}>
                                                 <div className="text17" style={{width:"350px", lineHeight:"60px"}}>{v.detail[v.value]}</div>

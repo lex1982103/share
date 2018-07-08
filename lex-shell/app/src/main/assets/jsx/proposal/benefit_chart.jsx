@@ -106,17 +106,22 @@ class BenefitChart extends React.Component {
     })
 
     //画顶部的介绍
-    ctx.textAlign = 'right'
+    ctx.textAlign = 'left'
     ctx.textBaseline = 'middle'
     let x = ax.w - ax.mr
+    let y = ax.mt / 2
     this.state.chart.data.map(v1 => {
       if (v1.type == "text")
         return
       ctx.fillStyle = "#" + v1.color
-      ctx.fillText(v1.name, x, ax.mt / 2)
-      x -= ctx.measureText(v1.name).width + ax.m + ax.bar
-      ctx.fillRect(x, ax.mt / 2 - ax.bar / 2, ax.bar, ax.bar)
-      x -= ax.m 
+      let ww = ctx.measureText(v1.name).width + ax.m + ax.bar
+      if (x < ax.ml + ww) {
+        x = ax.w - ax.mr
+        y += ax.bar + 10
+      }
+      x -= ww - ax.m
+      ctx.fillText(v1.name, x + ax.bar + ax.m, y)
+      ctx.fillRect(x, y - ax.bar / 2, ax.bar, ax.bar)
     })
 
     //计算点击的位置

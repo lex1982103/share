@@ -38,6 +38,7 @@ class Main extends React.Component {
                 that.setState({ login: "fail" })
                 // MF.navi("home/home.html")
             })*/
+            let that = this
             $.ajax({
                 contentType: 'application/json',
                 type:'POST',
@@ -48,10 +49,20 @@ class Main extends React.Component {
                 }),
                 success(data){
                     if(window.MF){
+                        localStorage.loginName = that.state.loginName
+                        localStorage.channelId = data.content.channelId
+                        localStorage.orgId = data.content.orgId
+                        localStorage.userKey = data.content.userKey
+
                         MF.setEnv("userKey", data.content.userKey);
                         MF.setEnv("orgId", data.content.orgId);
                         MF.navi("home/home.html")
+
                     }else{
+                        localStorage.loginName = that.state.loginName
+                        localStorage.channelId = data.content.channelId
+                        localStorage.orgId = data.content.orgId
+                        localStorage.userKey = data.content.userKey
                         location.href = 'home.html'
                     }
                 },

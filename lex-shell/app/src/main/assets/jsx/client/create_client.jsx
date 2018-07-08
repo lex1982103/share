@@ -1,5 +1,3 @@
-
-const serverUrl = 'http://47.104.13.159:31001';
 class CreateClient extends React.Component {
     constructor() {
         super()
@@ -11,24 +9,31 @@ class CreateClient extends React.Component {
             certTypeDict: {},
             relationDict: {"00":"本人", "01":"夫妻"},
             index: 0,
-            mode: 0,
-            cust: [{}]
-        }
+            mode: 1,
+            cust: common.customer('customerMsg')
+        };
+        this.finish = this.finish.bind(this);
     }
     componentDidMount() {
-        window.MF && MF.setTitle("新建客户")
+        if (Object.keys(this.state.cust).length > 0) {
+            window.MF && MF.setTitle("客户编辑");
+        } else {
+            window.MF && MF.setTitle("新建客户");
+        }
+
         window.MF && APP.dict("cert,marriage,nation,occupation,relation", r => {
-            let occMap = {}
-            let occRank = {}
+            let occMap = {};
+            let occRank = {};
             let occDict = r.occupation.datas.map(v => {
                 let c = v.smalls.map(w => {
                     occMap[w.occupationCode] = { text:w.occupationName }
                     occRank[w.occupationCode] = w.occupationLevel
                     return { code:w.occupationCode, text:w.occupationName }
-                })
-                occMap[v.occupationCode] = { text:v.occupationName, children:c }
+                });
+                occMap[v.occupationCode] = { text:v.occupationName, children:c };
                 return { code:v.occupationCode, text:v.occupationName }
-            })
+            });
+
             this.setState({
                 occMap: occMap,
                 occRank: occRank,
@@ -39,24 +44,65 @@ class CreateClient extends React.Component {
                 marriageDict: r.marriage
             })
         })
-
-
     }
     save() {
-        let c = this.state.cust[this.state.index]
-
+        let c = this.state.cust;
         if (this.state.mode == 1) {
             c.name = this.refs.name.value
             c.certNo = this.refs.certNo.value
+            if (!c.name || !c.name.length) {
+                console.log('请填写用户姓名');
+                return;
+            }if (!c.gender || !c.gender.length) {
+                console.log('请选择性别');
+                return;
+            } if (!c.nation || !c.nation.length) {
+                console.log('请选择国籍');
+                return;
+            } if (!c.birthday || !c.birthday.length) {
+                console.log('请选择出生日期');
+                return;
+            } if (!c.marriage || !c.marriage.length) {
+                console.log('请选择婚姻状况');
+                return;
+            } if (!c.certNo || !c.certNo.length) {
+                console.log('请填写证件号');
+                return;
+            } if (!c.certValidDate || !c.certValidDate.length) {
+                console.log('请填写证件有效期');
+                return;
+            }
             c.mode1 = true
         } else if (this.state.mode == 2) {
             c.company = this.refs.company.value
             c.workJob = this.refs.workJob.value
             c.income = this.refs.income.value
+             if (!c.company || !c.company.length) {
+                 console.log('请填写工作单位');
+                 return;
+             }if (!c.workJob || !c.workJob.length) {
+                 console.log('请填写职位');
+                 return;
+             } if (!c.occupation1 || !c.occupation1.length) {
+                 console.log('请选择职业大类');
+                 return;
+             } if (!c.occupation || !c.occupation.length) {
+                 console.log('请选择职业小类');
+                 return;
+             } if (!c.occupation || !c.occupation.length) {
+                 console.log('请填写职业代码');
+                 return;
+             } if (!c.occupationLevel || !c.occupationLevel.length) {
+                 console.log('请填写职业类别');
+                 return;
+             } if (!c.income || !c.income.length) {
+                 console.log('请填写年收入');
+                 return;
+             }
             c.mode2 = true
         } else if (this.state.mode == 3) {
             c.address = this.refs.address.value
-            c.address1 = this.refs.address1.value
+            c.cityText = this.refs.address1.value
             c.address2 = this.refs.address2.value
             c.telephone = this.refs.telephone.value
             c.mobile = this.refs.mobile.value
@@ -64,78 +110,121 @@ class CreateClient extends React.Component {
             c.wechat = this.refs.wechat.value
             c.zipcode = this.refs.zipcode.value
             c.email = this.refs.email.value
+            if (!c.address || !c.address.length) {
+                console.log('请填写联系地址');
+                return;
+            }/*if (!c.cityText || !c.cityText.length) {
+                console.log('请填写乡镇(街道)');
+                return;
+            } if (!c.address2 || !c.address2.length) {
+                console.log('请填写村(社区)');
+                return;
+            } */if ((!c.telephone || !c.telephone.length) && (!c.mobile || !c.mobile.length)) {
+                console.log('手机或者电话二者选其一');
+                return;
+            } /*if (!c.qq || !c.qq.length) {
+                console.log('请填写qq号码');
+                return;
+            } if (!c.wechat || !c.wechat.length) {
+                console.log('请填写微信号码');
+                return;
+            } */if (!c.zipcode || !c.zipcode.length) {
+                console.log('请填写邮政编码');
+                return;
+            } if (!c.email || !c.email.length) {
+                console.log('请填写邮箱');
+                return;
+            }
             c.mode3 = true
         } else if (this.state.mode == 4) {
             c.mode4 = true
         }
 
-        this.state.cust[this.state.index] = c
-        console.log('123');
-        $.ajax({
-            url: serverUrl + '/customerInfo/addCustomerInfo',
-            type:"POST",
-            contentType: 'application/json',
-            data: {
-                "customerAppInfo": {
-                    "applicationId": 0,
-                    "insure1": 0
-                },
-                "insuredMap": {
-                    "insured1": {
+        this.state.cust= c;
+        this.setState({mode: 0})
 
-                    }
-                },
-                "insuredSize": "1",
-                "policyHolderInfo": {
-                    "name": "钟永伟",
-                    "genderCode": "0",
-                    "birthday": "1985-12-02",
-                    "marriage": "0",
-                    "street": "非洲大道111",
-                    "community": "美国村111",
-                    "email": "11111111@qq.com",
-                    "zipcode": "111111",
-                    "mobile": "13888880000",
-                    "phone": "01077770000"
-                }
-            },
-            xhrFields: { withCredentials: false },
-            success:(r) => {
-                this.setState({
-                    products: r.rows || []
-                })
-            },
-            fail: function(r) {
-            },
-            dataType:"json"
-        });
     }
     finish() {
-        this.save()
-        window.MF && MF.navi("client/client_list.html")
+        let cust = this.state.cust;
+        let postData = {
+            "id": cust.id || '',
+            "name": cust.name,
+            "gender":cust.gender,
+            "birthday":cust.birthday,
+            "cert_type": cust.certType,
+            "cert_no": cust.certNo,
+            "type": '1',
+            "detail": JSON.stringify({
+                "mobile":cust.mobile,
+                "email": cust.email,
+                "city": cust.city,
+                "address": cust.address,
+                "birthday": cust.birthday,
+                "cert": {
+                    "certNo": cust.certNo,
+                    "certLong": true,
+                    "certExpire": cust.certExpire || "",
+                    "certType": cust.certType
+                },
+                "channelId": cust.channelId || 1,
+                "city": cust.city || "",
+                "cityText": cust.cityText,
+                "company": cust.company,
+                "companyAddress": cust.companyAddress || "",
+                "education": cust.education ||"",
+                "gender": cust.gender,
+                "marriage": cust.marriage,
+                "mobile": cust.marriage,
+                "phone": cust.phone,
+                "name": cust.name,
+                "nation": cust.nation,
+                "occupation": cust.occupation,
+                "owner": 1,
+                "partTimeJob": cust.partTimeJob || "",
+                "relation":  cust.relation ||"",
+                "workDetail": cust.workDetail || "",
+                "zipcode": cust.zipcode
+            })
+        }
+        this.save();
+        if (!cust.mode1 ||
+            !cust.mode2 ||
+            !cust.mode3 ||
+            !cust.mode4) {
+            console.log('请补充信息');
+            return;
+        }
+        APP.list('/customer/save.json', postData, r => {
+            alert(r)
+            // window.MF && MF.navi("client/client_list.html");
+        })
     }
     newInsurant() {
-        this.state.cust.push({})
+        this.state.cust.push({});
         this.setState({ cust: this.state.cust })
     }
     onInsurantSwitch(i) {
         this.setState({ mode: 0, index: i })
     }
     onValChange(key, val) {
-        this.state.cust[this.state.index][key] = val
+        if (key === 'certType') {
+            this.state.cust[key] = val;
+        } else {
+            this.state.cust[key] = val;
+        }
         if (key == "occupation1") {
-            this.state.cust[this.state.index].occupation = null
-            this.state.cust[this.state.index].occupationLevel = null
+            this.state.cust.occupation = null
+            this.state.cust.occupationLevel = null
         } else if (key == "occupation") {
-            this.state.cust[this.state.index].occupationLevel = this.state.occRank[this.state.cust[this.state.index].occupation]
+            this.state.cust.occupationLevel = this.state.occRank[this.state.cust.occupation]
         }
         this.setState({ cust: this.state.cust })
     }
+
     render(){
-        let cust = this.state.cust[0];
+        let cust = this.state.cust
         return (
             <div>
-
                 <div className="divx bg-white pl-3 pr-3" style={{height:"100px", marginTop:"20px", textAlign:"center"}} onClick={v => { this.setState({ mode: this.state.mode==1?0:1 }) }}>
                     <div className="divx text18" style={{height:"60px", margin:"25px auto 0 auto", verticalAlign:"middle", lineHeight:"50px"}}>
                         <img style={{width:"50px", height:"50px", margin:"0 20px 0 65px"}} src={"../images/"+(this.state.mode==1?"sub":"add")+".png"}/>基本信息
@@ -223,14 +312,14 @@ class CreateClient extends React.Component {
                     <div className="form-item text16">
                         <div className="form-item-label">职业大类</div>
                         <div className="form-item-widget" onClick={v => {APP.pick("select", this.state.occDict, this.onValChange.bind(this, "occupation1"))}}>
-                            <div className={(cust.occupation1 == null ? "tc-gray " : "") + "text16 ml-1 mr-auto"}>{cust.occupation1 == null ? "请选择职业大类" : this.state.occMap[cust.occupation1].text}</div>
+                            <div className={(cust.occupation1 == null ? "tc-gray " : "") + "text16 ml-1 mr-auto"}>{cust.occupation1 == null ? "请选择职业大类" : (this.state.occMap[cust.occupation1] ? this.state.occMap[cust.occupation1].text : "请选择职业大类")}</div>
                             <img className="mt-2 mr-0" style={{width:"27px", height:"39px"}} src="../images/right.png"/>
                         </div>
                     </div>
                     <div className="form-item text16">
                         <div className="form-item-label">职业小类</div>
                         <div className="form-item-widget" onClick={v => {APP.pick("select", this.state.occMap[cust.occupation1].children, this.onValChange.bind(this, "occupation"))}}>
-                            <div className={(cust.occupation == null ? "tc-gray " : "") + "text16 ml-1 mr-auto"}>{cust.occupation == null ? "请选择职业小类" : this.state.occMap[cust.occupation].text}</div>
+                            <div className={(cust.occupation == null ? "tc-gray " : "") + "text16 ml-1 mr-auto"}>{cust.occupation == null ? "请选择职业小类" : (this.state.occMap[cust.occupation] ? this.state.occMap[cust.occupation].text : "请选择职业小类")}</div>
                             <img className="mt-2 mr-0" style={{width:"27px", height:"39px"}} src="../images/right.png"/>
                         </div>
                     </div>
@@ -247,7 +336,7 @@ class CreateClient extends React.Component {
                         </div>
                     </div>
                     <div className="form-item text16">
-                        <div className="form-item-label">年收入（万元）</div>
+                        <div className="form-item-label">年收入(万元)</div>
                         <div className="form-item-widget">
                             <input className="mt-1" ref="income" defaultValue={cust.income} placeholder="请输入年收入"/>
                         </div>
@@ -270,13 +359,13 @@ class CreateClient extends React.Component {
                         </div>
                     </div>
                     <div className="form-item text16">
-                        <div className="form-item-label">乡镇（街道）</div>
+                        <div className="form-item-label">乡镇(街道)</div>
                         <div className="form-item-widget">
                             <input className="mt-1" ref="address1" defaultValue={cust.address1} placeholder="请输入乡镇（街道）"/>
                         </div>
                     </div>
                     <div className="form-item text16">
-                        <div className="form-item-label">村（社区）</div>
+                        <div className="form-item-label">村(社区)</div>
                         <div className="form-item-widget">
                             <input className="mt-1" ref="address2" defaultValue={cust.address2} placeholder="请输入村（社区）"/>
                         </div>
@@ -288,7 +377,7 @@ class CreateClient extends React.Component {
                         </div>
                     </div>
                     <div className="form-item text16">
-                        <div className="form-item-label" style={{width:"670px"}}>联系方式（手机或者电话二者选其一）</div>
+                        <div className="form-item-label" style={{width:"670px"}}>联系方式(手机或者电话二者选其一)</div>
                     </div>
                     <div className="form-item text16">
                         <div className="form-item-label">电话</div>
@@ -339,7 +428,7 @@ class CreateClient extends React.Component {
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
                     <div className="ml-3 mr-0" style={{width:"300px"}}></div>
-                    <div className="divx" onClick={this.finish.bind(this)}>
+                    <div onClick={ () => {this.finish ()}}>
                         <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
                             完成
                         </div>
@@ -349,6 +438,7 @@ class CreateClient extends React.Component {
             </div>
         )
     }
+
 }
 
 $(document).ready( function() {

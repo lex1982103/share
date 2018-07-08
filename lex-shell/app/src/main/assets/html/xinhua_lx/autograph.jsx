@@ -166,14 +166,33 @@ class Autograph extends React.Component {
     }
     componentDidMount() {
         window.MF && MF.setTitle("投保单预览");
-        APP.apply.view(common.param("orderId"), r => {
-            console.log(JSON.stringify(r.detail))
-            this.setState({
-                cust: r.detail
-            })
-        })
-    }
+        setTimeout(function(){
+            $.ajax({
+                type: 'POST',
+                url: 'http://114.112.96.61:7666/app/policy/qry_policysign.json',
+                dataType: "json",
+                data: {
+                    "policyNo":"5000010"
+                },
+                success: function(data) {
+                    document.getElementById("xss_20").src = data.content.signImg;
+                }
+            });
+        },200)
+        // APP.apply.view(common.param("orderId"), r => {
+        //     console.log(JSON.stringify(r.detail))
+        //     this.setState({
+        //         cust: r.detail
+        //     })
+        // })
 
+    }
+    getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
     submit() {
         this.next()
     }
@@ -230,7 +249,7 @@ class Autograph extends React.Component {
                                     {
                                         this.state.autographlistTop.map(item => {
                                             return (
-                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value]}</p>
+                                                <p>{Object.keys(cust).length && cust.insurants[0][item.value]  || '无'}</p>
                                             )
                                         })
                                     }

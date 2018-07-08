@@ -13,10 +13,6 @@ import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
-import com.picc.ehome.ocr.IOCRScript;
-import com.picc.ehome.ocr.OCRCallJavaScriptImpl;
-import com.picc.ehome.ocr.OCRNativeApi;
-
 public abstract class Layer extends RelativeLayout
 {
 	Main window;
@@ -38,7 +34,7 @@ public abstract class Layer extends RelativeLayout
 	public Layer(Main window, int top)
 	{
 		super(window);
-
+		
 		this.window = window;
 		this.setBackgroundColor(0xC0000000);
 
@@ -79,8 +75,6 @@ public abstract class Layer extends RelativeLayout
 		adapter = new JsBridge(this);
 		wv.addJavascriptInterface(adapter, "MF");
 
-		IOCRScript iScript = new OCRCallJavaScriptImpl(wv);
-		wv.addJavascriptInterface(new OCRNativeApi(this.window, iScript), "OCR");
 		setWebViewLoadListener(wv);
 
 		wvc = new WebViewClient()
@@ -167,6 +161,9 @@ public abstract class Layer extends RelativeLayout
 		{
 			int p2 = uri.lastIndexOf("?");
 			window.stat("open:" + (p2 < 0 ? uri : uri.substring(0, p2)));
+
+			if (Ui.width / Ui.dp >= 600)
+				uri = uri + (p2 < 0 ? "?" : "&") + "size=1500";
 		}
 
 		wv.loadUrl("file:///android_asset/html/" + uri);

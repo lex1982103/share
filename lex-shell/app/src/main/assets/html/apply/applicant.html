@@ -4,8 +4,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 		<script>
-			var scale = window.screen.width / 750
-			document.write('<meta name="viewport" content="width=750, initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no, minimal-ui">')
+			var size = 750;
+		    var reg = new RegExp("(^|&)size=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) size = Number(unescape(r[2]));
+			var scale = window.screen.width / size;
+			document.write('<meta name="viewport" content="width=' + size + ', initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no, minimal-ui">')
 		</script>
 
         <link href="../css/common.css" rel="stylesheet"/>
@@ -23,4 +27,16 @@
 	<body>
 		<div id="root"></div>
 	</body>
+	<!--<div id="bdshare" class="bdshare_t bds_tools_32 get-codes-bdshare" data="{'url':'http://114.112.96.30:10006/xinhua_lx/autograph_xh.html?'policyNo'='5000010'?'userId'=''+loginName+'''}">-->
+		<!--<span class="bds_more">更多</span>-->
+		<!--<a class="bds_tsina">新浪</a>-->
+		<!--<a class="bds_tqq">腾讯</a>-->
+		<!--<a class="bds_renren">人人</a>-->
+		<!--<a class="bds_qzone">QQ </a>-->
+	<!--</div>-->
+	<!--<script type="text/javascript" id="bdshare_js" data="type=tools" ></script>-->
+	<!--<script type="text/javascript" id="bdshell_js"></script>-->
+	<!--<script type="text/javascript">-->
+        <!--document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);-->
+    <!--</script>-->
 </html>

@@ -1,26 +1,24 @@
 var Host = {
     req: function(url, param, onSucc, onFail) {
-        if (param == null)
-            param = {}
-        APP.onSucc = null
-        var userKey = MF.env(key)
-        if (userKey) {
-            param.userKey = userKey
-            common.req("app" + url, param, onSucc, onFail)
+        if (param != null) {
+            param.userKey = MF.env("userKey")
         } else {
-            APP.onSucc = function(userKey) {
-                param.userKey = userKey
-                common.req("app" + url, param, onSucc, onFail)
-            }
+            param = { userKey: MF.env("userKey") }
         }
+        common.req("app" + url, param, onSucc, onFail)
     }
 }
 
+var SIZE = common.param("size")
+if (SIZE == null)
+    SIZE = 750
+
+//var MF = {
+//    env: () => {},
+//    setTitle: () => {}
+//}
+
 var APP = {
-    env(key, onSucc) {
-        APP.onSucc = onSucc
-        MF.env(key)
-    },
     callback(val) {
         if (APP.onSucc)
             APP.onSucc(val)
@@ -45,6 +43,12 @@ var APP = {
     },
     dict(code, onSucc) {
         Host.req("/dict/view.json", { company: "nciapp", name: code }, onSucc)
+    },
+   list(url, postData, onSucc) {
+      Host.req(url, postData, onSucc)
+    },
+    openApply(url, postData, onSucc) {
+        Host.req(url, postData, onSucc)
     },
     toMapDict(dict) {
         if (dict instanceof Array) {
@@ -73,3 +77,4 @@ if (typeof Apply == "object") {
     Apply.host = Host;
     APP.apply = Apply;
 }
+

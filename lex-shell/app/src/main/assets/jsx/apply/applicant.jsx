@@ -14,7 +14,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        MF.setTitle("投保人")
+        window.MF&&MF.setTitle("投保人")
         APP.dict("cert,marriage,nation,occupation", r => {
             let occMap = {}
             let occRank = {}
@@ -114,8 +114,15 @@ class Main extends React.Component {
             })
         }
     }
+    getIdCardImg () {// 证件扫描
+        this.setState({
+            IdCardImg: {}
+        })
+    }
     next() {
-        this.save()
+        this.save();
+        localStorage.everyState = JSON.stringify({applicant: this.state});// 存放每个界面state数据
+        // localStorage.OcrArr = JSON.stringify(this.state.IdCardImg); // 存放ocr对象
         MF.navi("apply/insurant.html?orderId=" + this.state.orderId)
     }
     onValChange(key, val) {
@@ -340,11 +347,11 @@ class Main extends React.Component {
                 </div> }
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
-                    <div className="ml-3 mr-0" style={{width:"300px"}}></div>
-                    <div className="divx" onClick={this.next.bind(this)}>
-                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
-                            被保险人信息
-                        </div>
+                    <div className="ml-3 mr-auto">
+                        <img className="mt-2" style={{width:"220px", height:"60px"}} src="../images/btn-scan.png" onClick={this.getIdCardImg.bind(this)}/>
+                    </div>
+                    <div className="mr-3" onClick={this.next.bind(this)}>
+                        被保险人信息
                     </div>
                 </div>
             </div>

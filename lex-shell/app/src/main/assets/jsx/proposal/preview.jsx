@@ -144,7 +144,7 @@ class Main extends React.Component {
                             <div>
                                 <div className="text17 lh-60 center pl-3 pr-3 ml-3 mr-3 mt-1 mb-2 tc-primary bg-white" style={{border:"#00aff9 1px solid", borderRadius:"30px"}}>{v.productName}</div>
                                 <div className="divx">
-                                    <BenefitChart ref={"benefitChart"+i} id={"benefitChart"+i} chart={v} years={[-2,-1,0,1,2]}/>
+                                    <BenefitChart size={750} ref={"benefitChart"+i} id={"benefitChart"+i} chart={v} years={[-2,-1,0,1,2]}/>
                                 </div>
                             </div>
                         )}

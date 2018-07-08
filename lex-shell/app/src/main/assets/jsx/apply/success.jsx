@@ -21,11 +21,10 @@ class Main extends React.Component {
                     投保成功<br/>保单号：123456789012345678
                 </div>
                 <div className="bottom text18 tc-primary">
-                    <div className="ml-3 mr-0" style={{width:"300px"}}></div>
-                    <div className="divx" onClick={this.next.bind(this)}>
-                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
-                            返回首页
-                        </div>
+                    <div className="ml-3 mr-auto">
+                    </div>
+                    <div className="mr-3" onClick={this.next.bind(this)}>
+                        返回首页
                     </div>
                 </div>
             </div>

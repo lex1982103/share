@@ -87,11 +87,9 @@ var ClientList = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (ClientList.__proto__ || Object.getPrototypeOf(ClientList)).call(this));
 
         _this.state = {
-            edit: false,
             // clientCount: 4,
             clientList: [],
             mockData: [],
-            number: 10,
             pageNumber: 1
         };
         return _this;
@@ -115,7 +113,7 @@ var ClientList = function (_React$Component) {
              *     }]
              * }]
              * */
-            APP.list("/customer/list.json", { from: 0, number: this.state.number }, function (r) {
+            APP.list("/customer/list.json", { from: 0, number: 20 }, function (r) {
                 _this2.setState({ mockData: r.list }, function () {
                     var data = _this2.state.mockData.map(function (d) {
                         var pinyinStr = pinyinUtil.getFirstLetter(d.name, false);
@@ -180,9 +178,11 @@ var ClientList = function (_React$Component) {
         value: function deleteClient(data) {
             var _this3 = this;
 
-            APP.list('/customer/delete.json', { "customerId": data.id }, function (r) {
-                _this3.fetchClientList(); //刷新
-            });
+            APP.alert("注意", "确定删除吗？", function (r) {
+                APP.list('/customer/delete.json', { "customerId": data.id }, function (r) {
+                    _this3.fetchClientList(); //刷新
+                });
+            }, function (r) {});
         }
         /*获取性别函数*/
 
@@ -195,8 +195,6 @@ var ClientList = function (_React$Component) {
         key: "render",
         value: function render() {
             var _this4 = this;
-
-            var edit = this.state.edit;
 
             return React.createElement(
                 "div",
@@ -247,13 +245,6 @@ var ClientList = function (_React$Component) {
                                 this.state.mockData && this.state.mockData.length,
                                 "\u4EBA"
                             )
-                        ),
-                        React.createElement(
-                            "a",
-                            { className: "cl-edit", onClick: function onClick() {
-                                    return _this4.setState({ edit: !edit });
-                                } },
-                            edit ? '取消' : '编辑'
                         )
                     ),
                     this.state.clientList.map(function (item) {
@@ -288,7 +279,7 @@ var ClientList = function (_React$Component) {
                                             c.birthday
                                         )
                                     ),
-                                    _this4.state.edit && React.createElement(
+                                    React.createElement(
                                         "span",
                                         null,
                                         React.createElement(

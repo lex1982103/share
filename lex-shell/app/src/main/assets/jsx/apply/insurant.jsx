@@ -117,8 +117,17 @@ class Main extends React.Component {
             })
         }
     }
+    getIdCardImg () {// 证件扫描
+        this.setState({
+            IdCardImg: {}
+        })
+    }
     next() {
-        this.save()
+        this.save();
+        let everyState = JSON.parse(localStorage.everyState);
+        let stateData = this.state;
+        everyState.insurant = stateData;
+        localStorage.everyState = JSON.stringify(everyState)
         MF.navi("apply/plan.html?orderId=" + this.state.orderId)
     }
     newInsurant() {
@@ -149,22 +158,22 @@ class Main extends React.Component {
         let cust = this.state.cust[this.state.index];
         return (
             <div>
-                <div className="bg-desk" style={{display:"flex", position:"fixed", zIndex:"50", top:"0"}}>
+                <div className="bg-desk" style={{display:"flex", position:"fixed", zIndex:"50", top:"0", width:"100%"}}>
                     { this.state.cust.map((v, i) =>
                         <div className={"tab " + (i == this.state.index ? 'tab-focus' : 'tab-blur')} key={i} style={{width:"250px"}} onClick={this.onInsurantSwitch.bind(this, i)}>
                             <text className="text18">{ v.name == null || v.name == "" ? "被保险人" + (i+1) : v.name }</text>
                         </div>
                     )}
                     { this.state.cust.length >= 3 ? null :
-                        <div style={{width:750-250*this.state.cust.length+"px", height:"80px", textAlign:"right"}}>
+                        <div className="ml-auto" style={{height:"80px", textAlign:"right"}}>
                             <img style={{width:"42px", height:"45px", margin:"17px"}} src="../images/add-ins.png" onClick={this.newInsurant.bind(this)}></img>
                         </div>
                     }
                 </div>
                 <div style={{height:"80px"}}></div>
-                <div className="divx text16 tc-white bg-primary" style={{height:"100px", padding:"20px", lineHeight:"60px", marginTop:"20px"}}>
-                    <div style={{width:"300px", height:"60px"}}>与同投保人关系</div>
-                    <div style={{width:"370px", height:"60px", textAlign:"right"}} onClick={v => {APP.pick("select", this.state.relationDict, this.onValChange.bind(this, "relation"))}}>
+                <div className="divx text16 tc-white bg-primary p-2 mt-1 lh-60 h-100" style={{width:"100%"}}>
+                    <div style={{width:"40%", height:"60px"}}>与同投保人关系</div>
+                    <div className="ml-auto h-60" style={{textAlign:"right"}} onClick={v => {APP.pick("select", this.state.relationDict, this.onValChange.bind(this, "relation"))}}>
                         <div className="mr-2">{this.state.relationDict[cust.relation]}</div>
                     </div>
                     <img style={{width:"27px", height:"39px", marginTop:"10px"}} src="../images/white-arrow-right.png"/>
@@ -372,14 +381,14 @@ class Main extends React.Component {
                         <img className="mt-1 ml-auto mr-3" style={{width:"120px", height:"60px"}} src="../images/finish.png" onClick={this.save.bind(this)}/>
                     </div>
                 </div> }
-                <div style={{backgroundColor:"#ff3333", borderRadius:"10px", margin:"20px", lineHeight:"70px", height:"70px", width:"710px", textAlign:"center", color:"#ffffff"}} onClick={this.deleteInsurant.bind(this)}>删除</div>
+                <div style={{backgroundColor:"#ff3333", borderRadius:"10px", margin:"20px", lineHeight:"70px", height:"70px", width:SIZE-40+"px", textAlign:"center", color:"#ffffff"}} onClick={this.deleteInsurant.bind(this)}>删除</div>
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
-                    <div className="ml-3 mr-0" style={{width:"300px"}}></div>
-                    <div className="divx" onClick={this.next.bind(this)}>
-                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
-                            投保计划
-                        </div>
+                    <div className="ml-3 mr-auto">
+                        <img className="mt-2" style={{width:"220px", height:"60px"}} src="../images/btn-scan.png" onClick={this.getIdCardImg.bind(this)}/>
+                    </div>
+                    <div className="mr-3" onClick={this.next.bind(this)}>
+                        投保计划
                     </div>
                 </div>
             </div>

@@ -114,7 +114,7 @@ class Main extends React.Component {
                         </div>
                     </div>
                     <div className="card-content" style={{marginTop:"10px"}}>
-                        { plan.product.map((v,i) =>
+                        { plan.product.map((v,i) => [
                             v.parent == null ?
                                 <div className="product product-main bg-white text16" style={{marginTop:"10px"}} onClick={this.editProduct.bind(this, i)}>
                                     <div style={{height:"70px", display:"flex"}}>
@@ -125,30 +125,36 @@ class Main extends React.Component {
                                         <img className="mt-1 mr-1 mb-1 ml-1" style={{width:"50px", height:"50px", opacity:"0.4"}} src="../images/stop.png" onClick={ e => { e.stopPropagation(); this.deleteProduct(i); } }/>
                                     </div>
                                     <div style={{height:"60px", display:"flex"}}>
-                                        <div className="left">
+                                        <div className="center" style={{width:"80px"}}>
                                         </div>
-                                        <div className="middle eclipse">
+                                        <div className="eclipse" style={{width:SIZE-250+"px"}}>
                                             <text>{v.purchase} / {v.insure} / {v.pay}</text>
                                         </div>
-                                        <div className="right">
+                                        <div className="right" style={{width:"150px"}}>
                                             <text style={{color:"#000"}}>{v.premium}元</text>
                                         </div>
                                     </div>
                                     <div style={{height:"10px"}}></div>
                                 </div> :
                                 <div className="product product-rider bg-white text16">
-                                    <div className="left">
+                                    <div className="center" style={{width:"80px"}}>
                                         <text style={{color:"#0a0"}}>附</text>
                                     </div>
-                                    <div className="middle eclipse">
+                                    <div className="eclipse" style={{width:SIZE-250+"px"}}>
                                         <text style={{color:"#000", marginRight:"10px"}}>{v.abbrName}</text>
                                         <text style={{color:"#aaa"}}>{v.purchase} / {v.insure} / {v.pay}</text>
                                     </div>
-                                    <div className="right">
+                                    <div className="right" style={{width:"150px"}}>
                                         <text style={{color:"#000"}}>{v.premium}元</text>
                                     </div>
                                 </div>
-                        )}
+                            , v.rule == null ? null :
+                                <div className="tc-red text12 ml-1 mr-1 pl-1 pr-1" style={{lineHeight:"32px", border:"#f00 solid 1px", backgroundColor:"#ffaaaa"}}>
+                                    { !v.rule ? null : v.rule.map((w, j) =>
+                                        <div>{j+1}、{w}</div>
+                                    )}
+                                </div>
+                        ])}
                         { plan.product && plan.product.length > 0 ?
                             <div className="card-content-line bg-white" style={{padding:"0 20px 0 20px", display:"block", marginTop:"10px", textAlign:"right", color:"#09bb07"}}>
                                 <text className="text16">合计：{plan.premium}元</text>
@@ -159,13 +165,11 @@ class Main extends React.Component {
                 </div>
                 <div style={{height:"120px"}}></div>
                 <div className="bottom text18 tc-primary">
-                    <div className="ml-3 mr-0" style={{width:"300px"}} onClick={this.showBenefit.bind(this)}>
+                    <div className="ml-3 mr-auto" onClick={this.showBenefit.bind(this)}>
                         查看利益责任
                     </div>
-                    <div className="divx" onClick={this.next.bind(this)}>
-                        <div className="ml-0 mr-0" style={{width:"390px", textAlign:"right"}}>
-                            预览建议书
-                        </div>
+                    <div className="mr-3" onClick={this.next.bind(this)}>
+                        预览建议书
                     </div>
                 </div>
             </div>

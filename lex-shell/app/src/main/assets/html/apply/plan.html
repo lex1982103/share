@@ -4,8 +4,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 		<script>
-			var scale = window.screen.width / 750
-			document.write('<meta name="viewport" content="width=750, initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no, minimal-ui">')
+			var size = 750;
+		    var reg = new RegExp("(^|&)size=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) size = Number(unescape(r[2]));
+			var scale = window.screen.width / size;
+			document.write('<meta name="viewport" content="width=' + size + ', initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no, minimal-ui">')
 		</script>
 
         <link href="../css/common.css" rel="stylesheet"/>

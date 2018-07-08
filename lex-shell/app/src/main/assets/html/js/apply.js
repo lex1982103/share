@@ -39,8 +39,8 @@ var Apply = {
       onSucc(r)
     })
   },
-  editProduct(planId, index, onSucc) {
-    Apply.host.req('/proposal/plan/view_clause.json', { planId: planId, index: index }, r => {
+  editProduct(planId,channelId,orgCode,productId, index, onSucc) {
+    Apply.host.req('/proposal/plan/view_clause.json', { planId: planId,channelId:channelId,orgCode:orgCode,productId:productId, index: index }, r => {
       onSucc(r)
     })
   },
@@ -49,13 +49,13 @@ var Apply = {
       onSucc(r)
     })
   },
-  queryProduct(tag, vendor, text, onSucc) {
-    Apply.host.req('/proposal/query_clause.json', { tag: tag, company: vendor, text: text == "" ? null : text }, r => {
+  queryProduct(tag,channelId,orgCode, vendor, text, onSucc) {
+    Apply.host.req('/proposal/query_clause.json', { tag: tag,channelId:channelId,orgCode:orgCode, company: vendor, text: text == "" ? null : text }, r => {
       onSucc(r)
     })
   },
-  listRiders(planId, index, onSucc) {
-    Apply.host.req('/proposal/plan/list_riders.json', { planId: planId, index: index }, r => {
+  listRiders(planId,channelId,orgCode, index, onSucc) {
+    Apply.host.req('/proposal/plan/list_riders.json', { planId: planId,channelId:channelId,orgCode:orgCode, index: index }, r => {
       onSucc(r)
     })
   },

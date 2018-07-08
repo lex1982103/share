@@ -6,12 +6,14 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        APP.apply.queryProduct(null, "fosun", null, r => {
+        APP.apply.queryProduct(null, null, null, "nci", null, r => {
           this.setState({ list: r })
         })
     }
     addToPlan(productId) {
+        localStorage.mainProductId = productId
         APP.back(productId)
+
     }
     close() {
         APP.back()
@@ -27,7 +29,7 @@ class Main extends React.Component {
                         </div>
                         <div className="list-item-content">
                             <div className="text18" style={{height:"45px", lineHeight:"45px"}}>{v.name}</div>
-                            <div className="text12" style={{height:"35px", lineHeight:"35px", color:"gray"}}>{v.name}</div>
+                            <div className="text12" style={{height:"35px", lineHeight:"35px", color:"gray"}}>{v.code}</div>
                         </div>
                     </div>
                 )}

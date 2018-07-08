@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/webapp_reset.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src='../js/jquery.2.1.1min.js'></script>
+</head>
+<body>
+	<button id="front">识别身份证证明</button><br /><br />
+	<button id="back">识别身份证反面</button><br /><br />
+	<button id="bank">识别银行卡</button><br />
+</body>
+<script type="text/javascript">
+
+	//js调原生
+	$('#front').click(function(event) {
+		//APPNT 投保人
+		//INSURED 被保人
+		//BENEFIT 受益人
+		//INSJOIN 连带被保险人
+		//NEW 新建客户
+		OCR.callCardFront("APPNT", "OCR_FRONT");
+	});
+	
+	$('#back').click(function(event) {
+		OCR.callCardBack("APPNT", "OCR_BACK");
+	});
+	
+	$('#bank').click(function(event) {
+		OCR.callCardBank("APPNT", "OCR_BANK");
+	});
+	
+	//安卓调js
+	//flag 参数为 调用方法的第二个参数
+	function callOCRBack(flag, jsonData, bitmapStr){
+		alert(jsonData);
+	}
+</script>
+</html>

@@ -170,7 +170,7 @@ class Main extends React.Component {
                                 </div>
                               </div>
                               { !x.show ? null : x.content.map((y, k) =>
-                                <div className="text16">　　{y.text}</div>
+                                <div className="text16" style={{textAlign:"left"}}>　　{y.text}</div>
                               )}
                               <div style={{height:"10px"}}></div>
                             </div>

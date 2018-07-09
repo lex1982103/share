@@ -198,6 +198,10 @@ class Main extends React.Component {
                                 return(
                                     <li className="actHome" onClick={this.toPage.bind(this,index)}>{prod}</li>
                                 )
+                            } else if (index == 1) {
+                                return <li className="actHome" onClick={this.openApply.bind(this, 40066)}>{prod}</li>
+                            } else if (index == 2) {
+                                return <li className="actHome" onClick={this.newApply.bind(this)}>{prod}</li>
                             }else if(index==3){
                                 return(
                                     <li className="actHome" onClick={this.toPage.bind(this,index)}>{prod}</li>

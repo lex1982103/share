@@ -7,6 +7,10 @@ import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ArithmeticAdd extends CodeImpl
 {
 	Code lc, rc;
@@ -35,6 +39,32 @@ public class ArithmeticAdd extends CodeImpl
 
 //			return left.toDecimal().add(right.toDecimal());
 //			return Double.valueOf(left.doubleValue() + right.doubleValue());
+		}
+		if ((l instanceof List || l instanceof Object[]) && (r instanceof List || r instanceof Object[]))
+		{
+			Object[] o1, o2;
+
+			if (l instanceof List)
+				o1 = ((List)l).toArray();
+			else
+				o1 = (Object[])l;
+
+			if (r instanceof List)
+				o2 = ((List)r).toArray();
+			else
+				o2 = (Object[])r;
+
+			Object[] o3 = new Object[o1.length + o2.length];
+
+//			for (int i = 0; i < o1.length; i++)
+//				o3[i] = o1[i];
+//			for (int i = 0; i < o2.length; i++)
+//				o3[i + o1.length] = o2[i];
+
+			System.arraycopy(o1, 0, o3, 0, o1.length);
+			System.arraycopy(o2, 0, o3, o1.length, o2.length);
+
+			return o3;
 		}
 		else if (l == null)
 		{

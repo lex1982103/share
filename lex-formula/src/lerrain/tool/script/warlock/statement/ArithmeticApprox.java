@@ -81,7 +81,14 @@ public class ArithmeticApprox extends CodeImpl
 			}
 			catch (Exception e)
 			{
-				return false;
+				try
+				{
+					return v2.toString().trim().equals(v1.toString().trim());
+				}
+				catch (Exception e1)
+				{
+					return false;
+				}
 			}
 		}
 
@@ -93,7 +100,14 @@ public class ArithmeticApprox extends CodeImpl
 			}
 			catch (Exception e)
 			{
-				return false;
+				try
+				{
+					return v1.toString().trim().equals(v2.toString().trim());
+				}
+				catch (Exception e1)
+				{
+					return false;
+				}
 			}
 		}
 

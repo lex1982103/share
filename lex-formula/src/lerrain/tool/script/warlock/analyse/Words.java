@@ -183,7 +183,7 @@ public class Words
 				String str = text.substring(i, j + 1);
 				str = str.replaceAll("[\\\\][\"]", "\"");
 				str = str.replaceAll("[\\\\][\']", "\'");
-				str = str.replaceAll("[\\\\][\\\\]", "\\");
+				str = str.replaceAll("[\\\\][\\\\]", "\\\\");
 				str = str.replaceAll("[\\\\][n]", "\n");
 				ws.add(str, STRING, i);
 				i = j;

@@ -2,17 +2,12 @@ package lerrain.tool.document.export;
 
 import java.io.*;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.itextpdf.text.pdf.security.*;
 import lerrain.tool.document.DocumentExportException;
 import lerrain.tool.document.LexColor;
 import lerrain.tool.document.LexDocument;
@@ -76,7 +71,6 @@ public class PdfPainterNDF implements Painter
 			throw new DocumentExportException("不支持的导出格式");
 		}
 	}
-
 
 	private void draw(LexDocument doc, OutputStream os) throws DocumentExportException
 	{
@@ -206,6 +200,58 @@ public class PdfPainterNDF implements Painter
 
 			if (image != null)
 			{
+				if (dImage.getScale() == DocumentImage.SCALE_FULL)
+				{
+				}
+				else if (dImage.getScale() == DocumentImage.SCALE_FIT)
+				{
+					float s1 = image.getWidth() / image.getHeight();
+					float s2 = sw / sh;
+
+					if (s1 > s2)
+					{
+						float t = image.getHeight() * sw / image.getWidth();
+						if (dImage.getVerticalAlign() == DocumentImage.ALIGN_MIDDLE)
+							sy = sy - (sh - t) / 2;
+						else if (dImage.getVerticalAlign() == DocumentImage.ALIGN_BOTTOM)
+							sy = sy - (sh - t);
+						sh = t;
+					}
+					else
+					{
+						float t = image.getWidth() * sh / image.getHeight();
+						if (dImage.getHorizontalAlign() == DocumentImage.ALIGN_CENTER)
+							sx = sx + (sw - t) / 2;
+						else if (dImage.getHorizontalAlign() == DocumentImage.ALIGN_RIGHT)
+							sx = sx + (sw - t);
+						sw = t;
+					}
+				}
+				else if (dImage.getScale() == DocumentImage.SCALE_OUTFIT_RESIZE)
+				{
+					float s1 = image.getWidth() / image.getHeight();
+					float s2 = sw / sh;
+
+					if (s1 > s2)
+					{
+						float t = image.getWidth() * sh / image.getHeight();
+						if (dImage.getHorizontalAlign() == DocumentImage.ALIGN_CENTER)
+							sx = sx + (sw - t) / 2;
+						else if (dImage.getHorizontalAlign() == DocumentImage.ALIGN_RIGHT)
+							sx = sx + (sw - t);
+						sw = t;
+					}
+					else
+					{
+						float t = image.getHeight() * sw / image.getWidth();
+						if (dImage.getVerticalAlign() == DocumentImage.ALIGN_MIDDLE)
+							sy = sy - (sh - t) / 2;
+						else if (dImage.getVerticalAlign() == DocumentImage.ALIGN_BOTTOM)
+							sy = sy - (sh - t);
+						sh = t;
+					}
+				}
+
 				image.setAbsolutePosition(sx, sy);
 				image.scaleAbsolute(sw, sh);
 
@@ -244,7 +290,8 @@ public class PdfPainterNDF implements Painter
 			}
 
 			float fontSize = dText.getFont() == null ? 32 : dText.getFont().getSize();
-			Font font = new Font(textFont, scale(fontSize), Font.NORMAL, translate(dText.getColor()));
+			boolean bold = dText.getFont() == null ? false : dText.getFont().getBold() > 0;
+			Font font = new Font(textFont, scale(fontSize), bold ? Font.BOLD : Font.NORMAL, translate(dText.getColor()));
 			
 			String text = dText.getText();
 			if (text == null)
@@ -262,15 +309,26 @@ public class PdfPainterNDF implements Painter
 				pdf.fill();
 			}
 			
-			float y1 = font.getBaseFont().getAscentPoint(text, scale(fontSize));
-			float y2 = font.getBaseFont().getDescentPoint(text, scale(fontSize));
-			
-			ColumnText colText = new ColumnText(pdf);
+			float y1 = textFont.getAscentPoint(text, scale(fontSize));
+			float y2 = textFont.getDescentPoint(text, scale(fontSize));
+
+//			System.out.println(text + " - " + (sh - (y1 - y2)) / 2);
 			int align = dText.getHorizontalAlign() == DocumentText.ALIGN_CENTER ? Element.ALIGN_CENTER : dText.getHorizontalAlign() == DocumentText.ALIGN_RIGHT ? Element.ALIGN_RIGHT : Element.ALIGN_LEFT;
+
+			ColumnText colText = new ColumnText(pdf);
 			colText.setAlignment(align);
 			colText.setSimpleColumn(new Phrase(text, font), sx, sy, sx + sw, sy + sh, (sh - (y1 - y2)) / 2 + y1, align);
 			colText.go();
-			
+
+//			pdf.setColorFill(translate(dText.getColor()));
+//			pdf.setFontAndSize(textFont, scale(fontSize));
+//			if (align == Element.ALIGN_LEFT)
+//				pdf.showTextAligned(align, text, sx, sy + (sh - (y1 - y2)) / 2, 0);
+//			else if (align == Element.ALIGN_RIGHT)
+//				pdf.showTextAligned(align, text, sx + sw, sy + (sh - (y1 - y2)) / 2, 0);
+//			else if (align == Element.ALIGN_CENTER)
+//				pdf.showTextAligned(align, text, sx + sw / 2, sy + (sh - (y1 - y2)) / 2, 0);
+
 			if (dText.getUnderline() != null)
 			{
 				pdf.setColorStroke(translate(dText.getColor()));

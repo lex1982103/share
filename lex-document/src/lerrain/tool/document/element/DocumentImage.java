@@ -7,8 +7,10 @@ import java.util.Map;
 
 public class DocumentImage extends LexElement
 {
-	private static final long serialVersionUID = 1L;
-	
+	public static final int SCALE_FULL				= 1; //拉满，不保持比例
+	public static final int SCALE_FIT				= 2; //保持比例，内部撑满
+	public static final int SCALE_OUTFIT_RESIZE		= 4; //保持比例，向外撑满，并扩大控件尺寸完全契合
+
 	public static final int TYPE_FILE	= 1; //文件
 	public static final int TYPE_PATH	= 2; //文件路径
 	public static final int TYPE_SRC	= 3; //文件相对路径
@@ -21,6 +23,8 @@ public class DocumentImage extends LexElement
 	boolean sign = false;
 
 	Map imageMap = new HashMap();
+
+	int scale = SCALE_FULL;
 	
 	public DocumentImage()
 	{
@@ -54,6 +58,16 @@ public class DocumentImage extends LexElement
 	public void setSign(boolean sign)
 	{
 		this.sign = sign;
+	}
+
+	public int getScale()
+	{
+		return scale;
+	}
+
+	public void setScale(int scale)
+	{
+		this.scale = scale;
 	}
 
 	public LexElement copy()

@@ -32,7 +32,7 @@ public class TextDimensionAwt implements TextDimension
 		if (text == null || "".equals(text))
 			return new TypesetCoord(0, 0);
 
-		Font f = getFont(font.getFamily().getPath(), font.getSize());
+		Font f = getFont(font.getFamily().getPath(), font.getSize(), font.getBold() > 0 ? Font.BOLD : Font.PLAIN);
 		FontMetrics fm = sun.font.FontDesignMetrics.getMetrics(f);
 
 		int w = fm.stringWidth(text);
@@ -47,7 +47,7 @@ public class TextDimensionAwt implements TextDimension
 //		return new TypesetCoord((int)Math.round(rect.getWidth() + 2), (int)Math.round(rect.getHeight() + 2));
 	}
 
-	private Font getFont(String path, float size)
+	private Font getFont(String path, float size, int style)
 	{
 		Font font = (Font)fontMap.get(path);
 		if (font == null)
@@ -68,12 +68,12 @@ public class TextDimensionAwt implements TextDimension
 		
 		if (font == null)
 		{
-			font = new Font("黑体", Font.PLAIN, (int)size);
+			font = new Font("黑体", style, (int)size);
 			fontMap.put(path, font);
 		}
 		else
 		{
-			font = font.deriveFont(size);
+			font = font.deriveFont(style, size);
 		}
 		
 		return font;

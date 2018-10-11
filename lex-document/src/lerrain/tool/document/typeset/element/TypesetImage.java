@@ -1,5 +1,6 @@
 package lerrain.tool.document.typeset.element;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import lerrain.tool.formula.Value;
 public class TypesetImage extends TypesetElement
 {
 	boolean sign = false;
+
+	int scale;
 	
 	Map srcMap = new HashMap();
 	
@@ -37,8 +40,11 @@ public class TypesetImage extends TypesetElement
 	public LexElement build(TypesetParameters tvs)
 	{
 		DocumentImage dImage = new DocumentImage();
+		dImage.setScale(scale);
 		dImage.setSign(sign);
 		dImage.setAbsFloat(this.isAbsFloat());
+		dImage.setVerticalAlign(this.getVerticalAlign());
+		dImage.setHorizontalAlign(this.getAlign());
 
 		try
 		{
@@ -48,8 +54,6 @@ public class TypesetImage extends TypesetElement
 				dImage.addImageSource(getImageSource(DocumentImage.TYPE_PATH).run(tvs), DocumentImage.TYPE_PATH);
 			if (hasType(DocumentImage.TYPE_SRC))
 				dImage.addImageSource(getImageSource(DocumentImage.TYPE_SRC).run(tvs), DocumentImage.TYPE_SRC);
-			if (hasType(DocumentImage.TYPE_FILE))
-				dImage.addImageSource(getImageSource(DocumentImage.TYPE_FILE).run(tvs), DocumentImage.TYPE_FILE);
 			if (hasType(DocumentImage.TYPE_BASE64))
 				dImage.addImageSource(getImageSource(DocumentImage.TYPE_BASE64).run(tvs), DocumentImage.TYPE_BASE64);
 			if (hasType(DocumentImage.TYPE_OTHER))
@@ -85,6 +89,16 @@ public class TypesetImage extends TypesetElement
 		}
 
 		return dImage;
+	}
+
+	public int getScale()
+	{
+		return scale;
+	}
+
+	public void setScale(int scale)
+	{
+		this.scale = scale;
 	}
 
 	public boolean isSign()

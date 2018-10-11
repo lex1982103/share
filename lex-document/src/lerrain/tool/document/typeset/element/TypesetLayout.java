@@ -54,6 +54,8 @@ public class TypesetLayout extends TypesetPanel
 				iye.setFont(this.getFont());
 			if (iye.getColor() == null)
 				iye.setColor(this.getColor());
+			if (iye.getLineHeight() <= 0)
+				iye.setLineHeight(this.getLineHeight());
 
 			tvs2.set("text_x", new Integer(x));
 			tvs2.set("text_y", new Integer(y));

@@ -208,7 +208,7 @@ public class TypesetText extends TypesetElement
 			if (c == '\n')
 			{
 				TypesetCoord tc = textDimension.getSize(font, line);
-				DocumentText sText = textOf(line, color, font, x, y, tc.x, tc.y);
+				DocumentText sText = textOf(line, color, font, x, y, tc.x, lineHeight);
 				dPanel.add(sText);
 				
 				if (pWidth < tc.x)
@@ -230,7 +230,7 @@ public class TypesetText extends TypesetElement
 						tw = textDimension.getSize(font, line).x;
 					}
 
-					DocumentText sText = textOf(line, color, font, x, y, tw, tc.y);
+					DocumentText sText = textOf(line, color, font, x, y, tw, lineHeight);
 					dPanel.add(sText);
 
 					if (pWidth < tw)
@@ -267,7 +267,8 @@ public class TypesetText extends TypesetElement
 		for (int i=0;i<s;i++)
 		{
 			LexElement e = dPanel.getElement(i);
-			//System.out.println(((DocumentText)e).getText());
+//			e.setBgColor(LexColor.GRAY);
+//			System.out.println(((DocumentText)e).getText() + " - " + e.getWidth() + " - " + fullWidth);
 
 			if (this.getAlign() == LexElement.ALIGN_CENTER)
 			{

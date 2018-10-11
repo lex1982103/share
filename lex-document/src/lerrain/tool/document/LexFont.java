@@ -8,6 +8,8 @@ public class LexFont implements Serializable
 	
 	LexFontFamily family;
 
+	int bold;
+
 	public LexFontFamily getFamily()
 	{
 		return family;
@@ -25,7 +27,17 @@ public class LexFont implements Serializable
 		this.family = family;
 		this.size = size;
 	}
-	
+
+	public int getBold()
+	{
+		return bold;
+	}
+
+	public void setBold(int bold)
+	{
+		this.bold = bold;
+	}
+
 	public String getName()
 	{
 		return family.getName();

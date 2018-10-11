@@ -7,9 +7,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import lerrain.tool.document.DocumentUtil;
+import lerrain.tool.document.LexFont;
 import lerrain.tool.document.LexFontFamily;
 import lerrain.tool.document.element.DocumentImage;
-import lerrain.tool.document.element.LexElement;
 import lerrain.tool.document.typeset.*;
 import lerrain.tool.document.typeset.element.*;
 import lerrain.tool.document.typeset.element.grid.SimpleGrid;
@@ -53,8 +53,13 @@ public class ParserXml implements TypesetParser
 			throw new TypesetParseException("Fail to read typeset file.", e);
 		}
 	}
-	
+
 	public static void parseTypesetBase(Typeset typeset, Element node, TypesetElement text)
+	{
+		parseTypesetBase(typeset, node, text, null);
+	}
+	
+	public static void parseTypesetBase(Typeset typeset, Element node, TypesetElement text, LexFont dFont)
 	{
 		String temp;
 		
@@ -175,7 +180,12 @@ public class ParserXml implements TypesetParser
 //			text.setFixed(true);
 		
 		String font = node.getAttribute("font");
-		if (!isEmpty(font))
+		if (isEmpty(font))
+		{
+			if (dFont != null)
+				text.setFont(dFont.derive(dFont.getSize()));
+		}
+		else
 		{
 			String[] s = font.split("[:]");
 			LexFontFamily f = typeset.getFontFamily(s[0]);
@@ -185,13 +195,20 @@ public class ParserXml implements TypesetParser
 				{
 					String fontSize = node.getAttribute("font_size");
 					if (isEmpty(fontSize)) fontSize = "20";
-					text.setFont(f.derive(Integer.parseInt(fontSize)));
+					text.setFont(f.derive(Float.parseFloat(fontSize)));
 				}
 				else
 				{
-					text.setFont(f.derive(Integer.parseInt(s[1])));
+					text.setFont(f.derive(Float.parseFloat(s[1])));
 				}
 			}
+		}
+
+		if (text.getFont() != null)
+		{
+			String bold = node.getAttribute("bold");
+			if ("yes".equalsIgnoreCase(bold))
+				text.getFont().setBold(1);
 		}
 
 		String absFloat = node.getAttribute("float");
@@ -376,8 +393,13 @@ public class ParserXml implements TypesetParser
 		}
 		return paragraph;
 	}
-	
+
 	private TypesetElement parseTypesetElement(Typeset typeset, Element node)
+	{
+		return parseTypesetElement(typeset, node, null);
+	}
+	
+	private TypesetElement parseTypesetElement(Typeset typeset, Element node, LexFont font)
 	{
 		if ("line".equals(node.getNodeName()))
 		{
@@ -505,8 +527,8 @@ public class ParserXml implements TypesetParser
 		else if ("text".equals(node.getNodeName()))
 		{
 			TypesetText text = new TypesetText();
-			parseTypesetBase(typeset, node, text);
-			
+			parseTypesetBase(typeset, node, text, font);
+
 			if (node.hasAttribute("underline"))
 				text.setUnderline(node.getAttribute("underline"));
 			
@@ -522,7 +544,15 @@ public class ParserXml implements TypesetParser
 		else if ("image".equals(node.getNodeName()) || "sign".equals(node.getNodeName()))
 		{
 			TypesetImage image = new TypesetImage();
-			parseTypesetBase(typeset, node, image);				
+			parseTypesetBase(typeset, node, image);
+
+			String scale = node.getAttribute("scale");
+			if ("full".equalsIgnoreCase(scale))
+				image.setScale(DocumentImage.SCALE_FULL);
+			else if ("fit".equalsIgnoreCase(scale))
+				image.setScale(DocumentImage.SCALE_FIT);
+			else if ("resize".equalsIgnoreCase(scale))
+				image.setScale(DocumentImage.SCALE_OUTFIT_RESIZE);
 
 			String src = node.getAttribute("src");
 			String path = node.getAttribute("path");
@@ -598,7 +628,7 @@ public class ParserXml implements TypesetParser
 				Node node2 = list.item(i);
 				if (node2.getNodeType() != Node.ELEMENT_NODE)
 					continue;
-				
+
 				TypesetElement ite = parseTypesetElement(typeset, (Element)node2);
 				if (ite != null)
 					when.add(ite);
@@ -625,7 +655,7 @@ public class ParserXml implements TypesetParser
 			TypesetLayout layout = new TypesetLayout(mode);
 			layout.setBaseLine(baseline);
 			parseTypesetBase(typeset, node, layout);
-			
+
 			NodeList list = node.getChildNodes();
 			for(int i=0;list != null && i<list.getLength();i++)
 			{
@@ -633,7 +663,7 @@ public class ParserXml implements TypesetParser
 				if (node2.getNodeType() != Node.ELEMENT_NODE)
 					continue;
 				
-				TypesetElement ite = parseTypesetElement(typeset, (Element)node2);
+				TypesetElement ite = parseTypesetElement(typeset, (Element)node2, layout.getFont());
 				if (ite != null)
 					layout.add(ite);
 			}

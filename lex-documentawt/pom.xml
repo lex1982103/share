@@ -7,11 +7,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>lerrain</groupId>
-			<artifactId>document</artifactId>
-			<version>4.3</version>
-		</dependency>
-		<dependency>
 			<groupId>com.itext</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.6</version>

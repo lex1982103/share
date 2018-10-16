@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>lerrain.tool</groupId>
 	<artifactId>document</artifactId>
-	<version>4.3.2</version>
+	<version>4.4</version>
 
 	<dependencies>
 		<dependency>

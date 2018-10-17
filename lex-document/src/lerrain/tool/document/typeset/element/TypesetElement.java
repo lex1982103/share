@@ -358,6 +358,20 @@ public abstract class TypesetElement
 		{
 			tvs.setY(element.getY() + element.getHeight());
 		}
+
+		Map map = new HashMap();
+		map.put("WIDTH", element.getWidth());
+		map.put("HEIGHT", element.getHeight());
+		map.put("X", element.getX());
+		map.put("Y", element.getY());
+		tvs.set("LAST", map);
+
+		Number num = (Number)tvs.get("MAX_HEIGHT");
+		if (num == null || num.doubleValue() < element.getHeight())
+			tvs.set("MAX_HEIGHT", element.getHeight());
+
+		tvs.set("CURSOR", tvs.getY());
+		tvs.set("ORIGIN", tvs.getDatum());
 	}
 
 	public Formula getValue()

@@ -47,6 +47,11 @@ public class ServiceMgr
         }
     }
 
+    public boolean hasServers(String serviceName)
+    {
+        return map.containsKey(serviceName) || env.containsProperty("service." + serviceName);
+    }
+
     public Servers getServers(String serviceName)
     {
         synchronized (map)

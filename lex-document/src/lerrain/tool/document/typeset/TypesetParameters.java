@@ -191,6 +191,7 @@ public class TypesetParameters extends Stack implements Factors, Serializable
 	{
 		this.typeset = typeset;
 	}
+
 //	public Object get(String name)
 //	{
 //		if (stack == this)

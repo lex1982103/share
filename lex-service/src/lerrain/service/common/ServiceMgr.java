@@ -23,7 +23,9 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ServiceMgr
@@ -31,25 +33,48 @@ public class ServiceMgr
     @Resource
     private Environment env;
 
-    Map<String, String> current = new HashMap<>();
-    Map<String, ServiceClient> map = new HashMap<>();
+    Map<String, Servers> map = new HashMap<>();
+
     Map<String, Integer> prtLog = new HashMap<>();
 
     Map<String, long[]> idRange = new HashMap<>();
 
     public void reset(Map<String, Object> json)
     {
+        for (Map.Entry<String, Object> e : json.entrySet())
+        {
+            Servers servers = getServers(e.getKey());
+            servers.resetClients(Common.trimStringOf(e.getValue()));
+        }
+    }
+
+    public Servers getServers(String serviceName)
+    {
         synchronized (map)
         {
-            for (Map.Entry<String, Object> e : json.entrySet())
+            Servers servers = map.get(serviceName);
+            if (servers == null)
             {
-                String url = Common.trimStringOf(e.getValue());
-                ServiceClient client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url);
+                servers = new Servers();
+                servers.resetClients(env.getProperty("service." + serviceName));
 
-                map.put(e.getKey(), client);
-                current.put(e.getKey(), url);
+                map.put(serviceName, servers);
             }
+
+            return servers;
         }
+    }
+
+    public void setServerPicker(String serviceName, ServicePicker picker)
+    {
+        Servers servers = getServers(serviceName);
+        servers.picker = picker;
+    }
+
+    public void setDefaultServer(String serviceName, int defaultIndex)
+    {
+        Servers servers = getServers(serviceName);
+        servers.defaultIndex = defaultIndex;
     }
 
     public void setLog(String service, int level)
@@ -59,19 +84,12 @@ public class ServiceMgr
 
     public ServiceClient getClient(String str)
     {
-        if (!map.containsKey(str))
-        {
-            String url = env.getProperty("service." + str);
-            ServiceClient client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url);
+        return getServers(str).getClient();
+    }
 
-            synchronized (map)
-            {
-                map.put(str, client);
-                current.put(str, url);
-            }
-        }
-
-        return map.get(str);
+    public ServiceClient getClient(String str, int index)
+    {
+        return getServers(str).getClient(index);
     }
 
     public JSONObject req(String service, String loc, JSON param)
@@ -164,5 +182,38 @@ public class ServiceMgr
 //                return JSONObject.parse(Common.byteOf(is));
             }
         }
+    }
+
+    class Servers
+    {
+        ServiceClient[] clients;
+
+        ServicePicker picker;
+
+        int defaultIndex = 0;
+
+        public void resetClients(String addrs)
+        {
+            String[] url = addrs.split(",");
+
+            clients = new ServiceClient[url.length];
+            for (int i = 0; i < url.length; i++)
+                clients[i] = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url[i].trim());
+        }
+
+        public ServiceClient getClient(int index)
+        {
+            return clients[index % clients.length];
+        }
+
+        public ServiceClient getClient()
+        {
+            return getClient(picker == null ? defaultIndex : picker.getIndex());
+        }
+    }
+
+    public static interface ServicePicker
+    {
+        public int getIndex();
     }
 }

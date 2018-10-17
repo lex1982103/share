@@ -83,7 +83,12 @@ public class Expression
 			
 			if (t == Words.BRACE_R || t == Words.BRACKET_R || t == Words.PRT_R)
 			{
+				int j = i;
 				i = Syntax.findLeftBrace(ws, i - 1);
+
+				if (i < 0)
+					throw new SyntaxException(ws, j, "无法找到匹配的左括号");
+
 				t = ws.getType(i);
 			}
 			
@@ -98,7 +103,7 @@ public class Expression
 		if (pos >= 0)
 			return arithmeticOf(ws.getType(pos), ws, pos);
 
-		throw new SyntaxException("无法处理的运算 - " + ws.toString());
+		throw new SyntaxException(ws, "无法处理的运算");
 	}
 	
 //	private static int getPriority(int arithmetic)
@@ -170,7 +175,7 @@ public class Expression
 		
 		if (arithmetic == Words.PRT) return new ArithmeticParentheses(ws, pos);
 		
-		throw new SyntaxException("ARITHMETIC<" + arithmetic + "> not found");
+		throw new SyntaxException(ws, pos, "ARITHMETIC<" + arithmetic + "> not found");
 	}
 	
 	private static int getPriority(int arithmetic)

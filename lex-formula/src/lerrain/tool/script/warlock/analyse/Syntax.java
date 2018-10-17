@@ -73,7 +73,7 @@ public class Syntax
 //				return new StatementTry(ws);
 //			}
 			
-			throw new SyntaxException("无法识别的关键字：" + word);
+			throw new SyntaxException(ws, 0, "无法识别的关键字");
 		}
 		else if (type == Words.BRACE)
 		{
@@ -109,7 +109,7 @@ public class Syntax
 	/**
 	 * 找到第一个右侧的括号，中间被括号包括的内容会被跳过
 	 * @param ws
-	 * @param i
+	 * @param p
 	 * @return
 	 */
 	public static int findRightBrace(Words ws, int p)
@@ -135,7 +135,7 @@ public class Syntax
 		}
 		
 		if (i >= size)
-			throw new SyntaxException("无法找到对应的右侧括号：" + ws + " at " + p);
+			throw new SyntaxException(ws, p, "无法找到对应的右侧括号");
 
 		return	i;
 	}

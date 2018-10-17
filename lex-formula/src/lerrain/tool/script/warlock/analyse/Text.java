@@ -104,8 +104,8 @@ public class Text
 			else if (c == quote)
 				return i;
 		}
-		
-		throw new SyntaxException("缺少结束的引号或单引号");
+
+		throw new SyntaxException(text, begin, "无法找到对应的右侧引号");
 	}
 
 /*

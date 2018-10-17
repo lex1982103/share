@@ -11,6 +11,16 @@ import java.util.Map;
 
 public class Common
 {
+	public static final int MODE_DEBUG		= 1;
+	public static final int MODE_RELEASE	= 2;
+
+	public static int mode					= MODE_DEBUG;
+
+	public static boolean isRelease()
+	{
+		return mode == MODE_RELEASE;
+	}
+
 	public static BigDecimal decimalOf(Object val)
 	{
 		if (val instanceof Number)

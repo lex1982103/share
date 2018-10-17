@@ -113,6 +113,15 @@ public class PageLayer extends Layer
 			tpb[0].setVisibility(b ? View.VISIBLE : View.INVISIBLE);
 	}
 
+	public void hideTitle()
+	{
+		top.setVisibility(View.INVISIBLE);
+
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		wv.setLayoutParams(lp);
+		wv.forceLayout();
+	}
+
 	public void setTitle(String text)
 	{
 		title.setText(text);

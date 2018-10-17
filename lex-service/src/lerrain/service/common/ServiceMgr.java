@@ -23,15 +23,14 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ServiceMgr
 {
     @Resource
     private Environment env;
+
+    Random ran = new Random();
 
     Map<String, Servers> map = new HashMap<>();
 
@@ -190,7 +189,7 @@ public class ServiceMgr
 
         ServicePicker picker;
 
-        int defaultIndex = 0;
+        int defaultIndex = -1;
 
         public void resetClients(String addrs)
         {
@@ -203,6 +202,9 @@ public class ServiceMgr
 
         public ServiceClient getClient(int index)
         {
+            if (index < 0)
+                index = ran.nextInt(1024);
+
             return clients[index % clients.length];
         }
 

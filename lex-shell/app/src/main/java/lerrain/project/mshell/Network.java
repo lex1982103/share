@@ -19,6 +19,7 @@ import javax.net.ssl.X509TrustManager;
 public class Network
 {
 	public static String ADDRESS = "http://www.lerrain.com:7666/app/";
+	public static String WEB = "http://www.lerrain.com:7701/app/";
 
 	public static String urlOf(String url)
 	{

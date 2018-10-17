@@ -55,6 +55,19 @@ public class JsBridge
     }
 
     @JavascriptInterface
+    public void hideTitle()
+    {
+        layer.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                layer.hideTitle();
+            }
+        });
+    }
+
+    @JavascriptInterface
     public void direct(final String url)
     {
         layer.post(new Runnable()
@@ -62,7 +75,7 @@ public class JsBridge
             @Override
             public void run()
             {
-                layer.openLocal(url);
+                layer.openUrl(Network.WEB + url);
             }
         });
     }
@@ -78,7 +91,7 @@ public class JsBridge
                 Layer newLayer = new PageLayer(layer.window);
                 layer.getRoot().addLayout(newLayer);
 
-                newLayer.openLocal(url);
+                newLayer.openUrl(Network.WEB + url);
             }
         });
     }
@@ -94,7 +107,7 @@ public class JsBridge
                 Layer newLayer = new PopLayer(layer.window, Common.intOf(percent, 75));
                 layer.getRoot().addLayout(newLayer);
 
-                newLayer.openLocal(url);
+                newLayer.openUrl(Network.WEB + url);
             }
         });
     }

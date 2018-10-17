@@ -3,6 +3,7 @@ package lerrain.project.mshell;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.JsResult;
@@ -28,8 +29,6 @@ public abstract class Layer extends RelativeLayout
 	Scroller scroller;
 
 	int mode;
-
-	String currentUrl;
 
 	public Layer(Main window, int top)
 	{
@@ -60,18 +59,8 @@ public abstract class Layer extends RelativeLayout
 		wv.getSettings().setSupportZoom(false);
 		wv.getSettings().setUseWideViewPort(true);
 		wv.getSettings().setAllowUniversalAccessFromFileURLs(true);
-		wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        //允许JavaScript执行
-        wv.getSettings().setJavaScriptEnabled(true);
+		wv.getSettings().setCacheMode(Common.isRelease() ? WebSettings.LOAD_CACHE_ONLY : WebSettings.LOAD_NO_CACHE);
 
-        // 开启DOM缓存，开启LocalStorage存储（html5的本地存储方式）
-        wv.getSettings().setDomStorageEnabled(true);
-        wv.getSettings().setDatabaseEnabled(true);//允许JavaScript执行
-        wv.getSettings().setJavaScriptEnabled(true);
-
-        // 开启DOM缓存，开启LocalStorage存储（html5的本地存储方式）
-        wv.getSettings().setDomStorageEnabled(true);
-        wv.getSettings().setDatabaseEnabled(true);
 		adapter = new JsBridge(this);
 		wv.addJavascriptInterface(adapter, "MF");
 
@@ -112,7 +101,11 @@ public abstract class Layer extends RelativeLayout
 	{
 	}
 
-//	public void openPage(String link)
+	public void hideTitle()
+	{
+	}
+
+	//	public void openPage(String link)
 //	{
 //		int p2 = link.lastIndexOf("?");
 //		String uri = p2 < 0 ? link : link.substring(0, p2);
@@ -150,8 +143,12 @@ public abstract class Layer extends RelativeLayout
 		{
 			int p2 = url.lastIndexOf("?");
 			window.stat("open:" + (p2 < 0 ? url : url.substring(0, p2)));
+
+			if (Ui.width / Ui.dp >= 600)
+				url = url + (p2 < 0 ? "?" : "&") + "size=1500";
 		}
 
+		Log.i("mshell", "open web: " + url);
 		wv.loadUrl(url);
 	}
 
@@ -166,6 +163,7 @@ public abstract class Layer extends RelativeLayout
 				uri = uri + (p2 < 0 ? "?" : "&") + "size=1500";
 		}
 
+        Log.i("mshell", "open local: " + uri);
 		wv.loadUrl("file:///android_asset/html/" + uri);
 	}
 

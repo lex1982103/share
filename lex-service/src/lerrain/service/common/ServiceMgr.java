@@ -208,7 +208,7 @@ public class ServiceMgr
         public ServiceClient getClient(int index)
         {
             if (index < 0)
-                index = ran.nextInt(1024);
+                index = ran.nextInt(clients.length);
 
             return clients[index % clients.length];
         }

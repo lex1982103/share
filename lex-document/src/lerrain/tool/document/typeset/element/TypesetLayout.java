@@ -26,7 +26,7 @@ public class TypesetLayout extends TypesetPanel
 		boolean fixed = isFixed();
 		int bodyWidth = tvs.getPaper().getBody().getWidth().value(tvs);
 		
-		int width = this.getWidth() == null ? 0 : this.getWidth().value(tvs);
+		int width = this.getWidth() == null ? bodyWidth : this.getWidth().value(tvs);
 		int height = this.getHeight() == null ? 0 : this.getHeight().value(tvs);
 
 		DocumentPanel dPanel = new DocumentPanel();
@@ -44,8 +44,6 @@ public class TypesetLayout extends TypesetPanel
 		TypesetParameters tvs2 = pack(tvs);
 		tvs2.setStreamY(tvs.getStreamY() + dPanel.getY());
 
-		int ww = this.getWidth().value(tvs);
-		
 		int x = 0, y = 0, h = 0, p = 0;
 		for (int i = 0; i < elementList.size(); i++)
 		{
@@ -59,7 +57,7 @@ public class TypesetLayout extends TypesetPanel
 
 			tvs2.set("text_x", new Integer(x));
 			tvs2.set("text_y", new Integer(y));
-			tvs2.set("max", ww);
+			tvs2.set("max", width);
 
 			LexElement ile = iye.build(tvs2);
 			
@@ -160,7 +158,7 @@ public class TypesetLayout extends TypesetPanel
 				e.setY(height - y + e.getY());
 			}
 		}
-		
+
 		dPanel.setSize(width, height);
 		resetY(tvs, dPanel);
 

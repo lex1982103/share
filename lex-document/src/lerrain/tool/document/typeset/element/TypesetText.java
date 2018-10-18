@@ -25,7 +25,8 @@ public class TypesetText extends TypesetElement
 	{
 		int x = Value.intOf(tvs.get("text_x"), 0); //layout偏移
 		int y = Value.intOf(tvs.get("text_y"), 0); //layout偏移
-		int fullWidth = this.getWidth() == null ? 0 : this.getWidth().value(tvs);
+		int max = Value.intOf(tvs.get("max"), 0); //layout偏移
+		int fullWidth = this.getWidth() == null ? max : this.getWidth().value(tvs);
 		int fullHeight = this.getHeight() == null ? 0 : this.getHeight().value(tvs);
 		
 		final DocumentPanel dPanel = new DocumentPanel();
@@ -122,6 +123,7 @@ public class TypesetText extends TypesetElement
 
 		int textx = Value.intOf(tvs.get("text_x"), 0); //layout偏移
 		int texty = Value.intOf(tvs.get("text_y"), 0); //layout偏移
+		int max = Value.intOf(tvs.get("max"), 0); //layout偏移
 
 		DocumentPanel dPanel = new DocumentPanel();
 		dPanel.setType(2);
@@ -179,7 +181,7 @@ public class TypesetText extends TypesetElement
 		if (lineHeight <= 0)
 			lineHeight = textDimension.getSize(font, text).y;
 		
-		int fullWidth = this.getWidth() == null ? 0 : this.getWidth().value(tvs);
+		int fullWidth = this.getWidth() == null ? max : this.getWidth().value(tvs);
 		int fullHeight = this.getHeight() == null ? 0 : this.getHeight().value(tvs);
 		
 		int width = fullWidth - margin[0] - margin[2];
@@ -322,7 +324,20 @@ public class TypesetText extends TypesetElement
 	{
 		String newLine = "";
 
-		if (isRightSymbol(c)) //最后一个字如果是文字，先拿下来，之后剩下的：如果是连续的leftsymbol，全拿下来，否则不动。
+		if (isLetter(c))
+		{
+			for (int j = line.length() - 1; j >= 1; j--)
+			{
+				char c1 = line.charAt(j);
+				if (!isLetter(c1) || j == 1)
+				{
+					newLine = line.substring(j + 1) + newLine;
+					line = line.substring(0, j + 1);
+					break;
+				}
+			}
+		}
+		else if (isRightSymbol(c)) //最后一个字如果是文字，先拿下来，之后剩下的：如果是连续的leftsymbol，全拿下来，否则不动。
 		{
 			for (int j = line.length() - 1; j >= 1; j--)
 			{
@@ -368,6 +383,11 @@ public class TypesetText extends TypesetElement
 		}
 
 		return new String[] {line, newLine};
+	}
+
+	private boolean isLetter(char c)
+	{
+		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 	}
 
 	private boolean isRightSymbol(char c)

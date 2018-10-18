@@ -26,7 +26,7 @@ public class CacheService
             cache.put(id, value);
         }
 
-        if (serviceCode != null && serviceMgr.hasServers("athens"))
+        if (serviceCode != null && serviceMgr.hasServers("cache"))
         {
             new Thread(new Runnable()
             {
@@ -38,7 +38,7 @@ public class CacheService
                     req.put("key", id);
                     req.put("value", value);
 
-                    serviceMgr.req("athens", "cache/save.json", req);
+                    serviceMgr.req("cache", "save.json", req);
                 }
             }).start();
         }
@@ -52,13 +52,13 @@ public class CacheService
                 return cache.get(id);
         }
 
-        if (serviceCode != null && serviceMgr.hasServers("athens"))
+        if (serviceCode != null && serviceMgr.hasServers("cache"))
         {
             JSONObject req = new JSONObject();
             req.put("service", serviceCode);
             req.put("key", id);
 
-            Object value = serviceMgr.req("athens", "cache/load.json", req);
+            Object value = serviceMgr.req("cache", "load.json", req);
             if (value != null)
             {
                 synchronized (cache)

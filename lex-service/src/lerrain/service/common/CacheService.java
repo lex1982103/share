@@ -19,6 +19,25 @@ public class CacheService
 
     Map<String, Object> cache = new HashMap<>();
 
+    boolean store = false;
+
+    Translator tran;
+
+    public void setTranslator(Translator tran)
+    {
+        this.tran = tran;
+    }
+
+    public boolean isStore()
+    {
+        return store;
+    }
+
+    public void setStore(boolean store)
+    {
+        this.store = store;
+    }
+
     public void put(final String id, final Object value)
     {
         synchronized (cache)
@@ -26,7 +45,7 @@ public class CacheService
             cache.put(id, value);
         }
 
-        if (serviceCode != null && serviceMgr.hasServers("cache"))
+        if (store && serviceCode != null && serviceMgr.hasServers("cache"))
         {
             new Thread(new Runnable()
             {
@@ -36,7 +55,7 @@ public class CacheService
                     JSONObject req = new JSONObject();
                     req.put("service", serviceCode);
                     req.put("key", id);
-                    req.put("value", value);
+                    req.put("value", tran != null ? tran.toMap(value) : value);
 
                     serviceMgr.req("cache", "save.json", req);
                 }
@@ -52,22 +71,32 @@ public class CacheService
                 return cache.get(id);
         }
 
-        if (serviceCode != null && serviceMgr.hasServers("cache"))
+        if (store && serviceCode != null && serviceMgr.hasServers("cache"))
         {
             JSONObject req = new JSONObject();
             req.put("service", serviceCode);
             req.put("key", id);
 
-            Object value = serviceMgr.req("cache", "load.json", req);
-            if (value != null)
+            Map res = serviceMgr.req("cache", "load.json", req);
+            if (res != null)
             {
+                Object value = tran != null ? tran.toObject(res) : res;
                 synchronized (cache)
                 {
                     cache.put(id, value);
                 }
+
+                return value;
             }
         }
 
         return null;
+    }
+
+    public static interface Translator
+    {
+        public Map toMap(Object val);
+
+        public Object toObject(Map json);
     }
 }

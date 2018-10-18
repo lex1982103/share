@@ -1,6 +1,7 @@
 package lerrain.service.common;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import feign.Feign;
 import feign.FeignException;
@@ -12,12 +13,6 @@ import feign.codec.EncodeException;
 import feign.codec.Encoder;
 import lerrain.tool.Common;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -33,10 +28,6 @@ public class ServiceMgr
     Random ran = new Random();
 
     Map<String, Servers> map = new HashMap<>();
-
-    Map<String, Integer> prtLog = new HashMap<>();
-
-    Map<String, long[]> idRange = new HashMap<>();
 
     public void reset(Map<String, Object> json)
     {
@@ -61,6 +52,7 @@ public class ServiceMgr
             {
                 servers = new Servers();
                 servers.resetClients(env.getProperty("service." + serviceName));
+                servers.setDispatch(serviceName);
 
                 map.put(serviceName, servers);
             }
@@ -83,84 +75,84 @@ public class ServiceMgr
 
     public void setLog(String service, int level)
     {
-        prtLog.put(service, level);
+        getServers(service).level = level;
     }
 
-    public ServiceClient getClient(String str)
+    public Client getClient(String str)
     {
-        return getServers(str).getClient();
+        return getServers(str).getClient(null);
     }
 
-    public ServiceClient getClient(String str, int index)
+    public Client getClient(String str, int index)
     {
         return getServers(str).getClient(index);
     }
 
     public JSONObject req(String service, String loc, JSON param)
     {
-        return JSONObject.parseObject(reqStr(service, loc, param.toJSONString()));
+        return JSONObject.parseObject(reqStr(service, loc, param));
     }
 
     public JSONObject reqVal(String service, String loc, JSON param)
     {
-        return JSONObject.parseObject(reqStr(service, loc, param.toJSONString())).getJSONObject("content");
+        return JSONObject.parseObject(reqStr(service, loc, param)).getJSONObject("content");
     }
 
-    public String reqStr(String service, String loc, String param)
+    private String reqStr(String service, String loc, Object param)
     {
+        long t = System.currentTimeMillis();
+
+        Servers servers = this.getServers(service);
+        Client client = servers.getClient(param);
+
         try
         {
-            long t = System.currentTimeMillis();
-            String res = this.getClient(service).req(loc, param);
+            client.post++;
+            String res = client.client.req(loc, param == null ? null : param.toString());
 
-            Integer level = prtLog.get(service);
-            if (level != null)
-            {
-                if (level == 1)
-                    Log.debug("%s => %s/%s(%dms) => %s", param, service, loc, System.currentTimeMillis() - t, res);
-                else if (level == 2)
-                    Log.info("%s => %s/%s(%dms) => %s", param, service, loc, System.currentTimeMillis() - t, res);
-            }
+            long t1 = System.currentTimeMillis() - t;
+            client.recTime((int)t1);
+
+            if (servers.level == 1)
+                Log.debug("%s => %s/%s(%dms) => %s", param, service, loc, t1, res);
+            else if (servers.level == 2)
+                Log.info("%s => %s/%s(%dms) => %s", param, service, loc, t1, res);
+
             return res;
         }
         catch (Exception e)
         {
+            client.fail++;
+
             Log.error("request: " + service + "/" + loc + " -- " + param, e);
             throw e;
         }
     }
 
-    public synchronized Long nextId(String code)
+    public JSONObject report()
     {
-        long[] v = idRange.get(code);
+        JSONObject r = new JSONObject();
 
-        if (v == null)
+        for (Map.Entry<String, Servers> e : map.entrySet())
         {
-            v = reqId(code);
-            idRange.put(code, v);
-        }
-        else
-        {
-            v[0]++;
-
-            if (v[0] > v[1])
+            JSONArray list = new JSONArray();
+            for (Client c : e.getValue().clients)
             {
-                long[] r = reqId(code);
-                v[0] = r[0];
-                v[1] = r[1];
+                JSONObject r1 = new JSONObject();
+                r1.put("client", c.client.toString());
+                r1.put("postTimes", c.post);
+                r1.put("failTimes", c.fail);
+
+                int[] t = new int[c.time.length];
+                for (int i = 0; i < t.length; i++)
+                    t[i] = c.time[(c.pos + i) % t.length];
+                r1.put("time", t);
+
+                list.add(r1);
             }
+
+            r.put(e.getKey(), list);
         }
-
-        return v[0];
-    }
-
-    public long[] reqId(String code)
-    {
-        String[] res = this.reqStr("dict", "id/req", code).split(",");
-
-        long[] r = new long[2];
-        r[0] = Long.parseLong(res[0]);
-        r[1] = Long.parseLong(res[1]);
 
         return r;
     }
@@ -190,22 +182,27 @@ public class ServiceMgr
 
     class Servers
     {
-        ServiceClient[] clients;
+        Client[] clients;
 
         ServicePicker picker;
 
         int defaultIndex = -1;
 
+        int level = 0;
+
         public void resetClients(String addrs)
         {
             String[] url = addrs.split(",");
 
-            clients = new ServiceClient[url.length];
+            clients = new Client[url.length];
             for (int i = 0; i < url.length; i++)
-                clients[i] = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url[i].trim());
+            {
+                clients[i] = new Client();
+                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url[i].trim());
+            }
         }
 
-        public ServiceClient getClient(int index)
+        public Client getClient(int index)
         {
             if (index < 0)
                 index = ran.nextInt(clients.length);
@@ -213,14 +210,58 @@ public class ServiceMgr
             return clients[index % clients.length];
         }
 
-        public ServiceClient getClient()
+        public Client getClient(Object req)
         {
-            return getClient(picker == null ? defaultIndex : picker.getIndex());
+            return getClient(picker == null ? defaultIndex : picker.getIndex(req));
+        }
+
+        public void setDispatch(String srvName)
+        {
+            if (env.containsProperty("dispatch." + srvName))
+            {
+                final String[] dispatch = env.getProperty("dispatch." + srvName).split(",");
+                this.picker = new ServicePicker()
+                {
+                    @Override
+                    public int getIndex(Object req)
+                    {
+                        if (req instanceof JSONObject)
+                        {
+                            JSONObject m = (JSONObject)req;
+                            for (String str : dispatch)
+                            {
+                                String s = m.getString(str);
+                                if (s != null)
+                                    return s.hashCode();
+                            }
+                        }
+
+                        return -1;
+                    }
+                };
+            }
+        }
+    }
+
+    static class Client
+    {
+        ServiceClient client;
+
+        int post;
+        int fail;
+
+        int[] time = new int[1000];
+        int pos = time.length - 1;
+
+        public void recTime(int t)
+        {
+            pos = (pos + 1) % time.length;
+            time[pos] = t;
         }
     }
 
     public static interface ServicePicker
     {
-        public int getIndex();
+        public int getIndex(Object req);
     }
 }

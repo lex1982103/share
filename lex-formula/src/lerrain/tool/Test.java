@@ -23,6 +23,17 @@ public class Test
 
 	public static void main(String[] s)
 	{
+		char ch1 = (char) 84426;
+		char ch2 = '䧊';
+		char ch3 = (char) 18890;
+
+		System.out.println("dasfdsad" + ch1);
+		System.out.println(ch2);
+		System.out.println(ch3);
+		System.out.println(ch1 == ch2);
+		System.out.println(ch1 == ch3);
+		System.out.println(ch2 == ch3);
+
 		try
 		{
 			//final Script sc = Script.scriptOf("z", "x+y/k");

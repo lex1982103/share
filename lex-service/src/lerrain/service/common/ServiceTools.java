@@ -11,6 +11,9 @@ public class ServiceTools
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    ServiceMgr serviceMgr;
+
     Map<String, long[]> map = new HashMap<>();
 
     int skip = -1;
@@ -41,19 +44,11 @@ public class ServiceTools
 
     public long[] reqId(String code)
     {
+        String[] res = serviceMgr.reqStr("tools", "id/req", code).split(",");
+
         long[] r = new long[2];
-
-        if (skip < 0)
-        {
-            int num = jdbcTemplate.queryForObject("select count(*) from s_sequence where code = ?", Integer.class, code);
-            if (num == 0)
-                jdbcTemplate.update("insert into s_sequence(code, value, step) values(?, 0, 100)", code);
-
-            skip = jdbcTemplate.queryForObject("select step from s_sequence where code = ?", Integer.class, code);
-        }
-
-        r[1] = jdbcTemplate.queryForObject("select s_next_seq(?) from dual", Long.class, code);
-        r[0] = r[1] - skip + 1;
+        r[0] = Long.parseLong(res[0]);
+        r[1] = Long.parseLong(res[1]);
 
         return r;
     }

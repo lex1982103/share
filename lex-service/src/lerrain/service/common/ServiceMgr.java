@@ -98,7 +98,7 @@ public class ServiceMgr
         return JSONObject.parseObject(reqStr(service, loc, param)).getJSONObject("content");
     }
 
-    private String reqStr(String service, String loc, Object param)
+    public String reqStr(String service, String loc, Object param)
     {
         long t = System.currentTimeMillis();
 
@@ -145,7 +145,7 @@ public class ServiceMgr
 
                 int[] t = new int[c.time.length];
                 for (int i = 0; i < t.length; i++)
-                    t[i] = c.time[(c.pos + i) % t.length];
+                    t[i] = c.time[(c.pos + t.length - i) % t.length];
                 r1.put("time", t);
 
                 list.add(r1);

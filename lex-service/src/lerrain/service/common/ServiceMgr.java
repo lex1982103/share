@@ -93,9 +93,14 @@ public class ServiceMgr
         return JSONObject.parseObject(reqStr(service, loc, param));
     }
 
-    public JSONObject reqVal(String service, String loc, JSON param)
+    public Object reqVal(String service, String loc, JSON param)
     {
-        return JSONObject.parseObject(reqStr(service, loc, param)).getJSONObject("content");
+        JSONObject res = req(service, loc, param);
+
+        if (!"success".equals(res.getString("result")))
+            throw new RuntimeException(res.getString("reason"));
+
+        return res.get("content");
     }
 
     public String reqStr(String service, String loc, Object param)

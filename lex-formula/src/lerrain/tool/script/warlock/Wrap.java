@@ -18,6 +18,9 @@ public class Wrap
 	
 	public Wrap(Object r)
 	{
+		if (r instanceof Wrap)
+			values.addAll(((Wrap)r).values);
+
 		values.add(r);
 	}
 	

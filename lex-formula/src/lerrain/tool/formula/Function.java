@@ -1,5 +1,7 @@
 package lerrain.tool.formula;
 
+import java.io.Serializable;
+
 /**
  * <p>2014-06-14 李新豪</p>
  * <p>
@@ -21,7 +23,7 @@ package lerrain.tool.formula;
  * 
  *
  */
-public interface Function
+public interface Function extends Serializable
 {
 	public Object run(Object[] v, Factors p);
 }

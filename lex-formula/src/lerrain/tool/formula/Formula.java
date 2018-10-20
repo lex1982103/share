@@ -1,6 +1,8 @@
 package lerrain.tool.formula;
 
-public interface Formula
+import java.io.Serializable;
+
+public interface Formula extends Serializable
 {
 	public Object run(Factors factors);
 }

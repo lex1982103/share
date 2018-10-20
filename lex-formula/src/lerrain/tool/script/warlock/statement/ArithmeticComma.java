@@ -18,6 +18,13 @@ public class ArithmeticComma implements Code
 
 	public Object run(Factors factors)
 	{
+		if (lc == null && rc == null)
+			return new Wrap();
+		if (rc == null)
+			return new Wrap(lc.run(factors));
+		if (lc == null)
+			return new Wrap(lc.run(factors));
+
 		return new Wrap(lc.run(factors), rc.run(factors));
 		
 //		/*

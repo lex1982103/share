@@ -1,5 +1,6 @@
 package lerrain.tool.script.warlock.analyse;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * 词法分析
  * @author lerrain
  */
-public class Words
+public class Words implements Serializable
 {
 	public static final int SYMBOL				= 10000; 
 	public static final int WORD				= 11000;

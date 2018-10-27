@@ -3,10 +3,7 @@ package lerrain.service.common;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import feign.Feign;
-import feign.FeignException;
-import feign.RequestTemplate;
-import feign.Response;
+import feign.*;
 import feign.codec.DecodeException;
 import feign.codec.Decoder;
 import feign.codec.EncodeException;
@@ -24,6 +21,8 @@ public class ServiceMgr
 {
     @Resource
     private Environment env;
+
+    public static final long MAX = 1024L * 1024 * 16;
 
     Random ran = new Random();
 
@@ -168,7 +167,12 @@ public class ServiceMgr
         public void encode(Object o, Type type, RequestTemplate requestTemplate) throws EncodeException
         {
             requestTemplate.header("Content-Type", "application/json;charset=utf-8");
-            requestTemplate.body(o.toString());
+
+            byte[] b = o.toString().getBytes(Util.UTF_8);
+            if (b.length > MAX)
+                throw new RuntimeException("param is too long");
+
+            requestTemplate.body(b, Util.UTF_8);
         }
     }
 
@@ -205,6 +209,11 @@ public class ServiceMgr
                 clients[i] = new Client();
                 clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url[i].trim());
             }
+        }
+
+        public Client[] getAllClient()
+        {
+            return clients;
         }
 
         public Client getClient(int index)

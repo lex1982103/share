@@ -145,6 +145,7 @@ public class CacheService
                 req.put("service", serviceCode);
                 req.put("key", id);
                 req.put("value", tran != null ? tran.toString(value) : value);
+                req.put("timeout", timeout);
 
                 serviceMgr.req("cache", "save.json", req);
             }

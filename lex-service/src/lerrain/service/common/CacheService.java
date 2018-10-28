@@ -13,6 +13,8 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CacheService
 {
@@ -64,6 +66,8 @@ public class CacheService
     Map<String, TimeValue> cache = new HashMap<>();
 
     Translator tran;
+
+    ExecutorService es = Executors.newCachedThreadPool();
 
     /**
      * 将缓存的数据同步到cache服务（redis或其他），这样多实例可以共享数据，否则当前实例put的数据只能自己使用
@@ -133,26 +137,32 @@ public class CacheService
         store(id, value, TIME_OUT);
     }
 
-    public void store(final String id, final Object value, long timeout)
+    public void store(final String id, final Object value, final long timeout)
     {
         put(id, value, timeout);
 
         if (tran != null && serviceCode != null && serviceMgr.hasServers("cache"))
         {
-            try
-            {
-                JSONObject req = new JSONObject();
-                req.put("service", serviceCode);
-                req.put("key", id);
-                req.put("value", tran != null ? tran.toString(value) : value);
-                req.put("timeout", timeout);
+            es.execute(new Runnable() {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        JSONObject req = new JSONObject();
+                        req.put("service", serviceCode);
+                        req.put("key", id);
+                        req.put("value", tran != null ? tran.toString(value) : value);
+                        req.put("timeout", timeout);
 
-                serviceMgr.req("cache", "save.json", req);
-            }
-            catch (Exception e)
-            {
-                Log.alert(e);
-            }
+                        serviceMgr.req("cache", "save.json", req);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.alert(e);
+                    }
+                }
+            });
         }
     }
 

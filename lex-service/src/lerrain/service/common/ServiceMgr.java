@@ -201,6 +201,12 @@ public class ServiceMgr
 
         public void resetClients(String addrs)
         {
+            if (addrs == null)
+            {
+                clients = new Client[0];
+                return;
+            }
+
             String[] url = addrs.split(",");
 
             clients = new Client[url.length];

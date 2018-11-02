@@ -49,7 +49,7 @@ public class ServiceMgr
             Servers servers = map.get(serviceName);
             if (servers == null)
             {
-                servers = new Servers();
+                servers = new Servers(serviceName);
                 servers.resetClients(env.getProperty("service." + serviceName));
                 servers.setDispatch(serviceName);
 
@@ -75,6 +75,11 @@ public class ServiceMgr
     public void setLog(String service, int level)
     {
         getServers(service).level = level;
+    }
+
+    public Client[] getAllClient(String str)
+    {
+        return getServers(str).getAllClient();
     }
 
     public Client getClient(String str)
@@ -104,10 +109,36 @@ public class ServiceMgr
 
     public String reqStr(String service, String loc, Object param)
     {
-        long t = System.currentTimeMillis();
-
         Servers servers = this.getServers(service);
         Client client = servers.getClient(param);
+
+        return reqStr(servers, client, loc, param);
+    }
+
+    public String[] reqAll(String service, String loc, Object param)
+    {
+        Servers servers = this.getServers(service);
+        Client[] clients = servers.getAllClient();
+
+        String[] res = new String[clients.length];
+
+        for (int i = 0; i < clients.length; i++)
+        {
+            try
+            {
+                res[i] = reqStr(servers, clients[i], loc, param);
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        return res;
+    }
+
+    private String reqStr(Servers servers, Client client, String loc, Object param)
+    {
+        long t = System.currentTimeMillis();
 
         try
         {
@@ -118,9 +149,9 @@ public class ServiceMgr
             client.recTime((int)t1);
 
             if (servers.level == 1)
-                Log.debug("%s => %s/%s(%dms) => %s", param, service, loc, t1, res);
+                Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
             else if (servers.level == 2)
-                Log.info("%s => %s/%s(%dms) => %s", param, service, loc, t1, res);
+                Log.info("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
 
             return res;
         }
@@ -128,7 +159,7 @@ public class ServiceMgr
         {
             client.fail++;
 
-            Log.error("request: " + service + "/" + loc + " -- " + param, e);
+            Log.error("request: " + servers.name + "/" + loc + " -- " + param, e);
             throw e;
         }
     }
@@ -144,8 +175,11 @@ public class ServiceMgr
             {
                 JSONObject r1 = new JSONObject();
                 r1.put("client", c.client.toString());
-                r1.put("postTimes", c.post);
-                r1.put("failTimes", c.fail);
+                r1.put("post", c.post);
+                r1.put("fail", c.fail);
+
+                if (c.post - c.fail > 0)
+                    r1.put("average", c.totalTime / (c.post - c.fail));
 
                 int[] t = new int[c.time.length];
                 for (int i = 0; i < t.length; i++)
@@ -159,6 +193,19 @@ public class ServiceMgr
         }
 
         return r;
+    }
+
+    public void resetTimes()
+    {
+        for (Map.Entry<String, Servers> e : map.entrySet())
+        {
+            for (Client c : e.getValue().clients)
+            {
+                c.post = 0;
+                c.fail = 0;
+                c.totalTime = 0;
+            }
+        }
     }
 
     class JSONEncoder implements Encoder
@@ -191,6 +238,8 @@ public class ServiceMgr
 
     class Servers
     {
+        String name;
+
         Client[] clients;
 
         ServicePicker picker;
@@ -198,6 +247,11 @@ public class ServiceMgr
         int defaultIndex = -1;
 
         int level = 0;
+
+        public Servers(String name)
+        {
+            this.name = name;
+        }
 
         public void resetClients(String addrs)
         {
@@ -270,6 +324,8 @@ public class ServiceMgr
         int post;
         int fail;
 
+        long totalTime;
+
         int[] time = new int[1000];
         int pos = time.length - 1;
 
@@ -277,6 +333,8 @@ public class ServiceMgr
         {
             pos = (pos + 1) % time.length;
             time[pos] = t;
+
+            totalTime += t;
         }
     }
 

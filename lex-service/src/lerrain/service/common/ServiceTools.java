@@ -1,5 +1,6 @@
 package lerrain.service.common;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
@@ -40,5 +41,23 @@ public class ServiceTools
         r[1] = Long.parseLong(res[1]);
 
         return r;
+    }
+
+    public JSONObject success(Object val)
+    {
+        JSONObject res = new JSONObject();
+        res.put("result", "success");
+        res.put("content", val);
+
+        return res;
+    }
+
+    public JSONObject fail(Object val)
+    {
+        JSONObject res = new JSONObject();
+        res.put("result", "fail");
+        res.put("content", val);
+
+        return res;
     }
 }

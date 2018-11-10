@@ -105,7 +105,7 @@ public class ServiceLog
                     list.clear();
 
                 LogInfo log = new LogInfo();
-                log.buf = b;
+                log.buf = b.clone();
                 log.off = off;
                 log.len = len;
 

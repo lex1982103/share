@@ -9,6 +9,7 @@ import feign.codec.Decoder;
 import feign.codec.EncodeException;
 import feign.codec.Encoder;
 import lerrain.tool.Common;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
@@ -306,7 +307,7 @@ public class ServiceMgr
                             {
                                 String s = m.getString(str);
                                 if (s != null)
-                                    return s.hashCode();
+                                    return hash(s);
                             }
                         }
 
@@ -315,6 +316,11 @@ public class ServiceMgr
                 };
             }
         }
+    }
+
+    public int hash(String key)
+    {
+        return key.hashCode() & 0x7FFFFFFF;
     }
 
     static class Client

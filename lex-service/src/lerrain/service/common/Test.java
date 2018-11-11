@@ -29,26 +29,27 @@ public class Test
 //        Object val = client.req("dict/view.json", p);
 //        Log.info(val.toString());
 
+        System.out.println(-3 % 2);
 
-        JSONObject ee = new JSONObject();
-        JSONObject dd = new JSONObject();
-        JSONArray aa = new JSONArray();
-        for (int i=0;i<10;i++) {
-            JSONObject ll = new JSONObject();
-            ll.put("index", i+1);
-            ll.put("name", "平"+i);
-            ll.put("gender", "男");
-            ll.put("certNo", "32030419890709001X");
-            ll.put("plan", "测两万计划A");
-            ll.put("price", "200.00");
-            aa.add(ll);
-        }
-        dd.put("detail", aa);
-        ee.put("content", dd);
-        ee.put("outputType", "pdf");
-        ee.put("templateCode", "zhongan3");
-
-        System.out.println(request("http://www.lerrain.com:7511/print.stream", ee.toJSONString()));
+//        JSONObject ee = new JSONObject();
+//        JSONObject dd = new JSONObject();
+//        JSONArray aa = new JSONArray();
+//        for (int i=0;i<10;i++) {
+//            JSONObject ll = new JSONObject();
+//            ll.put("index", i+1);
+//            ll.put("name", "平"+i);
+//            ll.put("gender", "男");
+//            ll.put("certNo", "32030419890709001X");
+//            ll.put("plan", "测两万计划A");
+//            ll.put("price", "200.00");
+//            aa.add(ll);
+//        }
+//        dd.put("detail", aa);
+//        ee.put("content", dd);
+//        ee.put("outputType", "pdf");
+//        ee.put("templateCode", "zhongan3");
+//
+//        System.out.println(request("http://www.lerrain.com:7511/print.stream", ee.toJSONString()));
     }
 
     public static String request(String urlstr)

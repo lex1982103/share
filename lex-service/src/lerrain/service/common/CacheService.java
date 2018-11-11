@@ -57,7 +57,7 @@ public class CacheService
         }
     };
 
-    @Value("${info.code:null}")
+    @Value("${sys.code:null}")
     String serviceCode;
 
     @Autowired
@@ -134,12 +134,18 @@ public class CacheService
 
     public void store(String id, Object value)
     {
-        store(id, value, TIME_OUT);
+        store(id, value, TIME_OUT, true);
     }
 
-    public void store(final String id, final Object value, final long timeout)
+    public void store(String id, Object value, boolean memory)
     {
-        put(id, value, timeout);
+        store(id, value, TIME_OUT, memory);
+    }
+
+    public void store(final String id, final Object value, final long timeout, boolean memory)
+    {
+        if (memory)
+            put(id, value, timeout);
 
         if (tran != null && serviceCode != null && serviceMgr.hasServers("cache"))
         {
@@ -163,6 +169,22 @@ public class CacheService
                     }
                 }
             });
+        }
+    }
+
+    public void clear()
+    {
+        synchronized (cache)
+        {
+            cache.clear();
+        }
+    }
+
+    public void remove(String key)
+    {
+        synchronized (cache)
+        {
+            cache.remove(key);
         }
     }
 

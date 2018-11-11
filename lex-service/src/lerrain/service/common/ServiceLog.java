@@ -19,10 +19,10 @@ public class ServiceLog
     @Value("${path.log:null}")
     String logPath;
 
-    @Value("${info.code:null}")
+    @Value("${sys.code:null}")
     String serviceCode;
 
-    @Value("${env:null}")
+    @Value("${sys.env:null}")
     String env;
 
     LogOutputStream logOut = new LogOutputStream();

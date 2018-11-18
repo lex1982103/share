@@ -23,6 +23,8 @@ public class Test
 
 	public static void main(String[] s)
 	{
+		Script.scriptOf("for (var x,y : [500]) {}");
+
 		char ch1 = (char) 84426;
 		char ch2 = '䧊';
 		char ch3 = (char) 18890;

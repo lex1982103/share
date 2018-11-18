@@ -9,7 +9,6 @@ import feign.codec.Decoder;
 import feign.codec.EncodeException;
 import feign.codec.Encoder;
 import lerrain.tool.Common;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
@@ -20,10 +19,12 @@ import java.util.*;
 
 public class ServiceMgr
 {
-    @Resource
-    private Environment env;
+    public static final ThreadLocal<List<Request>> threadLocal = new ThreadLocal<>();
 
     public static final long MAX = 1024L * 1024 * 16;
+
+    @Resource
+    private Environment env;
 
     Random ran = new Random();
 
@@ -141,13 +142,32 @@ public class ServiceMgr
     {
         long t = System.currentTimeMillis();
 
+        List history = threadLocal.get();
+        if (history == null)
+        {
+            history = new ArrayList();
+            threadLocal.set(history);
+        }
+
+        Request srvReq = new Request();
+        srvReq.setService(servers.name);
+        srvReq.setTime(t);
+        history.add(srvReq);
+
         try
         {
             client.post++;
+
+            String req = param == null ? null : param.toString();
+            srvReq.setRequest(req);
+
             String res = client.client.req(loc, param == null ? null : param.toString());
 
             long t1 = System.currentTimeMillis() - t;
             client.recTime((int)t1);
+
+            srvReq.setResponse(res);
+            srvReq.setSpend((int)t1);
 
             if (servers.level == 1)
                 Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
@@ -163,6 +183,11 @@ public class ServiceMgr
             Log.error("request: " + servers.name + "/" + loc + " -- " + param, e);
             throw e;
         }
+    }
+
+    public List<Request> getRequestHistory()
+    {
+        return threadLocal.get();
     }
 
     public JSONObject report()
@@ -347,5 +372,65 @@ public class ServiceMgr
     public static interface ServicePicker
     {
         public int getIndex(Object req);
+    }
+
+    public static class Request
+    {
+        String service;
+
+        String request, response;
+
+        long time;
+        int spend = -1;
+
+        public String getRequest()
+        {
+            return request;
+        }
+
+        public void setRequest(String request)
+        {
+            this.request = request;
+        }
+
+        public String getResponse()
+        {
+            return response;
+        }
+
+        public void setResponse(String response)
+        {
+            this.response = response;
+        }
+
+        public String getService()
+        {
+            return service;
+        }
+
+        public void setService(String service)
+        {
+            this.service = service;
+        }
+
+        public int getSpend()
+        {
+            return spend;
+        }
+
+        public void setSpend(int spend)
+        {
+            this.spend = spend;
+        }
+
+        public long getTime()
+        {
+            return time;
+        }
+
+        public void setTime(long time)
+        {
+            this.time = time;
+        }
     }
 }

@@ -3,14 +3,8 @@ package lerrain.tool.script.warlock.function;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
-import lerrain.tool.script.warlock.analyse.Expression;
-import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.statement.ArithmeticApprox;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

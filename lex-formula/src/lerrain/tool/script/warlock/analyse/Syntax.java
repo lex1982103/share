@@ -80,7 +80,7 @@ public class Syntax
 			return new StatementParagraph(ws);
 		}
 		
-		return Expression.expressionOf(ws);
+		return new StatementExpression(ws);
 	}
 	
 	/**

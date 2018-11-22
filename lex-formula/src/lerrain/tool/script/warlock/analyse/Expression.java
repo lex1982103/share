@@ -69,9 +69,9 @@ public class Expression
 		{
 			int t = ws.getType(0);
 			if (t == Words.NULLPT || t == Words.NUMBER || t == Words.STRING || t == Words.TRUE || t == Words.FALSE)
-				return new Constant(t, ws.getWord(0));
+				return new Constant(ws);
 			if (t == Words.VARIABLE || t == Words.WORD)
-				return new Variable(ws.getWord(0));
+				return new Variable(ws);
 		}
 		
 		int p1 = 10000;

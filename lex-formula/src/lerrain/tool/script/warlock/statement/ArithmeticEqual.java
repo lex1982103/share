@@ -3,11 +3,10 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticEqual extends CodeImpl
+public class ArithmeticEqual extends Code
 {
 	Code l, r;
 	
@@ -37,8 +36,8 @@ public class ArithmeticEqual extends CodeImpl
 			return new Boolean(false);
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return l.toText("") + " == " + r.toText("");
+		return l.toText("", line) + " == " + r.toText("", line);
 	}
 }

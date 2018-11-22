@@ -9,12 +9,14 @@ import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class StatementIf implements Code
+public class StatementIf extends Code
 {
 	Code c, yes, no;
 	
 	public StatementIf(Words ws)
 	{
+		super(ws);
+
 		int left = 1; //条件左括号的位置
 		int right = Syntax.findRightBrace(ws, left + 1);
 		c = Expression.expressionOf(ws.cut(left + 1, right));
@@ -81,6 +83,8 @@ public class StatementIf implements Code
 
 	public Object run(Factors factors)
 	{
+		super.debug(factors);
+
 		boolean r;
 		
 		Value v = Value.valueOf(c, factors);
@@ -104,13 +108,13 @@ public class StatementIf implements Code
 		return null;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("IF (");
-		buf.append(c.toText(""));
+		buf.append(c.toText("", line));
 		buf.append(")\n");
 		buf.append(space + "{\n");
-		buf.append(yes.toText(space + "    ") + "\n");
+		buf.append(yes.toText(space + "    ", line) + "\n");
 		buf.append(space + "}");
 		
 		if (no != null)
@@ -118,7 +122,7 @@ public class StatementIf implements Code
 			buf.append("\n");
 			buf.append(space + "ELSE\n");
 			buf.append(space + "{\n");
-			buf.append(no.toText(space + "    ") + "\n");
+			buf.append(no.toText(space + "    ", line) + "\n");
 			buf.append(space + "}");
 		}
 		

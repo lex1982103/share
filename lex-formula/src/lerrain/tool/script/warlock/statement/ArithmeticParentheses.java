@@ -4,17 +4,16 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.Stack;
-import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.FunctionTry;
 
-public class ArithmeticParentheses extends CodeImpl
+import java.util.List;
+
+public class ArithmeticParentheses extends Code
 {
 	Code left, prt;
 	
@@ -55,17 +54,19 @@ public class ArithmeticParentheses extends CodeImpl
 
 				if (val instanceof FunctionTry)
 				{
-					Object v = null;
-					try
+					List<Code> codes = ((ArithmeticComma)prt).codes;
+					for (int i = 0; i < codes.size() - 1; i++)
 					{
-						v = ((ArithmeticComma) prt).left().run(factors);
+						try
+						{
+							return codes.get(i).run(factors);
+						}
+						catch (Exception e)
+						{
+						}
 					}
-					catch (Exception e)
-					{
-						if (((ArithmeticComma) prt).right() != null)
-							v = ((ArithmeticComma) prt).right().run(factors);
-					}
-					return v;
+
+					return codes.get(codes.size() - 1).run(factors);
 				}
 
 				Object[] params = null;
@@ -92,8 +93,8 @@ public class ArithmeticParentheses extends CodeImpl
 		}
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return (left == null ? "" : left.toText("")) + "(" + (prt == null ? "" : prt.toText("")) + ")";
+		return (left == null ? "" : left.toText("", line)) + "(" + (prt == null ? "" : prt.toText("", line)) + ")";
 	}
 }

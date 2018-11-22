@@ -18,10 +18,7 @@ public class Wrap
 	
 	public Wrap(Object r)
 	{
-		if (r instanceof Wrap)
-			values.addAll(((Wrap)r).values);
-
-		values.add(r);
+		this.add(r);
 	}
 	
 	public Wrap(Object v1, Object v2)
@@ -36,7 +33,15 @@ public class Wrap
 		else
 			values.add(v2);
 	}
-	
+
+	public void add(Object r)
+	{
+		if (r instanceof Wrap)
+			values.addAll(((Wrap)r).values);
+
+		values.add(r);
+	}
+
 	public List toList()
 	{
 		return values;

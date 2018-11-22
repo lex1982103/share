@@ -5,15 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticAddLet extends CodeImpl
+public class ArithmeticAddLet extends Code
 {
 	Code lc, rc;
 	
@@ -90,8 +88,8 @@ public class ArithmeticAddLet extends CodeImpl
 		}
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return lc.toText("") + " += " + rc.toText("");
+		return lc.toText("", line) + " += " + rc.toText("", line);
 	}
 }

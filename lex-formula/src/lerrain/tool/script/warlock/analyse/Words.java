@@ -68,17 +68,37 @@ public class Words implements Serializable
 	public static final int METHOD				= 400; //方法
 	public static final int KEY					= 410; //相对于前方值的KEY
 	
-	List c = new ArrayList();
-	List d = new ArrayList();
-	List e = new ArrayList();
+//	List c = new ArrayList();
+//	IntList d = new IntList();
+//	IntList e = new IntList();
+
+	List<Word> words = new ArrayList<>();
+
+	int from = 0, num = 0;
+	int end;
 
 	String scriptName;
 	String scriptStr;
+
+	private static class Word implements Serializable
+	{
+		String c;
+		int d, e;
+
+		public Word(String c, int d, int e)
+		{
+			this.c = c;
+			this.d = d;
+			this.e = e;
+		}
+	}
 
 	public Words(String scriptName, String scriptStr)
 	{
 		this.scriptName = scriptName;
 		this.scriptStr = scriptStr;
+
+		this.end = scriptStr.length();
 	}
 
 	public String getScriptName()
@@ -98,27 +118,36 @@ public class Words implements Serializable
 	
 	public int size()
 	{
-		return c.size();
+		return num;
 	}
 	
 	public boolean isEmpty()
 	{
-		return c.isEmpty();
+		return num == 0;
 	}
 	
 	public void setType(int index, int type)
 	{
-		d.set(index, new Integer(type));
+		if (index >= num)
+			throw new RuntimeException("out of range");
+
+		words.get(from + index).d = type;
 	}
 	
 	public String getWord(int index)
 	{
-		return (String)c.get(index);
+		if (index >= num)
+			throw new RuntimeException("out of range");
+
+		return words.get(from + index).c;
 	}
 
 	public int getLocation(int index)
 	{
-		return (Integer)e.get(index);
+		if (index >= num)
+			throw new RuntimeException("out of range");
+
+		return words.get(from + index).e;
 	}
 
 	public void add(char word, int loc)
@@ -128,22 +157,51 @@ public class Words implements Serializable
 	
 	public void add(String word, int type, int loc)
 	{
-		c.add(word);
-		d.add(new Integer(type));
-		e.add(new Integer(loc));
+		if (words.size() != num)
+			throw new RuntimeException("out of range");
+
+		words.add(new Word(word, type, loc));
+
+		num++;
 	}
 	
-	public void add(Words ws, int from, int to)
+//	public void add(Words ws, int from, int to)
+//	{
+//		for (int i = from; i < to; i++)
+//			add(ws.getWord(i), ws.getType(i), ws.getLocation(i));
+//	}
+
+	public boolean isInWords(int pos)
 	{
-		for (int i = from; i < to; i++)
-			add(ws.getWord(i), ws.getType(i), ws.getLocation(i));
+		return pos >= words.get(from).e && pos < end;
+	}
+
+	public int find(int pos)
+	{
+		if (!isInWords(pos))
+			return -1;
+
+		int i = 0;
+		for (Word w : words)
+		{
+			if (w.e <= pos)
+				return i;
+
+			i++;
+		}
+
+		throw new RuntimeException("error in formula");
 	}
 	
 	public Words cut(int from, int to)
 	{
 		Words ws = new Words(scriptName, scriptStr);
-		ws.add(this, from, to);
-		
+		ws.words = this.words;
+		ws.from = this.from + from;
+		ws.num = to - from;
+
+		ws.end = to < words.size() ? words.get(this.from + to).e : this.end;
+
 		return ws;
 	}
 	
@@ -154,12 +212,7 @@ public class Words implements Serializable
 	
 	public int getType(int index)
 	{
-		return (Integer)d.get(index);
-	}
-	
-	public String toString()
-	{
-		return c.toString();
+		return words.get(from + index).d;
 	}
 
 	public static Words wordsOf(String text)

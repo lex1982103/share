@@ -1,10 +1,8 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
@@ -12,7 +10,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 import java.util.List;
 import java.util.Map;
 
-public class ArithmeticSubLet extends CodeImpl
+public class ArithmeticSubLet extends Code
 {
 	Code lc, rc;
 	
@@ -64,8 +62,8 @@ public class ArithmeticSubLet extends CodeImpl
 		throw new RuntimeException("只可以在数字、List或Map上做递减赋值运算");
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return lc.toText("") + " -= " + rc.toText("");
+		return lc.toText("", line) + " -= " + rc.toText("", line);
 	}
 }

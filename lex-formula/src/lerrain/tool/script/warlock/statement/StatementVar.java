@@ -10,7 +10,10 @@ import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class StatementVar implements Code
+/**
+ * 这个类将来要改成个Arithmetic
+ */
+public class StatementVar extends Code
 {
 	Code r;
 	
@@ -18,6 +21,8 @@ public class StatementVar implements Code
 	
 	public StatementVar(Words ws)
 	{
+		super(ws);
+
 		names.add(ws.getWord(1));
 
 		if (ws.size() > 2)
@@ -41,6 +46,8 @@ public class StatementVar implements Code
 
 	public Object run(Factors factors)
 	{
+		super.debug(factors);
+
 		for (int i = 0; i < names.size(); i++)
 			((Stack)factors).declare((String)names.get(i));
 		
@@ -50,8 +57,8 @@ public class StatementVar implements Code
 		return r.run(factors);
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return "VAR " + (r == null ? names.toString() : r.toText(""));
+		return "VAR " + (r == null ? names.toString() : r.toText("", line));
 	}
 }

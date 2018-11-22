@@ -4,18 +4,22 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
+import lerrain.tool.script.warlock.analyse.Words;
 
-public class Variable implements Code, Reference
+public class Variable extends Code implements Reference
 {
 	String varName;
 	
-	public Variable(String name)
+	public Variable(Words ws)
 	{
-		this.varName = name;
+		super(ws);
+
+		this.varName = ws.getWord(0);
 	}
 
 	public Object run(Factors factors)
 	{
+		//作废
 		if ("timems".equals(varName))
 			return Double.valueOf((double)System.currentTimeMillis());
 		
@@ -32,7 +36,7 @@ public class Variable implements Code, Reference
 		return varName;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		return varName;
 	}

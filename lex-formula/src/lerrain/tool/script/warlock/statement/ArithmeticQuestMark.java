@@ -4,11 +4,10 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticQuestMark extends CodeImpl
+public class ArithmeticQuestMark extends Code
 {
 	Code l, r;
 	
@@ -41,8 +40,8 @@ public class ArithmeticQuestMark extends CodeImpl
 		throw new ScriptRuntimeException(this, factors, "?!组合运算要求问号左侧值为boolean类型");
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return l.toText("") + " ? " + r.toText("");
+		return l.toText("", false) + " ? " + r.toText("", false);
 	}
 }

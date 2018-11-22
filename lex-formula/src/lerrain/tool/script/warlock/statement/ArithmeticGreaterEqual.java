@@ -6,11 +6,10 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticGreaterEqual extends CodeImpl
+public class ArithmeticGreaterEqual extends Code
 {
 	Code l, r;
 	
@@ -42,8 +41,8 @@ public class ArithmeticGreaterEqual extends CodeImpl
 		throw new ScriptRuntimeException(this, factors, "大小比较只可以在数字、日期上进行");
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return l.toText("") + " >= " + r.toText("");
+		return l.toText("", line) + " >= " + r.toText("", line);
 	}
 }

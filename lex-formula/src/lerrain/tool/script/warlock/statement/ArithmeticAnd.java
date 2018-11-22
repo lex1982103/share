@@ -4,11 +4,10 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticAnd extends CodeImpl
+public class ArithmeticAnd extends Code
 {
 	Code l, r;
 	
@@ -37,8 +36,8 @@ public class ArithmeticAnd extends CodeImpl
 		return Value.booleanOf(c.run(factors));
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return l.toText("") + " AND " + r.toText("");
+		return l.toText("", line) + " AND " + r.toText("", line);
 	}
 }

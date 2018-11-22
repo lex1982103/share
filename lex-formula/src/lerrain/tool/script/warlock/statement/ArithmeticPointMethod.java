@@ -1,19 +1,13 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
-import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
-import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
 /**
@@ -28,7 +22,7 @@ import lerrain.tool.script.warlock.analyse.Words;
  * @author lerrain
  *
  */
-public class ArithmeticPointMethod extends CodeImpl
+public class ArithmeticPointMethod extends Code
 {
 	Code obj;
 	
@@ -58,7 +52,7 @@ public class ArithmeticPointMethod extends CodeImpl
 		if (v == null)
 		{
 			if (tk)
-				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText(""));
+				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText("", true));
 			else
 				return null;
 		}
@@ -73,8 +67,8 @@ public class ArithmeticPointMethod extends CodeImpl
 		throw new ScriptRuntimeException(this, factors, "point左侧只能是map或者factors，目前为" + v.toString());
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return obj.toText("") + "." + name;
+		return obj.toText("", line) + "." + name;
 	}
 }

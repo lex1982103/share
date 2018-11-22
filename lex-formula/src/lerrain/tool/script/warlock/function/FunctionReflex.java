@@ -2,10 +2,6 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.formula.Value;
-import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.analyse.Expression;
-import lerrain.tool.script.warlock.analyse.Words;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;

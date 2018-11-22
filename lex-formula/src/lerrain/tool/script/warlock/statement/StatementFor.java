@@ -13,7 +13,7 @@ import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class StatementFor implements Code
+public class StatementFor extends Code
 {
 	int type = 1;
 	
@@ -21,6 +21,8 @@ public class StatementFor implements Code
 	
 	public StatementFor(Words ws)
 	{
+		super(ws);
+
 		int left = 1;
 		int right = Syntax.findRightBrace(ws, left + 1);
 		Script c = new Script(ws.cut(left + 1, right));
@@ -50,8 +52,18 @@ public class StatementFor implements Code
 		}
 	}
 
+	public void markBreakPoint(int pos)
+	{
+		if (fc.isPointOn(pos))
+			fc.markBreakPoint(pos);
+		else
+			this.setBreakPoint(true);
+	}
+
 	public Object run(Factors factors)
 	{
+		super.debug(factors);
+
 		Stack stack = new Stack(factors);
 		
 		if (type == 2)
@@ -136,16 +148,16 @@ public class StatementFor implements Code
 		return null;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("FOR (");
 		if (type == 2)
-			buf.append(f1.toText(""));
+			buf.append(f1.toText("", line));
 		else
-			buf.append((f1 == null ? "" : f1.toText("")) + "; " + (f2 == null ? "" : f2.toText("")) + "; " + (f3 == null ? "" : f3.toText("")));
+			buf.append((f1 == null ? "" : f1.toText("", line)) + "; " + (f2 == null ? "" : f2.toText("", line)) + "; " + (f3 == null ? "" : f3.toText("", line)));
 		buf.append(")\n");
 		buf.append(space + "{\n");
-		buf.append(fc.toText(space + "    ") + "\n");
+		buf.append(fc.toText(space + "    ", line) + "\n");
 		buf.append(space + "}");
 		
 		return buf.toString();

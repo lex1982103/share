@@ -6,17 +6,19 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 import java.math.BigDecimal;
 
-public class Constant implements Code
+public class Constant extends Code
 {
 	int type;
 	String text;
 	
 	Object v;
 	
-	public Constant(int type, String text)
+	public Constant(Words ws)
 	{
-		this.type = type;
-		this.text = text;
+		super(ws);
+
+		this.type = ws.getType(0);
+		this.text = ws.getWord(0);
 		
 		if (type == Words.NULLPT)
 		{
@@ -63,12 +65,12 @@ public class Constant implements Code
 		return v;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		if (v == null)
 			return "NULL";
 		
-		return v instanceof String ? "'" + v + "'" : v.toString();
+		return v instanceof String ? "\"" + v + "\"" : v.toString();
 	}
 	
 	public String toString()

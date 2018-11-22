@@ -14,9 +14,9 @@ import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticNew implements Code
+public class ArithmeticNew extends Code
 {
-	Code v, a;
+	Code v;
 	
 	String cluss;
 	int type;
@@ -25,6 +25,8 @@ public class ArithmeticNew implements Code
 	
 	public ArithmeticNew(Words ws, int i)
 	{
+		super(ws, i);
+
 		if (i == ws.size() - 1 || ws.getType(i + 1) != Words.CLASS)
 			throw new SyntaxException("没有找到new的类型");
 		
@@ -116,8 +118,8 @@ public class ArithmeticNew implements Code
 		return null;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return "";
+		return "NEW " + cluss + (type == 1 ? "<ARRAY>" : type == 2 ? "<OBJECT>" : "");
 	}
 }

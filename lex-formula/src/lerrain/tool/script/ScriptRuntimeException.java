@@ -2,7 +2,6 @@ package lerrain.tool.script;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -63,7 +62,7 @@ public class ScriptRuntimeException extends RuntimeException
 
 		try (ByteArrayOutputStream os = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(os))
 		{
-			String funcName = ((CodeImpl) code).getScriptName();
+			String funcName = ((Code) code).getScriptName();
 			ps.println("---- Cause in <" + (funcName == null ? "?" : funcName) + "> ----");
 
 			String msg;
@@ -74,7 +73,7 @@ public class ScriptRuntimeException extends RuntimeException
 			else
 				msg = super.getMessage();
 
-			((CodeImpl) code).printAll(ps, msg);
+			((Code) code).printAll(ps, msg);
 
 			if (this.getCause() instanceof ScriptRuntimeException)
 				ps.println(((ScriptRuntimeException)this.getCause()).toStackString());

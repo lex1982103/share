@@ -1,7 +1,6 @@
 package lerrain.tool.script.warlock.statement;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
@@ -9,12 +8,11 @@ import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticPointKey extends CodeImpl implements Reference
+public class ArithmeticPointKey extends Code implements Reference
 {
 	Code l;
 	String key;
@@ -49,7 +47,7 @@ public class ArithmeticPointKey extends CodeImpl implements Reference
 		if (v == null)
 		{
 			if (tk)
-				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText(""));
+				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText("", true));
 			else
 				return null;
 		}
@@ -103,8 +101,8 @@ public class ArithmeticPointKey extends CodeImpl implements Reference
 			throw new ScriptRuntimeException(this, factors, "赋值时，被赋值一方的POINT运算的左侧不是有效类型");
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return l.toText("") + "." + key;
+		return l.toText("", line) + "." + key;
 	}
 }

@@ -47,8 +47,8 @@ public class WarlockFunction implements Formula
 			{
 				ArithmeticComma ac = (ArithmeticComma)formula;
 				
-				findParameters(ac.left(), list, true);
-				findParameters(ac.right(), list, false);
+				findParameters(ac.getCodes().get(0), list, true);
+				findParameters(ac.getCodes().get(1), list, false);
 			}
 			else
 			{

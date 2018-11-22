@@ -9,13 +9,15 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticFunctionDim implements Code, Function
+public class ArithmeticFunctionDim extends Code implements Function
 {
 	String[] param;
 	Script content;
 	
 	public ArithmeticFunctionDim(Words ws, int i)
 	{
+		super(ws, i);
+
 		int l = i + 1;
 		int r = Syntax.findRightBrace(ws, l + 1);
 
@@ -39,9 +41,9 @@ public class ArithmeticFunctionDim implements Code, Function
 		return this;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return "function dec";
+		return "DIM FUNCTION";
 	}
 
 	public Object run(Object[] v, Factors p)

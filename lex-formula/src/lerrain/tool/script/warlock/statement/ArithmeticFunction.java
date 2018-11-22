@@ -5,7 +5,7 @@ import lerrain.tool.formula.Function;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
-import lerrain.tool.script.warlock.CodeImpl;
+import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.*;
 
@@ -23,7 +23,7 @@ import lerrain.tool.script.warlock.function.*;
  * 如果每个都计算，那么这个函数是没办法运行的。
  * 
  */
-public class ArithmeticFunction extends CodeImpl
+public class ArithmeticFunction extends Code
 {
 	String name;
 	
@@ -170,7 +170,7 @@ public class ArithmeticFunction extends CodeImpl
 		return f;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		return name;
 	}

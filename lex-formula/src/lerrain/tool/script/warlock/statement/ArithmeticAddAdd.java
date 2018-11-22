@@ -1,16 +1,14 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticAddAdd extends CodeImpl
+public class ArithmeticAddAdd extends Code
 {
 	Code l, r;
 	
@@ -64,11 +62,11 @@ public class ArithmeticAddAdd extends CodeImpl
 		}
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		if (l != null)
-			return l.toText("") + "++";
+			return l.toText("", line) + "++";
 		else
-			return "++" + r.toText("");
+			return "++" + r.toText("", line);
 	}
 }

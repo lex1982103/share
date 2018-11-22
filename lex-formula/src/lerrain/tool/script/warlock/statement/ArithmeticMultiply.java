@@ -1,14 +1,12 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticMultiply extends CodeImpl
+public class ArithmeticMultiply extends Code
 {
 	Code lc, rc;
 	
@@ -38,8 +36,8 @@ public class ArithmeticMultiply extends CodeImpl
 		throw new ScriptRuntimeException(this, factors, "只可以对数字做乘法运算 - " + l + " * " + r);
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return lc.toText("") + " * " + rc.toText("");
+		return lc.toText("", line) + " * " + rc.toText("", line);
 	}
 }

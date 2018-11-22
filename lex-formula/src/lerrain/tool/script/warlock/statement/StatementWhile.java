@@ -9,12 +9,14 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class StatementWhile implements Code
+public class StatementWhile extends Code
 {
 	Code c, fc;
 	
 	public StatementWhile(Words ws)
 	{
+		super(ws);
+
 		int left = 1;
 		int right = Syntax.findRightBrace(ws, left + 1);
 		c = new Script(ws.cut(left + 1, right));
@@ -34,6 +36,8 @@ public class StatementWhile implements Code
 
 	public Object run(Factors factors)
 	{
+		super.debug(factors);
+
 		Stack stack = new Stack(factors);
 		
 		while (Value.booleanOf(c, stack))
@@ -49,13 +53,13 @@ public class StatementWhile implements Code
 		return null;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("WHILE (");
-		buf.append(c.toText(""));
+		buf.append(c.toText("", line));
 		buf.append(")\n");
 		buf.append(space + "{\n");
-		buf.append(fc.toText(space + "    ") + "\n");
+		buf.append(fc.toText(space + "    ", line) + "\n");
 		buf.append(space + "}");
 		
 		return buf.toString();

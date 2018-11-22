@@ -7,12 +7,14 @@ import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticLet implements Code
+public class ArithmeticLet extends Code
 {
 	Code l, r;
 	
 	public ArithmeticLet(Words ws, int i)
 	{
+		super(ws, i);
+
 		l = Expression.expressionOf(ws.cut(0, i));
 		r = Expression.expressionOf(ws.cut(i + 1));
 		
@@ -28,8 +30,8 @@ public class ArithmeticLet implements Code
 		return v;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return l.toText("") + " = " + r.toText("");
+		return l.toText("", line) + " = " + r.toText("", line);
 	}
 }

@@ -51,7 +51,6 @@ import java.util.*;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
@@ -110,7 +109,7 @@ import lerrain.tool.script.warlock.analyse.Words;
  * <p></p>
  * @author lerrain
  */
-public class Script extends CodeImpl
+public class Script extends Code
 {
 	/**
 	 * <p>这是一种用原生计算代替高精度计算的方式，某些情形下，可以显著提升计算速度，在Script中设置即可。</p>
@@ -148,9 +147,9 @@ public class Script extends CodeImpl
 	 */
 	boolean main = true;
 	
-	List codeList = new ArrayList();
+	List<Code> codeList = new ArrayList();
 	Code code;
-	
+
 	public Script(Words ws)
 	{
 		this(ws, false);
@@ -206,13 +205,10 @@ public class Script extends CodeImpl
 		
 		Stack stack = factors instanceof Stack ? (Stack)factors : new Stack(factors);
 		
-		Iterator iter = codeList.iterator();
-		while (iter.hasNext())
+		for (Code f : codeList)
 		{
-			Code f = (Code)iter.next();
 			r = f.run(stack);
-//			System.out.println("RUN: " + f.toText("") + "   ---   " + r);
-			
+
 			if (r instanceof Interrupt)
 			{
 				if (!main)
@@ -232,6 +228,12 @@ public class Script extends CodeImpl
 		
 		return r;
 	}
+
+	public void markBreakPoint(int pos)
+	{
+		for (Code f : codeList)
+			f.markBreakPoint(pos);
+	}
 	
 	public String toText(String space)
 	{
@@ -240,7 +242,7 @@ public class Script extends CodeImpl
 		Iterator iter = codeList.iterator();
 		while (iter.hasNext())
 		{
-			buf.append(space + ((Code)iter.next()).toText(space) + (iter.hasNext() ? "\n" : ""));
+			buf.append(space + ((Code)iter.next()).toText(space, false) + (iter.hasNext() ? "\n" : ""));
 		}
 		
 		return buf.toString();

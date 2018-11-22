@@ -1,23 +1,21 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class StatementParagraph implements Code
+public class StatementParagraph extends Code
 {
 	Code c;
 	
 	public StatementParagraph(Words ws)
 	{
+		super(ws);
+
 		int i = 0;
 		int r = Syntax.findRightBrace(ws, i + 1);
 		
@@ -29,13 +27,15 @@ public class StatementParagraph implements Code
 
 	public Object run(Factors factors)
 	{
+		super.debug(factors);
+
 		return c.run(new Stack(factors));
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("{\n");
-		buf.append(c.toText(space + "    ") + "\n");
+		buf.append(c.toText(space + "    ", line) + "\n");
 		buf.append(space + "}");
 		
 		return buf.toString();

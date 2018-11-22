@@ -1,17 +1,13 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Value;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class ArithmeticAdd extends CodeImpl
+public class ArithmeticAdd extends Code
 {
 	Code lc, rc;
 	
@@ -80,8 +76,8 @@ public class ArithmeticAdd extends CodeImpl
 		}
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return lc.toText("") + " + " + rc.toText("");
+		return lc.toText("", line) + " + " + rc.toText("", line);
 	}
 }

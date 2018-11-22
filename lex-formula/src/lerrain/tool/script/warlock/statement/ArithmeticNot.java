@@ -4,11 +4,10 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticNot extends CodeImpl
+public class ArithmeticNot extends Code
 {
 	Code r;
 	
@@ -28,8 +27,8 @@ public class ArithmeticNot extends CodeImpl
 		throw new ScriptRuntimeException(this, factors, "NOT逻辑运算，要求值为boolean类型");
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return "NOT " + r.toText("");
+		return "NOT " + r.toText("", line);
 	}
 }

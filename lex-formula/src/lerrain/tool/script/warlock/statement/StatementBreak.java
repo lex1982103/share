@@ -5,18 +5,23 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class StatementBreak implements Code
+public class StatementBreak extends Code
 {
+	Words ws;
+
 	public StatementBreak(Words ws)
 	{
+		super(ws);
 	}
 
 	public Object run(Factors factors)
 	{
+		super.debug(factors);
+
 		return Interrupt.interruptOf(Interrupt.BREAK);
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
 		return "BREAK";
 	}

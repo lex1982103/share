@@ -10,12 +10,14 @@ import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticBrace implements Code
+public class ArithmeticBrace extends Code
 {
-	Code v, a;
+	Code a;
 
 	public ArithmeticBrace(Words ws, int i)
 	{
+		super(ws);
+
 		if (ws.getType(i) != Words.BRACE || ws.getType(ws.size() - 1) != Words.BRACE_R)
 			throw new SyntaxException("找不到数组的右括号");
 
@@ -55,8 +57,8 @@ public class ArithmeticBrace implements Code
 		return r;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return (v == null ? "OBJECT" : v.toText("")) + "{" + a.toText("") + "}";
+		return "{\n" + a.toText(space + "  ", true) + "\n" + space + "}\n";
 	}
 }

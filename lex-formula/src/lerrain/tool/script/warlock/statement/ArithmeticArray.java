@@ -10,13 +10,12 @@ import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticArray extends CodeImpl implements Reference
+public class ArithmeticArray extends Code implements Reference
 {
 	int type = 0;
 	
@@ -26,7 +25,7 @@ public class ArithmeticArray extends CodeImpl implements Reference
 	
 	public ArithmeticArray(Words ws, int i)
 	{
-		super(ws, i);
+		super(ws);
 
 		if (ws.getType(i) != Words.BRACKET || ws.getType(ws.size() - 1) != Words.BRACKET_R)
 			throw new SyntaxException("找不到数组的右括号");
@@ -178,7 +177,7 @@ public class ArithmeticArray extends CodeImpl implements Reference
 				return ((List) val).get(i);
 			}
 
-			throw new RuntimeException("无法处理的数组运算 - " + toText("") + " is " + val);
+			throw new RuntimeException("无法处理的数组运算 - " + toText("", true) + " is " + val);
 		}
 		catch (Exception e)
 		{
@@ -186,9 +185,9 @@ public class ArithmeticArray extends CodeImpl implements Reference
 		}
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return (v == null ? "OBJECT" : v.toText("")) + "[" + a.toText("") + "]";
+		return (v == null ? "" : v.toText("", line)) + "[" + (a == null ? "" : a.toText("", line)) + "]";
 	}
 
 	public void let(Factors factors, Object value)

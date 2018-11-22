@@ -138,36 +138,48 @@ public class ServiceMgr
         return res;
     }
 
+    public void setMonitor(boolean m)
+    {
+        if (m)
+            threadLocal.set(new ArrayList<Request>());
+        else
+            threadLocal.remove();
+    }
+
     private String reqStr(Servers servers, Client client, String loc, Object param)
     {
         long t = System.currentTimeMillis();
 
-        List history = threadLocal.get();
-        if (history == null)
-        {
-            history = new ArrayList();
-            threadLocal.set(history);
-        }
+        Request srvReq = null;
 
-        Request srvReq = new Request();
-        srvReq.setService(servers.name);
-        srvReq.setTime(t);
-        history.add(srvReq);
+        List history = threadLocal.get();
+        if (history != null)
+        {
+            srvReq = new Request();
+            srvReq.setService(servers.name);
+            srvReq.setTime(t);
+            history.add(srvReq);
+        }
 
         try
         {
             client.post++;
 
             String req = param == null ? null : param.toString();
-            srvReq.setRequest(req);
 
-            String res = client.client.req(loc, param == null ? null : param.toString());
+            if (srvReq != null)
+                srvReq.setRequest(req);
+
+            String res = client.client.req(loc, req);
 
             long t1 = System.currentTimeMillis() - t;
             client.recTime((int)t1);
 
-            srvReq.setResponse(res);
-            srvReq.setSpend((int)t1);
+            if (srvReq != null)
+            {
+                srvReq.setResponse(res);
+                srvReq.setSpend((int) t1);
+            }
 
             if (servers.level == 1)
                 Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
@@ -262,7 +274,7 @@ public class ServiceMgr
         }
     }
 
-    class Servers
+    public class Servers
     {
         String name;
 
@@ -348,7 +360,7 @@ public class ServiceMgr
         return key.hashCode() & 0x7FFFFFFF;
     }
 
-    static class Client
+    public static class Client
     {
         ServiceClient client;
 

@@ -3,7 +3,6 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.CodeImpl;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -11,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ArithmeticApprox extends CodeImpl
+public class ArithmeticApprox extends Code
 {
 	Code l, r;
 
@@ -45,8 +44,23 @@ public class ArithmeticApprox extends CodeImpl
 		if (v1.isNull() && v2.isNull())
 			return true;
 
-		if (v1.isNull() || v2.isNull())
-			return false;
+		if (v1.isNull())
+			return "null".equals(v2.toString());
+
+		if (v2.isNull())
+			return "null".equals(v1.toString());
+
+		if (v1.isBoolean() && v2.isString())
+		{
+			String s = v2.toString();
+			return v1.booleanValue() ? "true".equals(s) || "Y".equalsIgnoreCase(s) : "false".equals(s) || "N".equalsIgnoreCase(s);
+		}
+
+		if (v2.isBoolean() && v1.isString())
+		{
+			String s = v1.toString();
+			return v2.booleanValue() ? "true".equals(s) || "Y".equalsIgnoreCase(s) : "false".equals(s) || "N".equalsIgnoreCase(s);
+		}
 
 		if (v1.isDecimal() && v2.isDecimal())
 			return v1.doubleValue() == v2.doubleValue();
@@ -149,8 +163,8 @@ public class ArithmeticApprox extends CodeImpl
 		return true;
 	}
 
-	public String toText(String space)
+	public String toText(String space, boolean line)
 	{
-		return l.toText("") + " ~= " + r.toText("");
+		return l.toText("", line) + " ~= " + r.toText("", line);
 	}
 }

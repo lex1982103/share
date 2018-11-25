@@ -19,8 +19,6 @@ import java.util.*;
 
 public class ServiceMgr
 {
-    public static final ThreadLocal<List<Request>> threadLocal = new ThreadLocal<>();
-
     public static final long MAX = 1024L * 1024 * 16;
 
     @Resource
@@ -138,48 +136,19 @@ public class ServiceMgr
         return res;
     }
 
-    public void setMonitor(boolean m)
-    {
-        if (m)
-            threadLocal.set(new ArrayList<Request>());
-        else
-            threadLocal.remove();
-    }
-
     private String reqStr(Servers servers, Client client, String loc, Object param)
     {
         long t = System.currentTimeMillis();
-
-        Request srvReq = null;
-
-        List history = threadLocal.get();
-        if (history != null)
-        {
-            srvReq = new Request();
-            srvReq.setService(servers.name);
-            srvReq.setTime(t);
-            history.add(srvReq);
-        }
 
         try
         {
             client.post++;
 
             String req = param == null ? null : param.toString();
-
-            if (srvReq != null)
-                srvReq.setRequest(req);
-
             String res = client.client.req(loc, req);
 
             long t1 = System.currentTimeMillis() - t;
             client.recTime((int)t1);
-
-            if (srvReq != null)
-            {
-                srvReq.setResponse(res);
-                srvReq.setSpend((int) t1);
-            }
 
             if (servers.level == 1)
                 Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
@@ -195,11 +164,6 @@ public class ServiceMgr
             Log.error("request: " + servers.name + "/" + loc + " -- " + param, e);
             throw e;
         }
-    }
-
-    public List<Request> getRequestHistory()
-    {
-        return threadLocal.get();
     }
 
     public JSONObject report()
@@ -384,65 +348,5 @@ public class ServiceMgr
     public static interface ServicePicker
     {
         public int getIndex(Object req);
-    }
-
-    public static class Request
-    {
-        String service;
-
-        String request, response;
-
-        long time;
-        int spend = -1;
-
-        public String getRequest()
-        {
-            return request;
-        }
-
-        public void setRequest(String request)
-        {
-            this.request = request;
-        }
-
-        public String getResponse()
-        {
-            return response;
-        }
-
-        public void setResponse(String response)
-        {
-            this.response = response;
-        }
-
-        public String getService()
-        {
-            return service;
-        }
-
-        public void setService(String service)
-        {
-            this.service = service;
-        }
-
-        public int getSpend()
-        {
-            return spend;
-        }
-
-        public void setSpend(int spend)
-        {
-            this.spend = spend;
-        }
-
-        public long getTime()
-        {
-            return time;
-        }
-
-        public void setTime(long time)
-        {
-            this.time = time;
-        }
     }
 }

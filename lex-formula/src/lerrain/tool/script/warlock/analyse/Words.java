@@ -200,7 +200,7 @@ public class Words implements Serializable
 		ws.from = this.from + from;
 		ws.num = to - from;
 
-		ws.end = to < words.size() ? words.get(this.from + to).e : this.end;
+		ws.end = this.from + to < words.size() ? words.get(this.from + to).e : this.end;
 
 		return ws;
 	}

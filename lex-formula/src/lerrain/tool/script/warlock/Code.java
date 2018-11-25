@@ -2,6 +2,7 @@ package lerrain.tool.script.warlock;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -50,7 +51,7 @@ public abstract class Code implements Formula
 
 	public void debug(Factors factors)
 	{
-		if (factors instanceof Stack)
+		if (Script.DEBUG && factors instanceof Stack)
 		{
 			Stack stack = (Stack)factors;
 			Stack.BreakListener listener = stack.getBreakListener();

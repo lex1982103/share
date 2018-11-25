@@ -137,8 +137,8 @@ public class Script extends Code
 
 	public static boolean STACK_MESSAGE		= true;
 
-	private static int mode = NATIVE;
-	
+	public static boolean DEBUG				= false;
+
 	/**
 	 * 如果是最外层，那么遇到return不能直接把Result(return)对象返回，需要把他的真实值返回。
 	 * 1. 非最外层，直接上抛
@@ -277,10 +277,5 @@ public class Script extends Code
 	public static void addFunction(String name, Function f)
 	{
 		FUNCTIONS.put(name, f);
-	}
-	
-	public static int getCalculateMode()
-	{
-		return mode;
 	}
 }

@@ -57,7 +57,7 @@ public class StatementFor extends Code
 		if (fc.isPointOn(pos))
 			fc.markBreakPoint(pos);
 		else
-			this.setBreakPoint(true);
+			super.markBreakPoint(pos);
 	}
 
 	public Object run(Factors factors)

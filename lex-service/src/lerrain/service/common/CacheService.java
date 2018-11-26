@@ -172,6 +172,30 @@ public class CacheService
         }
     }
 
+    public void storeSynch(final String id, final Object value, final long timeout, boolean memory)
+    {
+        if (memory)
+            put(id, value, timeout);
+
+        if (tran != null && serviceCode != null && serviceMgr.hasServers("cache"))
+        {
+            try
+            {
+                JSONObject req = new JSONObject();
+                req.put("service", serviceCode);
+                req.put("key", id);
+                req.put("value", tran != null ? tran.toString(value) : value);
+                req.put("timeout", timeout);
+
+                serviceMgr.req("cache", "save.json", req);
+            }
+            catch (Exception e)
+            {
+                Log.alert(e);
+            }
+        }
+    }
+
     public void clear()
     {
         synchronized (cache)

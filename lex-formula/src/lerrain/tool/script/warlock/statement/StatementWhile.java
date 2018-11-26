@@ -34,6 +34,14 @@ public class StatementWhile extends Code
 		}
 	}
 
+	public void markBreakPoint(int pos)
+	{
+		if (fc.isPointOn(pos))
+			fc.markBreakPoint(pos);
+		else
+			super.markBreakPoint(pos);
+	}
+
 	public Object run(Factors factors)
 	{
 		super.debug(factors);

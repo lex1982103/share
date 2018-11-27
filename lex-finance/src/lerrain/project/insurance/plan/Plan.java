@@ -679,6 +679,7 @@ public class Plan implements Serializable
 	public void setInsureTime(Date insureTime)
 	{
 		this.insureTime = insureTime;
+		clearCache();
 	}
 
 	public String getVendor()

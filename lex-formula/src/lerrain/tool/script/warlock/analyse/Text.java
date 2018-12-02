@@ -33,8 +33,13 @@ public class Text
 				if (c1 == '/') //如果是//的注释
 				{
 					buf.append(text.substring(begin, i));
-					
-					i = find(text, i + 1, '\n');
+
+					int m = i;
+					i = find(text, i + 2, '\n');
+
+					for (int j = 0; j < i - m; j++) //填空格，保持文本中每个字符的位置不变
+						buf.append(' ');
+
 					begin = i; //单行注释结尾的回车不需要跳过，保留，否则很多跟在代码后的注释会导致正常的回车也没有了
 					
 					if (i < 0) break;
@@ -43,7 +48,12 @@ public class Text
 				{
 					buf.append(text.substring(begin, i));
 
+					int m = i;
 					i = find(text, i + 2, "*/");
+
+					for (int j = 0; j < i - m; j++) //填空格，保持文本中每个字符的位置不变
+						buf.append(' ');
+
 					begin = i < 0 ? i : i + 2;
 					
 					if (i < 0)  break;

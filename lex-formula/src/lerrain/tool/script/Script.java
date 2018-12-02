@@ -46,6 +46,7 @@
  */
 package lerrain.tool.script;
 
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 import lerrain.tool.formula.Factors;
@@ -139,6 +140,8 @@ public class Script extends Code
 
 	public static boolean DEBUG				= false;
 
+	private static Class<Function> interceptor;
+
 	/**
 	 * 如果是最外层，那么遇到return不能直接把Result(return)对象返回，需要把他的真实值返回。
 	 * 1. 非最外层，直接上抛
@@ -148,6 +151,7 @@ public class Script extends Code
 	boolean main = true;
 	
 	List<Code> codeList = new ArrayList();
+
 	Code code;
 
 	public Script(Words ws)
@@ -229,10 +233,17 @@ public class Script extends Code
 		return r;
 	}
 
-	public void markBreakPoint(int pos)
+	public int[] markBreakPoint(int pos)
 	{
 		for (Code f : codeList)
-			f.markBreakPoint(pos);
+		{
+			int[] res = f.markBreakPoint(pos);
+
+			if (res != null)
+				return res;
+		}
+
+		return null;
 	}
 	
 	public String toText(String space)
@@ -278,4 +289,24 @@ public class Script extends Code
 	{
 		FUNCTIONS.put(name, f);
 	}
+
+//	public static void setFunctionInterceptor(Class<Function> interceptor)
+//	{
+//		Script.interceptor = interceptor;
+//	}
+//
+//	public static Function functionInterceptorOf(Function src)
+//	{
+//		if (interceptor == null)
+//			return src;
+//
+//		try
+//		{
+//			return interceptor.getConstructor(new Class[]{Function.class}).newInstance(new Object[]{src});
+//		}
+//		catch (Exception e)
+//		{
+//			return src;
+//		}
+//	}
 }

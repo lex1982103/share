@@ -176,6 +176,11 @@ public class Words implements Serializable
 		return pos >= words.get(from).e && pos < end;
 	}
 
+	public int[] range()
+	{
+		return new int[] {words.get(from).e, end};
+	}
+
 	public int find(int pos)
 	{
 		if (!isInWords(pos))

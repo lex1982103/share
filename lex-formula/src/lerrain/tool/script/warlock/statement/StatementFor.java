@@ -52,12 +52,19 @@ public class StatementFor extends Code
 		}
 	}
 
-	public void markBreakPoint(int pos)
+	public int[] markBreakPoint(int pos)
 	{
 		if (fc.isPointOn(pos))
-			fc.markBreakPoint(pos);
-		else
-			super.markBreakPoint(pos);
+			return fc.markBreakPoint(pos);
+
+		if (f1 != null && f1.isPointOn(pos))
+			return f1.markBreakPoint(pos);
+		if (f2 != null && f2.isPointOn(pos))
+			return f2.markBreakPoint(pos);
+		if (f3 != null && f3.isPointOn(pos))
+			return f3.markBreakPoint(pos);
+
+		return super.markBreakPoint(pos);
 	}
 
 	public Object run(Factors factors)

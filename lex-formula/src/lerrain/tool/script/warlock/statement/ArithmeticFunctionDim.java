@@ -46,6 +46,15 @@ public class ArithmeticFunctionDim extends Code implements Function
 		return "DIM FUNCTION";
 	}
 
+	public String toString()
+	{
+		String str = null;
+		if (param != null) for (String p : param)
+			str = str == null ? p : str + "," + p;
+
+		return "(" + str + ") => {...}";
+	}
+
 	public Object run(Object[] v, Factors p)
 	{
 		Stack stack = new Stack(p);

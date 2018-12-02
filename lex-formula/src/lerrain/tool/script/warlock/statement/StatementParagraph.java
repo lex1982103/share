@@ -25,12 +25,12 @@ public class StatementParagraph extends Code
 		c = new Script(ws.cut(i + 1, r));
 	}
 
-	public void markBreakPoint(int pos)
+	public int[] markBreakPoint(int pos)
 	{
 		if (c.isPointOn(pos))
-			c.markBreakPoint(pos);
-		else
-			super.markBreakPoint(pos);
+			return c.markBreakPoint(pos);
+
+		return super.markBreakPoint(pos);
 	}
 
 	public Object run(Factors factors)

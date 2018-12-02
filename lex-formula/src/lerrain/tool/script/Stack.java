@@ -120,8 +120,14 @@ public class Stack implements Factors
 		return this.getStackMap().toString();
 	}
 
-	public void next(Factors factors)
+	public Map getHeap()
 	{
+		return heap;
+	}
+
+	public Factors getRoot()
+	{
+		return root;
 	}
 
 	public int getDebugging()

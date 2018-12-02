@@ -44,6 +44,16 @@ public class StatementSynch extends Code
 		}
 	}
 
+	public int[] markBreakPoint(int pos)
+	{
+		if (code.isPointOn(pos))
+			return code.markBreakPoint(pos);
+		else if (pre != null && pre.isPointOn(pos))
+			return pre.markBreakPoint(pos);
+
+		return super.markBreakPoint(pos);
+	}
+
 	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("SYNCH (");

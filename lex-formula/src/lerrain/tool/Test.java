@@ -19,7 +19,7 @@ public class Test
 	public static void main(String[] s)
 	{
 		Script script = Script.scriptOf("var x = 1; var y = 2; for (var i = 0; i < 10; i++) { y += x; print(y); }");
-		script.markBreakPoint(57);
+		script.markBreakPoint(40);
 
 		final Stack stack = new Stack();
 		stack.setBreakListener(new Stack.BreakListener()

@@ -1,5 +1,6 @@
 package lerrain.tool.script.warlock.analyse;
 
+import lerrain.tool.script.Script;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.statement.*;

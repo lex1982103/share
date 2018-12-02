@@ -31,12 +31,14 @@ public class StatementThread extends Code
 		code = new Script(ws.cut(left + 1, right));
 	}
 
-	public void markBreakPoint(int pos)
+	public int[] markBreakPoint(int pos)
 	{
 		if (code.isPointOn(pos))
-			code.markBreakPoint(pos);
-		else
-			super.markBreakPoint(pos);
+			return code.markBreakPoint(pos);
+		else if (pre != null && pre.isPointOn(pos))
+			return pre.markBreakPoint(pos);
+
+		return super.markBreakPoint(pos);
 	}
 
 	public Object run(final Factors factors)

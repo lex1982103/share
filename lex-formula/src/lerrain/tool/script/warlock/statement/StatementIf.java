@@ -81,14 +81,16 @@ public class StatementIf extends Code
 		return -1;
 	}
 
-	public void markBreakPoint(int pos)
+	public int[] markBreakPoint(int pos)
 	{
-		if (yes.isPointOn(pos))
-			yes.markBreakPoint(pos);
+		if (c.isPointOn(pos))
+			return c.markBreakPoint(pos);
+		else if (yes.isPointOn(pos))
+			return yes.markBreakPoint(pos);
 		else if (no != null && no.isPointOn(pos))
-			no.markBreakPoint(pos);
-		else
-			super.markBreakPoint(pos);
+			return no.markBreakPoint(pos);
+
+		return super.markBreakPoint(pos);
 	}
 
 	public Object run(Factors factors)

@@ -86,69 +86,11 @@ public class ArithmeticFunction extends Code
 		
 		//内置函数，参数不直接运算
 		fs = (Function)Script.FUNCTIONS.get(name);
+	}
 
-//		if ("case".equals(name))
-//			fs = new FunctionCase();
-//		else if ("round".equals(name))
-//			fs = new FunctionRound();
-//		else if ("ceil".equals(name))
-//			fs = new FunctionCeil();
-//		else if ("floor".equals(name))
-//			fs = new FunctionFloor();
-//		else if ("format".equals(name))
-//			fs = new FunctionFormat();
-//		else if ("array".equals(name))
-//			fs = new FunctionArray();
-//		else if ("min".equals(name))
-//			fs = new FunctionMin();
-//		else if ("max".equals(name))
-//			fs = new FunctionMax();
-//		else if ("pow".equals(name))
-//			fs = new FunctionPow();
-//		else if ("size".equals(name))
-//			fs = new FunctionSize();
-//		else if ("str_begin".equals(name))
-//			fs = new FunctionStrBegin();
-//		else if ("str_end".equals(name))
-//			fs = new FunctionStrEnd();
-//		else if ("str_index".equals(name))
-//			fs = new FunctionStrIndex();
-//		else if ("call".equals(name))
-//			fs = new FunctionCall();
-//		else if ("print".equals(name))
-//			fs = new FunctionPrint();
-//		else if ("fill".equals(name))
-//			fs = new FunctionFill();
-//		else if ("sum".equals(name))
-//			fs = new FunctionSum();
-//		else if ("val".equals(name))
-//			fs = new FunctionVal();
-//		else if ("find".equals(name))
-//			fs = new FunctionFind();
-//		else if ("str".equals(name))
-//			fs = new FunctionStr();
-//		else if ("str_split".equals(name))
-//			fs = new FunctionStrSplit();
-//		else if ("str_len".equals(name))
-//			fs = new FunctionStrLen();
-//		else if ("str_right".equals(name))
-//			fs = new FunctionStrRight();
-//		else if ("str_trim".equals(name))
-//			fs = new FunctionStrTrim();
-//		else if ("str_replace".equals(name))
-//			fs = new FunctionStrReplace();
-//		else if ("random".equals(name))
-//			fs = new FunctionRandom();
-//		else if ("post".equals(name))
-//			fs = new FunctionPost();
-//		else if ("time".equals(name))
-//			fs = new FunctionTime();
-//		else if ("timestr".equals(name))
-//			fs = new FunctionTimeStr();
-//		else if ("num".equals(name))
-//			fs = new FunctionNum();
-//		else if ("sleep".equals(name))
-//			fs = new FunctionSleep();
+	public String toString()
+	{
+		return name + "(...) {...}";
 	}
 
 	public Object run(Factors factors)

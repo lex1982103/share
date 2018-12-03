@@ -19,7 +19,7 @@ public class StatementIf extends Code
 
 		int left = 1; //条件左括号的位置
 		int right = Syntax.findRightBrace(ws, left + 1);
-		c = Expression.expressionOf(ws.cut(left + 1, right));
+		c = new StatementExpression(ws.cut(left + 1, right));
 		
 		left = right + 1; 
 		int type1 = ws.getType(left);

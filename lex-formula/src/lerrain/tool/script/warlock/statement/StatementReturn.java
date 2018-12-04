@@ -23,7 +23,7 @@ public class StatementReturn extends Code
 	{
 		super.debug(factors);
 
-		return Interrupt.interruptOf(Interrupt.RETURN, r == null ? null : r.run(factors));
+		return Interrupt.interruptOf(this, Interrupt.RETURN, r == null ? null : r.run(factors));
 	}
 
 	public String toText(String space, boolean line)

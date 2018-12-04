@@ -18,7 +18,7 @@ public class StatementBreak extends Code
 	{
 		super.debug(factors);
 
-		return Interrupt.interruptOf(Interrupt.BREAK);
+		return Interrupt.interruptOf(this, Interrupt.BREAK);
 	}
 
 	public String toText(String space, boolean line)

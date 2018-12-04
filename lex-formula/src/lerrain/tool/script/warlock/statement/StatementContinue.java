@@ -18,7 +18,7 @@ public class StatementContinue extends Code
 	{
 		super.debug(factors);
 
-		return Interrupt.interruptOf(Interrupt.CONTINUE);
+		return Interrupt.interruptOf(this, Interrupt.CONTINUE);
 	}
 
 	public String toText(String space, boolean line)

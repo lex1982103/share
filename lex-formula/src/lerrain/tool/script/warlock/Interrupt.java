@@ -10,14 +10,17 @@ public class Interrupt
 	int type;
 	
 	Object value;
+
+	Code code;
 	
-	public Interrupt(int type)
+	public Interrupt(Code code, int type)
 	{
-		this(type, null);
+		this(code, type, null);
 	}
 	
-	public Interrupt(int type, Object value)
+	public Interrupt(Code code, int type, Object value)
 	{
+		this.code = code;
 		this.type = type;
 		this.value = value;
 	}
@@ -42,14 +45,14 @@ public class Interrupt
 		return ((Interrupt)v).value;
 	}
 	
-	public static Interrupt interruptOf(int type, Object v)
+	public static Interrupt interruptOf(Code code, int type, Object v)
 	{
-		return new Interrupt(type, v);
+		return new Interrupt(code, type, v);
 	}
 	
-	public static Interrupt interruptOf(int type)
+	public static Interrupt interruptOf(Code code, int type)
 	{
-		return interruptOf(type, null);
+		return interruptOf(code, type, null);
 	}
 	
 	public static boolean isMatch(Object v, int type)

@@ -62,20 +62,7 @@ public abstract class Code implements Formula
 			Stack.BreakListener listener = stack.getBreakListener();
 
 			if ((this.isBreakPoint() || stack.getDebugging() == Stack.DEBUG_LINE_BY_LINE) && listener != null)
-			{
-				synchronized (listener)
-				{
-					listener.onBreak(this, stack);
-
-					try
-					{
-						listener.wait();
-					}
-					catch (InterruptedException e)
-					{
-					}
-				}
-			}
+				listener.onBreak(this, stack);
 		}
 	}
 

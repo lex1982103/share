@@ -52,7 +52,7 @@ public class ArithmeticFunctionDim extends Code implements Function
 		if (param != null) for (String p : param)
 			str = str == null ? p : str + "," + p;
 
-		return "(" + str + ") => {...}";
+		return "function(" + str + ")";
 	}
 
 	public Object run(Object[] v, Factors p)

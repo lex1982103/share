@@ -93,13 +93,10 @@ public class ServiceLog
 
         public void write(byte b[], int off, int len)
         {
-            if (listener != null)
-                listener.onMessage(b, off, len);
-
             if (OUT_SYSTEM && ps != null)
                 ps.write(b, off, len);
 
-            if (OUT_FILE) synchronized (list)
+            synchronized (list)
             {
                 if (list.size() > 1000000)
                     list.clear();
@@ -149,14 +146,36 @@ public class ServiceLog
 
                 if (pack.size() > 0)
                 {
-                    try (FileOutputStream logFile = new FileOutputStream(path + "-" + Common.getString(new Date()) + ".log", true))
+                    if (OUT_FILE)
                     {
-                        for (LogInfo inf : pack)
-                            logFile.write(inf.buf, inf.off, inf.len);
+                        try (FileOutputStream logFile = new FileOutputStream(path + "-" + Common.getString(new Date()) + ".log", true))
+                        {
+                            for (LogInfo inf : pack)
+                            {
+                                logFile.write(inf.buf, inf.off, inf.len);
+                                if (listener != null)
+                                    listener.onMessage(inf.buf, inf.off, inf.len);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
-                    catch (Exception e)
+
+                    if (listener != null)
                     {
-                        e.printStackTrace();
+                        try
+                        {
+                            for (LogInfo inf : pack)
+                            {
+                                listener.onMessage(inf.buf, inf.off, inf.len);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
 
                     try

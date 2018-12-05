@@ -12,9 +12,9 @@ import java.util.List;
 
 public abstract class Code implements Formula
 {
-	Words words;
+	transient Words words;
 
-	int pos1, pos2;
+	transient int pos1, pos2;
 
 	boolean breakPoint = false;
 

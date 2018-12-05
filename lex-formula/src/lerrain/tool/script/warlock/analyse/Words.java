@@ -209,6 +209,23 @@ public class Words implements Serializable
 
 		return ws;
 	}
+
+	/**
+	 * 最小化内存占用的副本
+	 * @return
+	 */
+	public Words less()
+	{
+		String str = scriptStr.substring(from == 0 ? 0 : getLocation( - 1), end);
+
+		Words ws = new Words(null, str);
+		for (int i = 0; i < num; i++)
+			ws.words.add(words.get(from + i));
+		ws.num = num;
+		ws.end = str.length();
+
+		return ws;
+	}
 	
 	public Words cut(int from)
 	{

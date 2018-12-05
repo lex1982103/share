@@ -37,12 +37,13 @@ public class Text
 					int m = i;
 					i = find(text, i + 2, '\n');
 
-					for (int j = 0; j < i - m; j++) //填空格，保持文本中每个字符的位置不变
+					if (i < 0) //没找到换行，后面全都是注释
+						i = len;
+
+					for (int j = m; j < i; j++) //填空格，保持文本中每个字符的位置不变
 						buf.append(' ');
 
 					begin = i; //单行注释结尾的回车不需要跳过，保留，否则很多跟在代码后的注释会导致正常的回车也没有了
-					
-					if (i < 0) break;
 				}
 				else if (c1 == '*') //如果是/*的注释
 				{
@@ -51,14 +52,16 @@ public class Text
 					int m = i;
 					i = find(text, i + 2, "*/");
 
-					for (int j = 0; j < i - m; j++) //填空格，保持文本中每个字符的位置不变
+					if (i < 0)
+						i = len;
+					else
+						i += 2; //注释的结尾符号是两个字节，全部都要跳过，只靠循环的i++还差一个，这里要补一下。
+
+					for (int j = m; j < i; j++) //填空格，保持文本中每个字符的位置不变
 						buf.append(' ');
 
-					begin = i < 0 ? i : i + 2;
-					
-					if (i < 0)  break;
-
-					i++; //注释的结尾符号是两个字节，全部都要跳过，只靠循环的i++还差一个，这里要补一下。
+					begin = i;
+					i--; //注释结尾符后面可能直接跟着有效字符，退一位，而行注释结尾符是回车，跳过无所谓
 				}
 			}
 			else if (c == '\"' || c == '\'') //如果是字符串，或单引号圈起来的
@@ -67,7 +70,7 @@ public class Text
 			}
 		}
 
-		if (begin >= 0)
+		if (begin >= 0 && begin < len)
 			buf.append(text.substring(begin));
 		
 		return buf.toString();

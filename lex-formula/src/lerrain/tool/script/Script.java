@@ -140,7 +140,7 @@ public class Script extends Code
 
 	public static boolean DEBUG				= false;
 
-	private static Class<Function> interceptor;
+	public static boolean SERIALIZABLE		= false;
 
 	/**
 	 * 如果是最外层，那么遇到return不能直接把Result(return)对象返回，需要把他的真实值返回。

@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.analyse;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -494,5 +495,38 @@ public class Words implements Serializable
 	private static boolean isNumber(char c)
 	{
 		return c >= '0' && c <= '9';
+	}
+
+	public String hash()
+	{
+		MessageDigest messageDigest = null;
+		try
+		{
+			messageDigest = MessageDigest.getInstance("MD5");
+			messageDigest.reset();
+			messageDigest.update(scriptStr.getBytes("UTF-8"));
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("md5 exception", e);
+		}
+
+		byte[] byteArray = messageDigest.digest();
+
+		StringBuffer md5StrBuff = new StringBuffer();
+		for (int i = 0; i < byteArray.length; i++)
+		{
+			String s = Integer.toHexString(0xFF & byteArray[i]);
+			if (s.length() == 1)
+				md5StrBuff.append("0");
+			md5StrBuff.append(s);
+		}
+
+		md5StrBuff.append('&');
+		md5StrBuff.append(from);
+		md5StrBuff.append('&');
+		md5StrBuff.append(num);
+
+		return md5StrBuff.toString();
 	}
 }

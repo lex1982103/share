@@ -2,6 +2,7 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.formula.FunctionCloneable;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
@@ -9,14 +10,18 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticFunctionDim extends Code implements Function
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+
+public class ArithmeticFunctionDim extends Code implements Function, FunctionCloneable
 {
 	String[] param;
 
-	transient Script content;
+	Script content;
 
-	Words copy; //序列化或复制使用，content很大，恢复的时候用copy恢复，但内部的content最初的已经不是同一个对象，里面的格式和引用都不同了
-	
+	String functionId;
+
 	public ArithmeticFunctionDim(Words ws, int i)
 	{
 		super(ws, i);
@@ -37,10 +42,13 @@ public class ArithmeticFunctionDim extends Code implements Function
 		r = Syntax.findRightBrace(ws, l + 1);
 
 		Words words = ws.cut(l + 1, r);
-		content = new Script(words); //这个要用来debug定位，不能用最小化的words副本
+		content = new Script(words);
 
-		//这个用来序列化stack的时候恢复
-		copy = words.less();
+		if (Script.SERIALIZABLE)
+		{
+			functionId = words.hash();
+			Script.FUNCTIONS.put(functionId, this);
+		}
 	}
 
 	public Object run(Factors factors)
@@ -64,16 +72,6 @@ public class ArithmeticFunctionDim extends Code implements Function
 
 	public Object run(Object[] v, Factors p)
 	{
-		//复制或序列化出来的content为null
-		if (content == null) synchronized(copy)
-		{
-			//锁加在外面影响效率，加在里面有很小的可能重复执行，这里在判断一下，这个被执行到的情况很少
-			if (content == null)
-			{
-				content = new Script(copy);
-			}
-		}
-
 		Stack stack = new Stack(p);
 
 		for (int i = 0; i < param.length && i < v.length; i++)
@@ -88,5 +86,31 @@ public class ArithmeticFunctionDim extends Code implements Function
 			result = Interrupt.getValue(result);
 		
 		return result;
+	}
+
+	private Object writeReplace()
+	{
+		return new SerializedFunction(functionId);
+	}
+
+	@Override
+	public String clone()
+	{
+		return functionId;
+	}
+
+	public static class SerializedFunction implements Serializable
+	{
+		String functionId;
+
+		public SerializedFunction(String functionId)
+		{
+			this.functionId = functionId;
+		}
+
+		private Object readResolve()
+		{
+			return Script.FUNCTIONS.get(functionId);
+		}
 	}
 }

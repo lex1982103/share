@@ -18,7 +18,9 @@ public class Stack implements Factors
 
 	BreakListener breakListener;
 
-	int debugging = DEBUG_RUNNING;
+	int debug = DEBUG_RUNNING;
+
+	Code current;
 
 	public Stack()
 	{
@@ -26,6 +28,9 @@ public class Stack implements Factors
 	
 	public Stack(Factors root)
 	{
+		if (root instanceof Stack)
+			debug = ((Stack)root).debug;
+
 		this.root = root;
 	}
 
@@ -130,9 +135,9 @@ public class Stack implements Factors
 		return root;
 	}
 
-	public int getDebugging()
+	public int getDebug()
 	{
-		return debugging;
+		return debug;
 	}
 
 	public void setBreakListener(BreakListener breakListener)

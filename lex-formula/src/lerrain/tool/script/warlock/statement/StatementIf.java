@@ -81,7 +81,7 @@ public class StatementIf extends Code
 		return -1;
 	}
 
-	public int[] markBreakPoint(int pos)
+	public Code markBreakPoint(int pos)
 	{
 		if (c.isPointOn(pos))
 			return c.markBreakPoint(pos);

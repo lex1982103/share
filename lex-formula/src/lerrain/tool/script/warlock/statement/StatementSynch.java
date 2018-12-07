@@ -44,7 +44,7 @@ public class StatementSynch extends Code
 		}
 	}
 
-	public int[] markBreakPoint(int pos)
+	public Code markBreakPoint(int pos)
 	{
 		if (code.isPointOn(pos))
 			return code.markBreakPoint(pos);

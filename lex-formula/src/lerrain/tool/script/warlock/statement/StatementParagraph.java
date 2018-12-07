@@ -25,7 +25,7 @@ public class StatementParagraph extends Code
 		c = new Script(ws.cut(i + 1, r));
 	}
 
-	public int[] markBreakPoint(int pos)
+	public Code markBreakPoint(int pos)
 	{
 		if (c.isPointOn(pos))
 			return c.markBreakPoint(pos);

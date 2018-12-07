@@ -43,12 +43,17 @@ public abstract class Code implements Formula
 		return words.isInWords(pos);
 	}
 
-	public int[] markBreakPoint(int pos)
+	public int[] getRange()
+	{
+		return words.range();
+	}
+
+	public Code markBreakPoint(int pos)
 	{
 		if (isPointOn(pos))
 		{
 			setBreakPoint(true);
-			return words.range();
+			return this;
 		}
 
 		return null;

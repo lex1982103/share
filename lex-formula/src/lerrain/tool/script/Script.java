@@ -233,11 +233,11 @@ public class Script extends Code
 		return r;
 	}
 
-	public int[] markBreakPoint(int pos)
+	public Code markBreakPoint(int pos)
 	{
 		for (Code f : codeList)
 		{
-			int[] res = f.markBreakPoint(pos);
+			Code res = f.markBreakPoint(pos);
 
 			if (res != null)
 				return res;

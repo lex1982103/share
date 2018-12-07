@@ -52,7 +52,7 @@ public class StatementFor extends Code
 		}
 	}
 
-	public int[] markBreakPoint(int pos)
+	public Code markBreakPoint(int pos)
 	{
 		if (fc.isPointOn(pos))
 			return fc.markBreakPoint(pos);

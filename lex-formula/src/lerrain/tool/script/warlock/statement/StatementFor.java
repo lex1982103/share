@@ -67,9 +67,23 @@ public class StatementFor extends Code
 		return super.markBreakPoint(pos);
 	}
 
+	public void clearBreakPoints()
+	{
+		fc.clearBreakPoints();
+
+		if (f1 != null)
+			f1.clearBreakPoints();
+		if (f2 != null)
+			f2.clearBreakPoints();
+		if (f3 != null)
+			f3.clearBreakPoints();
+
+		super.clearBreakPoints();
+	}
+
 	public Object run(Factors factors)
 	{
-		super.debug(factors);
+		super.debug((Stack)factors);
 
 		Stack stack = new Stack(factors);
 		
@@ -84,13 +98,18 @@ public class StatementFor extends Code
 				for (Object v : (Object[])value)
 				{
 					ref.let(stack, v);
-					
-					Object result = fc.run(stack);
-					
-					if (Interrupt.isMatch(result, Interrupt.BREAK))
+
+					try
+					{
+						fc.run(stack);
+					}
+					catch (Interrupt.Break e)
+					{
 						break;
-					if (Interrupt.isMatch(result, Interrupt.RETURN))// || Interrupt.isMatch(result, Interrupt.THROW))
-						return result;
+					}
+					catch (Interrupt.Continue e)
+					{
+					}
 				}
 			}
 			else if (value instanceof Collection)
@@ -98,39 +117,37 @@ public class StatementFor extends Code
 				for (Object v : (Collection<?>)value)
 				{
 					ref.let(stack, v);
-					
-					Object result = fc.run(stack);
-					
-					if (Interrupt.isMatch(result, Interrupt.BREAK))
+
+					try
+					{
+						fc.run(stack);
+					}
+					catch (Interrupt.Break e)
+					{
 						break;
-					if (Interrupt.isMatch(result, Interrupt.RETURN))// || Interrupt.isMatch(result, Interrupt.THROW))
-						return result;
+					}
+					catch (Interrupt.Continue e)
+					{
+					}
 				}
 			}
 			else if (value instanceof Map)
 			{
-//				Collection val = null;
-//
-//				if (f1 instanceof ArithmeticColon)
-//				{
-//					ArithmeticColon ac = (ArithmeticColon) f1;
-//					if ("::".equals(ac.getSymbol()))
-//						val = ((Map<?, ?>)value).values();
-//				}
-//
-//				if (val == null)
-//					val = ((Map<?, ?>)value).keySet();
-
 				for (Object v : ((Map<?, ?>)value).keySet())
 				{
 					ref.let(stack, v);
 
-					Object result = fc.run(stack);
-
-					if (Interrupt.isMatch(result, Interrupt.BREAK))
+					try
+					{
+						fc.run(stack);
+					}
+					catch (Interrupt.Break e)
+					{
 						break;
-					if (Interrupt.isMatch(result, Interrupt.RETURN))// || Interrupt.isMatch(result, Interrupt.THROW))
-						return result;
+					}
+					catch (Interrupt.Continue e)
+					{
+					}
 				}
 			}
 		}
@@ -141,13 +158,18 @@ public class StatementFor extends Code
 			
 			while (Value.booleanOf(f2, stack))
 			{
-				Object result = fc.run(stack);
-				
-				if (Interrupt.isMatch(result, Interrupt.BREAK))
+				try
+				{
+					fc.run(stack);
+				}
+				catch (Interrupt.Break e)
+				{
 					break;
-				if (Interrupt.isMatch(result, Interrupt.RETURN))// || Interrupt.isMatch(result, Interrupt.THROW))
-					return result;
-				
+				}
+				catch (Interrupt.Continue e)
+				{
+				}
+
 				f3.run(stack);
 			}
 		}

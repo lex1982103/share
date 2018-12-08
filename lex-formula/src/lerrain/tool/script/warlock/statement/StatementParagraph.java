@@ -33,9 +33,16 @@ public class StatementParagraph extends Code
 		return super.markBreakPoint(pos);
 	}
 
+	public void clearBreakPoints()
+	{
+		c.clearBreakPoints();
+
+		super.clearBreakPoints();
+	}
+
 	public Object run(Factors factors)
 	{
-		super.debug(factors);
+		super.debug((Stack)factors);
 
 		return c.run(new Stack(factors));
 	}

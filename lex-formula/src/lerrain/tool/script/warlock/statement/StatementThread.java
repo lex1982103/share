@@ -41,9 +41,19 @@ public class StatementThread extends Code
 		return super.markBreakPoint(pos);
 	}
 
+	public void clearBreakPoints()
+	{
+		code.clearBreakPoints();
+
+		if (pre != null)
+			pre.clearBreakPoints();
+
+		super.clearBreakPoints();
+	}
+
 	public Object run(final Factors factors)
 	{
-		super.debug(factors);
+		super.debug((Stack)factors);
 
 		final Stack stack = new Stack(factors);
 		Object r = pre == null ? null : pre.run(stack);

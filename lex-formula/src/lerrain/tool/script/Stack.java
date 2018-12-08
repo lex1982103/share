@@ -8,9 +8,10 @@ import lerrain.tool.script.warlock.Code;
 
 public class Stack implements Factors
 {
-	public static final int DEBUG_RUNNING = 0;
-	public static final int DEBUG_LINE_BY_LINE = 1;
-	public static final int DEBUG_SKIP = 2;
+	public static final int RUNNING				= 0;
+	public static final int DEBUG_BREAK_POINT	= 1;
+	public static final int DEBUG_STEP_INTO		= 2;
+	public static final int DEBUG_STEP_OVER		= 3;
 
 	Factors root;
 	
@@ -18,9 +19,9 @@ public class Stack implements Factors
 
 	BreakListener breakListener;
 
-	int debug = DEBUG_RUNNING;
+	int debug = RUNNING;
 
-	Code current;
+	Code code;
 
 	public Stack()
 	{
@@ -29,7 +30,12 @@ public class Stack implements Factors
 	public Stack(Factors root)
 	{
 		if (root instanceof Stack)
-			debug = ((Stack)root).debug;
+		{
+			debug = ((Stack) root).debug;
+
+			if (debug == DEBUG_STEP_OVER) //进了一层，既然是stepover，新的层里即直接略过
+				debug = DEBUG_BREAK_POINT;
+		}
 
 		this.root = root;
 	}
@@ -140,6 +146,21 @@ public class Stack implements Factors
 		return debug;
 	}
 
+	public void setDebug(int debug)
+	{
+		this.debug = debug;
+	}
+
+	public Code getCode()
+	{
+		return code;
+	}
+
+	public void setCode(Code code)
+	{
+		this.code = code;
+	}
+
 	public void setBreakListener(BreakListener breakListener)
 	{
 		this.breakListener = breakListener;
@@ -155,6 +176,12 @@ public class Stack implements Factors
 
 	public static interface BreakListener
 	{
-		public void onBreak(Code code, Factors f);
+		public void onBreak(Code code, Stack s);
+
+		/**
+		 * return语句时触发，主要用于定位return的位置
+		 * 没有return正常执行结束以最后一行的值返回的情况下不会触发
+		 */
+		public void onReturn(Code code, Stack s, Object val);
 	}
 }

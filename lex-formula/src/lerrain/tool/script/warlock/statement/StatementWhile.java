@@ -44,20 +44,35 @@ public class StatementWhile extends Code
 		return super.markBreakPoint(pos);
 	}
 
+	public void clearBreakPoints()
+	{
+		fc.clearBreakPoints();
+
+		if (c != null)
+			c.clearBreakPoints();
+
+		super.clearBreakPoints();
+	}
+
 	public Object run(Factors factors)
 	{
-		super.debug(factors);
+		super.debug((Stack)factors);
 
 		Stack stack = new Stack(factors);
 		
 		while (Value.booleanOf(c, stack))
 		{
-			Object result = fc.run(stack);
-			
-			if (Interrupt.isMatch(result, Interrupt.BREAK))
+			try
+			{
+				fc.run(stack);
+			}
+			catch (Interrupt.Break e)
+			{
 				break;
-			if (Interrupt.isMatch(result, Interrupt.RETURN))// || Interrupt.isMatch(result, Interrupt.THROW))
-				return result;
+			}
+			catch (Interrupt.Continue e)
+			{
+			}
 		}
 		
 		return null;

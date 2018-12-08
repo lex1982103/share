@@ -4,15 +4,14 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.FunctionCloneable;
 import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Type;
 
 public class ArithmeticFunctionDim extends Code implements Function, FunctionCloneable
 {
@@ -50,6 +49,19 @@ public class ArithmeticFunctionDim extends Code implements Function, FunctionClo
 			Script.FUNCTIONS.put(functionId, this);
 		}
 	}
+	public Code markBreakPoint(int pos)
+	{
+		if (content.isPointOn(pos))
+			return content.markBreakPoint(pos);
+
+		return super.markBreakPoint(pos);
+	}
+
+	public void clearBreakPoints()
+	{
+		content.clearBreakPoints();
+		super.clearBreakPoints();
+	}
 
 	public Object run(Factors factors)
 	{
@@ -79,13 +91,19 @@ public class ArithmeticFunctionDim extends Code implements Function, FunctionClo
 			stack.declare(param[i]);
 			stack.set(param[i], v[i]);
 		}
-		
-		Object result = content.run(stack);
-		
-		if (Interrupt.isMatch(result, Interrupt.RETURN))
-			result = Interrupt.getValue(result);
-		
-		return result;
+
+		try
+		{
+			return content.run(stack);
+		}
+		catch (Interrupt.Return e)
+		{
+			return e.getValue();
+		}
+		catch (Interrupt e)
+		{
+			throw new ScriptRuntimeException(this, p, "can't break/continue a function, use return");
+		}
 	}
 
 	private Object writeReplace()

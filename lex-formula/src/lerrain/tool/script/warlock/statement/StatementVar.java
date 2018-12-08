@@ -27,7 +27,7 @@ public class StatementVar extends Code
 
 		if (ws.size() > 2)
 		{
-			r = Expression.expressionOf(ws.cut(1));
+			r = new StatementExpression(ws.cut(1));
 			
 			for (int i = 2; i < ws.size(); i++)
 			{
@@ -46,7 +46,7 @@ public class StatementVar extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug(factors);
+		super.debug((Stack)factors);
 
 		for (int i = 0; i < names.size(); i++)
 			((Stack)factors).declare((String)names.get(i));

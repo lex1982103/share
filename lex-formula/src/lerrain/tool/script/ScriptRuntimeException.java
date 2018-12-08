@@ -62,8 +62,8 @@ public class ScriptRuntimeException extends RuntimeException
 
 		try (ByteArrayOutputStream os = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(os))
 		{
-			String funcName = ((Code) code).getScriptName();
-			ps.println("---- Cause in <" + (funcName == null ? "?" : funcName) + "> ----");
+			Object codeTag = ((Code) code).getScriptTag();
+			ps.println("---- Cause in <" + (codeTag == null ? "?" : codeTag) + "> ----");
 
 			String msg;
 			if (this.getCause() instanceof ScriptRuntimeException)

@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.ScriptRuntimeException;
+import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
@@ -63,6 +64,7 @@ public class ArithmeticParentheses extends Code
 						}
 						catch (Exception e)
 						{
+							//这里没必要处理Interrupt，break/continue直接被循环拦截，return不存在抛到try的可能
 						}
 					}
 
@@ -79,6 +81,9 @@ public class ArithmeticParentheses extends Code
 					else
 						params = new Object[]{r};
 				}
+
+				if (factors instanceof Stack)
+					((Stack)factors).setCode(this);
 
 				return val.run(params, factors);
 			}

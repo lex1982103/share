@@ -25,10 +25,16 @@ public class Test
 		stack.setBreakListener(new Stack.BreakListener()
 		{
 			@Override
-			public void onBreak(Code code, Factors f)
+			public void onBreak(Code code, Stack f)
 			{
 				System.out.println("DEBUG: " + code);
 				System.out.println("STACK: " + f);
+			}
+
+			@Override
+			public void onReturn(Code code, Stack f, Object val)
+			{
+
 			}
 		});
 

@@ -55,6 +55,7 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
+import lerrain.tool.script.warlock.statement.StatementExpression;
 
 /**
  * <p>脚本对象</p>
@@ -138,8 +139,6 @@ public class Script extends Code
 
 	public static boolean STACK_MESSAGE		= true;
 
-	public static boolean DEBUG				= false;
-
 	public static boolean SERIALIZABLE		= false;
 
 	/**
@@ -149,10 +148,10 @@ public class Script extends Code
 	 * 3. 最外层的continue break等，直接返回null
 	 */
 	boolean main = true;
-	
-	List<Code> codeList = new ArrayList();
 
-	Code code;
+	boolean express = false;
+
+	List<Code> codeList = new ArrayList();
 
 	public Script(Words ws)
 	{
@@ -166,21 +165,17 @@ public class Script extends Code
 		this.main = main;
 		
 		List line = Syntax.split(ws);
-		if (line.size() == 1)
+
+		Iterator iter = line.iterator();
+		while (iter.hasNext())
 		{
-			code = Syntax.sentenceOf((Words)line.get(0));
-			codeList.add(code);
+			Code code = Syntax.sentenceOf((Words)iter.next());
+			if (code != null) //单纯一个分号的语句会直接返回null
+				codeList.add(code);
 		}
-		else
-		{
-			Iterator iter = line.iterator();
-			while (iter.hasNext())
-			{
-				Code code = Syntax.sentenceOf((Words)iter.next());
-				if (code != null) //单纯一个分号的语句会直接返回null
-					codeList.add(code);
-			}
-		}
+
+		if (line.size() == 1 && codeList.get(0) instanceof StatementExpression)
+			express = true;
 	}
 	
 	public int size()
@@ -190,7 +185,7 @@ public class Script extends Code
 	
 	public Code getSentence(int index)
 	{
-		return (Code)codeList.get(index);
+		return codeList.get(index);
 	}
 
 	/**
@@ -201,35 +196,37 @@ public class Script extends Code
 	{
 		Object r = null;
 		
-		if (code != null)
-		{
-			r = code.run(factors);
-			return r instanceof Interrupt && main ? Interrupt.getValue(r) : r;
-		}
+		if (express && !(factors instanceof Stack)) //只有单行纯表达式才可以不在stack里运行（不可debug运算细节），多行脚本必须在stack运行
+			factors = new Stack(factors);
 		
-		Stack stack = factors instanceof Stack ? (Stack)factors : new Stack(factors);
-		
-		for (Code f : codeList)
+		if (main)
 		{
-			r = f.run(stack);
+			Code f = null;
+			Iterator<Code> iter = codeList.iterator();
 
-			if (r instanceof Interrupt)
+			try
 			{
-				if (!main)
-					return r;
-
-				return ((Interrupt) r).getValue();
-
-//				Interrupt interrupt = (Interrupt)r;
-//				Object with = interrupt.getValue();
-//
-//				if (interrupt.getType() == Interrupt.THROW)
-//					throw new RuntimeException(with == null ? null : with.toString());
-//
-//				return with;
+				while (iter.hasNext())
+				{
+					f = iter.next();
+					r = f.run(factors);
+				}
+			}
+			catch (Interrupt.Return e)
+			{
+				r = e.getValue();
+			}
+			catch (Interrupt e)
+			{
+				throw new ScriptRuntimeException(f, factors, "not in a for/while, can't break or continue");
 			}
 		}
-		
+		else //非最外层，无需拦截break/continue/return，交给外面的代码处理
+		{
+			for (Code f : codeList)
+				r = f.run(factors);
+		}
+
 		return r;
 	}
 
@@ -244,6 +241,12 @@ public class Script extends Code
 		}
 
 		return null;
+	}
+
+	public void clearBreakPoints()
+	{
+		for (Code f : codeList)
+			f.clearBreakPoints();
 	}
 	
 	public String toText(String space)
@@ -277,12 +280,12 @@ public class Script extends Code
 		return new Script(Words.wordsOf(null, text), true);
 	}
 
-	public static Script scriptOf(String name, String text)
+	public static Script scriptOf(Object tag, String text)
 	{
 		if (text == null || "".equals(text.trim()))
 			return null;
 
-		return new Script(Words.wordsOf(name, text), true);
+		return new Script(Words.wordsOf(tag, text), true);
 	}
 
 	public static void addFunction(String name, Function f)

@@ -85,7 +85,7 @@ public class StatementIf extends Code
 	{
 		if (c.isPointOn(pos))
 			return c.markBreakPoint(pos);
-		else if (yes.isPointOn(pos))
+		else if (yes != null && yes.isPointOn(pos))
 			return yes.markBreakPoint(pos);
 		else if (no != null && no.isPointOn(pos))
 			return no.markBreakPoint(pos);
@@ -93,9 +93,21 @@ public class StatementIf extends Code
 		return super.markBreakPoint(pos);
 	}
 
+	public void clearBreakPoints()
+	{
+		c.clearBreakPoints();
+
+		if (yes != null)
+			yes.clearBreakPoints();
+		if (no != null)
+			no.clearBreakPoints();
+
+		super.clearBreakPoints();
+	}
+
 	public Object run(Factors factors)
 	{
-		super.debug(factors);
+		super.debug((Stack)factors);
 
 		boolean r;
 		

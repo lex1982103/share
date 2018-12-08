@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Expression;
@@ -21,9 +22,15 @@ public class StatementReturn extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug(factors);
+		Stack stack = (Stack) factors;
+		super.debug(stack);
 
-		return Interrupt.interruptOf(this, Interrupt.RETURN, r == null ? null : r.run(factors));
+		Object val = r == null ? null : r.run(factors);
+
+		if (stack.getDebug() != Stack.RUNNING && stack.getBreakListener() != null)
+			stack.getBreakListener().onReturn(this, stack, val);
+
+		throw new Interrupt.Return(val);
 	}
 
 	public String toText(String space, boolean line)

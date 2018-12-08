@@ -2,7 +2,6 @@ package lerrain.tool.script.warlock;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -36,8 +35,6 @@ public abstract class Code implements Formula
 		this.pos2 = pos2;
 	}
 
-	public abstract Object run(Factors factors);
-
 	public boolean isPointOn(int pos)
 	{
 		return words.isInWords(pos);
@@ -59,14 +56,19 @@ public abstract class Code implements Formula
 		return null;
 	}
 
-	public void debug(Factors factors)
+	public void clearBreakPoints()
 	{
-		if (Script.DEBUG && factors instanceof Stack)
+		breakPoint = false;
+	}
+
+	//能debug的一定是stack
+	public void debug(Stack stack)
+	{
+		if (stack.getDebug() != Stack.RUNNING)
 		{
-			Stack stack = (Stack)factors;
 			Stack.BreakListener listener = stack.getBreakListener();
 
-			if ((this.isBreakPoint() || stack.getDebugging() == Stack.DEBUG_LINE_BY_LINE) && listener != null)
+			if (listener != null && (this.isBreakPoint() || stack.getDebug() != Stack.DEBUG_BREAK_POINT))
 				listener.onBreak(this, stack);
 		}
 	}
@@ -86,9 +88,9 @@ public abstract class Code implements Formula
 		return words.toString();
 	}
 
-	public String getScriptName()
+	public Object getScriptTag()
 	{
-		return words.getScriptName();
+		return words.getScriptTag();
 	}
 
 	public void printAll(PrintStream ps, String msg)

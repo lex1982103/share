@@ -78,7 +78,7 @@ public class Words implements Serializable
 	int from = 0, num = 0;
 	int end;
 
-	String scriptName;
+	Object scriptTag;
 	String scriptStr;
 
 	private static class Word implements Serializable
@@ -94,22 +94,22 @@ public class Words implements Serializable
 		}
 	}
 
-	public Words(String scriptName, String scriptStr)
+	public Words(Object scriptTag, String scriptStr)
 	{
-		this.scriptName = scriptName;
+		this.scriptTag = scriptTag;
 		this.scriptStr = scriptStr;
 
 		this.end = scriptStr.length();
 	}
 
-	public String getScriptName()
+	public Object getScriptTag()
 	{
-		return scriptName;
+		return scriptTag;
 	}
 
-	public void setScriptName(String scriptName)
+	public void setScriptTag(Object scriptTag)
 	{
-		this.scriptName = scriptName;
+		this.scriptTag = scriptTag;
 	}
 
 	public String getScript()
@@ -201,7 +201,7 @@ public class Words implements Serializable
 	
 	public Words cut(int from, int to)
 	{
-		Words ws = new Words(scriptName, scriptStr);
+		Words ws = new Words(scriptTag, scriptStr);
 		ws.words = this.words;
 		ws.from = this.from + from;
 		ws.num = to - from;
@@ -243,11 +243,11 @@ public class Words implements Serializable
 		return wordsOf(null, text);
 	}
 
-	public static Words wordsOf(String name, String text)
+	public static Words wordsOf(Object tag, String text)
 	{
 		text = Text.cutComment(text);
 		
-		Words ws = new Words(name, text);
+		Words ws = new Words(tag, text);
 		
 		int len = text.length();
 		for (int i = 0; i < len; i++)

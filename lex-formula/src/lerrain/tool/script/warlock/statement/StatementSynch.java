@@ -33,7 +33,7 @@ public class StatementSynch extends Code
 
 	public Object run(final Factors factors)
 	{
-		super.debug(factors);
+		super.debug((Stack)factors);
 
 		final Stack stack = new Stack(factors);
 		Object r = pre == null ? null : pre.run(stack);
@@ -52,6 +52,16 @@ public class StatementSynch extends Code
 			return pre.markBreakPoint(pos);
 
 		return super.markBreakPoint(pos);
+	}
+
+	public void clearBreakPoints()
+	{
+		code.clearBreakPoints();
+
+		if (pre != null)
+			pre.clearBreakPoints();
+
+		super.clearBreakPoints();
 	}
 
 	public String toText(String space, boolean line)

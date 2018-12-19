@@ -471,7 +471,7 @@ public class Words implements Serializable
 		if ("false".equals(word))
 			return FALSE;
 		
-		if (",for,while,if,else,return,continue,break,var,throw,thread,synch,".indexOf("," + word + ",") >= 0)
+		if (",for,while,if,else,return,continue,break,var,throw,thread,synch,function,".indexOf("," + word + ",") >= 0)
 			return KEYWORD;
 		
 		return WORD;

@@ -49,6 +49,7 @@ public class ArithmeticFunctionDim extends Code implements Function, FunctionClo
 			Script.FUNCTIONS.put(functionId, this);
 		}
 	}
+
 	public Code markBreakPoint(int pos)
 	{
 		if (content.isPointOn(pos))

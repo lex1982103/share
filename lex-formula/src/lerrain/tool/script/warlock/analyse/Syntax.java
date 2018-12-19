@@ -68,6 +68,10 @@ public class Syntax
 			{
 				return new StatementSynch(ws);
 			}
+			else if ("function".equals(word))
+			{
+				return new StatementFunction(ws);
+			}
 //			else if ("try".equals(word))
 //			{
 //				return new StatementTry(ws);

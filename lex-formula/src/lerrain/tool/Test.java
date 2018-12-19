@@ -18,6 +18,17 @@ public class Test
 {
 	public static void main(String[] s)
 	{
+		String str = "_version=2.5&_client=2&__MYLOG_UID=bfcc7e5f-cb21-4688-979e-08c738d6ae8f&__MYLOG_SID=879cac2a-9257-4229-938e-b75e811e5b44";
+		Map param = new HashMap();
+		for (String ss : str.split("\\&"))
+		{
+			String[] pp = ss.split("\\=");
+			if (pp.length >= 2)
+				param.put(pp[0], pp[1]);
+		}
+
+		System.out.println(param);
+
 		Script script = Script.scriptOf("var x = 1; var y = 2; for (var i = 0; i < 10; i++) { y += x; print(y); }");
 		script.markBreakPoint(40);
 

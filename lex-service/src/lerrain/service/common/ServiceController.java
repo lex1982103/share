@@ -29,7 +29,17 @@ public class ServiceController
 
         JSONObject res = new JSONObject();
         res.put("result", "fail");
-        res.put("reason", e.getMessage());
+
+        if (e instanceof ServiceException)
+        {
+            ServiceException se = (ServiceException)e;
+            res.put("reason", se.getMessage());
+            res.put("detail", se.getDetail());
+        }
+        else
+        {
+            res.put("reason", e.getMessage());
+        }
 
         return res;
     }

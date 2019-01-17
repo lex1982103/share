@@ -31,7 +31,7 @@ public class ScriptRuntimeException extends RuntimeException
 
 	public ScriptRuntimeException(Code code, Factors factors, Exception e)
 	{
-		super(e);
+		super((e == null ? null : e.getMessage()), e);
 
 		this.code = code;
 		this.factors = factors;
@@ -69,9 +69,9 @@ public class ScriptRuntimeException extends RuntimeException
 			if (this.getCause() instanceof ScriptRuntimeException)
 				msg = "...";
 			else if (this.getCause() != null)
-				msg = "... ==> " + super.getMessage();
+				msg = "... ==> " + super.toString();	// super.getMessage();
 			else
-				msg = super.getMessage();
+				msg = super.toString();		// super.getMessage();
 
 			((Code) code).printAll(ps, msg);
 

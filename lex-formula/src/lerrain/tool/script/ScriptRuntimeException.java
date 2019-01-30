@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class ScriptRuntimeException extends RuntimeException
 {
+    String detailMsg; // 为了承载当前封装的实际异常类相关数据
+
 	Code code;
 
 	Factors factors;
@@ -31,7 +33,8 @@ public class ScriptRuntimeException extends RuntimeException
 
 	public ScriptRuntimeException(Code code, Factors factors, Exception e)
 	{
-		super(e);
+		super((e == null ? null : e.getMessage()), e);
+		detailMsg = (e == null ? null : e.toString());
 
 		this.code = code;
 		this.factors = factors;
@@ -55,10 +58,15 @@ public class ScriptRuntimeException extends RuntimeException
 		return factors;
 	}
 
-	public String toStackString()
+    @Override
+    public String toString() {
+        return (detailMsg == null || "".equals(detailMsg)) ? super.toString() : detailMsg;
+    }
+
+    public String toStackString()
 	{
 		if (!Script.STACK_MESSAGE)
-			return super.toString();
+			return this.toString();
 
 		try (ByteArrayOutputStream os = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(os))
 		{
@@ -69,9 +77,9 @@ public class ScriptRuntimeException extends RuntimeException
 			if (this.getCause() instanceof ScriptRuntimeException)
 				msg = "...";
 			else if (this.getCause() != null)
-				msg = "... ==> " + super.getMessage();
+				msg = "... ==> " + this.toString();	// super.getMessage();
 			else
-				msg = super.getMessage();
+				msg = this.toString();		// super.getMessage();
 
 			((Code) code).printAll(ps, msg);
 

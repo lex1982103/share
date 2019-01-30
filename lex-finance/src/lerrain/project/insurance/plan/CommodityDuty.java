@@ -54,6 +54,8 @@ public class CommodityDuty extends ArrayList
 
             super.add(map);
         }
+
+        inited = true;
     }
 
     public int size()

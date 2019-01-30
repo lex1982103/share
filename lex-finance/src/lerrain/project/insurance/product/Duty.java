@@ -13,6 +13,8 @@ public class Duty
     Formula premium;
     Formula amount;
 
+    Formula condition;
+
     public Formula getAmount()
     {
         return amount;
@@ -51,5 +53,15 @@ public class Duty
     public void setPremium(Formula premium)
     {
         this.premium = premium;
+    }
+
+    public Formula getCondition()
+    {
+        return condition;
+    }
+
+    public void setCondition(Formula condition)
+    {
+        this.condition = condition;
     }
 }

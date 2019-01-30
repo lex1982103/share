@@ -2,6 +2,7 @@ package lerrain.project.insurance.plan;
 
 import lerrain.project.insurance.product.Duty;
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,9 +14,11 @@ import java.util.Map;
  */
 public class CommodityDuty extends ArrayList
 {
-    List dutyList;
+    List<Duty> dutyList;
 
     Factors factors;
+
+    boolean inited = false;
 
     public CommodityDuty(List dutyList, Factors factors)
     {
@@ -27,12 +30,20 @@ public class CommodityDuty extends ArrayList
 
     public Object get(int index)
     {
-        Map map = (Map)super.get(index);
-        if (map == null)
-        {
-            Duty duty = (Duty)dutyList.get(index);
+        if (!inited)
+            this.init();
 
-            map = new HashMap();
+        return super.get(index);
+    }
+
+    private synchronized void init()
+    {
+        if (dutyList != null) for (Duty duty : dutyList)
+        {
+            if (duty.getCondition() != null && !Value.booleanOf(duty.getCondition(), factors))
+                continue;
+
+            Map map = new HashMap();
             map.put("NAME", duty.getName());
             map.put("CODE", duty.getCode());
 
@@ -41,17 +52,22 @@ public class CommodityDuty extends ArrayList
             if (duty.getPremium() != null)
                 map.put("PREMIUM", duty.getPremium().run(factors));
 
-            super.set(index, map);
+            super.add(map);
         }
+    }
 
-        return map;
+    public int size()
+    {
+        if (!inited)
+            this.init();
+
+        return super.size();
     }
 
     public void clear()
     {
         super.clear();
 
-        for (int i=0;i<dutyList.size();i++)
-            super.add(null);
+        inited = false;
     }
 }

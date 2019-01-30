@@ -355,6 +355,7 @@ public class ProductLoader
 				Duty duty = new Duty();
 				duty.setName(n1.getAttribute("name"));
 				duty.setCode(n1.getAttribute("code"));
+				duty.setCondition(Script.scriptOf(n1.getAttribute("condition")));
 				duty.setPremium(Script.scriptOf(n1.getAttribute("premium")));
 				duty.setAmount(Script.scriptOf(n1.getText()));
 				dutyList.add(duty);

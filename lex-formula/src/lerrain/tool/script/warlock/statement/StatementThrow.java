@@ -21,7 +21,7 @@ public class StatementThrow extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 
 		throw new ScriptRuntimeException(this, factors, Value.stringOf(r, factors));
 	}

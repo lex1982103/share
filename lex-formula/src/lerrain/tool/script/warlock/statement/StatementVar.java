@@ -46,7 +46,7 @@ public class StatementVar extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 
 		for (int i = 0; i < names.size(); i++)
 			((Stack)factors).declare((String)names.get(i));

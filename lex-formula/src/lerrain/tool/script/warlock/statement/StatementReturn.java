@@ -22,13 +22,17 @@ public class StatementReturn extends Code
 
 	public Object run(Factors factors)
 	{
-		Stack stack = (Stack) factors;
-		super.debug(stack);
+		super.debug(factors);
 
 		Object val = r == null ? null : r.run(factors);
 
-		if (stack.getDebug() != Stack.RUNNING && stack.getBreakListener() != null)
-			stack.getBreakListener().onReturn(this, stack, val);
+		if (factors instanceof Stack)
+		{
+			Stack stack = (Stack) factors;
+
+			if (stack.getDebug() != Stack.RUNNING && stack.getBreakListener() != null)
+				stack.getBreakListener().onReturn(this, stack, val);
+		}
 
 		throw new Interrupt.Return(val);
 	}

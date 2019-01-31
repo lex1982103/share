@@ -33,7 +33,7 @@ public class StatementSynch extends Code
 
 	public Object run(final Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 
 		final Stack stack = new Stack(factors);
 		Object r = pre == null ? null : pre.run(stack);

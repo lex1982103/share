@@ -42,7 +42,7 @@ public class StatementParagraph extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 
 		return c.run(new Stack(factors));
 	}

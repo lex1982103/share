@@ -107,7 +107,7 @@ public class StatementIf extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 
 		boolean r;
 		

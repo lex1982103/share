@@ -41,7 +41,7 @@ public class StatementFunction extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 
 		((Stack)factors).declare(name, f);
 

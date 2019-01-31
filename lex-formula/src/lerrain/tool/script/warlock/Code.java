@@ -62,8 +62,12 @@ public abstract class Code implements Formula
 	}
 
 	//能debug的一定是stack
-	public void debug(Stack stack)
+	public void debug(Factors factors)
 	{
+		if (!(factors instanceof Stack))
+			return;
+
+		Stack stack = (Stack)factors;
 		if (stack.getDebug() != Stack.RUNNING)
 		{
 			Stack.BreakListener listener = stack.getBreakListener();

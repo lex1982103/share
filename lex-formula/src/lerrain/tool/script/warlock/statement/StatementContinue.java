@@ -17,7 +17,7 @@ public class StatementContinue extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 
 		throw new Interrupt.Continue();
 	}

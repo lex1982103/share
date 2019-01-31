@@ -20,7 +20,7 @@ public class StatementExpression extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 		
 		return exp.run(factors);
 	}

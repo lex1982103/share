@@ -83,7 +83,7 @@ public class StatementFor extends Code
 
 	public Object run(Factors factors)
 	{
-		super.debug((Stack)factors);
+		super.debug(factors);
 
 		Stack stack = new Stack(factors);
 		

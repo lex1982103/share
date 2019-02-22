@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
@@ -136,6 +137,26 @@ public class StatementFor extends Code
 				for (Object v : ((Map<?, ?>)value).keySet())
 				{
 					ref.let(stack, v);
+
+					try
+					{
+						fc.run(stack);
+					}
+					catch (Interrupt.Break e)
+					{
+						break;
+					}
+					catch (Interrupt.Continue e)
+					{
+					}
+				}
+			}
+			else if (value instanceof Iterator)
+			{
+				Iterator iter = (Iterator)value;
+				while (iter.hasNext())
+				{
+					ref.let(stack, iter.next());
 
 					try
 					{

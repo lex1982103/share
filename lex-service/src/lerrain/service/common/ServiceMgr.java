@@ -28,6 +28,8 @@ public class ServiceMgr
 
     Map<String, Servers> map = new HashMap<>();
 
+    ServiceListener listener;
+
     public void reset(Map<String, Object> json)
     {
         for (Map.Entry<String, Object> e : json.entrySet())
@@ -139,26 +141,36 @@ public class ServiceMgr
     private String reqStr(Servers servers, Client client, String loc, Object param)
     {
         long t = System.currentTimeMillis();
+        Object passport = null;
 
         try
         {
+            if (listener != null)
+                passport = listener.onBegin(client, loc);
+
             client.post++;
 
             String req = param == null ? null : param.toString();
             String res = client.client.req(loc, req);
 
-            long t1 = System.currentTimeMillis() - t;
-            client.recTime((int)t1);
+            int t1 = (int)(System.currentTimeMillis() - t);
+            client.recTime(t1);
 
             if (servers.level == 1)
                 Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
             else if (servers.level == 2)
                 Log.info("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
 
+            if (listener != null)
+                listener.onSucc(passport, t1);
+
             return res;
         }
         catch (Exception e)
         {
+            if (listener != null)
+                listener.onFail(passport, e);
+
             client.fail++;
 
             Log.error("request: " + servers.name + "/" + loc + " -- " + param, e);
@@ -208,6 +220,16 @@ public class ServiceMgr
                 c.totalTime = 0;
             }
         }
+    }
+
+    public ServiceListener getListener()
+    {
+        return listener;
+    }
+
+    public void setListener(ServiceListener listener)
+    {
+        this.listener = listener;
     }
 
     class JSONEncoder implements Encoder
@@ -269,7 +291,9 @@ public class ServiceMgr
             for (int i = 0; i < url.length; i++)
             {
                 clients[i] = new Client();
-                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, url[i].trim());
+                clients[i].index = i;
+                clients[i].url = Common.trimStringOf(url[i]);
+                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
             }
         }
 
@@ -317,6 +341,11 @@ public class ServiceMgr
                 };
             }
         }
+
+        public String getName()
+        {
+            return name;
+        }
     }
 
     public int hash(String key)
@@ -326,7 +355,13 @@ public class ServiceMgr
 
     public static class Client
     {
+        Servers servers;
+
         ServiceClient client;
+
+        String url;
+
+        int index;
 
         int post;
         int fail;
@@ -343,10 +378,34 @@ public class ServiceMgr
 
             totalTime += t;
         }
+
+        public String getUrl()
+        {
+            return url;
+        }
+
+        public int getIndex()
+        {
+            return index;
+        }
+
+        public Servers getServers()
+        {
+            return servers;
+        }
     }
 
     public static interface ServicePicker
     {
         public int getIndex(Object req);
+    }
+
+    public static interface ServiceListener
+    {
+        public Object onBegin(Client client, String loc);
+
+        public void onSucc(Object passport, int time);
+
+        public void onFail(Object passport, Exception e);
     }
 }

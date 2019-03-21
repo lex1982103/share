@@ -162,7 +162,7 @@ public abstract class Code implements Formula
 
 	public boolean isInt(Object v)
 	{
-		return (v instanceof Integer) || (v instanceof Long) || (v instanceof Character);
+		return (v instanceof Integer) || (v instanceof Character);
 	}
 
 	public boolean isLong(Object v)

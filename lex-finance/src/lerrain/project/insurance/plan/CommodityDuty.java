@@ -48,9 +48,28 @@ public class CommodityDuty extends ArrayList
             map.put("CODE", duty.getCode());
 
             if (duty.getAmount() != null)
-                map.put("AMOUNT", duty.getAmount().run(factors));
+            {
+                try
+                {
+                    map.put("AMOUNT", duty.getAmount().run(factors));
+                }
+                catch (Exception e)
+                {
+                    map.put("AMOUNT", null);
+                }
+            }
+
             if (duty.getPremium() != null)
-                map.put("PREMIUM", duty.getPremium().run(factors));
+            {
+                try
+                {
+                    map.put("PREMIUM", duty.getPremium().run(factors));
+                }
+                catch (Exception e)
+                {
+                    map.put("PREMIUM", null);
+                }
+            }
 
             super.add(map);
         }

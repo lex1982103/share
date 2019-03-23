@@ -169,7 +169,7 @@ public class ServiceMgr
         catch (Exception e)
         {
             if (listener != null)
-                listener.onFail(passport, e);
+                listener.onFail(passport, (int)(System.currentTimeMillis() - t), e);
 
             client.fail++;
 
@@ -178,6 +178,10 @@ public class ServiceMgr
         }
     }
 
+    /**
+     * @deprecated
+     * @return
+     */
     public JSONObject report()
     {
         JSONObject r = new JSONObject();
@@ -290,7 +294,7 @@ public class ServiceMgr
             clients = new Client[url.length];
             for (int i = 0; i < url.length; i++)
             {
-                clients[i] = new Client();
+                clients[i] = new Client(this);
                 clients[i].index = i;
                 clients[i].url = Common.trimStringOf(url[i]);
                 clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
@@ -371,6 +375,11 @@ public class ServiceMgr
         int[] time = new int[1000];
         int pos = time.length - 1;
 
+        public Client(Servers servers)
+        {
+            this.servers = servers;
+        }
+
         public void recTime(int t)
         {
             pos = (pos + 1) % time.length;
@@ -406,6 +415,6 @@ public class ServiceMgr
 
         public void onSucc(Object passport, int time);
 
-        public void onFail(Object passport, Exception e);
+        public void onFail(Object passport, int time, Exception e);
     }
 }

@@ -6,6 +6,7 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -78,7 +79,7 @@ public class ArithmeticApprox extends Code
 			{
 				try
 				{
-					return Double.parseDouble(s1) == Double.parseDouble(s2);
+					return new BigDecimal(s1).compareTo(new BigDecimal(s2)) == 0;
 				}
 				catch (Exception e)
 				{

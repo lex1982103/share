@@ -154,7 +154,7 @@ public class ServiceMgr
             String res = client.client.req(loc, req);
 
             int t1 = (int)(System.currentTimeMillis() - t);
-            client.recTime(t1);
+            client.recTime(loc, t1);
 
             if (servers.level == 1)
                 Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
@@ -203,6 +203,11 @@ public class ServiceMgr
                 for (int i = 0; i < t.length; i++)
                     t[i] = c.time[(c.pos + t.length - i) % t.length];
                 r1.put("time", t);
+
+                String[] uri = new String[c.uri.length];
+                for (int i = 0; i < uri.length; i++)
+                    uri[i] = c.uri[(c.pos + uri.length - i) % uri.length];
+                r1.put("uri", c.uri);
 
                 list.add(r1);
             }
@@ -372,7 +377,9 @@ public class ServiceMgr
 
         long totalTime;
 
-        int[] time = new int[1000];
+        String[] uri = new String[100];
+        int[] time = new int[uri.length * 10];
+
         int pos = time.length - 1;
 
         public Client(Servers servers)
@@ -380,10 +387,15 @@ public class ServiceMgr
             this.servers = servers;
         }
 
-        public void recTime(int t)
+        public void recTime(String loc, int t)
         {
-            pos = (pos + 1) % time.length;
+            pos++;
+
+            if (pos >= time.length)
+                pos = pos % time.length;
+
             time[pos] = t;
+            uri[pos % uri.length] = loc;
 
             totalTime += t;
         }

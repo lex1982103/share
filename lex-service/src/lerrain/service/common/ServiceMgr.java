@@ -146,7 +146,7 @@ public class ServiceMgr
         try
         {
             if (listener != null)
-                passport = listener.onBegin(client, loc);
+                passport = listener.onBegin(client, loc, param);
 
             client.post++;
 
@@ -423,7 +423,7 @@ public class ServiceMgr
 
     public static interface ServiceListener
     {
-        public Object onBegin(Client client, String loc);
+        public Object onBegin(Client client, String loc, Object param);
 
         public void onSucc(Object passport, int time);
 

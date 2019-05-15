@@ -4,13 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ServiceTools
 {
     @Value("${sys.code:null}")
     String serviceCode;
+
+    @Value("${sys.index:null}")
+    String serviceIndex;
 
     @Autowired
     ServiceMgr serviceMgr;

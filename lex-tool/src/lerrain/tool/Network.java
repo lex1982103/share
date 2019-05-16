@@ -42,6 +42,7 @@ public class Network
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
+			conn.setReadTimeout(timeout);
 			conn.setConnectTimeout(timeout);
 			conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
 
@@ -109,6 +110,7 @@ public class Network
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
+			conn.setReadTimeout(timeout);
 			conn.setConnectTimeout(timeout);
 			conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
 

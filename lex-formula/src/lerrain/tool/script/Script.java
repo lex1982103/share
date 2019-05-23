@@ -157,7 +157,7 @@ public class Script extends Code
 	{
 		this(ws, false);
 	}
-	
+
 	public Script(Words ws, boolean main)
 	{
 		super(ws);

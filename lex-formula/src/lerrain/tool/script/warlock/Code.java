@@ -174,4 +174,9 @@ public abstract class Code implements Formula
 	{
 		return !isInt(v) && !isLong(v);
 	}
+
+	public String getFullScriptString()
+	{
+		return words.getScript();
+	}
 }

@@ -67,7 +67,7 @@ public class ServiceTools
                 for (int i = 0; i < ns.length; i++)
                     ns[i] = sleep[i + 1];
 
-                reqId(code, r, ns);
+                return reqId(code, r, ns);
             }
         }
 

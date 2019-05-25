@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServiceTools
 {
@@ -25,7 +26,7 @@ public class ServiceTools
 
         if (v == null)
         {
-            v = reqId(code, new long[2]);
+            v = reqId(code, new long[2], 5000, 10000, 30000);
             map.put(code, v);
         }
         else
@@ -33,23 +34,47 @@ public class ServiceTools
             v[0]++;
 
             if (v[0] > v[1])
-                reqId(code, v);
+                reqId(code, v, 5000, 10000, 30000);
         }
 
         return v[0];
     }
 
-    private long[] reqId(String code, long[] r)
+    private long[] reqId(String code, long[] r, int... sleep)
     {
-        String[] res = serviceMgr.reqStr("tools", "id/req", code).split(",");
+        try
+        {
+            String[] res = serviceMgr.reqStr("tools", "id/req", code).split(",");
 
-        r[0] = Long.parseLong(res[0]);
-        r[1] = Long.parseLong(res[1]);
+            r[0] = Long.parseLong(res[0]);
+            r[1] = Long.parseLong(res[1]);
 
-        return r;
+            return r;
+        }
+        catch (Exception e3)
+        {
+            if (sleep != null && sleep.length > 0)
+            {
+                try
+                {
+                    Thread.sleep(sleep[0]);
+                }
+                catch (InterruptedException i3)
+                {
+                }
+
+                int[] ns = new int[sleep.length - 1];
+                for (int i = 0; i < ns.length; i++)
+                    ns[i] = sleep[i + 1];
+
+                reqId(code, r, ns);
+            }
+        }
+
+        throw new RuntimeException("获取id失败，tools服务异常");
     }
 
-    public JSONObject success(Object val)
+    public static JSONObject success(Object val)
     {
         JSONObject res = new JSONObject();
         res.put("result", "success");
@@ -58,7 +83,7 @@ public class ServiceTools
         return res;
     }
 
-    public JSONObject fail(Object val)
+    public static JSONObject fail(Object val)
     {
         JSONObject res = new JSONObject();
         res.put("result", "fail");

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.*;
 
 import lerrain.project.insurance.product.Config;
+import lerrain.project.insurance.product.Insurance;
 import lerrain.project.insurance.product.attachment.axachart.AxaChartParser;
 import lerrain.project.insurance.product.attachment.chart.ChartParser;
 import lerrain.project.insurance.product.attachment.combo.ComboChartDefParser;
@@ -92,6 +93,19 @@ public class Loader
 				String parent = n1.getAttribute("extends");
 				cl.loadCompany(parent, n1);
 			}
+		}
+	}
+
+	public void load(Insurance ins, File f)
+	{
+		try
+		{
+			new ProductLoader(ins.getCompany(), this).loadProduct(XmlNode.nodeOf(f), f.getParent());
+		}
+		catch (Exception e2)
+		{
+			System.out.println("[lex-finance]跳过 -- " + f.getAbsolutePath());
+			e2.printStackTrace();
 		}
 	}
 }

@@ -14,6 +14,8 @@ public class FunctionStr implements Function
 		{
 			if (v[0] == null)
 				return null;
+			else if (v[0] instanceof Exception)
+				return ((Exception)v[0]).getMessage();
 			else
 				return v[0].toString();
 		}

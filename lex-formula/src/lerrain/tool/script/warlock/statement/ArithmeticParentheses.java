@@ -12,7 +12,9 @@ import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.FunctionTry;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ArithmeticParentheses extends Code
 {
@@ -55,6 +57,8 @@ public class ArithmeticParentheses extends Code
 
 				if (val instanceof FunctionTry)
 				{
+					Object ex = null;
+
 					List<Code> codes = ((ArithmeticComma)prt).codes;
 					for (int i = 0; i < codes.size() - 1; i++)
 					{
@@ -64,11 +68,20 @@ public class ArithmeticParentheses extends Code
 						}
 						catch (Exception e)
 						{
+							ex = e;
+
 							//这里没必要处理Interrupt，break/continue直接被循环拦截，return不存在抛到try的可能
 						}
 					}
 
-					return codes.get(codes.size() - 1).run(factors);
+					Object x = codes.get(codes.size() - 1).run(factors);
+					if (x instanceof Function)
+					{
+						Stack st = new Stack(factors);
+						return ((Function)x).run(new Object[]{ex}, st);
+					}
+
+					return x;
 				}
 
 				Object[] params = null;

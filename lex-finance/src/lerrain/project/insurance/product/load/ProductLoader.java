@@ -36,11 +36,20 @@ public class ProductLoader
 
 	public Insurance loadProduct(XmlNode root, String path)
 	{
-		this.product = new Insurance();
-		
+		Insurance ins = new Insurance();
+		ins.setCompany(company);
+		ins.setInitValue(new InitValue());
+
+		return loadProduct(ins, root, path);
+	}
+
+	public Insurance loadProduct(Insurance ins, XmlNode root, String path)
+	{
+		this.product = ins;
+
 		parseAttribution(root);
 		parseRoot(root, path == null ? "" : path + File.separator);
-		
+
 		return product;
 	}
 
@@ -79,15 +88,24 @@ public class ProductLoader
 		
 		//产品在计划中的显示位置
 		String seq = n1.getAttribute("sequence");
-		if (isEmpty(seq))
-			product.setSequence(1000);
-		else
+		if (!isEmpty(seq))
 			product.setSequence(Integer.parseInt(seq));
 
-		product.setId(n1.getAttribute("id"));
-		product.setName(n1.getAttribute("name"));
-		product.setAbbrName(n1.getAttribute("name_abbr"));
-		product.setCode(n1.getAttribute("code"));
+		String id = n1.getAttribute("id");
+		if (!isEmpty(id))
+			product.setId(id);
+
+		String name = n1.getAttribute("name");
+		if (!isEmpty(name))
+			product.setName(name);
+
+		String nameAbbr = n1.getAttribute("name_abbr");
+		if (!isEmpty(nameAbbr))
+			product.setAbbrName(nameAbbr);
+
+		String code = n1.getAttribute("code");
+		if (!isEmpty(code))
+			product.setCode(code);
 		
 		if (n1.hasAttribute("full_code"))
 			product.setFullCode(FormulaUtil.formulaOf(n1.getAttribute("full_code")));
@@ -97,9 +115,8 @@ public class ProductLoader
 		 */
 		String vendor = n1.getAttributeInOrder("vendor,company_id,corporation_id");
 //		company = (Company)loader.getCompanys().get(companyId);
-		product.setVendor(vendor);
-
-		product.setCompany(company);
+		if (!isEmpty(vendor))
+			product.setVendor(vendor);
 
 //		String free = XmlUtil.getOptions(node, "free");
 //		//这个值表明这个险种是免费的或者它的保费已经在别的险种中计算了
@@ -155,7 +172,8 @@ public class ProductLoader
 			product.setUnit(Double.parseDouble(unit));
 		
 		String purchaseTypeStr = n1.getAttribute("purchase");
-		product.getPurchase().setPurchaseType(
+		if (!isEmpty(purchaseTypeStr))
+			product.getPurchase().setPurchaseType(
 				"none".equals(purchaseTypeStr) ? Purchase.NONE : 
 				"quantity".equals(purchaseTypeStr) ? Purchase.QUANTITY : 
 				"rank".equals(purchaseTypeStr) ? Purchase.RANK : 
@@ -163,9 +181,7 @@ public class ProductLoader
 				Purchase.AMOUNT);
 		
 		String inputStr = n1.getAttribute("input");
-		if (isEmpty(inputStr))
-			product.getPurchase().setInputMode(product.getPurchase().getPurchaseMode());
-		else
+		if (!isEmpty(inputStr))
 			product.getPurchase().setInputMode(
 				"quantity".equals(inputStr) ? Purchase.QUANTITY : 
 //				"rank".equals(inputStr) ? Purchase.RANK : 
@@ -178,10 +194,15 @@ public class ProductLoader
 //				"rank_and_quantity".equals(inputStr) ? Purchase.RANK_AND_QUANTITY :
 				"rank_and_quantity".equals(inputStr) ? Purchase.QUANTITY :
 				Purchase.AMOUNT);
-		
-		product.setHidden("yes".equals(n1.getAttribute("hidden")));
-		product.setMain(!"no".equals(n1.getAttribute("is_main")));
-		product.setRider("yes".equals(n1.getAttribute("is_rider")));
+
+		if (n1.hasAttribute("hidden"))
+			product.setHidden("yes".equals(n1.getAttribute("hidden")));
+
+		if (n1.hasAttribute("is_main"))
+			product.setMain(!"no".equals(n1.getAttribute("is_main")));
+
+		if (n1.hasAttribute("is_rider"))
+			product.setRider("yes".equals(n1.getAttribute("is_rider")));
 
 		String productType = n1.getAttributeInOrder("type,type_code");
 		if (!isEmpty(productType))
@@ -239,8 +260,6 @@ public class ProductLoader
 				product.addBind(defId[j]);
 			}
 		}
-		
-		product.setInitValue(new InitValue());
 		
 		return product;
 	}

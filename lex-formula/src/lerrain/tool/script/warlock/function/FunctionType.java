@@ -30,6 +30,9 @@ public class FunctionType implements Function
 		if (v[0] instanceof Object[])
 			return "array";
 
+		if (v[0] instanceof Exception)
+			return "exception";
+
 		return "unknown";
 	}
 }

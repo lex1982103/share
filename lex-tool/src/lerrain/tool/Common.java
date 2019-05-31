@@ -589,17 +589,16 @@ public class Common
 		}
 	}
 
-	private static BASE64Encoder base64Encoder = new BASE64Encoder();
-	private static BASE64Decoder base64Decoder = new BASE64Decoder();
-
 	public static String encodeBase64(byte[] b)
 	{
-		return base64Encoder.encode(b);
+		//只能实时new，要么就加同步锁，里面有成员变量
+		return new BASE64Encoder().encode(b);
 	}
 
 	public static byte[] decodeBase64ToByte(String s) throws IOException
 	{
-		return base64Decoder.decodeBuffer(s);
+		//只能实时new，要么就加同步锁，里面有成员变量
+		return new BASE64Decoder().decodeBuffer(s);
 	}
 
 	public static String encodeBase64(String str)

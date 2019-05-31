@@ -71,6 +71,11 @@ public class InsuranceMgr
 		return loader.load();
 	}
 
+	public void loadMore(Insurance ins, File xml)
+	{
+		loader.load(ins, xml);
+	}
+
 //	public String getResourcePath()
 //	{
 //		return resourcePath;

@@ -193,7 +193,9 @@ public class Recorder
         }
         catch (Exception e)
         {
-            Log.alert(r);
+            Log.alert(e);
+            Log.alert("url: " + url + ", response: " + response);
+            Log.alert(e);
         }
     }
 

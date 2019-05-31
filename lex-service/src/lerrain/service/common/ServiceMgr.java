@@ -3,18 +3,11 @@ package lerrain.service.common;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import feign.*;
-import feign.codec.DecodeException;
-import feign.codec.Decoder;
-import feign.codec.EncodeException;
-import feign.codec.Encoder;
 import lerrain.tool.Common;
+import lerrain.tool.Network;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.*;
 
 public class ServiceMgr
@@ -96,12 +89,22 @@ public class ServiceMgr
 
     public JSONObject req(String service, String loc, JSON param)
     {
-        return JSONObject.parseObject(reqStr(service, loc, param));
+        return req(service, loc, param, -1);
+    }
+
+    public JSONObject req(String service, String loc, JSON param, int timeout)
+    {
+        return JSONObject.parseObject(reqStr(service, loc, param, timeout));
     }
 
     public Object reqVal(String service, String loc, JSON param)
     {
-        JSONObject res = req(service, loc, param);
+        return reqVal(service, loc, param, -1);
+    }
+
+    public Object reqVal(String service, String loc, JSON param, int timeout)
+    {
+        JSONObject res = req(service, loc, param, timeout);
 
         if (!"success".equals(res.getString("result")))
             throw new RuntimeException(res.getString("reason"));
@@ -111,13 +114,23 @@ public class ServiceMgr
 
     public String reqStr(String service, String loc, Object param)
     {
+        return reqStr(service, loc, param, -1);
+    }
+
+    public String reqStr(String service, String loc, Object param, int timeout)
+    {
         Servers servers = this.getServers(service);
         Client client = servers.getClient(param);
 
-        return reqStr(servers, client, loc, param);
+        return reqStr(servers, client, loc, param, timeout);
     }
 
     public String[] reqAll(String service, String loc, Object param)
+    {
+        return reqAll(service, loc, param, -1);
+    }
+
+    public String[] reqAll(String service, String loc, Object param, int timeout)
     {
         Servers servers = this.getServers(service);
         Client[] clients = servers.getAllClient();
@@ -128,7 +141,7 @@ public class ServiceMgr
         {
             try
             {
-                res[i] = reqStr(servers, clients[i], loc, param);
+                res[i] = reqStr(servers, clients[i], loc, param, timeout);
             }
             catch (Exception e)
             {
@@ -138,7 +151,7 @@ public class ServiceMgr
         return res;
     }
 
-    private String reqStr(Servers servers, Client client, String loc, Object param)
+    private String reqStr(Servers servers, Client client, String loc, Object param, int timeout)
     {
         long t = System.currentTimeMillis();
         Object passport = null;
@@ -151,7 +164,7 @@ public class ServiceMgr
             client.post++;
 
             String req = param == null ? null : param.toString();
-            String res = client.client.req(loc, req);
+            String res = client.client.req(loc, req, timeout);
 
             int t1 = (int)(System.currentTimeMillis() - t);
             client.recTime(loc, t1);
@@ -241,6 +254,7 @@ public class ServiceMgr
         this.listener = listener;
     }
 
+    /*
     class JSONEncoder implements Encoder
     {
         @Override
@@ -268,6 +282,7 @@ public class ServiceMgr
             }
         }
     }
+    */
 
     public class Servers
     {
@@ -302,7 +317,8 @@ public class ServiceMgr
                 clients[i] = new Client(this);
                 clients[i].index = i;
                 clients[i].url = Common.trimStringOf(url[i]);
-                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
+//                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
+                clients[i].client = new NetworkClient(clients[i].url);
             }
         }
 
@@ -413,6 +429,25 @@ public class ServiceMgr
         public Servers getServers()
         {
             return servers;
+        }
+    }
+
+    public static class NetworkClient implements ServiceClient
+    {
+        String url;
+
+        public NetworkClient(String url)
+        {
+            this.url = url.endsWith("/") ? url : url + "/";
+        }
+
+        @Override
+        public String req(String link, String param, int timeout)
+        {
+            if (link.startsWith("/"))
+                link = link.substring(1);
+
+            return Network.request(url + link, param, timeout < 0 ? 10000 : timeout);
         }
     }
 

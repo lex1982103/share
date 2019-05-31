@@ -16,8 +16,6 @@ public class ReqReplay
 
     LinkedList<ReqHistory> history;
 
-    Map<Long, Script> map = new HashMap<>();
-
     public ReqReplay(ReqHistory req)
     {
         this.req = req;
@@ -84,15 +82,14 @@ public class ReqReplay
     {
         final ReqHistory reqHistory = find(req, historyId);
 
-        if (!map.containsKey(reqHistory.getId()))
-            map.put(reqHistory.getId(), DebugUtil.getScript(reqHistory));
-
-        Script script = map.get(reqHistory.getId());
+        Script script = DebugUtil.getScript(reqHistory);
 
         script.clearBreakPoints();
         Code code = script.markBreakPoint(pos);
 
         final Current r = new Current();
+        r.script = script.getFullScriptString();
+
         if (code != null)
             r.range = code.getRange();
 
@@ -148,6 +145,8 @@ public class ReqReplay
 
         Object result;
         Object error;
+
+        String script;
 
         public void setResult(int[] range, Object val)
         {

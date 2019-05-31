@@ -7,22 +7,30 @@ import lerrain.tool.formula.Formula;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class DebugUtil
 {
+    public static Recorder RECORDER;
+
     static ObjectOperate opt;
 
-    public static void initiate(ObjectOperate opt)
+    static Map<Long, Script> temp = new HashMap<>();
+
+    public static void initiate(Recorder recorder, ObjectOperate opt)
     {
+        DebugUtil.RECORDER = recorder;
         DebugUtil.opt = opt;
     }
 
     public static Object copy(Object val)
     {
         return opt.copy(val);
+    }
+
+    public static boolean isScript(int type)
+    {
+        return opt.isScript(type);
     }
 
     public static Object snapshot(Object val)
@@ -65,13 +73,28 @@ public class DebugUtil
         m.put("count", current.count);
         m.put("result", current.result);
         m.put("error", current.error);
+        m.put("stack", current.stack);
+        m.put("script", current.script);
 
         return m;
     }
 
     public static Script getScript(ReqHistory rh)
     {
-        return opt.getScript(rh);
+        synchronized (temp)
+        {
+            if (temp.containsKey(rh.getId()))
+                return temp.get(rh.getId());
+        }
+
+        Script script = opt.getScript(rh);
+
+        synchronized (temp)
+        {
+            temp.put(rh.getId(), script);
+        }
+
+        return script;
     }
 
     public static Object resume(int type, Object val)
@@ -86,7 +109,7 @@ public class DebugUtil
         req.setType(rs.getIntValue("type"));
         req.setTarget(rs.getString("target"));
 
-        if (req.getType() == ReqHistory.TYPE_FUNCTION)
+        if (isScript(req.getType()))
             req.setRequest(DebugUtil.resume(10, rs.getJSONObject("request")));
         else
             req.setRequest(rs.get("request"));
@@ -95,7 +118,7 @@ public class DebugUtil
         req.setResult(rs.getIntValue("result"));
         req.setSpend(rs.getIntValue("spend"));
         req.setTime(rs.getDate("time").getTime());
-        req.setName(req.getTarget());
+        req.setName(rs.getString("name"));
 
         JSONArray ja = rs.getJSONArray("detail");
         if (ja != null)
@@ -165,5 +188,7 @@ public class DebugUtil
         public Object resume(int type, Object val);
 
         public Script getScript(ReqHistory reqHistory);
+
+        public boolean isScript(int type);
     }
 }

@@ -5,11 +5,15 @@ import lerrain.service.common.Log;
 import lerrain.service.common.ServiceMgr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
+@RequestMapping("/script")
 public class Recorder
 {
     @Value("${sys.code:null}")
@@ -20,6 +24,8 @@ public class Recorder
 
     @Autowired
     ServiceMgr serviceMgr;
+
+    Map<Long, ReqHistory> temp = new HashMap<>();
 
     //总记录点的数量需要限制，单个记录点的长短也需要限制
     private static final ThreadLocal<LinkedList<ReqHistory>> threadLocal = new ThreadLocal<>();
@@ -36,12 +42,16 @@ public class Recorder
         threadLocal.set(new LinkedList<ReqHistory>());
     }
 
-    public void finish(int type, String scriptId, Object req, int result, Object res)
+    public List<ReqHistory> stop()
     {
         List<ReqHistory> history = threadLocal.get();
-
         threadLocal.remove();
 
+        return history;
+    }
+
+    public void save(List<ReqHistory> history, int type, String scriptId, String url, String ip, Object req, int result, Object res)
+    {
         if (history == null || history.isEmpty())
             return;
 
@@ -50,7 +60,7 @@ public class Recorder
         Date date = new Date(rh.getTime());
         int spend = (int)(System.currentTimeMillis() - date.getTime());
 
-        store(type, scriptId, req, rh, result, res, date, spend);
+        store(type, scriptId, url, ip, req, rh, result, res, date, spend);
     }
 
     public ReqHistory newHistory(int type)
@@ -85,6 +95,24 @@ public class Recorder
         history.add(req);
 
         return req;
+    }
+
+    public ReqHistory newFunctionHistory(String name)
+    {
+        return newFunctionHistory(name, name);
+    }
+
+    public ReqHistory newFunctionHistory(String name, String target)
+    {
+        ReqHistory rh = newHistory(ReqHistory.TYPE_FUNCTION);
+
+        if (rh != null)
+        {
+            rh.setName(name);
+            rh.setTarget(target);
+        }
+
+        return rh;
     }
 
     public ReqReplay.Current replay(ReqReplay rs, Long historyId, int pos)
@@ -143,13 +171,15 @@ public class Recorder
         return DebugUtil.reqHistoryOf(res);
     }
 
-    public void store(int bizType, String scriptId, Object req, ReqHistory rh, int result, Object response, Date date, int spend)
+    private void store(int bizType, String scriptId, String url, String ip, Object req, ReqHistory rh, int result, Object response, Date date, int spend)
     {
         JSONObject r = new JSONObject();
         r.put("service", serviceCode);
         r.put("instance", serviceIndex);
-        r.put("bizType", bizType);
+        r.put("type", bizType);
         r.put("scriptId", scriptId);
+        r.put("url", url);
+        r.put("ip", ip);
         r.put("request", req);
         r.put("history", DebugUtil.snapshot(rh));
         r.put("result", result);
@@ -167,4 +197,50 @@ public class Recorder
         }
     }
 
+    @RequestMapping("/debug/prepare.json")
+    @ResponseBody
+    @CrossOrigin
+    public JSONObject prepare(@RequestBody JSONObject req)
+    {
+        ReqHistory rh = DebugUtil.reqHistoryOf(req);
+
+        synchronized (temp)
+        {
+            temp.put(rh.getId(), rh);
+        }
+
+        Map map = (Map)DebugUtil.snapshot(rh);
+
+        JSONObject res = new JSONObject();
+        res.put("result", "success");
+        res.put("content", map);
+
+        return res;
+    }
+
+    @RequestMapping("/debug/debug.json")
+    @ResponseBody
+    @CrossOrigin
+    public JSONObject debug(@RequestBody JSONObject req)
+    {
+        ReqHistory rh;
+
+        synchronized (temp)
+        {
+            rh = temp.get(req.getLong("reqId"));
+        }
+
+        ReqReplay rs = new ReqReplay(rh);
+
+        Long historyId = req.getLong("historyId");
+        int pos = req.getIntValue("pos");
+
+        ReqReplay.Current current = this.replay(rs, historyId, pos);
+
+        JSONObject res = new JSONObject();
+        res.put("result", "success");
+        res.put("content", DebugUtil.snapshot(current));
+
+        return res;
+    }
 }

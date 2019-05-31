@@ -8,6 +8,7 @@ public class ReqHistory
     public static final int TYPE_SERVICE    = 1;
     public static final int TYPE_URL        = 2;
     public static final int TYPE_FUNCTION   = 3;
+    public static final int TYPE_SCRIPT     = 4;
 
     public static final int RESTYPE_SUCCESS = 1;
     public static final int RESTYPE_FAIL    = 2;

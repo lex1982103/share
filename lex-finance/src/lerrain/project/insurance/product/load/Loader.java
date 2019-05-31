@@ -100,7 +100,16 @@ public class Loader
 	{
 		try
 		{
-			new ProductLoader(ins.getCompany(), this).loadProduct(XmlNode.nodeOf(f), f.getParent());
+			XmlNode e = XmlNode.nodeOf(f);
+
+			if (!"declare".equals(e.getName()))
+				return;
+
+			ProductLoader prdLoader = new ProductLoader(ins.getCompany(), this);
+
+			List<XmlNode> list = e.getChildren("product");
+			for (XmlNode prd : list)
+				prdLoader.loadProduct(ins, prd, f.getParent());
 		}
 		catch (Exception e2)
 		{

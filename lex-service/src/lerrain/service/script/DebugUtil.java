@@ -1,5 +1,6 @@
 package lerrain.service.script;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.tool.formula.Factors;
@@ -35,10 +36,7 @@ public class DebugUtil
 
     public static Object snapshot(Object val)
     {
-        if (val instanceof Stack)
-            return opt.snapshot((Stack)val);
-
-        return val;
+        return opt.snapshot(val);
     }
 
     public static Object snapshot(ReqHistory rh)
@@ -183,7 +181,7 @@ public class DebugUtil
     {
         public Object copy(Object val);
 
-        public Object snapshot(Stack stack);
+        public Object snapshot(Object stack);
 
         public Object resume(int type, Object val);
 

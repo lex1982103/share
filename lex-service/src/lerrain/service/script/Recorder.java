@@ -189,7 +189,7 @@ public class Recorder
 
         try
         {
-            serviceMgr.req("tools", "script/record.json", r);
+            serviceMgr.req("secure", "script/record.json", r);
         }
         catch (Exception e)
         {

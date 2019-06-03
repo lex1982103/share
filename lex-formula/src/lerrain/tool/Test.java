@@ -16,7 +16,38 @@ import lerrain.tool.script.warlock.statement.ArithmeticApprox;
 
 public class Test
 {
+	static Map s = new HashMap();
+	static Map m = new HashMap();
+
+	static class MapTest implements Runnable
+	{
+
+		@Override
+		public void run()
+		{
+
+			s.put("a", m);
+			((Map)s.get("a")).get("b");
+
+			for (int i=0;i<100;i++)
+			{
+				s.put(i, 1);
+				((Map)s.get("a")).get("b");
+			}
+		}
+	}
+
 	public static void main(String[] s)
+	{
+		MapTest mt = new MapTest();
+
+		for (int i = 0; i < 200; i++)
+		{
+			new Thread(mt).start();
+		}
+	}
+
+	public static void main5(String[] s)
 	{
 		String str = "_version=2.5&_client=2&__MYLOG_UID=bfcc7e5f-cb21-4688-979e-08c738d6ae8f&__MYLOG_SID=879cac2a-9257-4229-938e-b75e811e5b44";
 		Map param = new HashMap();

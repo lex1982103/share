@@ -1,11 +1,7 @@
 package lerrain.tool;
 
 import javax.net.ssl.*;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
@@ -84,9 +80,8 @@ public class Network
 		}
 		catch (Exception e)
 		{
-//			e.printStackTrace();
-//			System.out.println(String.format("request: %s<%s> - %s", urlstr, req, e.getMessage()));
-			System.out.println(String.format("request: %s - %s", urlstr, e.toString()));
+			System.out.println("request: " + urlstr + " - " + req + " -> " + e.getMessage());
+			throw new RuntimeException(e);
 		}
 		finally
 		{
@@ -141,7 +136,8 @@ public class Network
 		}
 		catch (Exception e)
 		{
-			System.out.println(String.format("request: %s<%s> - %s", urlstr, info == null ? null : new String(info), e.getMessage()));
+			System.out.println("request: " + urlstr + " -> " + e.getMessage());
+			throw new RuntimeException(e);
 		}
 		finally
 		{

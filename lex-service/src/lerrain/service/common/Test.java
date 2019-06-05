@@ -11,6 +11,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by lerrain on 2017/8/3.
@@ -19,6 +22,9 @@ public class Test
 {
     public static void main(String[] arg) throws Exception
     {
+        for (int i=0;i<1000;i++)
+            System.out.println(nextId("order"));
+
 //        ServiceMgr cm = new ServiceMgr();
 //        ServiceClient client = cm.getClient("http://localhost:7773");
 //
@@ -28,8 +34,6 @@ public class Test
 //
 //        Object val = client.req("dict/view.json", p);
 //        Log.info(val.toString());
-
-        System.out.println(-3 % 2);
 
 //        JSONObject ee = new JSONObject();
 //        JSONObject dd = new JSONObject();
@@ -51,6 +55,75 @@ public class Test
 //
 //        System.out.println(request("http://www.lerrain.com:7511/print.stream", ee.toJSONString()));
     }
+
+    static Map<String, long[]> map = new HashMap<>();
+    static Random ran = new Random();
+
+    public static synchronized Long nextId(String code)
+    {
+        long[] v = map.get(code);
+
+        if (v == null)
+        {
+            v = reqId(code, new long[3], 5000, 10000, 30000);
+            map.put(code, v);
+        }
+        else
+        {
+            if (v[2] <= 1)
+                v[0]++;
+            else
+                v[0] += ran.nextInt((int)v[2]);
+
+            if (v[0] > v[1])
+                reqId(code, v, 5000, 10000, 30000);
+        }
+
+        return v[0];
+    }
+
+    static int id = 312313200;
+
+    private static long[] reqId(String code, long[] r, int... sleep)
+    {
+        try
+        {
+            String[] res = (id + ",100000,10000").split(",");
+
+            r[0] = Long.parseLong(res[0]);
+            r[1] = Long.parseLong(res[1]);
+            r[2] = Long.parseLong(res[2]);
+
+            if (r[2] > 1)
+                r[0] += ran.nextInt((int)r[2]);
+
+            id += r[1];
+
+            return r;
+        }
+        catch (Exception e3)
+        {
+            if (sleep != null && sleep.length > 0)
+            {
+                try
+                {
+                    Thread.sleep(sleep[0]);
+                }
+                catch (InterruptedException i3)
+                {
+                }
+
+                int[] ns = new int[sleep.length - 1];
+                for (int i = 0; i < ns.length; i++)
+                    ns[i] = sleep[i + 1];
+
+                return reqId(code, r, ns);
+            }
+        }
+
+        throw new RuntimeException("获取id失败，tools服务异常");
+    }
+
 
     public static String request(String urlstr)
     {

@@ -1,5 +1,6 @@
 package lerrain.service.script;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.service.common.Log;
 import lerrain.service.common.ServiceMgr;
@@ -167,7 +168,7 @@ public class Recorder
         JSONObject req = new JSONObject();
         req.put("reqId", reqId);
 
-        JSONObject res = (JSONObject)serviceMgr.reqVal("tools", "script/view_history.json", req);
+        JSONObject res = (JSONObject)serviceMgr.reqVal("secure", "script/view_history.json", req);
         return DebugUtil.reqHistoryOf(res);
     }
 
@@ -197,6 +198,19 @@ public class Recorder
             Log.alert("url: " + url + ", response: " + response);
             Log.alert(e);
         }
+    }
+
+    public JSONObject load(Long reqId)
+    {
+        JSONObject req = new JSONObject();
+        req.put("reqId", reqId);
+
+        return (JSONObject) JSON.toJSON(serviceMgr.reqVal("secure","script/load.json", req));
+    }
+
+    public Object query(JSONObject condition)
+    {
+        return serviceMgr.reqVal("secure","script/query.json", condition);
     }
 
     @RequestMapping("/debug/prepare.json")

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class ServiceTools
 {
@@ -20,18 +21,23 @@ public class ServiceTools
 
     Map<String, long[]> map = new HashMap<>();
 
+    Random ran = new Random();
+
     public synchronized Long nextId(String code)
     {
         long[] v = map.get(code);
 
         if (v == null)
         {
-            v = reqId(code, new long[2], 5000, 10000, 30000);
+            v = reqId(code, new long[3], 5000, 10000, 30000);
             map.put(code, v);
         }
         else
         {
-            v[0]++;
+            if (v[2] <= 1)
+                v[0]++;
+            else
+                v[0] += ran.nextInt((int)v[2]);
 
             if (v[0] > v[1])
                 reqId(code, v, 5000, 10000, 30000);
@@ -48,6 +54,10 @@ public class ServiceTools
 
             r[0] = Long.parseLong(res[0]);
             r[1] = Long.parseLong(res[1]);
+            r[2] = Long.parseLong(res[2]);
+
+            if (r[2] > 1)
+                r[0] += ran.nextInt((int)r[2]);
 
             return r;
         }

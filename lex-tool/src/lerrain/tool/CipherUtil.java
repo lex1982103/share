@@ -1,6 +1,9 @@
 package lerrain.tool;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
@@ -18,6 +21,99 @@ public class CipherUtil
     private static final String PRIVATE_KEY         = "RSAPrivateKey";
     private static final int    MAX_ENCRYPT_BLOCK   = 117;
     private static final int    MAX_DECRYPT_BLOCK   = 128;
+
+    static char[] DIGITS_LOWER = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+    static SecretKey key;
+
+    static Cipher enc, dec;
+
+    public static void initiate(String pwd) throws Exception
+    {
+        DESKeySpec desKeySpec = new DESKeySpec(pwd.getBytes());
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
+        key = factory.generateSecret(desKeySpec);
+
+        enc = Cipher.getInstance("DES/ECB/PKCS5Padding");  //算法类型/工作方式/填充方式
+        enc.init(Cipher.ENCRYPT_MODE, key);   //指定为加密模式
+
+        dec = Cipher.getInstance("DES/ECB/PKCS5Padding");  //算法类型/工作方式/填充方式
+        dec.init(Cipher.DECRYPT_MODE, key);  //相同密钥，指定为解密模式
+    }
+
+    public static String decode(String dst)
+    {
+        if (dst == null)
+            return null;
+
+        try
+        {
+            return new String(dec.doFinal(decodeHex(dst)), "UTF-8");
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String encode(Object src)
+    {
+        if (src == null)
+            return null;
+
+        return encode(src.toString());
+    }
+
+    public static String encode(String src)
+    {
+        if (src == null)
+            return null;
+
+        try
+        {
+            return encodeHex(enc.doFinal(src.getBytes("UTF-8")));
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static byte[] decodeHex(String str)
+    {
+        char[] data = str.toCharArray();
+        int len = data.length;
+        if ((len & 1) != 0) {
+            throw new RuntimeException("Odd number of characters.");
+        } else {
+            byte[] out = new byte[len >> 1];
+            int i = 0;
+
+            for(int j = 0; j < len; ++i) {
+                int f = Character.digit(data[j], 16) << 4;
+                ++j;
+                f |= Character.digit(data[j], 16);
+                ++j;
+                out[i] = (byte)(f & 255);
+            }
+
+            return out;
+        }
+    }
+
+    public static String encodeHex(byte[] data)
+    {
+        int l = data.length;
+        char[] out = new char[l << 1];
+        int i = 0;
+
+        for(int var5 = 0; i < l; ++i) {
+            out[var5++] = DIGITS_LOWER[(240 & data[i]) >>> 4];
+            out[var5++] = DIGITS_LOWER[15 & data[i]];
+        }
+
+        return new String(out);
+    }
 
     public static Map<String, Object> genKeyPair() throws Exception
     {
@@ -178,4 +274,6 @@ public class CipherUtil
         Key key = (Key) keyMap.get(PUBLIC_KEY);
         return Common.encodeBase64(key.getEncoded());
     }
+
+
 }

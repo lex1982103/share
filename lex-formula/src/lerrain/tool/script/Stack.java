@@ -93,6 +93,8 @@ public class Stack implements Factors
 	{
 		if ("this".equals(name))
 			return this;
+		if ("super".equals(name))
+			return root;
 
 		if (heap != null && heap.containsKey(name))
 			return heap.get(name);

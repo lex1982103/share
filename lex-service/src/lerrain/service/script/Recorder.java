@@ -168,7 +168,7 @@ public class Recorder
         JSONObject req = new JSONObject();
         req.put("reqId", reqId);
 
-        JSONObject res = (JSONObject)serviceMgr.reqVal("secure", "script/view_history.json", req);
+        JSONObject res = (JSONObject)serviceMgr.reqVal("develop", "script/view_history.json", req);
         return DebugUtil.reqHistoryOf(res);
     }
 
@@ -190,7 +190,7 @@ public class Recorder
 
         try
         {
-            serviceMgr.req("secure", "script/record.json", r);
+            serviceMgr.req("develop", "script/record.json", r);
         }
         catch (Exception e)
         {
@@ -205,12 +205,12 @@ public class Recorder
         JSONObject req = new JSONObject();
         req.put("reqId", reqId);
 
-        return (JSONObject) JSON.toJSON(serviceMgr.reqVal("secure","script/load.json", req));
+        return (JSONObject) JSON.toJSON(serviceMgr.reqVal("develop","script/load.json", req));
     }
 
     public Object query(JSONObject condition)
     {
-        return serviceMgr.reqVal("secure","script/query.json", condition);
+        return serviceMgr.reqVal("develop","script/query.json", condition);
     }
 
     @RequestMapping("/debug/prepare.json")

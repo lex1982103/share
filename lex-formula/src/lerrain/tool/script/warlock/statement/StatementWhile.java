@@ -3,6 +3,7 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
@@ -73,6 +74,9 @@ public class StatementWhile extends Code
 			catch (Interrupt.Continue e)
 			{
 			}
+
+			if (Thread.currentThread().isInterrupted())
+				throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 		}
 		
 		return null;

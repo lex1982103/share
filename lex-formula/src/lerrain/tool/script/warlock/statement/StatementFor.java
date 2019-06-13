@@ -7,6 +7,7 @@ import java.util.Map;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
@@ -111,6 +112,9 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
+
+					if (Thread.currentThread().isInterrupted())
+						throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 				}
 			}
 			else if (value instanceof Collection)
@@ -130,6 +134,9 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
+
+					if (Thread.currentThread().isInterrupted())
+						throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 				}
 			}
 			else if (value instanceof Map)
@@ -149,6 +156,9 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
+
+					if (Thread.currentThread().isInterrupted())
+						throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 				}
 			}
 			else if (value instanceof Iterator)
@@ -169,6 +179,9 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
+
+					if (Thread.currentThread().isInterrupted())
+						throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 				}
 			}
 		}
@@ -190,6 +203,9 @@ public class StatementFor extends Code
 				catch (Interrupt.Continue e)
 				{
 				}
+
+				if (Thread.currentThread().isInterrupted())
+					throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 
 				f3.run(stack);
 			}

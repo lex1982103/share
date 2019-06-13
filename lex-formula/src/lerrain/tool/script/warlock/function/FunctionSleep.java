@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class FunctionSleep implements Function
 		}
 		catch (InterruptedException e)
 		{
+			throw new RuntimeException(e);
 		}
 
 		return null;

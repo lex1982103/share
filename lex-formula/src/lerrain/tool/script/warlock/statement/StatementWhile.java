@@ -74,9 +74,6 @@ public class StatementWhile extends Code
 			catch (Interrupt.Continue e)
 			{
 			}
-
-			if (Thread.currentThread().isInterrupted())
-				throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 		}
 		
 		return null;

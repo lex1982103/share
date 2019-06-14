@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class ScriptRuntimeException extends RuntimeException
 {
+	String exCode;
     String detailMsg; // 为了承载当前封装的实际异常类相关数据
 
 	Code code;
@@ -20,6 +21,15 @@ public class ScriptRuntimeException extends RuntimeException
 		super(detail, e);
 
 		this.code = code;
+		this.factors = factors;
+	}
+
+	public ScriptRuntimeException(Code code, Factors factors, String exCode, String detail)
+	{
+		super(detail);
+
+		this.code = code;
+		this.exCode = exCode;
 		this.factors = factors;
 	}
 
@@ -38,6 +48,18 @@ public class ScriptRuntimeException extends RuntimeException
 
 		this.code = code;
 		this.factors = factors;
+	}
+
+	public ScriptRuntimeException(String exCode, Exception e)
+	{
+		super(e);
+
+		this.exCode = exCode;
+	}
+
+	public String getExceptionCode()
+	{
+		return this.exCode;
 	}
 
 	public Code getCode()

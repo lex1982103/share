@@ -112,9 +112,6 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
-
-					if (Thread.currentThread().isInterrupted())
-						throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 				}
 			}
 			else if (value instanceof Collection)
@@ -134,9 +131,6 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
-
-					if (Thread.currentThread().isInterrupted())
-						throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 				}
 			}
 			else if (value instanceof Map)
@@ -156,9 +150,6 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
-
-					if (Thread.currentThread().isInterrupted())
-						throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 				}
 			}
 			else if (value instanceof Iterator)
@@ -179,9 +170,6 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
-
-					if (Thread.currentThread().isInterrupted())
-						throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 				}
 			}
 		}
@@ -203,9 +191,6 @@ public class StatementFor extends Code
 				catch (Interrupt.Continue e)
 				{
 				}
-
-				if (Thread.currentThread().isInterrupted())
-					throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 
 				f3.run(stack);
 			}

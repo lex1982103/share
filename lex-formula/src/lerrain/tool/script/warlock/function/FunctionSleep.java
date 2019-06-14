@@ -19,7 +19,7 @@ public class FunctionSleep implements Function
 		}
 		catch (InterruptedException e)
 		{
-			throw new RuntimeException(e);
+			throw new ScriptRuntimeException("interrupt", e);
 		}
 
 		return null;

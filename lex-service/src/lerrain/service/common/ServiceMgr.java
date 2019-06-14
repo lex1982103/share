@@ -454,7 +454,7 @@ public class ServiceMgr
             if (link.startsWith("/"))
                 link = link.substring(1);
 
-            return Network.request(url + link, param, timeout <= 0 ? 10000 : timeout);
+            return Network.request(url + link, param, timeout <= 0 ? 300 : timeout);
         }
     }
 

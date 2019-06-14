@@ -68,6 +68,15 @@ public class ArithmeticParentheses extends Code
 						}
 						catch (Exception e)
 						{
+//							if (e instanceof ScriptRuntimeException)
+//							{
+//								if ("interrupt".equals(((ScriptRuntimeException)e).getExceptionCode())) //线程强制中断，不拦截
+//									throw e;
+//							}
+
+							if (Thread.currentThread().isInterrupted()) //线程强制中断，不拦截
+								throw new ScriptRuntimeException(this, factors, "interrupted");
+
 							ex = e;
 
 							//这里没必要处理Interrupt，break/continue直接被循环拦截，return不存在抛到try的可能

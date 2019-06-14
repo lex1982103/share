@@ -25,14 +25,18 @@ public class Test
 		@Override
 		public void run()
 		{
+			test();
+		}
 
-			s.put("a", m);
-			((Map)s.get("a")).get("b");
-
-			for (int i=0;i<100;i++)
+		public void test()
+		{
+			try
 			{
-				s.put(i, 1);
-				((Map)s.get("a")).get("b");
+				Thread.sleep(10000);
+			}
+			catch (InterruptedException e)
+			{
+				throw new ScriptRuntimeException("interrupt", e);
 			}
 		}
 	}
@@ -41,10 +45,9 @@ public class Test
 	{
 		MapTest mt = new MapTest();
 
-		for (int i = 0; i < 200; i++)
-		{
-			new Thread(mt).start();
-		}
+		Thread thread = new Thread(mt);
+		thread.start();
+		thread.interrupt();
 	}
 
 	public static void main5(String[] s)

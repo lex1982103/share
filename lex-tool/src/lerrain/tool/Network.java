@@ -11,12 +11,12 @@ public class Network
 {
 	public static String request(String urlstr)
 	{
-		return request(urlstr, null, 5000, "GET");
+		return request(urlstr, null, 500, "GET");
 	}
 
 	public static String request(String urlstr, String req)
 	{
-		return request(urlstr, req, 5000, req == null ? "GET" : "POST");
+		return request(urlstr, req, 500, req == null ? "GET" : "POST");
 	}
 
 	public static String request(String urlstr, String req, int timeout)

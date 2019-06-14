@@ -71,6 +71,7 @@ public class ServiceTools
                 }
                 catch (InterruptedException i3)
                 {
+                    throw new RuntimeException(i3);
                 }
 
                 int[] ns = new int[sleep.length - 1];

@@ -355,7 +355,7 @@ public class Common
 
 	public static double round(double val, int scale)
 	{
-		return BigDecimal.valueOf(val).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		return BigDecimal.valueOf(val).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
 	public static String pathOf(String... path)

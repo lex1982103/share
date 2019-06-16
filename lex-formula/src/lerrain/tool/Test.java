@@ -30,9 +30,11 @@ public class Test
 
 		public void test()
 		{
+			Thread.currentThread().interrupt();
+			System.out.println(Thread.currentThread().isInterrupted());
 			try
 			{
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 			}
 			catch (InterruptedException e)
 			{
@@ -47,7 +49,6 @@ public class Test
 
 		Thread thread = new Thread(mt);
 		thread.start();
-		thread.interrupt();
 	}
 
 	public static void main5(String[] s)

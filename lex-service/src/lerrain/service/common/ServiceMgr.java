@@ -13,6 +13,7 @@ import java.util.*;
 public class ServiceMgr
 {
     public static final long MAX = 1024L * 1024 * 16;
+    public static int SPEND_SLOW = 300;
 
     @Resource
     private Environment env;
@@ -169,6 +170,9 @@ public class ServiceMgr
             int t1 = (int)(System.currentTimeMillis() - t);
             client.recTime(loc, t1);
 
+            if (t1 >= SPEND_SLOW)
+                client.slow++;
+
             if (servers.level == 1)
                 Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
             else if (servers.level == 2)
@@ -208,6 +212,7 @@ public class ServiceMgr
                 r1.put("client", c.client.toString());
                 r1.put("post", c.post);
                 r1.put("fail", c.fail);
+                r1.put("slow", c.slow);
 
                 if (c.post - c.fail > 0)
                     r1.put("average", c.totalTime / (c.post - c.fail));
@@ -239,6 +244,7 @@ public class ServiceMgr
             {
                 c.post = 0;
                 c.fail = 0;
+                c.slow = 0;
                 c.totalTime = 0;
             }
         }
@@ -390,6 +396,7 @@ public class ServiceMgr
 
         int post;
         int fail;
+        int slow;
 
         long totalTime;
 

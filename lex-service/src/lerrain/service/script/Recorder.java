@@ -116,6 +116,19 @@ public class Recorder
         return rh;
     }
 
+    public ReqHistory newBuildInHistory(String name, String target)
+    {
+        ReqHistory rh = newHistory(ReqHistory.TYPE_BUILD_IN);
+
+        if (rh != null)
+        {
+            rh.setName(name);
+            rh.setTarget(target);
+        }
+
+        return rh;
+    }
+
     public ReqReplay.Current replay(ReqReplay rs, Long historyId, int pos)
     {
         threadRuntime.set(rs);

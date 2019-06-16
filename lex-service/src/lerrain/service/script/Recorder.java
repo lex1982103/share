@@ -98,11 +98,6 @@ public class Recorder
         return req;
     }
 
-    public ReqHistory newFunctionHistory(String name)
-    {
-        return newFunctionHistory(name, name);
-    }
-
     public ReqHistory newFunctionHistory(String name, String target)
     {
         ReqHistory rh = newHistory(ReqHistory.TYPE_FUNCTION);
@@ -116,14 +111,14 @@ public class Recorder
         return rh;
     }
 
-    public ReqHistory newBuildInHistory(String name, String target)
+    public ReqHistory newBuildInHistory(String name)
     {
         ReqHistory rh = newHistory(ReqHistory.TYPE_BUILD_IN);
 
         if (rh != null)
         {
             rh.setName(name);
-            rh.setTarget(target);
+            rh.setTarget(name);
         }
 
         return rh;

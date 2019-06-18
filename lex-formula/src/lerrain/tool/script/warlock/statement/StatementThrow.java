@@ -31,19 +31,16 @@ public class StatementThrow extends Code
 
 			if (v instanceof Wrap)
 			{
-				Object[] list = ((Wrap)v).toArray();
-				if (list != null)
-				{
-					if (list.length >= 2)
-						val = list[1];
-
-					if (list.length >= 1)
-						msg = list[0] == null ? null : list[0].toString();
-				}
+				val = ((Wrap)v).toArray();
+			}
+			else if (v instanceof String)
+			{
+				msg = (String)v;
+				val = v;
 			}
 			else
 			{
-				msg = v == null ? null : v.toString();
+				val = v;
 			}
 		}
 

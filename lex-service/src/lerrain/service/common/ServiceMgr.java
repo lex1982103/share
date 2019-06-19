@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.tool.Common;
 import lerrain.tool.Network;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
@@ -12,8 +13,10 @@ import java.util.*;
 
 public class ServiceMgr
 {
-    public static final long MAX = 1024L * 1024 * 16;
+//    public static final long MAX = 1024L * 1024 * 16;
+
     public static int SPEND_SLOW = 300;
+    public static int SERVICE_TIME_OUT = 500;
 
     @Resource
     private Environment env;
@@ -454,7 +457,7 @@ public class ServiceMgr
             if (link.startsWith("/"))
                 link = link.substring(1);
 
-            return Network.request(url + link, param, timeout <= 0 ? 300 : timeout);
+            return Network.request(url + link, param, timeout <= 0 ? SERVICE_TIME_OUT : timeout);
         }
     }
 

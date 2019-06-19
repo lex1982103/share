@@ -196,7 +196,7 @@ public class Script extends Code
 	{
 		Object r = null;
 		
-		if (express && !(factors instanceof Stack)) //只有单行纯表达式才可以不在stack里运行（不可debug运算细节），多行脚本必须在stack运行
+		if (!express && !(factors instanceof Stack)) //只有单行纯表达式才可以不在stack里运行（不可debug运算细节），多行脚本必须在stack运行
 			factors = new Stack(factors);
 
 		if (Thread.currentThread().isInterrupted())

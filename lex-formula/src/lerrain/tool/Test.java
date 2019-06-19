@@ -45,6 +45,18 @@ public class Test
 
 	public static void main(String[] s)
 	{
+		Script script = Script.scriptOf("var product = PLAN.PRODUCTS;\n" +
+				"\t            var ridp=0;\n" +
+				"\t            for(var i=0; i lt size(product); i++){\n" +
+				"\t            \tvar p = product[i];\n" +
+				"\t            \tif(p.DEF_ID == '1030001'){\n" +
+				"\t            \t\tridp=p.PREMIUM;\n" +
+				"\t            \t}\n" +
+				"\t            }\n" +
+				"\t            return ridp+PARENT.PREMIUM;");
+
+		System.out.println(script);
+
 		MapTest mt = new MapTest();
 
 		Thread thread = new Thread(mt);

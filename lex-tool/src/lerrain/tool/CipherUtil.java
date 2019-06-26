@@ -1,6 +1,7 @@
 package lerrain.tool;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
@@ -28,6 +29,9 @@ public class CipherUtil
 
     static Cipher enc, dec;
 
+    /**
+     * @deprecated
+     */
     public static void initiate(String pwd) throws Exception
     {
         DESKeySpec desKeySpec = new DESKeySpec(pwd.getBytes());
@@ -41,6 +45,9 @@ public class CipherUtil
         dec.init(Cipher.DECRYPT_MODE, key);  //相同密钥，指定为解密模式
     }
 
+    /**
+     * @deprecated
+     */
     public static String decode(String dst)
     {
         if (dst == null)
@@ -56,6 +63,9 @@ public class CipherUtil
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static String encode(Object src)
     {
         if (src == null)
@@ -64,6 +74,9 @@ public class CipherUtil
         return encode(src.toString());
     }
 
+    /**
+     * @deprecated
+     */
     public static String encode(String src)
     {
         if (src == null)
@@ -79,6 +92,9 @@ public class CipherUtil
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static byte[] decodeHex(String str)
     {
         char[] data = str.toCharArray();
@@ -101,6 +117,9 @@ public class CipherUtil
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static String encodeHex(byte[] data)
     {
         int l = data.length;
@@ -115,6 +134,9 @@ public class CipherUtil
         return new String(out);
     }
 
+    /**
+     * @deprecated
+     */
     public static Map<String, Object> genKeyPair() throws Exception
     {
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
@@ -128,6 +150,9 @@ public class CipherUtil
         return keyMap;
     }
 
+    /**
+     * @deprecated
+     */
     public static String sign(byte[] data, String privateKey) throws Exception
     {
         byte[] keyBytes = Common.decodeBase64ToByte(privateKey);
@@ -140,6 +165,9 @@ public class CipherUtil
         return Common.encodeBase64(signature.sign());
     }
 
+    /**
+     * @deprecated
+     */
     public static boolean verify(byte[] data, String publicKey, String sign) throws Exception
     {
         byte[] keyBytes = Common.decodeBase64ToByte(publicKey);
@@ -152,6 +180,9 @@ public class CipherUtil
         return signature.verify(Common.decodeBase64ToByte(sign));
     }
 
+    /**
+     * @deprecated
+     */
     public static byte[] decryptByPrivateKey(byte[] encryptedData, String privateKey) throws Exception
     {
         byte[] keyBytes = Common.decodeBase64ToByte(privateKey);
@@ -180,6 +211,9 @@ public class CipherUtil
         return decryptedData;
     }
 
+    /**
+     * @deprecated
+     */
     public static byte[] decryptByPublicKey(byte[] encryptedData, String publicKey) throws Exception
     {
         byte[] keyBytes = Common.decodeBase64ToByte(publicKey);
@@ -208,6 +242,9 @@ public class CipherUtil
         return decryptedData;
     }
 
+    /**
+     * @deprecated
+     */
     public static byte[] encryptByPublicKey(byte[] data, String publicKey) throws Exception
     {
         byte[] keyBytes = Common.decodeBase64ToByte(publicKey);
@@ -236,6 +273,9 @@ public class CipherUtil
         return encryptedData;
     }
 
+    /**
+     * @deprecated
+     */
     public static byte[] encryptByPrivateKey(byte[] data, String privateKey) throws Exception
     {
         byte[] keyBytes = Common.decodeBase64ToByte(privateKey);
@@ -263,12 +303,18 @@ public class CipherUtil
         return encryptedData;
     }
 
+    /**
+     * @deprecated
+     */
     public static String getPrivateKey(Map<String, Object> keyMap) throws Exception
     {
         Key key = (Key) keyMap.get(PRIVATE_KEY);
         return Common.encodeBase64(key.getEncoded());
     }
 
+    /**
+     * @deprecated
+     */
     public static String getPublicKey(Map<String, Object> keyMap) throws Exception
     {
         Key key = (Key) keyMap.get(PUBLIC_KEY);
@@ -276,4 +322,70 @@ public class CipherUtil
     }
 
 
+    public static byte[][] newKeyPair(String algorithm, int length) throws Exception
+    {
+        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(algorithm);
+        keyPairGen.initialize(length, new SecureRandom());
+        KeyPair keyPair = keyPairGen.generateKeyPair();
+
+        return new byte[][] {keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded()};
+    }
+
+    public static String sign(String algorithm, byte[] privateKey, byte[] data) throws Exception
+    {
+        PrivateKey priKey = KeyFactory.getInstance(algorithm).generatePrivate(new X509EncodedKeySpec(privateKey));
+
+        Signature signature = Signature.getInstance(algorithm);
+        signature.initSign(priKey);
+        signature.update(data);
+
+        return new String(signature.sign());
+    }
+
+    public static boolean verify(String algorithm, byte[] publicKey, byte[] data, byte[] sign) throws Exception
+    {
+        PublicKey pubKey = KeyFactory.getInstance(algorithm).generatePublic(new X509EncodedKeySpec(publicKey));
+
+        Signature signature = Signature.getInstance(algorithm);
+        signature.initVerify(pubKey);
+        signature.update(data);
+
+        return signature.verify(sign);
+    }
+
+    public static byte[] encrypt(String algorithm, byte[] publicKey, byte[] data) throws Exception
+    {
+        PublicKey pubKey = KeyFactory.getInstance(algorithm).generatePublic(new X509EncodedKeySpec(publicKey));
+
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+
+        return cipher.doFinal(data);
+    }
+
+    public static byte[] decrypt(String algorithm, byte[] privateKey, byte[] encryptedData) throws Exception
+    {
+        PrivateKey priKey = KeyFactory.getInstance(algorithm).generatePrivate(new X509EncodedKeySpec(privateKey));
+
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.DECRYPT_MODE, priKey);
+
+        return cipher.doFinal(encryptedData);
+    }
+
+    public static byte[] newKey(String algorithm, int length) throws Exception
+    {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
+        keyGenerator.init(length);
+        SecretKey secretKey = keyGenerator.generateKey();
+
+        return secretKey.getEncoded();
+    }
+
+    public static void main(String[] str) throws Exception
+    {
+        byte[][] keys = newKeyPair("RSA", 2048);
+        System.out.println(Common.encodeBase64(keys[0]));
+        System.out.println(Common.encodeBase64(keys[1]));
+    }
 }

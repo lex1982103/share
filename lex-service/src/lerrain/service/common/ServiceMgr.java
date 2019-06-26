@@ -165,16 +165,23 @@ public class ServiceMgr
             if (listener != null)
                 passport = listener.onBegin(client, loc, param);
 
-            client.post++;
+            synchronized (client)
+            {
+                client.post++;
+            }
 
             String req = param == null ? null : param.toString();
             String res = client.client.req(loc, req, timeout);
 
             int t1 = (int)(System.currentTimeMillis() - t);
-            client.recTime(loc, t1);
 
-            if (t1 >= SPEND_SLOW)
-                client.slow++;
+            synchronized (client)
+            {
+                client.recTime(loc, t1);
+
+                if (t1 >= SPEND_SLOW)
+                    client.slow++;
+            }
 
             if (servers.level == 1)
                 Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
@@ -191,7 +198,10 @@ public class ServiceMgr
             if (listener != null)
                 listener.onFail(passport, (int)(System.currentTimeMillis() - t), e);
 
-            client.fail++;
+            synchronized (client)
+            {
+                client.fail++;
+            }
 
             Log.error("request: " + servers.name + "/" + loc + " -- " + param, e);
             throw e;
@@ -211,26 +221,29 @@ public class ServiceMgr
             JSONArray list = new JSONArray();
             for (Client c : e.getValue().clients)
             {
-                JSONObject r1 = new JSONObject();
-                r1.put("client", c.client.toString());
-                r1.put("post", c.post);
-                r1.put("fail", c.fail);
-                r1.put("slow", c.slow);
+                synchronized (c.client)
+                {
+                    JSONObject r1 = new JSONObject();
+                    r1.put("client", c.client.toString());
+                    r1.put("post", c.post);
+                    r1.put("fail", c.fail);
+                    r1.put("slow", c.slow);
 
-                if (c.post - c.fail > 0)
-                    r1.put("average", c.totalTime / (c.post - c.fail));
+                    if (c.post - c.fail > 0)
+                        r1.put("average", c.totalTime / (c.post - c.fail));
 
-                int[] t = new int[c.time.length];
-                for (int i = 0; i < t.length; i++)
-                    t[i] = c.time[(c.pos + t.length - i) % t.length];
-                r1.put("time", t);
+                    int[] t = new int[c.time.length];
+                    for (int i = 0; i < t.length; i++)
+                        t[i] = c.time[(c.pos + t.length - i) % t.length];
+                    r1.put("time", t);
 
-                String[] uri = new String[c.uri.length];
-                for (int i = 0; i < uri.length; i++)
-                    uri[i] = c.uri[(c.pos + uri.length - i) % uri.length];
-                r1.put("uri", c.uri);
+                    String[] uri = new String[c.uri.length];
+                    for (int i = 0; i < uri.length; i++)
+                        uri[i] = c.uri[(c.pos + uri.length - i) % uri.length];
+                    r1.put("uri", c.uri);
 
-                list.add(r1);
+                    list.add(r1);
+                }
             }
 
             r.put(e.getKey(), list);
@@ -245,10 +258,13 @@ public class ServiceMgr
         {
             for (Client c : e.getValue().clients)
             {
-                c.post = 0;
-                c.fail = 0;
-                c.slow = 0;
-                c.totalTime = 0;
+                synchronized (c)
+                {
+                    c.post = 0;
+                    c.fail = 0;
+                    c.slow = 0;
+                    c.totalTime = 0;
+                }
             }
         }
     }

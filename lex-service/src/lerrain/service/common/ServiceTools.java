@@ -37,7 +37,7 @@ public class ServiceTools
             if (v[2] <= 1)
                 v[0]++;
             else
-                v[0] += ran.nextInt((int)v[2]);
+                v[0] += ran.nextInt((int)v[2] - 1) + 1;
 
             if (v[0] > v[1])
                 reqId(code, v, 5000, 10000, 30000);

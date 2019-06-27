@@ -336,6 +336,8 @@ public class ServiceMgr
 
             String[] url = addrs.split(",");
 
+            Client[] last = clients;
+
             clients = new Client[url.length];
             for (int i = 0; i < url.length; i++)
             {
@@ -344,6 +346,14 @@ public class ServiceMgr
                 clients[i].url = Common.trimStringOf(url[i]);
 //                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
                 clients[i].client = new NetworkClient(clients[i].url);
+
+                if (last != null && last.length > i)
+                {
+                    clients[i].post = last[i].post;
+                    clients[i].fail = last[i].fail;
+                    clients[i].slow = last[i].slow;
+                    clients[i].totalTime = last[i].totalTime;
+                }
             }
         }
 

@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.ScriptRuntimeError;
 import lerrain.tool.script.ScriptRuntimeThrow;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Wrap;
@@ -10,12 +11,17 @@ import lerrain.tool.script.warlock.analyse.Words;
 public class StatementThrow extends Code
 {
 	Code r;
+
+	boolean error = false;
 	
 	public StatementThrow(Words ws)
 	{
 		super(ws);
 
-		r = Expression.expressionOf(ws.cut(1));
+		if ("error".equals(ws.getWord(1)))
+			r = Expression.expressionOf(ws.cut(2));
+		else
+			r = Expression.expressionOf(ws.cut(1));
 	}
 
 	public Object run(Factors factors)
@@ -44,7 +50,10 @@ public class StatementThrow extends Code
 			}
 		}
 
-		throw new ScriptRuntimeThrow(this, factors, msg, val);
+		if (error)
+			throw new ScriptRuntimeError(this, factors, msg, val);
+		else
+			throw new ScriptRuntimeThrow(this, factors, msg, val);
 	}
 
 	public String toText(String space, boolean line)

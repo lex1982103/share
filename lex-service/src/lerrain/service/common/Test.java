@@ -20,10 +20,35 @@ import java.util.Random;
  */
 public class Test
 {
+    static int[] XX = new int[4];
+
     public static void main(String[] arg) throws Exception
     {
+        Runnable r = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                for (int i=0;i<1000;i++)
+                {
+                    synchronized (XX)
+                    {
+                        XX[0]++;
+                        XX[1] += XX[1];
+                        XX[2] += 3;
+                        XX[3] += ran.nextInt(10);
+                    }
+                }
+
+                System.out.println(XX[0]);
+            }
+        };
+
         for (int i=0;i<1000;i++)
-            System.out.println(nextId("order"));
+            new Thread(r).start();
+
+
+//            System.out.println(nextId("order"));
 
 //        ServiceMgr cm = new ServiceMgr();
 //        ServiceClient client = cm.getClient("http://localhost:7773");
@@ -88,7 +113,7 @@ public class Test
     {
         try
         {
-            String[] res = (id + ",100000,10000").split(",");
+            String[] res = (id + ",100000,10").split(",");
 
             r[0] = Long.parseLong(res[0]);
             r[1] = Long.parseLong(res[1]);

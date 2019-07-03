@@ -72,12 +72,12 @@ public class Syntax
 			{
 				return new StatementFunction(ws);
 			}
-			else if ("try".equals(word) && ws.getType(1) == Words.BRACE)
-			{
-				return new StatementTry(ws);
-			}
-			
+
 			throw new SyntaxException(ws, 0, "无法识别的关键字");
+		}
+		else if ("try".equals(word) && ws.getType(1) == Words.BRACE) //try也是个函数，就不好做关键字了，用try后面紧跟一个大括号来识别
+		{
+			return new StatementTry(ws);
 		}
 		else if (type == Words.BRACE)
 		{

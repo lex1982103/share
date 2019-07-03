@@ -60,6 +60,9 @@ public class StatementTry extends Code
 		}
 		catch (Exception e)
 		{
+			if (catchAll == null)
+				throw e;
+
 			catchAll.run(new Stack(factors));
 		}
 		

@@ -72,10 +72,10 @@ public class Syntax
 			{
 				return new StatementFunction(ws);
 			}
-//			else if ("try".equals(word))
-//			{
-//				return new StatementTry(ws);
-//			}
+			else if ("try".equals(word) && ws.getType(1) == Words.BRACE)
+			{
+				return new StatementTry(ws);
+			}
 			
 			throw new SyntaxException(ws, 0, "无法识别的关键字");
 		}

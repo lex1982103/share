@@ -19,46 +19,7 @@ public class FunctionTime implements Function
 		}
 		else if (v.length == 1)
 		{
-			Object val = v[0];
-			if (val == null)
-			{
-				return new Date();
-			}
-			else if (val instanceof java.sql.Date)
-			{
-				return new Date(((java.sql.Date) val).getTime());
-			}
-			else if (val instanceof Date)
-			{
-				return (Date) val;
-			}
-			else if (val instanceof Long)
-			{
-				return new Date((Long) val);
-			}
-			else if (val instanceof Number)
-			{
-				return new Date(((Number) val).longValue());
-			}
-			else if (val instanceof String)
-			{
-				try
-				{
-					String str = (String) val;
-					if (str.length() == 8)
-						return getDate((String) val, "yyyyMMdd");
-					else if (str.length() == 10)
-						return getDate((String) val, "yyyy-MM-dd");
-					else if (str.length() == 14)
-						return getDate((String) val, "yyyyMMddHHmmss");
-					else if (str.length() == 19)
-						return getDate((String) val, "yyyy-MM-dd HH:mm:ss");
-				}
-				catch (Exception e)
-				{
-					throw new RuntimeException("错误的time运算 - " + e.getMessage());
-				}
-			}
+			return getDate(v[0]);
 		}
 		else
 		{
@@ -67,9 +28,9 @@ public class FunctionTime implements Function
 			Object[] vv = new Object[6];
 			for (int i=0;i<6;i++)
 				vv[i] = (i + 1 < v.length ? Value.intOf(v[i + 1]) : 0) + Integer.parseInt(str.substring(i == 0 ? 0 : i * 2 + 2, i * 2 + 4));
+
 			return getDate(String.format(buf, vv), "yyyy-MM-dd HH:mm:ss");
 		}
-//
 //		else if (v.length == 3)
 //		{
 //			return getDate(String.format("%04d%02d%02d", Value.intOf(v[0]),  Value.intOf(v[1]),  Value.intOf(v[2])), "yyyyMMdd");
@@ -99,8 +60,64 @@ public class FunctionTime implements Function
 //					Value.intOf(v[5]) + Integer.parseInt(str.substring(12))
 //			), "yyyyMMddHHmmss");
 //		}
+	}
 
-		throw new RuntimeException("错误的time运算");
+	public static Date getDate(Object val)
+	{
+		if (val == null)
+		{
+			return new Date();
+		}
+		else if (val instanceof java.sql.Date)
+		{
+			return new Date(((java.sql.Date) val).getTime());
+		}
+		else if (val instanceof Date)
+		{
+			return (Date) val;
+		}
+		else if (val instanceof Long)
+		{
+			return new Date((Long) val);
+		}
+		else if (val instanceof Number)
+		{
+			return new Date(((Number) val).longValue());
+		}
+		else if (val instanceof String)
+		{
+			try
+			{
+				String str = (String) val;
+				str = str.replaceAll("/", "-");
+
+				int pos = str.indexOf("-");
+				if (pos > 0)
+				{
+					if (str.length() <= 10)
+						return getDate(str, "yyyy-MM-dd");
+					else
+						return getDate(str, "yyyy-MM-dd HH:mm:ss");
+				}
+
+				if (str.length() == 8)
+				{
+					return getDate(str, "yyyyMMdd");
+				}
+				else if (str.length() == 14)
+				{
+					return getDate(str, "yyyyMMddHHmmss");
+				}
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("错误的time运算 - " + e.getMessage());
+			}
+
+			throw new RuntimeException("timestr不支持的string格式 - " + val);
+		}
+
+		throw new RuntimeException("timestr不支持的格式 - " + val.getClass().toString());
 	}
 
 	public static Date getDate(String dateStr, String formatPattern)
@@ -116,13 +133,12 @@ public class FunctionTime implements Function
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("错误的time运算 - " + dateStr + " - " + formatPattern + " - " + e.getMessage());
+			throw new RuntimeException(dateStr + " - " + formatPattern + " - " + e.getMessage());
 		}
 	}
 
 	public static void main(String[] s)
 	{
-		FunctionTime ft = new FunctionTime();
-		System.out.println(ft.run(new Object[] {new Date(), 0, 0, 90}, null ));
+		System.out.println(getDate("2015-08/09"));
 	}
 }

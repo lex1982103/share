@@ -17,11 +17,11 @@ public class FunctionTimeStr implements Function
 		}
 		else if (v.length == 1)
 		{
-			return getString((Date)v[0], "yyyy-MM-dd");
+			return getString(FunctionTime.getDate(v[0]), "yyyy-MM-dd");
 		}
 		else if (v.length == 2)
 		{
-			return getString((Date)v[0], (String)v[1]);
+			return getString(FunctionTime.getDate(v[0]), (String)v[1]);
 		}
 
 		throw new RuntimeException("错误的timestr运算");

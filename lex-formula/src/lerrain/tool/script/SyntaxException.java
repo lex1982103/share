@@ -52,7 +52,36 @@ public class SyntaxException extends RuntimeException
 			return super.getMessage();
 
 		if (pos < 0 && ws != null)
-			return super.getMessage() + " - " + ws.getScript().substring(0, Math.min(100, ws.getScript().length()));
+		{
+			int p1 = ws.getLocation(0);
+			int p2 = ws.getLocation(ws.size() - 1);
+
+			if (p1 < 0 || p2 <= p1)
+			{
+				return super.getMessage() + " - " + ws.getScript().substring(0, Math.min(100, ws.getScript().length()));
+			}
+			else
+			{
+				String script = ws.getScript();
+
+				p1 -= 10;
+				p2 += 10;
+
+				if (p1 < 0)
+					p1 = 0;
+				if (p2 > script.length())
+					p2 = script.length();
+
+				String wss = "";
+				for (int i = 0; i < 5 && i < ws.size(); i++)
+				{
+					wss += ws.getWord(i);
+					wss += " ";
+				}
+
+				return super.getMessage() + " for " + wss + "at " + script.substring(p1, p2);
+			}
+		}
 
 		if (pos < 0 && script != null)
 			return super.getMessage() + " - " + script.substring(0, Math.min(100, script.length()));

@@ -126,6 +126,11 @@ public class Words implements Serializable
 	{
 		return num == 0;
 	}
+
+	public int getFrom()
+	{
+		return from;
+	}
 	
 	public void setType(int index, int type)
 	{

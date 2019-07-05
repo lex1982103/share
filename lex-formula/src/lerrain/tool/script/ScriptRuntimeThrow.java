@@ -7,20 +7,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Map;
 
-public class ScriptRuntimeThrow extends ScriptRuntimeException
+public class ScriptRuntimeThrow extends ScriptRuntimeError
 {
-	Object value;
-
 	public ScriptRuntimeThrow(Code code, Factors factors, String detail, Object value)
 	{
-		super(code, factors, detail);
-
-		this.value = value;
+		super(code, factors, detail, value);
 	}
-
-	public Object getValue()
-	{
-		return value;
-	}
-
 }

@@ -3,6 +3,8 @@ package lerrain.tool.script.warlock.function;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.ScriptRuntimeError;
+import lerrain.tool.script.ScriptRuntimeThrow;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -29,6 +31,12 @@ public class FunctionType implements Function
 
 		if (v[0] instanceof Object[])
 			return "array";
+
+		if (v[0] instanceof ScriptRuntimeThrow)
+			return "throw";
+
+		if (v[0] instanceof ScriptRuntimeError)
+			return "error";
 
 		if (v[0] instanceof Exception)
 			return "exception";

@@ -3,6 +3,7 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeThrow;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Syntax;
@@ -11,6 +12,8 @@ import lerrain.tool.script.warlock.analyse.Words;
 public class StatementTry extends Code
 {
 	Code code;
+
+	String excVar;
 	Code catchAll;
 
 	public StatementTry(Words ws)
@@ -25,6 +28,22 @@ public class StatementTry extends Code
 		if (right > 0 && right < ws.size() && "catch".equals(ws.getWord(right)))
 		{
 			left = right + 1; //catch后面左括号的位置
+			if (ws.getType(left) == Words.PRT)
+			{
+				if (ws.getType(left + 1) == Words.PRT_R)
+				{
+					left = left + 2;
+				}
+				else if (ws.getType(left + 2) == Words.PRT_R)
+				{
+					excVar = ws.getWord(left + 1);
+					left = left + 3;
+				}
+			}
+
+			if (ws.getType(left) != Words.BRACE)
+				throw new RuntimeException("catch后面没有找到代码段");
+
 			right = Syntax.findRightBrace(ws, left + 1);
 			catchAll = new Script(ws.cut(left + 1, right));
 		}
@@ -63,7 +82,11 @@ public class StatementTry extends Code
 			if (catchAll == null)
 				throw e;
 
-			catchAll.run(new Stack(factors));
+			Stack exc = new Stack(factors);
+			if (excVar != null)
+				exc.set(excVar, e);
+
+			catchAll.run(exc);
 		}
 		
 		return null;

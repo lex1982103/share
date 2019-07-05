@@ -7,6 +7,9 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeError;
+import lerrain.tool.script.ScriptRuntimeException;
+import lerrain.tool.script.ScriptRuntimeThrow;
 
 public class FunctionVal implements Function
 {
@@ -19,6 +22,9 @@ public class FunctionVal implements Function
 
 			if (v[0] instanceof Map)
 				return ((Map)v[0]).values();
+
+			if (v[0] instanceof ScriptRuntimeError)
+				return ((ScriptRuntimeError)v[0]).getValue();
 
 			Script r = Script.scriptOf(v[0].toString());
 			return r.run(factors);

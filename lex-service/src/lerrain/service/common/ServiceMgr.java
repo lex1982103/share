@@ -96,6 +96,16 @@ public class ServiceMgr
         return req(service, loc, param, -1);
     }
 
+    public ServiceResponse ask(String service, String loc, JSON param)
+    {
+        return new ServiceResponse(req(service, loc, param, -1));
+    }
+
+    public ServiceResponse ask(String service, String loc, JSON param, int timeout)
+    {
+        return new ServiceResponse(req(service, loc, param, timeout));
+    }
+
     public JSONObject req(String service, String loc, JSON param, int timeout)
     {
         return JSONObject.parseObject(reqStr(service, loc, param, timeout));

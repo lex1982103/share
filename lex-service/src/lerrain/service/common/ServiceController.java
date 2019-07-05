@@ -25,19 +25,30 @@ public class ServiceController
     @ResponseBody
     public JSONObject exc(Exception e)
     {
-        Log.error(e);
-
         JSONObject res = new JSONObject();
-        res.put("result", "fail");
-
-        if (e instanceof ServiceException)
+        if (e instanceof ServiceAlert)
         {
+            Log.alert(e);
+
+            ServiceAlert se = (ServiceAlert)e;
+            res.put("result", "alert");
+            res.put("reason", se.getMessage());
+            res.put("detail", se.getDetail());
+        }
+        else if (e instanceof ServiceException)
+        {
+            Log.error(e);
+
             ServiceException se = (ServiceException)e;
+            res.put("result", "fail");
             res.put("reason", se.getMessage());
             res.put("detail", se.getDetail());
         }
         else
         {
+            Log.error(e);
+
+            res.put("result", "fail");
             res.put("reason", e.getMessage());
         }
 

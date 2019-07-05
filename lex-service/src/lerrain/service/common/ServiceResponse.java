@@ -48,6 +48,11 @@ public class ServiceResponse
         return value;
     }
 
+    public JSONObject getJsonVal()
+    {
+        return (JSONObject)value;
+    }
+
     public String getReason()
     {
         return reason;

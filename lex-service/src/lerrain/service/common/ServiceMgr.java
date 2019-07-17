@@ -199,7 +199,7 @@ public class ServiceMgr
                 Log.info("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
 
             if (listener != null)
-                listener.onSucc(passport, t1);
+                listener.onSucc(passport, t1, res);
 
             return res;
         }
@@ -506,7 +506,7 @@ public class ServiceMgr
     {
         public Object onBegin(Client client, String loc, Object param);
 
-        public void onSucc(Object passport, int time);
+        public void onSucc(Object passport, int time, Object res);
 
         public void onFail(Object passport, int time, Exception e);
     }

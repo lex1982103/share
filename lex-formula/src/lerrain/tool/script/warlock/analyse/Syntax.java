@@ -173,11 +173,15 @@ public class Syntax
 		for (; i < size; i++)
 		{
 			int t = ws.getType(i);
-			
+			int j = 0;
+
 			if (t == Words.BRACE || t == Words.BRACKET || t == Words.PRT)
+			{
+				j = i;
 				i = findRightBrace(ws, i + 1);
-			
-			if (isSplit(ws, i))
+			}
+
+			if (isSplit(ws, i, j - 1))
 				return i;
 		}
 		
@@ -208,15 +212,22 @@ public class Syntax
 		return -1;
 	}
 	
-	private static boolean isSplit(Words ws, int i)
+	private static boolean isSplit(Words ws, int i, int j)
 	{
 		int size = ws.size();
 		int t = ws.getType(i);
-		
+
 		//分号和右大括号并不能完全代表行结尾，如果后面跟else、catch等，需要继续追加
 		if (t == Words.SEMICOLON || t == Words.BRACE_R)
 		{
 			String s1 = i + 1 < size ? ws.getWord(i + 1) : null;
+
+			if (j >= 0) //这里是特别语法处理，j>=0时t一定是BRACE_R，throw如果跟在try{}后面，那就不单独作为语句，而是作为try语句的一部分
+			{
+				if ("throw".equals(s1) && "try".equals(ws.getWord(j)))
+					return false;
+			}
+
 			return (!"else".equals(s1) && !"catch".equals(s1));
 		}
 		

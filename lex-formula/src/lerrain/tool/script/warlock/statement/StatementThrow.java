@@ -19,9 +19,14 @@ public class StatementThrow extends Code
 		super(ws);
 
 		if ("error".equals(ws.getWord(1)))
+		{
 			r = Expression.expressionOf(ws.cut(2));
+			error = true;
+		}
 		else
+		{
 			r = Expression.expressionOf(ws.cut(1));
+		}
 	}
 
 	public Object run(Factors factors)

@@ -92,9 +92,13 @@ public class Expression
 
 				t = ws.getType(i);
 			}
-			
-			int p2 = getPriority(t);
-			if (p2 > 0 && p2 < p1)
+
+			int p2 = t == Words.KEYWORD ? getPriority(ws.getWord(i)) : getPriority(t);
+
+			boolean right = t == Words.QUESTMARK; //这个运算是右边优先，和其他的相反
+			boolean match = right ? p2 <= p1 : p2 < p1;
+
+			if (p2 > 0 && match)
 			{
 				p1 = p2;
 				pos = i;
@@ -142,7 +146,7 @@ public class Expression
 		if (arithmetic == Words.SUBLET) return new ArithmeticSubLet(ws, pos);
 		if (arithmetic == Words.COMMA) return new ArithmeticComma(ws, pos);
 		if (arithmetic == Words.QUESTMARK) return new ArithmeticQuestMark(ws, pos);
-		if (arithmetic == Words.COLON) return new ArithmeticColon(ws, pos);
+		if (arithmetic == Words.COLON || arithmetic == Words.COLON_SPLIT) return new ArithmeticColon(ws, pos);
 		
 		if (arithmetic == Words.NEW) return new ArithmeticNew(ws, pos);
 		if (arithmetic == Words.FUNCTION_DIM) return new ArithmeticFunctionDim(ws, pos);
@@ -175,16 +179,38 @@ public class Expression
 		if (arithmetic == Words.LESSEQUAL) return new ArithmeticLessEqual(ws, pos);
 		
 		if (arithmetic == Words.PRT) return new ArithmeticParentheses(ws, pos);
+
+		if (arithmetic == Words.KEYWORD)
+		{
+			String word = ws.getWord(pos);
+
+			if ("throw".equals(word))
+				return new ArithmeticThrow(ws, pos);
+			if ("catch".equals(word))
+				return new ArithmeticCatch(ws, pos);
+		}
 		
 		throw new SyntaxException(ws, pos, "ARITHMETIC<" + arithmetic + "> not found");
+	}
+
+	private static int getPriority(String word)
+	{
+		if ("throw".equals(word))
+			return 10;
+		if ("catch".equals(word))
+			return 40;
+
+		return -1;
 	}
 	
 	private static int getPriority(int arithmetic)
 	{
-		if (arithmetic == Words.LET) return 50;
+		if (arithmetic == Words.COMMA) return 20;
+		if (arithmetic == Words.COLON_SPLIT) return 25;
+		if (arithmetic == Words.LET) return 30;
+
 		if (arithmetic == Words.ADDLET) return 50;
 		if (arithmetic == Words.SUBLET) return 50;
-		if (arithmetic == Words.COMMA) return 60;
 		if (arithmetic == Words.QUESTMARK) return 100;
 		if (arithmetic == Words.COLON) return 101;
 
@@ -212,7 +238,6 @@ public class Expression
 
 		if (arithmetic == Words.AND) return 300;
 		if (arithmetic == Words.OR) return 200;
-		if (arithmetic == Words.REVISE) return 1200;
 		if (arithmetic == Words.EQUAL) return 700;
 		if (arithmetic == Words.APPROX) return 700;
 		if (arithmetic == Words.NOTEQUAL) return 700;
@@ -220,6 +245,7 @@ public class Expression
 		if (arithmetic == Words.LESS) return 800;
 		if (arithmetic == Words.GREATEREQUAL) return 800;
 		if (arithmetic == Words.LESSEQUAL) return 800;
+		if (arithmetic == Words.REVISE) return 1200;
 
 		return -1;
 	}

@@ -21,7 +21,7 @@ public class ArithmeticBrace extends Code
 		if (ws.getType(i) != Words.BRACE || ws.getType(ws.size() - 1) != Words.BRACE_R)
 			throw new SyntaxException("找不到数组的右括号");
 
-		if (ws.size() - 1 == i + 1 || ws.getType(i + 2) == Words.COLON)
+		if (ws.size() - 1 == i + 1 || ws.getType(i + 2) == Words.COLON_SPLIT)
 			a = Expression.expressionOf(ws.cut(i + 1, ws.size() - 1));
 		else
 			a = new StatementParagraph(ws.cut(i, ws.size()));

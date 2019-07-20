@@ -36,7 +36,8 @@ public class Words implements Serializable
 	public static final int COMMA				= 100; //,
 	public static final int QUESTMARK			= 101; //?
 	public static final int COLON				= 102; //:
-	public static final int COLON2				= 103; //:
+	public static final int COLON2				= 103; //::
+	public static final int COLON_SPLIT			= 104; //json或map串中key后面的:
 	public static final int LET					= 110;
 	public static final int AND					= 120; 
 	public static final int OR					= 130; 
@@ -68,7 +69,7 @@ public class Words implements Serializable
 	public static final int FUNCTION			= 390; //函数
 	public static final int METHOD				= 400; //方法
 	public static final int KEY					= 410; //相对于前方值的KEY
-	
+
 //	List c = new ArrayList();
 //	IntList d = new IntList();
 //	IntList e = new IntList();
@@ -285,7 +286,15 @@ public class Words implements Serializable
 				}
 				
 				String w = text.substring(x, i + 1);
-				ws.add(w, getSymbolType(w), x);
+				int type = getSymbolType(w);
+				if (type == Words.COLON) //如果冒号前面是一个string/word/keyword，在前面是一个逗号，那么他就是json/map串中key后面的冒号，不是常规的?:
+				{
+					int t1 = ws.getType(ws.size() - 1);
+					int t2 = ws.getType(ws.size() - 2);
+					if (ws.size() >= 2 && (t1 == Words.STRING || t1 == Words.KEYWORD || t1 == Words.WORD) && (t2 == Words.BRACE || t2 == Words.COMMA))
+						type = Words.COLON_SPLIT;
+				}
+				ws.add(w, type, x);
 			}
 			else if (isLetter(c)) //如果是单词
 			{
@@ -476,7 +485,7 @@ public class Words implements Serializable
 		if ("false".equals(word))
 			return FALSE;
 		
-		if (",for,while,if,else,return,continue,break,var,throw,thread,synch,function,".indexOf("," + word + ",") >= 0)
+		if (",for,while,if,else,return,continue,break,var,throw,thread,synch,function,catch,".indexOf("," + word + ",") >= 0)
 			return KEYWORD;
 		
 		return WORD;

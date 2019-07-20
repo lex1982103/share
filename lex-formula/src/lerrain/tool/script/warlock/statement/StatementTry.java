@@ -16,6 +16,8 @@ public class StatementTry extends Code
 	String excVar;
 	Code catchAll;
 
+	Code throwIt;
+
 	public StatementTry(Words ws)
 	{
 		super(ws);
@@ -25,27 +27,36 @@ public class StatementTry extends Code
 		code = new Script(ws.cut(left + 1, right));
 		right++; //catch的位置为右括号+1
 
-		if (right > 0 && right < ws.size() && "catch".equals(ws.getWord(right)))
+		if (right > 0 && right < ws.size())
 		{
-			left = right + 1; //catch后面左括号的位置
-			if (ws.getType(left) == Words.PRT)
+			String after = ws.getWord(right);
+
+			if ("catch".equals(after))
 			{
-				if (ws.getType(left + 1) == Words.PRT_R)
+				left = right + 1; //catch后面左括号的位置
+				if (ws.getType(left) == Words.PRT)
 				{
-					left = left + 2;
+					if (ws.getType(left + 1) == Words.PRT_R)
+					{
+						left = left + 2;
+					}
+					else if (ws.getType(left + 2) == Words.PRT_R)
+					{
+						excVar = ws.getWord(left + 1);
+						left = left + 3;
+					}
 				}
-				else if (ws.getType(left + 2) == Words.PRT_R)
-				{
-					excVar = ws.getWord(left + 1);
-					left = left + 3;
-				}
+
+				if (ws.getType(left) != Words.BRACE)
+					throw new RuntimeException("catch后面没有找到代码段");
+
+				right = Syntax.findRightBrace(ws, left + 1);
+				catchAll = new Script(ws.cut(left + 1, right));
 			}
-
-			if (ws.getType(left) != Words.BRACE)
-				throw new RuntimeException("catch后面没有找到代码段");
-
-			right = Syntax.findRightBrace(ws, left + 1);
-			catchAll = new Script(ws.cut(left + 1, right));
+			else if ("throw".equals(after))
+			{
+				throwIt = new StatementThrow(ws.cut(right));
+			}
 		}
 	}
 
@@ -55,6 +66,8 @@ public class StatementTry extends Code
 			return code.markBreakPoint(pos);
 		else if (catchAll != null && catchAll.isPointOn(pos))
 			return catchAll.markBreakPoint(pos);
+		else if (throwIt != null && throwIt.isPointOn(pos))
+			return throwIt.markBreakPoint(pos);
 
 		return super.markBreakPoint(pos);
 	}
@@ -65,6 +78,8 @@ public class StatementTry extends Code
 
 		if (catchAll != null)
 			catchAll.clearBreakPoints();
+		if (throwIt != null)
+			throwIt.clearBreakPoints();
 
 		super.clearBreakPoints();
 	}
@@ -79,14 +94,22 @@ public class StatementTry extends Code
 		}
 		catch (Exception e)
 		{
-			if (catchAll == null)
+			if (catchAll != null)
+			{
+				Stack exc = new Stack(factors);
+				if (excVar != null)
+					exc.set(excVar, e);
+
+				catchAll.run(exc);
+			}
+			else if (throwIt != null)
+			{
+				throwIt.run(factors);
+			}
+			else
+			{
 				throw e;
-
-			Stack exc = new Stack(factors);
-			if (excVar != null)
-				exc.set(excVar, e);
-
-			catchAll.run(exc);
+			}
 		}
 		
 		return null;

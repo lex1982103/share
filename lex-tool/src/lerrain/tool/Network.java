@@ -9,24 +9,24 @@ import java.security.cert.X509Certificate;
 
 public class Network
 {
-	public static String request(String urlstr)
+	public static String request(String urlstr) throws Exception
 	{
 		return request(urlstr, null, 500, "GET");
 	}
 
-	public static String request(String urlstr, String req)
+	public static String request(String urlstr, String req) throws Exception
 	{
 		return request(urlstr, req, 500, req == null ? "GET" : "POST");
 	}
 
-	public static String request(String urlstr, String req, int timeout)
+	public static String request(String urlstr, String req, int timeout) throws Exception
 	{
 		return request(urlstr, req, timeout, "POST");
 	}
 
-	public static String request(String urlstr, String req, int timeout, String method)
+	public static String request(String urlstr, String req, int timeout, String method) throws Exception
 	{
-		String res = null;
+		String res;
 		
 		HttpURLConnection conn = null;
 		try
@@ -81,7 +81,7 @@ public class Network
 		catch (Exception e)
 		{
 			System.out.println("request: " + urlstr + " - " + req + " -> " + e.getMessage());
-			throw new RuntimeException(e);
+			throw e;
 		}
 		finally
 		{
@@ -92,7 +92,7 @@ public class Network
 		return res;
 	}
 
-	public static String request(String urlstr, byte[] info, int timeout)
+	public static String request(String urlstr, byte[] info, int timeout) throws Exception
 	{
 		String res = null;
 
@@ -136,8 +136,7 @@ public class Network
 		}
 		catch (Exception e)
 		{
-			System.out.println("request: " + urlstr + " -> " + e.getMessage());
-			throw new RuntimeException(e);
+			throw e;
 		}
 		finally
 		{
@@ -148,12 +147,12 @@ public class Network
 		return res;
 	}
 
-	public static String request(String urlstr, int timeout)
+	public static String request(String urlstr, int timeout) throws Exception
 	{
 		return request(urlstr, (byte[])null, timeout);
 	}
 	
-	public static boolean download(String urlstr, File dstFile)
+	public static boolean download(String urlstr, File dstFile) throws Exception
 	{
 		File dir = dstFile.getParentFile();
 		if (!dir.exists())
@@ -183,8 +182,7 @@ public class Network
 		}
 		catch (Exception e)
 		{
-			System.out.println("download: " + urlstr + " - " + e.getMessage());
-			return false;
+			throw e;
 		}
 		finally
 		{

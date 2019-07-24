@@ -177,6 +177,7 @@ public class ServiceMgr
 
             synchronized (client)
             {
+                client.moreFail = 0;
                 client.recTime(loc, t1);
 
                 if (t1 >= SPEND_SLOW)
@@ -201,10 +202,15 @@ public class ServiceMgr
             synchronized (client)
             {
                 client.fail++;
+
+                if (e instanceof java.net.SocketTimeoutException || e instanceof java.net.SocketException)
+                    client.moreFail++;
+                else //这种一般是地址不对，不是服务错误
+                    client.moreFail = 0;
             }
 
-            Log.error("request: " + servers.name + "/" + loc + " -- " + param, e);
-            throw e;
+            Log.error("request: " + servers.name + "/" + loc + " -- " + param + " -- " + e.getMessage());
+            throw new ServiceException(e, "request: " + servers.name + "/" + loc + " -- " + e.getMessage());
         }
     }
 
@@ -277,6 +283,26 @@ public class ServiceMgr
     public void setListener(ServiceListener listener)
     {
         this.listener = listener;
+    }
+
+    public void requestFatal(String name, int index)
+    {
+        if ("secure".equals(name))
+        {
+            Log.error("secure is down");
+            return;
+        }
+
+        JSONArray list = new JSONArray();
+        JSONObject v = new JSONObject();
+        v.put("from", name);
+        v.put("index", index);
+        v.put("result", "down");
+        v.put("type", "service");
+        v.put("time", System.currentTimeMillis());
+        list.add(v);
+
+        ServiceMgr.this.req("secure", "action.json", list);
     }
 
     /*
@@ -367,7 +393,60 @@ public class ServiceMgr
             if (index < 0)
                 index = ran.nextInt(clients.length);
 
-            return clients[index % clients.length];
+            Client client = clients[index % clients.length];
+
+            if (client.moreFail >= 3)
+            {
+                long t = System.currentTimeMillis();
+
+                if (t > client.restoreTime)
+                {
+                    synchronized (client)
+                    {
+                        if (client.moreFail >= 5) //连续5次错误
+                        {
+                            client.restoreTime = System.currentTimeMillis() + 3600L;
+                        }
+                        else if (client.moreFail >= 4) //连续4次错误
+                        {
+                            client.restoreTime = System.currentTimeMillis() + 1800L;
+                        }
+                        else if (client.moreFail >= 3) //连续3次错误
+                        {
+                            client.restoreTime = System.currentTimeMillis() + 600L;
+                        }
+                    }
+
+                    /*
+                     * 标机停机
+                     * 标记停机后先给一次机会，如果成功就消除记录，不会停机；如果失败则停机，并错误累加1，好了以后直接累加进入下一次停机，但是也先给一次机会，如果好了停机计划取消
+                     */
+                    requestFatal(name, index);
+                }
+                else //处于无效期，这里用else，而不是另起if（上面的结果可能已经要求停机了），是考虑每次标记失败都要先请求一次，判断是不是好了
+                {
+                    Client res = null;
+
+                    if (clients.length > 1) //多台机器才有调整停机的空间一台机器只能挂了
+                    {
+                        for (Client c : clients)
+                        {
+                            if (t > c.restoreTime) //为0也是大于
+                            {
+                                res = c;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (res != null)
+                        client = res;
+                    else
+                        Log.error("没有可用的client，继续使用有问题的client");
+                }
+            }
+
+            return client;
         }
 
         public Client getClient(Object req)
@@ -427,6 +506,9 @@ public class ServiceMgr
         int fail;
         int slow;
 
+        int moreFail; //连续错误
+        long restoreTime; //连续错误后停机的恢复时间
+
         long totalTime;
 
         String[] uri = new String[100];
@@ -478,7 +560,7 @@ public class ServiceMgr
         }
 
         @Override
-        public String req(String link, String param, int timeout)
+        public String req(String link, String param, int timeout) throws Exception
         {
             if (link.startsWith("/"))
                 link = link.substring(1);

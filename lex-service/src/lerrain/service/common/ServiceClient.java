@@ -11,5 +11,5 @@ import feign.RequestLine;
 public interface ServiceClient
 {
     @RequestLine("POST /{link}")
-    public String req(@Param("link") String link, String param, int timeout);
+    public String req(@Param("link") String link, String param, int timeout) throws Exception;
 }

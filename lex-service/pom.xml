@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>lerrain</groupId>
 	<artifactId>service</artifactId>
-	<version>1.17</version>
+	<version>1.18</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>lerrain</groupId>
 			<artifactId>common</artifactId>
-			<version>1.7.1</version>
+			<version>1.10</version>
 		</dependency>
 		<dependency>
 			<groupId>lerrain</groupId>

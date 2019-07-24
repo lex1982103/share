@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.tool.Common;
 import lerrain.tool.Network;
+import org.springframework.core.env.Environment;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -24,28 +25,39 @@ public class Test
 
     public static void main(String[] arg) throws Exception
     {
+        Map m = new HashMap();
+        m.put("dict", "http://localhost:8888,http://localhost:7773");
+
+        final ServiceMgr sm = new ServiceMgr();
+        sm.map.put("dict", sm.new Servers("dict"));
+        sm.reset(m);
+
         Runnable r = new Runnable()
         {
             @Override
             public void run()
             {
-                for (int i=0;i<1000;i++)
+                try
                 {
-                    synchronized (XX)
-                    {
-                        XX[0]++;
-                        XX[1] += XX[1];
-                        XX[2] += 3;
-                        XX[3] += ran.nextInt(10);
-                    }
+                    sm.req("dict", "test.json", new JSONObject());
                 }
-
-                System.out.println(XX[0]);
+                catch (Exception e)
+                {
+                }
             }
         };
 
-        for (int i=0;i<1000;i++)
-            new Thread(r).start();
+        for (int i=0;i<100;i++)
+        {
+            r.run();
+            Thread.sleep(10);
+
+            if (i == 10)
+            {
+                ((ServiceMgr.NetworkClient)sm.map.get("dict").clients[0].client).url = "http://localhost:7792/";
+            }
+        }
+//            new Thread(r).start();
 
 
 //            System.out.println(nextId("order"));

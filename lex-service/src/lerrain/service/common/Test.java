@@ -54,7 +54,7 @@ public class Test
 
             if (i == 10)
             {
-                ((ServiceMgr.NetworkClient)sm.map.get("dict").clients[0].client).url = "http://localhost:7792/";
+                ((ServiceMgr.NetworkClient)sm.map.get("dict").clients[0].client).addr = "http://localhost:7792/";
             }
         }
 //            new Thread(r).start();

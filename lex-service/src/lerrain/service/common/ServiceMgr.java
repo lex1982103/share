@@ -24,6 +24,7 @@ public class ServiceMgr
     Random ran = new Random();
 
     Map<String, Servers> map = new HashMap<>();
+    Map<String, Integer> reqTimeout = new HashMap<>();
 
     ServiceListener listener;
 
@@ -33,6 +34,26 @@ public class ServiceMgr
         {
             Servers servers = getServers(e.getKey());
             servers.resetClients(Common.trimStringOf(e.getValue()));
+        }
+    }
+
+    public void setConfig(JSONObject v)
+    {
+        for (String srvName : v.keySet())
+        {
+            JSONArray list = v.getJSONArray(srvName);
+            for (int i = 0; i < list.size(); i++)
+            {
+                JSONObject rs = list.getJSONObject(i);
+                String uri = rs.getString("uri");
+                int timeout = Common.intOf(rs.get("timeout"), -1);
+
+                if (uri != null && timeout > 0)
+                {
+                    String reqKey = uri.startsWith("/") ? srvName + uri : srvName + "/" + uri;
+                    reqTimeout.put(reqKey, timeout);
+                }
+            }
         }
     }
 
@@ -550,31 +571,39 @@ public class ServiceMgr
         }
     }
 
-    public static class NetworkClient implements ServiceClient
+    public class NetworkClient implements ServiceClient
     {
-        String url;
+        String addr;
 
-        public NetworkClient(String url)
+        public NetworkClient(String addr)
         {
-            this.url = url.endsWith("/") ? url : url + "/";
+            this.addr = addr.endsWith("/") ? addr.substring(0, addr.length() - 1) : addr;
         }
 
         @Override
         public String req(String link, String param, int timeout) throws Exception
         {
-            if (link.startsWith("/"))
-                link = link.substring(1);
+            String url = link.startsWith("/") ? addr + link : addr + "/" + link;
 
-            return Network.request(url + link, param, timeout <= 0 ? SERVICE_TIME_OUT : timeout);
+            if (timeout <= 0)
+            {
+                Integer time = reqTimeout.get(url);
+                if (time == null)
+                    timeout = SERVICE_TIME_OUT;
+                else
+                    timeout = time;
+            }
+
+            return Network.request(url, param, timeout);
         }
     }
 
-    public static interface ServicePicker
+    public interface ServicePicker
     {
         public int getIndex(Object req);
     }
 
-    public static interface ServiceListener
+    public interface ServiceListener
     {
         public Object onBegin(Client client, String loc, Object param);
 

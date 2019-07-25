@@ -26,16 +26,7 @@ public class ServiceController
     public JSONObject exc(Exception e)
     {
         JSONObject res = new JSONObject();
-        if (e instanceof ServiceAlert)
-        {
-            Log.alert(e);
-
-            ServiceAlert se = (ServiceAlert)e;
-            res.put("result", "alert");
-            res.put("reason", se.getMessage());
-            res.put("detail", se.getDetail());
-        }
-        else if (e instanceof ServiceException)
+        if (e instanceof ServiceException)
         {
             Log.error(e);
 

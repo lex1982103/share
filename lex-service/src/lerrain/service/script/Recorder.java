@@ -51,7 +51,7 @@ public class Recorder
         return history;
     }
 
-    public void save(List<ReqHistory> history, int type, String scriptId, String url, String ip, Object req, int result, Object res)
+    public void save(List<ReqHistory> history, int type, String scriptId, String url, String ip, Object req, int result, Object res, boolean overwrite)
     {
         if (history == null || history.isEmpty())
             return;
@@ -61,7 +61,7 @@ public class Recorder
         Date date = new Date(rh.getTime());
         int spend = (int)(System.currentTimeMillis() - date.getTime());
 
-        store(type, scriptId, url, ip, req, rh, result, res, date, spend);
+        store(type, scriptId, url, ip, req, rh, result, res, date, spend, overwrite);
     }
 
     public ReqHistory newHistory(int type)
@@ -180,7 +180,7 @@ public class Recorder
         return DebugUtil.reqHistoryOf(res);
     }
 
-    private void store(int bizType, String scriptId, String url, String ip, Object req, ReqHistory rh, int result, Object response, Date date, int spend)
+    private void store(int bizType, String scriptId, String url, String ip, Object req, ReqHistory rh, int result, Object response, Date date, int spend, boolean overwrite)
     {
         JSONObject r = new JSONObject();
         r.put("service", serviceCode);
@@ -195,6 +195,7 @@ public class Recorder
         r.put("response", response);
         r.put("time", date);
         r.put("spend", spend);
+        r.put("overwrite", overwrite);
 
         try
         {

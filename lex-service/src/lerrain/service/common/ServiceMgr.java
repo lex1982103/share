@@ -534,6 +534,7 @@ public class ServiceMgr
 
         String[] uri = new String[100];
         int[] time = new int[uri.length * 10];
+//        int[] count = new int[3600 * 24];
 
         int pos = time.length - 1;
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @RequestMapping("/script")
@@ -26,7 +27,19 @@ public class Recorder
     @Autowired
     ServiceMgr serviceMgr;
 
+    RecorderQueue rq;
+
     Map<Long, ReqHistory> temp = new HashMap<>();
+
+    @PostConstruct
+    public void initiate()
+    {
+        if (rq != null)
+            rq.stop();
+
+        rq = new RecorderQueue(serviceMgr);
+        rq.start();
+    }
 
     //总记录点的数量需要限制，单个记录点的长短也需要限制
     private static final ThreadLocal<LinkedList<ReqHistory>> threadLocal = new ThreadLocal<>();
@@ -197,16 +210,7 @@ public class Recorder
         r.put("spend", spend);
         r.put("overwrite", overwrite);
 
-        try
-        {
-            serviceMgr.req("develop", "script/record.json", r);
-        }
-        catch (Exception e)
-        {
-            Log.alert(e);
-            Log.alert("url: " + url + ", response: " + response);
-            Log.alert(e);
-        }
+        rq.add(r);
     }
 
     public JSONObject load(Long reqId)

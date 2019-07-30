@@ -63,7 +63,7 @@ public class ChartFilter implements FilterCommodity
 		}
 		catch (Exception e)
 		{
-			throw new FilterException(e);
+			throw new FilterException(e.getMessage(), e);
 		}
 	}
 

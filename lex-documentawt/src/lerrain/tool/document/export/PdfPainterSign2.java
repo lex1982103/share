@@ -50,7 +50,7 @@ public class PdfPainterSign2 extends PdfPainterBase implements Painter
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 
 		if (canvasType == Painter.AUTO)
@@ -78,7 +78,7 @@ public class PdfPainterSign2 extends PdfPainterBase implements Painter
 			}
 			catch (Exception e)
 			{
-				throw new RuntimeException(e);
+				throw new RuntimeException(e.getMessage(), e);
 			}
 		}
 		else if (canvasType == Painter.FILE || canvasType == Painter.FILEPATH)
@@ -90,7 +90,7 @@ public class PdfPainterSign2 extends PdfPainterBase implements Painter
 			}
 			catch (Exception e)
 			{
-				throw new RuntimeException(e);
+				throw new RuntimeException(e.getMessage(), e);
 			}
 		}
 		else
@@ -116,7 +116,7 @@ public class PdfPainterSign2 extends PdfPainterBase implements Painter
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 

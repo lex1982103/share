@@ -236,6 +236,55 @@ public class ServiceMgr
     }
 
     /**
+     * 这个是带有重试功能的，10秒一次，重试1分钟
+     * 潜在的隐患是当请求量大的时候，多个请求会挂在这里等待，会导致这段时间的大量请求阻塞，可能引发系统问题
+     *
+     * @param service
+     * @param loc
+     * @param param
+     * @return
+     */
+    public Object ask(String service, String loc, JSON param)
+    {
+        return retry(service, loc, param, new int[] {10000, 10000, 10000, 10000, 10000});
+    }
+
+    private Object retry(String service, String loc, JSON param, int... sleep)
+    {
+        try
+        {
+            JSONObject res = req(service, loc, param, -1);
+
+            if (!"success".equals(res.getString("result")))
+                throw new RuntimeException(res.getString("reason"));
+
+            return res.get("content");
+        }
+        catch (Exception e3)
+        {
+            if (sleep != null && sleep.length > 0)
+            {
+                try
+                {
+                    Thread.sleep(sleep[0]);
+                }
+                catch (InterruptedException i3)
+                {
+                    throw new RuntimeException(i3.getMessage(), i3);
+                }
+
+                int[] ns = new int[sleep.length - 1];
+                for (int i = 0; i < ns.length; i++)
+                    ns[i] = sleep[i + 1];
+
+                return retry(service, loc, param, ns);
+            }
+        }
+
+        throw new ServiceException("服务<" + service + "/" + loc + ">异常，多次重试失败");
+    }
+
+    /**
      * @deprecated
      * @return
      */

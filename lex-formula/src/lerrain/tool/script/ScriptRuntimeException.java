@@ -52,7 +52,7 @@ public class ScriptRuntimeException extends RuntimeException
 
 	public ScriptRuntimeException(String exCode, Exception e)
 	{
-		super(e);
+		super((e == null ? null : e.getMessage()), e);
 
 		this.exCode = exCode;
 	}

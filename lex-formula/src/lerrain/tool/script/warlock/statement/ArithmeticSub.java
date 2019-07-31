@@ -6,6 +6,8 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Date;
+
 public class ArithmeticSub extends Code
 {
 	Code lc, rc;
@@ -36,8 +38,12 @@ public class ArithmeticSub extends Code
 			else
 				return ((Number) l).longValue() - ((Number) r).longValue();
 		}
+		else if (l instanceof Date && r instanceof Date)
+		{
+			return ((Date)l).getTime() - ((Date)r).getTime();
+		}
 
-		throw new ScriptRuntimeException(this, factors, "只可以对数字做减法运算：" + l + " - " + r);
+		throw new ScriptRuntimeException(this, factors, "只可以对数字或日期做减法运算：" + l + " - " + r);
 	}
 
 	public String toText(String space, boolean line)

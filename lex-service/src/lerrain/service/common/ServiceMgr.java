@@ -441,7 +441,7 @@ public class ServiceMgr
                 clients[i].index = i;
                 clients[i].url = Common.trimStringOf(url[i]);
 //                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
-                clients[i].client = new NetworkClient(clients[i].url);
+                clients[i].client = new NetworkClient(name, clients[i].url);
 
                 if (last != null && last.length > i)
                 {
@@ -623,10 +623,12 @@ public class ServiceMgr
 
     public class NetworkClient implements ServiceClient
     {
+        String name;
         String addr;
 
-        public NetworkClient(String addr)
+        public NetworkClient(String name, String addr)
         {
+            this.name = name;
             this.addr = addr.endsWith("/") ? addr.substring(0, addr.length() - 1) : addr;
         }
 
@@ -637,7 +639,9 @@ public class ServiceMgr
 
             if (timeout <= 0)
             {
-                Integer time = reqTimeout.get(url);
+                String loc = link.startsWith("/") ? name + link : name + "/" + link;
+                Integer time = reqTimeout.get(loc);
+
                 if (time == null)
                     timeout = SERVICE_TIME_OUT;
                 else

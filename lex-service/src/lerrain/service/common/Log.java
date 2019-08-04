@@ -14,7 +14,7 @@ public class Log
 {
     public static boolean EXCEPTION_STACK = true;
 
-    static String LOG_DIR = "log/";
+//    static String LOG_DIR = "log/";
 
     static boolean write = false;
 
@@ -25,12 +25,12 @@ public class Log
 
     static String fmt = "%tF %tT <%s> %s.%s: %s";
 
-    static List<String> buffer = new ArrayList<>();
-
-    public static String getLogFile(long time)
-    {
-        return LOG_DIR + String.format("%tF", time) + ".log";
-    }
+//    static List<String> buffer = new ArrayList<>();
+//
+//    public static String getLogFile(long time)
+//    {
+//        return LOG_DIR + String.format("%tF", time) + ".log";
+//    }
 
     /**
      * 设置日志输出级别
@@ -55,48 +55,48 @@ public class Log
         }
     }
 
-    public static void stopWrite()
-    {
-        write = false;
-    }
-
-    public static void startWrite(String path)
-    {
-        LOG_DIR = path;
-
-        new File(LOG_DIR).mkdirs();
-
-        write = true;
-
-        while (write)
-        {
-            synchronized (buffer)
-            {
-                try (FileOutputStream f = new FileOutputStream(new File(Log.getLogFile(System.currentTimeMillis())), true))
-                {
-                    for (String line : buffer)
-                    {
-                        f.write(line.getBytes());
-                        f.write("\n".getBytes());
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                buffer.clear();
-
-                try
-                {
-                    buffer.wait();
-                }
-                catch (InterruptedException e)
-                {
-                }
-            }
-        }
-    }
+//    public static void stopWrite()
+//    {
+//        write = false;
+//    }
+//
+//    public static void startWrite(String path)
+//    {
+//        LOG_DIR = path;
+//
+//        new File(LOG_DIR).mkdirs();
+//
+//        write = true;
+//
+//        while (write)
+//        {
+//            synchronized (buffer)
+//            {
+//                try (FileOutputStream f = new FileOutputStream(new File(Log.getLogFile(System.currentTimeMillis())), true))
+//                {
+//                    for (String line : buffer)
+//                    {
+//                        f.write(line.getBytes());
+//                        f.write("\n".getBytes());
+//                    }
+//                }
+//                catch (Exception e)
+//                {
+//                    e.printStackTrace();
+//                }
+//
+//                buffer.clear();
+//
+//                try
+//                {
+//                    buffer.wait();
+//                }
+//                catch (InterruptedException e)
+//                {
+//                }
+//            }
+//        }
+//    }
 
     private static void print(String inf, Object str, Exception e)
     {
@@ -128,11 +128,11 @@ public class Log
 
         System.out.println(log);
 
-        if (write) synchronized (buffer)
-        {
-            buffer.add(log);
-            buffer.notify();
-        }
+//        if (write) synchronized (buffer)
+//        {
+//            buffer.add(log);
+//            buffer.notify();
+//        }
     }
 
     public static void info(String fmt, Object... obj)

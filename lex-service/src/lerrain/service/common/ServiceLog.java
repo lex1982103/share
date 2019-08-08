@@ -33,7 +33,7 @@ public class ServiceLog
         if (logOut.ps != null)
             throw new RuntimeException("already running!");
 
-        System.out.println("intercept system.out, see service log");
+        System.out.println("拦截了system.out, 输出为service log日志");
         logOut.ps = System.out;
 
         System.setOut(new PrintStream(logOut));
@@ -47,7 +47,7 @@ public class ServiceLog
         System.setOut(logOut.ps);
         logOut.ps = null;
 
-        System.out.println("restore system.out");
+        System.out.println("恢复system.out");
 
         logOut.stop();
     }

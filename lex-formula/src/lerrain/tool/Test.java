@@ -55,6 +55,8 @@ public class Test
 				"\tdict: dict,\n" +
 				"\t\"id\": pack.id\n" +
 				"};";
+
+		str = "service('', '', '')";
 		Script script = Script.scriptOf(str);
 //		Script script = Script.scriptOf("var z=2; var x = {x:z==null?1:z!=null?z==1?7:8:4,y:z!=null?5:4}; return x;");
 //		Script script = Script.scriptOf("var x = {}; var z.z = x.y catch 100; return z");
@@ -69,9 +71,9 @@ public class Test
 			e.printStackTrace();
 		}
 
-		Words words = new Words(null, str);
-		Words w1 = words.cut(words.size());
-
-		System.out.println(Expression.expressionOf(w1));
+//		Words words = new Words(null, str);
+//		Words w1 = words.cut(words.size());
+//
+//		System.out.println(Expression.expressionOf(w1));
 	}
 }

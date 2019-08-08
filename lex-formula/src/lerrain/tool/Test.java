@@ -11,6 +11,8 @@ import lerrain.tool.formula.FormulaUtil;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.*;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.analyse.Expression;
+import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.statement.ArithmeticApprox;
 
 public class Test
@@ -66,5 +68,10 @@ public class Test
 			System.out.println(e.getValue());
 			e.printStackTrace();
 		}
+
+		Words words = new Words(null, str);
+		Words w1 = words.cut(words.size());
+
+		System.out.println(Expression.expressionOf(w1));
 	}
 }

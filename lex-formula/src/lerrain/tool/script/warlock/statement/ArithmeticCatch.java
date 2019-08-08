@@ -30,6 +30,9 @@ public class ArithmeticCatch extends Code
 		}
 		catch (Exception e)
 		{
+			if (rc == null)
+				return null;
+
 			return rc.run(factors);
 		}
 	}

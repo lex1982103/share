@@ -92,6 +92,26 @@ public class ServiceMgr
         servers.defaultIndex = defaultIndex;
     }
 
+    public boolean callback(String key, Object... param)
+    {
+        String[] keys = key.split(";");
+        Client client = getClient(keys[0], Integer.parseInt(keys[1]));
+
+        JSONObject req = new JSONObject();
+        req.put("key", keys[3]);
+        req.put("param", param);
+
+        try
+        {
+            reqStr(client, keys[2], req.toJSONString(), SERVICE_TIME_OUT);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
     public void setLog(String service, int level)
     {
         getServers(service).level = level;
@@ -147,7 +167,7 @@ public class ServiceMgr
         Servers servers = this.getServers(service);
         Client client = servers.getClient(param);
 
-        return reqStr(servers, client, loc, param, timeout);
+        return reqStr(client, loc, param, timeout);
     }
 
     public String[] reqAll(String service, String loc, Object param)
@@ -166,7 +186,7 @@ public class ServiceMgr
         {
             try
             {
-                res[i] = reqStr(servers, clients[i], loc, param, timeout);
+                res[i] = reqStr(clients[i], loc, param, timeout);
             }
             catch (Exception e)
             {
@@ -176,8 +196,9 @@ public class ServiceMgr
         return res;
     }
 
-    private String reqStr(Servers servers, Client client, String loc, Object param, int timeout)
+    private String reqStr(Client client, String loc, Object param, int timeout)
     {
+        Servers servers = client.getServers();
         long t = System.currentTimeMillis();
         Object passport = null;
 

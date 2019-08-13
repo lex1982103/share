@@ -18,6 +18,12 @@ public class ServiceMgr
     public static int SPEND_SLOW = 300;
     public static int SERVICE_TIME_OUT = 500;
 
+    @Value("${sys.code:null}")
+    String serviceCode;
+
+    @Value("${sys.index:null}")
+    String serviceIndex;
+
     @Resource
     private Environment env;
 
@@ -92,6 +98,17 @@ public class ServiceMgr
         servers.defaultIndex = defaultIndex;
     }
 
+    public String getCallbackKey(String uri, String uuid)
+    {
+        return serviceCode + ";" + serviceIndex + ";" + uri + ";" + uuid;
+    }
+
+    /**
+     * 回调门户
+     * @param key
+     * @param param
+     * @return
+     */
     public boolean callback(String key, Object... param)
     {
         String[] keys = key.split(";");

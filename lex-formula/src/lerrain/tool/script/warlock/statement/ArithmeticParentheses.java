@@ -3,6 +3,8 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.CompileListener;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
@@ -35,6 +37,9 @@ public class ArithmeticParentheses extends Code
 
 		left = Expression.expressionOf(ws.cut(0, l));
 		prt = Expression.expressionOf(ws.cut(l + 1, r));
+
+		if (left != null && Script.compileListener != null)
+			Script.compileListener.compile(CompileListener.FUNCTION, left);
 	}
 
 	public Object run(Factors factors)
@@ -55,7 +60,7 @@ public class ArithmeticParentheses extends Code
 
 				Function val = (Function) res;
 
-				if (val instanceof FunctionTry)
+				if (val instanceof FunctionTry) //这种方式的try已经作废，虽然还支持，但以后不要使用
 				{
 					Object ex = null;
 

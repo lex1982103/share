@@ -141,6 +141,8 @@ public class Script extends Code
 
 	public static boolean SERIALIZABLE		= false;
 
+	public static CompileListener compileListener;
+
 	/**
 	 * 如果是最外层，那么遇到return不能直接把Result(return)对象返回，需要把他的真实值返回。
 	 * 1. 非最外层，直接上抛

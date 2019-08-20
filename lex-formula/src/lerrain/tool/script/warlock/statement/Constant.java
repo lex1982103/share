@@ -1,6 +1,8 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.CompileListener;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -58,6 +60,9 @@ public class Constant extends Code
 		{
 			throw new RuntimeException("无法识别的常量：" + v);
 		}
+
+		if (Script.compileListener != null)
+			Script.compileListener.compile(CompileListener.CONST, this);
 	}
 	
 	public Object run(Factors factors)

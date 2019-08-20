@@ -35,6 +35,11 @@ public abstract class Code implements Formula
 		this.pos2 = pos2;
 	}
 
+	public Words getWords()
+	{
+		return words;
+	}
+
 	public boolean isPointOn(int pos)
 	{
 		return words.isInWords(pos);

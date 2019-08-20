@@ -43,7 +43,7 @@ public class ArithmeticFunctionDim extends Code implements Function, FunctionClo
 		Words words = ws.cut(l + 1, r);
 		content = new Script(words);
 
-		if (Script.SERIALIZABLE)
+		if (Script.SERIALIZABLE) //序列化自定义函数的时候的特殊处理
 		{
 			functionId = words.hash();
 			Script.FUNCTIONS.put(functionId, this);

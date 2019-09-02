@@ -69,6 +69,9 @@ public class StatementWhile extends Code
 			}
 			catch (Interrupt.Break e)
 			{
+				if (e.popOut() > 0)
+					throw e;
+
 				break;
 			}
 			catch (Interrupt.Continue e)

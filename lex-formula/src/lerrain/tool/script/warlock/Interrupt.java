@@ -4,6 +4,17 @@ public class Interrupt extends RuntimeException
 {
 	public static class Break extends Interrupt
 	{
+		int l;
+
+		public Break(int l)
+		{
+			this.l = l;
+		}
+
+		public int popOut()
+		{
+			return --l;
+		}
 	}
 
 	public static class Continue extends Interrupt

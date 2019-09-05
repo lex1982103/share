@@ -14,23 +14,12 @@ public class Log
 {
     public static boolean EXCEPTION_STACK = true;
 
-//    static String LOG_DIR = "log/";
-
-    static boolean write = false;
-
     static boolean write_info = true;
     static boolean write_debug = true;
     static boolean write_alert = true;
     static boolean write_error = true;
 
     static String fmt = "%tF %tT <%s> %s.%s: %s";
-
-//    static List<String> buffer = new ArrayList<>();
-//
-//    public static String getLogFile(long time)
-//    {
-//        return LOG_DIR + String.format("%tF", time) + ".log";
-//    }
 
     /**
      * 设置日志输出级别

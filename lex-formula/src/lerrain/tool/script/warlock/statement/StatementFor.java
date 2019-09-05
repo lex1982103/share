@@ -88,7 +88,9 @@ public class StatementFor extends Code
 		super.debug(factors);
 
 		Stack stack = new Stack(factors);
-		
+
+		int count = 0;
+
 		if (type == 2)
 		{
 			Code[] cc = (Code[])f1.run(stack);
@@ -99,6 +101,14 @@ public class StatementFor extends Code
 			{
 				for (Object v : (Object[])value)
 				{
+					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					{
+						count++;
+
+						if (count % Stack.LOOP_ALERT_TIMES == 0)
+							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+					}
+
 					ref.let(stack, v);
 
 					try
@@ -118,6 +128,14 @@ public class StatementFor extends Code
 			{
 				for (Object v : (Collection<?>)value)
 				{
+					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					{
+						count++;
+
+						if (count % Stack.LOOP_ALERT_TIMES == 0)
+							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+					}
+
 					ref.let(stack, v);
 
 					try
@@ -137,6 +155,14 @@ public class StatementFor extends Code
 			{
 				for (Object v : ((Map<?, ?>)value).keySet())
 				{
+					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					{
+						count++;
+
+						if (count % Stack.LOOP_ALERT_TIMES == 0)
+							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+					}
+
 					ref.let(stack, v);
 
 					try
@@ -160,6 +186,14 @@ public class StatementFor extends Code
 				Iterator iter = (Iterator)value;
 				while (iter.hasNext())
 				{
+					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					{
+						count++;
+
+						if (count % Stack.LOOP_ALERT_TIMES == 0)
+							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+					}
+
 					ref.let(stack, iter.next());
 
 					try
@@ -186,6 +220,14 @@ public class StatementFor extends Code
 			
 			while (Value.booleanOf(f2, stack))
 			{
+				if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+				{
+					count++;
+
+					if (count % Stack.LOOP_ALERT_TIMES == 0)
+						Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+				}
+
 				try
 				{
 					fc.run(stack);

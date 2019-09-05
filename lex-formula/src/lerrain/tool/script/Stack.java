@@ -13,6 +13,12 @@ public class Stack implements Factors
 	public static final int DEBUG_STEP_INTO		= 2;
 	public static final int DEBUG_STEP_OVER		= 3;
 
+	public static final int EVENT_LOOP_ALERT    = 10001;
+
+	public static int LOOP_ALERT_TIMES     	    = 0; //大于0时生效，每当循环达到这个次数的时候报警
+
+	public static RuntimeListener runtimeListener;
+
 	Factors root;
 	
 	Map heap;

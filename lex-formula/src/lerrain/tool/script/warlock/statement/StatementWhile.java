@@ -60,9 +60,19 @@ public class StatementWhile extends Code
 		super.debug(factors);
 
 		Stack stack = new Stack(factors);
-		
+
+		int count = 0;
+
 		while (Value.booleanOf(c, stack))
 		{
+			if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+			{
+				count++;
+
+				if (count % Stack.LOOP_ALERT_TIMES == 0)
+					Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+			}
+
 			try
 			{
 				fc.run(stack);

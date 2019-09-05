@@ -9,6 +9,9 @@ public class Test
     {
 //        Network.request("http://iyunbao-broker-iyb-facilities.test.za-tech.net/open/neptuneDisable/user/queryProduct?accountId=1");
 
+
+       System.out.println ((int)(System.currentTimeMillis() - 3600000*2 - 0));
+
         System.out.println("2017/6\\\\9".replaceAll("[\\\\][\\\\]", "\\\\"));
         System.out.println(Common.dateOf("2017-6-9"));
         System.out.println(Common.dateOf("2017/6/9"));

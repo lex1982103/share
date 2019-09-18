@@ -126,4 +126,12 @@ public class ServiceTools
 
         serviceMgr.req("cache", "save.json", req);
     }
+
+    /**
+     * 获取当前应用编排编号
+     * @return
+     */
+    public String getServiceIndex(){
+        return serviceIndex;
+    }
 }

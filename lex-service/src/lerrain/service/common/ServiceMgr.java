@@ -577,9 +577,15 @@ public class ServiceMgr
                             JSONObject m = (JSONObject)req;
                             for (String str : dispatch)
                             {
-                                String s = m.getString(str);
-                                if (s != null)
-                                    return hash(s);
+                                Object o = m.get(str);
+                                if (o instanceof String)
+                                {
+                                    return hash(o);
+                                }
+                                else if (o instanceof Number)
+                                {
+                                    return ((Number)o).intValue();
+                                }
                             }
                         }
 
@@ -595,7 +601,7 @@ public class ServiceMgr
         }
     }
 
-    public int hash(String key)
+    public int hash(Object key)
     {
         return key.hashCode() & 0x7FFFFFFF;
     }

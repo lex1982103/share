@@ -29,6 +29,21 @@ public class ServiceStat implements Runnable
 
     Thread thread;
 
+    public String getSrvIndex()
+    {
+        return srvIndex;
+    }
+
+    public String getSrvCode()
+    {
+        return srvCode;
+    }
+
+    public Thread getThread()
+    {
+        return thread;
+    }
+
     @PostConstruct
     public void start()
     {
@@ -73,10 +88,15 @@ public class ServiceStat implements Runnable
 
         thread = new Thread(this);
         thread.start();
+
+        Log.info("Service Stat started");
     }
 
     public void addMsg(Map v)
     {
+        v.put("fromSrv", srvCode);
+        v.put("fromIndex", srvIndex);
+
         if (!v.containsKey("time"))
             v.put("time", System.currentTimeMillis());
 
@@ -108,8 +128,6 @@ public class ServiceStat implements Runnable
         v.put("service", service);
         v.put("from", service); //废弃，为了兼容
         v.put("index", index);
-        v.put("fromSrv", srvCode);
-        v.put("fromIndex", srvIndex);
         v.put("uri", uri);
         v.put("spend", spend);
         v.put("result", "success");
@@ -130,8 +148,6 @@ public class ServiceStat implements Runnable
         v.put("service", service);
         v.put("from", service); //废弃，为了兼容
         v.put("index", index);
-        v.put("fromSrv", srvCode);
-        v.put("fromIndex", srvIndex);
         v.put("uri", uri);
         v.put("spend", spend);
         v.put("result", "fail");
@@ -188,16 +204,16 @@ public class ServiceStat implements Runnable
 
     private void store(JSONArray more)
     {
+        boolean invoke;
+
         synchronized (retry)
         {
-            if (!retry.isEmpty())
-            {
-                retry.addAll(more);
-                return;
-            }
-
+            invoke = retry.isEmpty();
             retry.addAll(more);
+        }
 
+        if (invoke)
+        {
             new Thread(new Runnable()
             {
                 @Override

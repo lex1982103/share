@@ -225,6 +225,14 @@ public class Recorder
         return (JSONObject) JSON.toJSON(serviceMgr.reqVal("develop","script/load.json", req));
     }
 
+    public JSONObject load(String reqKey)
+    {
+        JSONObject req = new JSONObject();
+        req.put("reqKey", reqKey);
+
+        return (JSONObject) JSON.toJSON(serviceMgr.reqVal("develop","script/load.json", req));
+    }
+
     public Object query(JSONObject condition)
     {
         return serviceMgr.reqVal("develop","script/query.json", condition);

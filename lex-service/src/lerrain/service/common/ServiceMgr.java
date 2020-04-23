@@ -149,6 +149,16 @@ public class ServiceMgr
         return getServers(str).getClient(index);
     }
 
+    public JSONObject req(String service, int index, String loc, JSON param)
+    {
+        return req(service, index, loc, param, -1);
+    }
+
+    public JSONObject req(String service, int index, String loc, JSON param, int timeout)
+    {
+        return JSONObject.parseObject(reqStr(getClient(service, index), loc, param, timeout));
+    }
+
     public JSONObject req(String service, String loc, JSON param)
     {
         return req(service, loc, param, -1);

@@ -5,8 +5,49 @@ import java.util.List;
 
 public class Test
 {
+    public static void test()
+    {
+        Thread th = new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+
+                try
+                {
+                    Thread.sleep(10000);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                finally
+                {
+                    System.out.println("XXXXX");
+                }
+            }
+        });
+
+
+        th.start();
+
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        th.interrupt();
+    }
+
     public static void main(String[] s)
     {
+        test();
+
+
 //        Network.request("http://iyunbao-broker-iyb-facilities.test.za-tech.net/open/neptuneDisable/user/queryProduct?accountId=1");
 
 

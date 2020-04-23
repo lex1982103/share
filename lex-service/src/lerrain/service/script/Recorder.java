@@ -2,11 +2,9 @@ package lerrain.service.script;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import lerrain.service.common.Log;
 import lerrain.service.common.ServiceMgr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,6 +64,11 @@ public class Recorder
 
     public void save(List<ReqHistory> history, int type, String scriptId, String url, String ip, Object req, int result, Object res, boolean overwrite)
     {
+        save(history, type, scriptId, url, ip, req, result, res, overwrite);
+    }
+
+    public void save(List<ReqHistory> history, int type, String scriptId, String url, String ip, Object req, int result, Object res, boolean overwrite, String seekKey)
+    {
         if (history == null || history.isEmpty())
             return;
 
@@ -74,7 +77,7 @@ public class Recorder
         Date date = new Date(rh.getTime());
         int spend = (int)(System.currentTimeMillis() - date.getTime());
 
-        store(type, scriptId, url, ip, req, rh, result, res, date, spend, overwrite);
+        store(type, scriptId, url, ip, req, rh, result, res, date, spend, overwrite, seekKey);
     }
 
     public ReqHistory newHistory(int type)
@@ -193,9 +196,10 @@ public class Recorder
         return DebugUtil.reqHistoryOf(res);
     }
 
-    private void store(int bizType, String scriptId, String url, String ip, Object req, ReqHistory rh, int result, Object response, Date date, int spend, boolean overwrite)
+    private void store(int bizType, String scriptId, String url, String ip, Object req, ReqHistory rh, int result, Object response, Date date, int spend, boolean overwrite, String seekKey)
     {
         JSONObject r = new JSONObject();
+        r.put("key", seekKey);
         r.put("service", serviceCode);
         r.put("instance", serviceIndex);
         r.put("type", bizType);
@@ -217,6 +221,14 @@ public class Recorder
     {
         JSONObject req = new JSONObject();
         req.put("reqId", reqId);
+
+        return (JSONObject) JSON.toJSON(serviceMgr.reqVal("develop","script/load.json", req));
+    }
+
+    public JSONObject load(String reqKey)
+    {
+        JSONObject req = new JSONObject();
+        req.put("reqKey", reqKey);
 
         return (JSONObject) JSON.toJSON(serviceMgr.reqVal("develop","script/load.json", req));
     }

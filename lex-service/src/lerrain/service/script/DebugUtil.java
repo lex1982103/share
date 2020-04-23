@@ -1,12 +1,10 @@
 package lerrain.service.script;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.script.Script;
-import lerrain.tool.script.Stack;
 
 import java.util.*;
 

@@ -2,6 +2,7 @@ package lerrain.service.script;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lerrain.service.common.PostQueue;
 import lerrain.service.common.ServiceMgr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,7 @@ public class Recorder
     @Autowired
     ServiceMgr serviceMgr;
 
-    RecorderQueue rq;
+    PostQueue rq;
 
     Map<Long, ReqHistory> temp = new HashMap<>();
 
@@ -35,7 +36,8 @@ public class Recorder
         if (rq != null)
             rq.stop();
 
-        rq = new RecorderQueue(serviceMgr);
+        rq = new PostQueue();
+        rq.initiate(serviceMgr, 128, "develop", "script/record.json");
         rq.start();
     }
 
@@ -214,7 +216,7 @@ public class Recorder
         r.put("spend", spend);
         r.put("overwrite", overwrite);
 
-        rq.add(r);
+        rq.addMsg(r);
     }
 
     public JSONObject load(Long reqId)

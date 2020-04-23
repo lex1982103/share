@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ServiceStat implements Runnable
+public class ServiceStat extends PostQueue
 {
     @Value("${sys.index}")
     String srvIndex;
@@ -23,12 +23,6 @@ public class ServiceStat implements Runnable
     @Autowired
     ServiceMgr serviceMgr;
 
-    List msg = new ArrayList();
-
-    JSONArray retry = new JSONArray();
-
-    Thread thread;
-
     public String getSrvIndex()
     {
         return srvIndex;
@@ -37,11 +31,6 @@ public class ServiceStat implements Runnable
     public String getSrvCode()
     {
         return srvCode;
-    }
-
-    public Thread getThread()
-    {
-        return thread;
     }
 
     @PostConstruct
@@ -83,11 +72,8 @@ public class ServiceStat implements Runnable
             }
         });
 
-        if (thread != null)
-            thread.interrupt();
-
-        thread = new Thread(this);
-        thread.start();
+        super.initiate(serviceMgr, 1000, "secure", "action.json");
+        super.start();
 
         Log.info("Service Stat started");
     }
@@ -100,14 +86,7 @@ public class ServiceStat implements Runnable
         if (!v.containsKey("time"))
             v.put("time", System.currentTimeMillis());
 
-        synchronized (msg)
-        {
-            if (msg.size() > 1000)
-                msg.clear();
-
-            msg.add(v);
-            msg.notify();
-        }
+        super.addMsg(v);
     }
 
     public void recServiceSucc(String service, int index, String uri, int spend, Object request, Object response)
@@ -156,116 +135,5 @@ public class ServiceStat implements Runnable
         v.put("time", System.currentTimeMillis() - spend);
 
         addMsg(v);
-    }
-
-    public void run()
-    {
-        while (true)
-        {
-            JSONArray list = new JSONArray();
-
-            synchronized (msg)
-            {
-                if (!msg.isEmpty())
-                {
-                    list.addAll(msg);
-                    msg.clear();
-                }
-            }
-
-            if (list.size() > 0)
-            {
-                try
-                {
-                    serviceMgr.req("secure", "action.json", list);
-                }
-                catch (Exception e)
-                {
-                    store(list);
-                }
-            }
-
-            try
-            {
-                Thread.sleep(100);
-
-                synchronized (msg)
-                {
-                    if (msg.isEmpty())
-                        msg.wait();
-                }
-            }
-            catch (InterruptedException e)
-            {
-                break;
-            }
-        }
-    }
-
-    private void store(JSONArray more)
-    {
-        boolean invoke;
-
-        synchronized (retry)
-        {
-            invoke = retry.isEmpty();
-            retry.addAll(more);
-        }
-
-        if (invoke)
-        {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        retry(10000, 60000, 600000, 1800000);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.alert(e.getMessage());
-                    }
-                }
-
-            }).start();
-        }
-    }
-
-    private void retry(int... sleep) throws InterruptedException
-    {
-        try
-        {
-            synchronized (retry)
-            {
-                serviceMgr.req("secure", "action.json", retry);
-                retry.clear();
-            }
-        }
-        catch (Exception e3)
-        {
-            Log.error("发送至secure服务失败 -> ", e3);
-
-            if (sleep.length > 0)
-            {
-                Log.info("等待" + sleep[0] + "ms继续发送");
-
-                try
-                {
-                    Thread.sleep(sleep[0]);
-                }
-                catch (InterruptedException i3)
-                {
-                    throw i3;
-                }
-
-                int[] ns = new int[sleep.length - 1];
-                for (int i = 0; i < ns.length; i++)
-                    ns[i] = sleep[i + 1];
-
-                retry(ns);
-            }
-        }
     }
 }

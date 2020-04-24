@@ -80,7 +80,6 @@ public class Network
 		}
 		catch (Exception e)
 		{
-			System.out.println("request: " + urlstr + " - " + req + " -> " + e.getMessage());
 			throw e;
 		}
 		finally

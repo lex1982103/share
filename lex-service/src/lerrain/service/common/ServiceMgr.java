@@ -228,6 +228,7 @@ public class ServiceMgr
         Servers servers = client.getServers();
         long t = System.currentTimeMillis();
         Object passport = null;
+        String req = null;
 
         try
         {
@@ -239,7 +240,7 @@ public class ServiceMgr
                 client.post++;
             }
 
-            String req = param == null ? null : param.toString();
+            req = param == null ? null : param.toString();
             String res = client.client.req(loc, req, timeout);
 
             int t1 = (int)(System.currentTimeMillis() - t);
@@ -254,9 +255,9 @@ public class ServiceMgr
             }
 
             if (servers.level == 1)
-                Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
+                Log.debug("%s => %s/%s(%dms) => %s", req, servers.name, loc, t1, res);
             else if (servers.level == 2)
-                Log.info("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
+                Log.info("%s => %s/%s(%dms) => %s", req, servers.name, loc, t1, res);
 
             if (listener != null)
                 listener.onSucc(passport, t1, res);
@@ -278,7 +279,10 @@ public class ServiceMgr
                     client.moreFail = 0;
             }
 
-            Log.error("request: " + servers.name + "/" + loc + " -- " + param + " -- " + e.getMessage());
+            if (req.length() > 4096)
+                req = req.substring(0, 4096) + " ...";
+            Log.error("request: " + servers.name + "/" + loc + " -- " + req + " -- " + e.getMessage());
+
             throw new ServiceException(e, "request: " + servers.name + "/" + loc + " -- " + e.getMessage());
         }
     }

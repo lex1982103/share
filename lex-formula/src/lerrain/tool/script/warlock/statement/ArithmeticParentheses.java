@@ -108,13 +108,36 @@ public class ArithmeticParentheses extends Code
 						params = new Object[]{r};
 				}
 
-				if (val instanceof FunctionInstable && Script.playbackListener != null && Script.playbackListener.isDebugging())
-					return Script.playbackListener.popRecordHistory(((FunctionInstable)val).getRecordName());
+				Object prepare = null;
+				if (val instanceof FunctionInstable && Script.playbackListener != null)
+				{
+					String recordName = ((FunctionInstable)val).getRecordName();
+
+					if (Script.playbackListener.isDebugging())
+						return Script.playbackListener.popRecordHistory(recordName);
+
+					prepare = Script.playbackListener.prepare(recordName);
+				}
 
 				if (factors instanceof Stack)
 					((Stack)factors).setCode(this);
 
-				return val.run(params, factors);
+				try
+				{
+					Object r = val.run(params, factors);
+
+					if (prepare != null)
+						Script.playbackListener.success(prepare, r);
+
+					return r;
+				}
+				catch (Exception e)
+				{
+					if (prepare != null)
+						Script.playbackListener.fail(prepare, e);
+
+					throw e;
+				}
 			}
 			else
 			{

@@ -6,26 +6,21 @@ public class ServiceException extends RuntimeException
 {
     List detail;
 
-    public ServiceException(Exception e, String msg)
+    public ServiceException(String msg)
     {
-        this(e, msg, null);
+        super(msg);
     }
 
-    public ServiceException(Exception e, String msg, List detail)
+    public ServiceException(String msg, Exception e)
     {
         super(msg, e);
-
-        this.detail = detail;
     }
 
     public ServiceException(String msg, List detail)
     {
-        this(null, msg, detail);
-    }
+        super(msg);
 
-    public ServiceException(String msg)
-    {
-        this(null, msg, null);
+        this.detail = detail;
     }
 
     public List getDetail()

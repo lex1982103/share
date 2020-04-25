@@ -28,20 +28,16 @@ public class ServiceController
     {
         JSONObject res = new JSONObject();
         res.put("reason", e.getMessage());
-        res.put("stack", getExceptionStack(e));
+        res.put("detail", getExceptionStack(e));
 
-        if (e instanceof ServiceException) //手工抛出的异常，不算做错误
+        if (e instanceof ServiceFeedback) //手工抛出的异常，不算做错误
         {
             Log.alert(e.getMessage());
-
-            ServiceException se = (ServiceException)e;
             res.put("result", "fail");
-            res.put("detail", se.getDetail());
         }
         else //其他异常都算作失败
         {
             Log.error(e);
-
             res.put("result", "error");
         }
 

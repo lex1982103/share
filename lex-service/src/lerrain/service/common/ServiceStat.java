@@ -94,6 +94,12 @@ public class ServiceStat extends PostQueue
         if ("secure".equals(service))
             return;
 
+        if (spend <= 100) //太多了，减少压力，成功且快速的先不传了
+        {
+            request = null;
+            response = null;
+        }
+
         try
         {
             if (response instanceof String)

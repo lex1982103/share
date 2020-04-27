@@ -3,6 +3,7 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.FunctionInstable;
 import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
@@ -14,9 +15,7 @@ import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.FunctionTry;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ArithmeticParentheses extends Code
 {
@@ -109,10 +108,36 @@ public class ArithmeticParentheses extends Code
 						params = new Object[]{r};
 				}
 
+				Object prepare = null;
+				if (val instanceof FunctionInstable && Script.playbackListener != null)
+				{
+					String recordName = ((FunctionInstable)val).getRecordName();
+
+					if (Script.playbackListener.isDebugging())
+						return Script.playbackListener.popRecordHistory(recordName);
+
+					prepare = Script.playbackListener.prepare(recordName);
+				}
+
 				if (factors instanceof Stack)
 					((Stack)factors).setCode(this);
 
-				return val.run(params, factors);
+				try
+				{
+					Object r = val.run(params, factors);
+
+					if (prepare != null)
+						Script.playbackListener.success(prepare, r);
+
+					return r;
+				}
+				catch (Exception e)
+				{
+					if (prepare != null)
+						Script.playbackListener.fail(prepare, e);
+
+					throw e;
+				}
 			}
 			else
 			{

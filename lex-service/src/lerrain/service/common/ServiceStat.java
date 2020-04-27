@@ -91,8 +91,8 @@ public class ServiceStat extends PostQueue
 
     public void recServiceSucc(String service, int index, String uri, int spend, Object request, Object response)
     {
-        if ("secure".equals(service))
-            return;
+        if ("develop".equals(service)) //debug的报文巨大
+            request = null;
 
         if (spend <= 100) //太多了，减少压力，成功且快速的先不传了
         {
@@ -126,8 +126,8 @@ public class ServiceStat extends PostQueue
 
     public void recServiceFail(String service, int index, String uri, int spend, Object request)
     {
-        if ("secure".equals(service))
-            return;
+        if ("develop".equals(service)) //debug的报文巨大
+            request = null;
 
         JSONObject v = new JSONObject();
         v.put("service", service);

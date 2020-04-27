@@ -5,8 +5,9 @@ import java.util.Random;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.FunctionInstable;
 
-public class FunctionRandom implements Function
+public class FunctionRandom implements Function, FunctionInstable
 {
 	static Random random = new Random();
 	
@@ -19,5 +20,11 @@ public class FunctionRandom implements Function
 			return random.nextInt(Value.intOf(v[0]));
 		
 		throw new RuntimeException("错误的random运算");
+	}
+
+	@Override
+	public String getRecordName()
+	{
+		return "function/random";
 	}
 }

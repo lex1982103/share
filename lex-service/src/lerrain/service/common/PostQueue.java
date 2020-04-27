@@ -116,6 +116,10 @@ public class PostQueue implements Runnable
         synchronized (retry)
         {
             invoke = retry.isEmpty();
+
+            if (retry.size() > max)
+                retry.clear();
+
             retry.addAll(more);
         }
 
@@ -142,34 +146,34 @@ public class PostQueue implements Runnable
 
     private void retry(int... sleep) throws InterruptedException
     {
-        try
+        if (sleep.length > 0)
         {
-            synchronized (retry)
+            Log.info("等待" + sleep[0] + "ms继续发送");
+
+            try
             {
-                serviceMgr.req(service, uri, retry);
-                retry.clear();
+                Thread.sleep(sleep[0]);
             }
-        }
-        catch (Exception e3)
-        {
-            Log.error("发送至" + uri + "服务失败 -> ", e3);
-
-            if (sleep.length > 0)
+            catch (InterruptedException i3)
             {
-                Log.info("等待" + sleep[0] + "ms继续发送");
+                throw i3;
+            }
 
-                try
-                {
-                    Thread.sleep(sleep[0]);
-                }
-                catch (InterruptedException i3)
-                {
-                    throw i3;
-                }
+            int[] ns = new int[sleep.length - 1];
+            for (int i = 0; i < ns.length; i++)
+                ns[i] = sleep[i + 1];
 
-                int[] ns = new int[sleep.length - 1];
-                for (int i = 0; i < ns.length; i++)
-                    ns[i] = sleep[i + 1];
+            try
+            {
+                synchronized (retry)
+                {
+                    serviceMgr.req(service, uri, retry);
+                    retry.clear();
+                }
+            }
+            catch (Exception e3)
+            {
+                Log.error("发送至" + uri + "服务失败 -> ", e3);
 
                 retry(ns);
             }

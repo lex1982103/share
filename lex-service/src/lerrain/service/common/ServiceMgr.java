@@ -13,10 +13,9 @@ import java.util.*;
 
 public class ServiceMgr
 {
-//    public static final long MAX = 1024L * 1024 * 16;
-
     public static int SPEND_SLOW = 300;
     public static int SERVICE_TIME_OUT = 500;
+    public static int JSON_LIMIT = 1024 * 1024 * 20;
 
     @Value("${sys.code:null}")
     String serviceCode;
@@ -120,7 +119,7 @@ public class ServiceMgr
 
         try
         {
-            reqStr(client, keys[2], req.toJSONString(), SERVICE_TIME_OUT);
+            callStr(client, keys[2], req.toJSONString(), SERVICE_TIME_OUT);
             return true;
         }
         catch (Exception e)
@@ -156,7 +155,8 @@ public class ServiceMgr
 
     public JSONObject req(String service, int index, String loc, JSON param, int timeout)
     {
-        return JSONObject.parseObject(reqStr(getClient(service, index), loc, param, timeout));
+        Client client = getClient(service, index);
+        return req(client, loc, param, timeout);
     }
 
     public JSONObject req(String service, String loc, JSON param)
@@ -166,7 +166,38 @@ public class ServiceMgr
 
     public JSONObject req(String service, String loc, JSON param, int timeout)
     {
-        return JSONObject.parseObject(reqStr(service, loc, param, timeout));
+        Client client = this.getServers(service).getClient(param);
+        return req(client, loc, param, timeout);
+    }
+
+    public JSONObject req(Client client, String loc, JSON param, int timeout)
+    {
+        Object passport = null;
+        long t = System.currentTimeMillis();
+
+        if (listener != null)
+            passport = listener.onBegin(client, loc, param);
+
+        try
+        {
+            JSONObject res = JSONObject.parseObject(call(client, loc, param, timeout));
+
+            String result = res.getString("result");
+            if ("error".equals(result))
+                throw new ServiceException(res.getString("reason"), res.getJSONArray("detail"));
+
+            if (listener != null)
+                listener.onSucc(passport, (int)(System.currentTimeMillis() - t), res);
+
+            return res;
+        }
+        catch (Exception e)
+        {
+            if (listener != null)
+                listener.onFail(passport, (int)(System.currentTimeMillis() - t), e);
+
+            throw e;
+        }
     }
 
     public Object reqVal(String service, String loc, JSON param)
@@ -179,7 +210,7 @@ public class ServiceMgr
         JSONObject res = req(service, loc, param, timeout);
 
         if (!"success".equals(res.getString("result")))
-            throw new RuntimeException(res.getString("reason"));
+            throw new ServiceFeedback(res.getString("reason"), res.getJSONArray("detail"));
 
         return res.get("content");
     }
@@ -191,10 +222,8 @@ public class ServiceMgr
 
     public String reqStr(String service, String loc, Object param, int timeout)
     {
-        Servers servers = this.getServers(service);
-        Client client = servers.getClient(param);
-
-        return reqStr(client, loc, param, timeout);
+        Client client = this.getServers(service).getClient(param);
+        return callStr(client, loc, param, timeout);
     }
 
     public String[] reqAll(String service, String loc, Object param)
@@ -204,16 +233,14 @@ public class ServiceMgr
 
     public String[] reqAll(String service, String loc, Object param, int timeout)
     {
-        Servers servers = this.getServers(service);
-        Client[] clients = servers.getAllClient();
-
+        Client[] clients = this.getServers(service).getAllClient();
         String[] res = new String[clients.length];
 
         for (int i = 0; i < clients.length; i++)
         {
             try
             {
-                res[i] = reqStr(clients[i], loc, param, timeout);
+                res[i] = callStr(clients[i], loc, param, timeout);
             }
             catch (Exception e)
             {
@@ -223,43 +250,20 @@ public class ServiceMgr
         return res;
     }
 
-    private String reqStr(Client client, String loc, Object param, int timeout)
+    private String callStr(Client client, String loc, Object param, int timeout)
     {
-        Servers servers = client.getServers();
-        long t = System.currentTimeMillis();
         Object passport = null;
+        long t = System.currentTimeMillis();
+
+        if (listener != null)
+            passport = listener.onBegin(client, loc, param);
 
         try
         {
-            if (listener != null)
-                passport = listener.onBegin(client, loc, param);
-
-            synchronized (client)
-            {
-                client.post++;
-            }
-
-            String req = param == null ? null : param.toString();
-            String res = client.client.req(loc, req, timeout);
-
-            int t1 = (int)(System.currentTimeMillis() - t);
-
-            synchronized (client)
-            {
-                client.moreFail = 0;
-                client.recTime(loc, t1);
-
-                if (t1 >= SPEND_SLOW)
-                    client.slow++;
-            }
-
-            if (servers.level == 1)
-                Log.debug("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
-            else if (servers.level == 2)
-                Log.info("%s => %s/%s(%dms) => %s", param, servers.name, loc, t1, res);
+            String res = call(client, loc, param, timeout);
 
             if (listener != null)
-                listener.onSucc(passport, t1, res);
+                listener.onSucc(passport, (int)(System.currentTimeMillis() - t), res);
 
             return res;
         }
@@ -268,18 +272,51 @@ public class ServiceMgr
             if (listener != null)
                 listener.onFail(passport, (int)(System.currentTimeMillis() - t), e);
 
+            throw e;
+        }
+    }
+
+    private String call(Client client, String loc, Object param, int timeout)
+    {
+        Servers servers = client.getServers();
+        String req = null;
+
+        try
+        {
+            if (param != null)
+            {
+                req = param.toString();
+                if (req.length() > JSON_LIMIT)
+                    throw new ServiceException("request body is too large");
+            }
+
+            String res = client.client.req(loc, req, timeout);
+
             synchronized (client)
             {
-                client.fail++;
+                client.moreFail = 0;
+            }
 
+            if (servers.level == 1)
+                Log.debug("%s => %s/%s => %s", req, servers.name, loc, res);
+
+            return res;
+        }
+        catch (Exception e)
+        {
+            synchronized (client)
+            {
                 if (e instanceof java.net.SocketTimeoutException || e instanceof java.net.SocketException)
                     client.moreFail++;
                 else //这种一般是地址不对，不是服务错误
                     client.moreFail = 0;
             }
 
-            Log.error("request: " + servers.name + "/" + loc + " -- " + param + " -- " + e.getMessage());
-            throw new ServiceException(e, "request: " + servers.name + "/" + loc + " -- " + e.getMessage());
+            if (req.length() > 4096)
+                req = req.substring(0, 4096) + " ...";
+            Log.error("request: " + servers.name + "/" + loc + " -- " + req + " -- " + e.getMessage());
+
+            throw new ServiceException("request: " + servers.name + "/" + loc + " -- " + e.getMessage(), e);
         }
     }
 
@@ -330,67 +367,6 @@ public class ServiceMgr
         }
 
         throw new ServiceException("服务<" + service + "/" + loc + ">异常，多次重试失败");
-    }
-
-    /**
-     * @deprecated
-     * @return
-     */
-    public JSONObject report()
-    {
-        JSONObject r = new JSONObject();
-
-        for (Map.Entry<String, Servers> e : map.entrySet())
-        {
-            JSONArray list = new JSONArray();
-            for (Client c : e.getValue().clients)
-            {
-                synchronized (c.client)
-                {
-                    JSONObject r1 = new JSONObject();
-                    r1.put("client", c.client.toString());
-                    r1.put("post", c.post);
-                    r1.put("fail", c.fail);
-                    r1.put("slow", c.slow);
-
-                    if (c.post - c.fail > 0)
-                        r1.put("average", c.totalTime / (c.post - c.fail));
-
-                    int[] t = new int[c.time.length];
-                    for (int i = 0; i < t.length; i++)
-                        t[i] = c.time[(c.pos + t.length - i) % t.length];
-                    r1.put("time", t);
-
-                    String[] uri = new String[c.uri.length];
-                    for (int i = 0; i < uri.length; i++)
-                        uri[i] = c.uri[(c.pos + uri.length - i) % uri.length];
-                    r1.put("uri", c.uri);
-
-                    list.add(r1);
-                }
-            }
-
-            r.put(e.getKey(), list);
-        }
-
-        return r;
-    }
-
-    public void resetTimes()
-    {
-        for (Map.Entry<String, Servers> e : map.entrySet())
-        {
-            for (Client c : e.getValue().clients)
-            {
-                synchronized (c)
-                {
-                    c.post = 0;
-                    c.fail = 0;
-                    c.slow = 0;
-                    c.totalTime = 0;
-                }
-            }
-        }
     }
 
     public ServiceListener getListener()
@@ -490,14 +466,6 @@ public class ServiceMgr
                 clients[i].url = Common.trimStringOf(url[i]);
 //                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
                 clients[i].client = new NetworkClient(name, clients[i].url);
-
-                if (last != null && last.length > i)
-                {
-                    clients[i].post = last[i].post;
-                    clients[i].fail = last[i].fail;
-                    clients[i].slow = last[i].slow;
-                    clients[i].totalTime = last[i].totalTime;
-                }
             }
         }
 
@@ -626,37 +594,12 @@ public class ServiceMgr
 
         int index;
 
-        int post;
-        int fail;
-        int slow;
-
         int moreFail; //连续错误
         long restoreTime; //连续错误后停机的恢复时间
-
-        long totalTime;
-
-        String[] uri = new String[100];
-        int[] time = new int[uri.length * 10];
-//        int[] count = new int[3600 * 24];
-
-        int pos = time.length - 1;
 
         public Client(Servers servers)
         {
             this.servers = servers;
-        }
-
-        public void recTime(String loc, int t)
-        {
-            pos++;
-
-            if (pos >= time.length)
-                pos = pos % time.length;
-
-            time[pos] = t;
-            uri[pos % uri.length] = loc;
-
-            totalTime += t;
         }
 
         public String getUrl()

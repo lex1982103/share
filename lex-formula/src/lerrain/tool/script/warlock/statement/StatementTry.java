@@ -6,6 +6,7 @@ import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeThrow;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -91,6 +92,10 @@ public class StatementTry extends Code
 		try
 		{
 			code.run(new Stack(factors));
+		}
+		catch (Interrupt e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{

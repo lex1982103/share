@@ -556,14 +556,9 @@ public class ServiceMgr
                             for (String str : dispatch)
                             {
                                 Object o = m.get(str);
-                                if (o instanceof String)
-                                {
-                                    return hash(o);
-                                }
-                                else if (o instanceof Number)
-                                {
-                                    return ((Number)o).intValue();
-                                }
+
+                                if (o != null)
+                                    return hash(o.toString());
                             }
                         }
 

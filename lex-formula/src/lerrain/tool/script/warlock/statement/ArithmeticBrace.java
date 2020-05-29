@@ -39,17 +39,17 @@ public class ArithmeticBrace extends Code
 			Map res = new LinkedHashMap();
 			for (Object val : ((Wrap)r).toList())
 			{
-				Code[] v = (Code[])val;
+				Code[] v = ((ArithmeticCode)val).v;
 				res.put(v[0].toString(), v[1].run(factors));
 			}
 
 			return res;
 		}
-		else if (r instanceof Code[])
+		else if (r instanceof ArithmeticCode)
 		{
 			Map res = new LinkedHashMap();
-			Code[] v = (Code[])r;
-			res.put(v[0].toString(), v[1].run(factors));
+			ArithmeticCode cc = (ArithmeticCode)r;
+			res.put(cc.v[0].toString(), cc.v[1].run(factors));
 
 			return res;
 		}

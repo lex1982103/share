@@ -146,8 +146,9 @@ public class Expression
 		if (arithmetic == Words.SUBLET) return new ArithmeticSubLet(ws, pos);
 		if (arithmetic == Words.COMMA) return new ArithmeticComma(ws, pos);
 		if (arithmetic == Words.QUESTMARK) return new ArithmeticQuestMark(ws, pos);
-		if (arithmetic == Words.COLON || arithmetic == Words.COLON_SPLIT) return new ArithmeticColon(ws, pos);
-		
+//		if (arithmetic == Words.COLON || arithmetic == Words.COLON_SPLIT) return new ArithmeticColon(ws, pos);
+		if (arithmetic == Words.COLON || arithmetic == Words.COLON_SPLIT || arithmetic == Words.COLON2 || arithmetic == Words.COLON_FLAG) return new ArithmeticCode(ws, pos);
+
 		if (arithmetic == Words.NEW) return new ArithmeticNew(ws, pos);
 		if (arithmetic == Words.FUNCTION_DIM) return new ArithmeticFunctionDim(ws, pos);
 
@@ -205,6 +206,8 @@ public class Expression
 	
 	private static int getPriority(int arithmetic)
 	{
+		if (arithmetic == Words.COLON2) return 15;
+		if (arithmetic == Words.COLON_FLAG) return 15;
 		if (arithmetic == Words.COMMA) return 20;
 		if (arithmetic == Words.COLON_SPLIT) return 25;
 		if (arithmetic == Words.LET) return 30;

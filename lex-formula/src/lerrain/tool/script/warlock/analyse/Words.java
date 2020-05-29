@@ -38,6 +38,7 @@ public class Words implements Serializable
 	public static final int COLON				= 102; //:
 	public static final int COLON2				= 103; //::
 	public static final int COLON_SPLIT			= 104; //json或map串中key后面的:
+	public static final int COLON_FLAG			= 105; //~:
 	public static final int LET					= 110;
 	public static final int AND					= 120; 
 	public static final int OR					= 130; 
@@ -446,6 +447,8 @@ public class Words implements Serializable
 			return QUESTMARK;
 		if (":".equals(symbol))
 			return COLON;
+		if ("~:".equals(symbol))
+			return COLON_FLAG;
 		if ("::".equals(symbol))
 			return COLON2;
 		if (".".equals(symbol))

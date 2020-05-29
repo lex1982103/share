@@ -1,10 +1,9 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
@@ -83,6 +82,67 @@ public class StatementFor extends Code
 		super.clearBreakPoints();
 	}
 
+	private void traversal(LinkedList ss, Reference nef, Reference ref, Object k, Object v, Stack stack)
+	{
+		if (v instanceof Map)
+		{
+			for (Map.Entry<Object, Object> e : ((Map<Object, Object>)v).entrySet())
+			{
+				if (ss != null)
+					ss.add(e.getKey());
+				traversal(ss, nef, ref, e.getKey(), e.getValue(), stack);
+
+				if (ss != null)
+					ss.removeLast();
+			}
+		}
+		else if (v instanceof Collection)
+		{
+			int count = 0;
+
+			for (Object o : (Collection)v)
+			{
+				if (ss != null)
+					ss.add(count);
+				traversal(ss, nef, ref, count, o, stack);
+
+				if (ss != null)
+					ss.removeLast();
+				count++;
+			}
+		}
+		else if (v instanceof Object[])
+		{
+			int count = 0;
+
+			for (Object o : (Object[])v)
+			{
+				if (ss != null)
+					ss.add(count);
+				traversal(ss, nef, ref, count, o, stack);
+
+				if (ss != null)
+					ss.removeLast();
+				count++;
+			}
+		}
+		else
+		{
+			if (nef != null)
+				nef.let(stack, k);
+
+			ref.let(stack, v);
+
+			try
+			{
+				fc.run(stack);
+			}
+			catch (Interrupt.Continue e)
+			{
+			}
+		}
+	}
+
 	public Object run(Factors factors)
 	{
 		super.debug(factors);
@@ -93,21 +153,48 @@ public class StatementFor extends Code
 
 		if (type == 2)
 		{
-			Code[] cc = (Code[])f1.run(stack);
-			Object value = cc[1].run(stack);
-			Reference ref = (Reference)cc[0];
-			
-			if (value instanceof Object[])
+			ArithmeticCode cc = (ArithmeticCode)f1.run(stack);
+			Object value = cc.v[1].run(stack);
+
+			Reference nef, ref, mef = null;
+			if (cc.v[0] instanceof ArithmeticComma)
+			{
+				ArithmeticComma comma = (ArithmeticComma)cc.v[0];
+				nef = (Reference)comma.getCodes().get(0);
+				ref = (Reference)comma.getCodes().get(1);
+
+				if (comma.getCodes().size() > 2)
+					mef = (Reference)comma.getCodes().get(2);
+			}
+			else
+			{
+				nef = null;
+				ref = (Reference)cc.v[0];
+			}
+
+			if ("~:".equals(cc.getSymbol()))
+			{
+				LinkedList ll = null;
+				if (mef != null)
+				{
+					ll = new LinkedList();
+					mef.let(stack, ll);
+				}
+
+				try
+				{
+					traversal(ll, nef, ref, null, value, stack);
+				}
+				catch (Interrupt.Break e)
+				{
+				}
+			}
+			else if (value instanceof Object[])
 			{
 				for (Object v : (Object[])value)
 				{
-					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
-					{
-						count++;
-
-						if (count % Stack.LOOP_ALERT_TIMES == 0)
-							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
-					}
+					if (nef != null)
+						nef.let(stack, count);
 
 					ref.let(stack, v);
 
@@ -121,6 +208,14 @@ public class StatementFor extends Code
 					}
 					catch (Interrupt.Continue e)
 					{
+					}
+
+					count++;
+
+					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					{
+						if (count % Stack.LOOP_ALERT_TIMES == 0)
+							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
 					}
 				}
 			}
@@ -128,13 +223,8 @@ public class StatementFor extends Code
 			{
 				for (Object v : (Collection<?>)value)
 				{
-					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
-					{
-						count++;
-
-						if (count % Stack.LOOP_ALERT_TIMES == 0)
-							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
-					}
+					if (nef != null)
+						nef.let(stack, count);
 
 					ref.let(stack, v);
 
@@ -148,36 +238,78 @@ public class StatementFor extends Code
 					}
 					catch (Interrupt.Continue e)
 					{
+					}
+
+					count++;
+
+					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					{
+						if (count % Stack.LOOP_ALERT_TIMES == 0)
+							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
 					}
 				}
 			}
 			else if (value instanceof Map)
 			{
-				for (Object v : ((Map<?, ?>)value).keySet())
+				if (nef == null)
 				{
-					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					for (Object v : ((Map<?, ?>) value).keySet())
 					{
+						ref.let(stack, v);
+
+						try
+						{
+							fc.run(stack);
+						}
+						catch (Interrupt.Break e)
+						{
+							if (e.popOut() > 0)
+								throw e;
+
+							break;
+						}
+						catch (Interrupt.Continue e)
+						{
+						}
+
 						count++;
 
-						if (count % Stack.LOOP_ALERT_TIMES == 0)
-							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+						if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+						{
+							if (count % Stack.LOOP_ALERT_TIMES == 0)
+								Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+						}
 					}
-
-					ref.let(stack, v);
-
-					try
+				}
+				else
+				{
+					for (Map.Entry entry : ((Map<?, ?>) value).entrySet())
 					{
-						fc.run(stack);
-					}
-					catch (Interrupt.Break e)
-					{
-						if (e.popOut() > 0)
-							throw e;
+						nef.let(stack, entry.getKey());
+						ref.let(stack, entry.getValue());
 
-						break;
-					}
-					catch (Interrupt.Continue e)
-					{
+						try
+						{
+							fc.run(stack);
+						}
+						catch (Interrupt.Break e)
+						{
+							if (e.popOut() > 0)
+								throw e;
+
+							break;
+						}
+						catch (Interrupt.Continue e)
+						{
+						}
+
+						count++;
+
+						if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+						{
+							if (count % Stack.LOOP_ALERT_TIMES == 0)
+								Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+						}
 					}
 				}
 			}
@@ -186,13 +318,8 @@ public class StatementFor extends Code
 				Iterator iter = (Iterator)value;
 				while (iter.hasNext())
 				{
-					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
-					{
-						count++;
-
-						if (count % Stack.LOOP_ALERT_TIMES == 0)
-							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
-					}
+					if (nef != null)
+						nef.let(stack, count);
 
 					ref.let(stack, iter.next());
 
@@ -210,6 +337,14 @@ public class StatementFor extends Code
 					catch (Interrupt.Continue e)
 					{
 					}
+
+					count++;
+
+					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					{
+						if (count % Stack.LOOP_ALERT_TIMES == 0)
+							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
+					}
 				}
 			}
 		}
@@ -220,14 +355,6 @@ public class StatementFor extends Code
 			
 			while (Value.booleanOf(f2, stack))
 			{
-				if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
-				{
-					count++;
-
-					if (count % Stack.LOOP_ALERT_TIMES == 0)
-						Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
-				}
-
 				try
 				{
 					fc.run(stack);
@@ -241,6 +368,14 @@ public class StatementFor extends Code
 				}
 				catch (Interrupt.Continue e)
 				{
+				}
+
+				count++;
+
+				if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+				{
+					if (count % Stack.LOOP_ALERT_TIMES == 0)
+						Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
 				}
 
 				f3.run(stack);

@@ -5,13 +5,15 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticColon extends Code
+import java.util.Map;
+
+public class ArithmeticCode extends Code
 {
 	Code[] v;
 
 	String symbol;
-	
-	public ArithmeticColon(Words ws, int i)
+
+	public ArithmeticCode(Words ws, int i)
 	{
 		super(ws, i);
 
@@ -29,7 +31,7 @@ public class ArithmeticColon extends Code
 
 	public Object run(Factors factors)
 	{
-		return v;
+		return this;
 	}
 	
 	public String toText(String space, boolean line)

@@ -129,7 +129,35 @@ public class ArithmeticApprox extends Code
 		if (v1.isMap() && v2.isMap())
 			return compare(v1.toMap(), v2.toMap());
 
+		if (v1.isQueue() && v2.isQueue())
+			return compare(v1.toArray(), v2.toArray());
+
 		return v1.getValue().equals(v2.getValue());
+	}
+
+	public static boolean compare(Object[] m1, Object[] m2)
+	{
+		if (m1 != null && m2 != null)
+		{
+			int size = Math.min(m1.length, m2.length);
+			for (int i=0;i<size;i++)
+			{
+				if (!compare(Value.valueOf(m1[i]), Value.valueOf(m2[i])))
+					return false;
+			}
+
+			for (int i=size;i<m1.length;i++)
+				if (m1[i] != null)
+					return false;
+
+			for (int i=size;i<m2.length;i++)
+				if (m2[i] != null)
+					return false;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public static boolean compare(Map m1, Map m2)

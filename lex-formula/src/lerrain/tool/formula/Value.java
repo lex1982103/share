@@ -156,7 +156,12 @@ public class Value implements Serializable
 	{
 		return isType(TYPE_MAP);
 	}
-	
+
+	public boolean isQueue()
+	{
+		return v instanceof Object[] || isType(TYPE_LIST);
+	}
+
 	public BigDecimal toDecimal()
 	{
 		return decimalOf(v); 
@@ -170,6 +175,14 @@ public class Value implements Serializable
 	public Map toMap()
 	{
 		return (Map)v;
+	}
+
+	public Object[] toArray()
+	{
+		if (v instanceof List)
+			return ((List)v).toArray();
+
+		return (Object[])v;
 	}
 	
 	public boolean isNull()

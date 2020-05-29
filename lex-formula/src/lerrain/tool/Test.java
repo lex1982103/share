@@ -56,11 +56,8 @@ public class Test
 				"\t\"id\": pack.id\n" +
 				"};";
 
-		str = "var aa = @[];\n" +
-			"for (var x : {xx:1, yy:[100, 200]}) \n" +
-			"print( @[x,y,z]);\n" +
-			"\n" +
-			"return aa;\n";
+		str = "var aa = {x:1, z:{xx:@[100]}}; var bb = {x:1, z:{xx:[100, null]}};" +
+			"return aa ~= bb;\n";
 
 		Script script = Script.scriptOf(str);
 //		Script script = Script.scriptOf("var z=2; var x = {x:z==null?1:z!=null?z==1?7:8:4,y:z!=null?5:4}; return x;");

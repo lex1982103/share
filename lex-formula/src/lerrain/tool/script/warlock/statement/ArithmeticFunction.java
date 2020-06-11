@@ -73,6 +73,7 @@ public class ArithmeticFunction extends Code
 		Script.FUNCTIONS.put("match", new FunctionMatch());
 		Script.FUNCTIONS.put("copy", new FunctionCopy());
 		Script.FUNCTIONS.put("contains", new FunctionContains());
+		Script.FUNCTIONS.put("nvl", new FunctionNvl());
 	}
 	
 	public ArithmeticFunction(Words ws, int i)

@@ -67,7 +67,7 @@ public class ServiceStat extends PostQueue
                 if (o != null)
                 {
                     Object[] x = (Object[]) o;
-                    recServiceFail((String) x[0], (Integer) x[1], (String) x[2], time, x[3]);
+                    recServiceFail((String) x[0], (Integer) x[1], (String) x[2], time, x[3], e);
                 }
             }
         });
@@ -124,7 +124,13 @@ public class ServiceStat extends PostQueue
         addMsg(v);
     }
 
+    @Deprecated
     public void recServiceFail(String service, int index, String uri, int spend, Object request)
+    {
+        recServiceFail(service, index, uri, spend, request, null);
+    }
+
+    public void recServiceFail(String service, int index, String uri, int spend, Object request, Exception e)
     {
         if ("develop".equals(service)) //debug的报文巨大
             request = null;
@@ -140,6 +146,25 @@ public class ServiceStat extends PostQueue
         v.put("request", request);
         v.put("time", System.currentTimeMillis() - spend);
 
+        if (e != null)
+            v.put("exc", log(new ArrayList(), e));
+
         addMsg(v);
+    }
+
+    private List<String> log(List<String> list, Throwable e)
+    {
+        if (e != null)
+        {
+            StackTraceElement[] ste = e.getStackTrace();
+            if (ste != null)
+                for (StackTraceElement st : ste)
+                    if (st != null)
+                        list.add(st.toString());
+
+            log(list, e.getCause());
+        }
+
+        return list;
     }
 }

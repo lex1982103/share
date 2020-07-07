@@ -28,7 +28,12 @@ public class Variable extends Code implements Reference
 		if ("timems".equals(varName))
 			return Double.valueOf((double)System.currentTimeMillis());
 		
-		return factors.get(varName);
+		Object v = factors.get(varName);
+
+		if (v instanceof LoadOnUse)
+			v = ((LoadOnUse)v).load();
+
+		return v;
 	}
 	
 	public void let(Factors factors, Object value)
@@ -44,5 +49,10 @@ public class Variable extends Code implements Reference
 	public String toText(String space, boolean line)
 	{
 		return varName;
+	}
+
+	public interface LoadOnUse
+	{
+		public Object load();
 	}
 }

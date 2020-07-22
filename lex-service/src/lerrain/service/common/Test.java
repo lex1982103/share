@@ -79,11 +79,15 @@ lerrain.service.common.ServiceException: request: secure/action.json -- Read tim
          第一波70秒debug报文3次失败后record放弃它，此时第二波70秒debug报文到位，并进入正式序列，正式序列也超时
          */
 
-//        if (true)  return;
 
-        String str = Disk.load(new File("x:/3.txt"), "gbk");
-//        JSONObject ooo = JSON.parseObject(str);
-//        JSONArray json = JSON.parseArray(str.trim());
+        String str = Disk.load(new File("x:/33.txt"), "utf-8");
+        str = str.trim();
+        System.out.println(str.length());
+        JSONArray ooo = JSON.parseArray(str.trim());
+        System.out.println(ooo.size());
+        if (true)  return;
+
+        //        JSONArray json = JSON.parseArray(str.trim());
 
 //        String str = Disk.load(new File("x:/1.csv"), "utf-8");
 //        StringBuffer sb = new StringBuffer();
@@ -161,14 +165,29 @@ lerrain.service.common.ServiceException: request: secure/action.json -- Read tim
 //        }
     }
 
-    public static void main6(String[] arg) throws Exception
+    public static void main11(String[] arg) throws Exception
     {
-        String str = Disk.load(new File("x:/2.csv"), "utf-8");
-        StringBuffer sb = new StringBuffer();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String str = Disk.load(new File("x:/3.csv"), "utf-8");
+        byte[] b = new byte[1];
+        for (int x=0,i=0;i<str.length();i++)
+        {
+            if (str.charAt(i) ==',')
+            {
+                int m = Common.intOf(str.substring(x,i), 32);
+                b[0]=(byte)m;
+                baos.write(b);
+                x=i+1;
+            }
+        }
 
-        for (int i=0;i<str.length();i+=2)
-        sb.append(str.charAt(i));
-                Disk.saveToDisk(new ByteArrayInputStream(sb.toString().getBytes("gbk")), new File("x:/21.txt"));
+        Disk.saveToDisk(new ByteArrayInputStream(baos.toByteArray()), new File("x:/33.txt"));
+
+//        StringBuffer sb = new StringBuffer();
+//
+//        for (int i=0;i<str.length();i+=2)
+//        sb.append(str.charAt(i));
+//                Disk.saveToDisk(new ByteArrayInputStream(sb.toString().getBytes("gbk")), new File("x:/21.txt"));
     }
 
     public static void main2(String[] arg) throws Exception

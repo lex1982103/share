@@ -363,6 +363,42 @@ public class CommodityFactors implements FactorsSupport, Serializable
 			return cr;
 		}
 
+		if ("RIDERS".equals(name))
+		{
+			List riders = new ArrayList();
+
+			if (commodity.pack != null) //先判断是不是打包的内部
+			{
+				List list = commodity.pack.getChildren().toList();
+				for (int i=0;i<list.size();i++)
+				{
+					Commodity commodity = (Commodity)list.get(i);
+					if (commodity.getParent() == this.commodity)
+						riders.add(commodity);
+				}
+			}
+			else
+			{
+				Plan plan = commodity.getPlan();
+				for (int i = 0; i < plan.size(); i++)
+				{
+					Commodity commodity = plan.getCommodity(i);
+					if (commodity.getParent() == this.commodity)
+						riders.add(commodity);
+				}
+			}
+
+			return riders;
+		}
+
+		if ("PRIMARY".equals(name))
+		{
+			if (commodity.getChildren() == null || commodity.getChildren().isEmpty())
+				return null;
+
+			return commodity.getChildren().get(0);
+		}
+
 //		if ("INPUT".equals(name))
 //			return new InputFunction(commodity);
 

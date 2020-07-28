@@ -9,12 +9,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import lerrain.project.insurance.plan.Time;
 import lerrain.project.insurance.product.*;
 import lerrain.project.insurance.product.attachment.AttachmentParser;
 import lerrain.project.insurance.product.rule.Rule;
 import lerrain.tool.data.DataParser;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.FormulaUtil;
+import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.warlock.analyse.Text;
 
@@ -696,6 +698,42 @@ public class ProductLoader
 		}
 	}
 
+	public static Object translate(String type, Object value)
+	{
+		if ("boolean".equals(type))
+		{
+			if (value == null)
+				return false;
+
+			String str = value.toString();
+			if ("Y".equalsIgnoreCase(str) || "yes".equalsIgnoreCase(str) || "true".equalsIgnoreCase(str))
+				return true;
+			if ("N".equalsIgnoreCase(str) || "no".equalsIgnoreCase(str) || "false".equalsIgnoreCase(str))
+				return false;
+
+			return Value.booleanOf(value);
+		}
+		else if ("integer".equals(type))
+			return Value.intOf(value, 0);
+		else if ("string".equals(type))
+			return value == null ? null : value.toString();
+		else if ("array".equals(type))
+			return value == null ? null : Script.scriptOf(value.toString()).run(null);
+		else if ("date".equals(type))
+		{
+			if ("today".equals(value))
+				return new Date();
+			else if ("tomorrow".equals(value))
+				return new Date(new Date().getTime() + 3600000L * 24);
+			else if ("yesterday".equals(value))
+				return new Date(new Date().getTime() - 3600000L * 24);
+			else
+				return Time.getDate(value, null);
+		}
+		else
+			return value;
+	}
+
 	private void parseInput(XmlNode e)
 	{
 		List fields = new ArrayList();
@@ -710,6 +748,8 @@ public class ProductLoader
 			pi.setLimit(n1.getAttribute("limit"));
 			pi.setWidget(n1.getAttribute("widget"));
 			pi.setOptions(Script.scriptOf(n1.getText()));
+			pi.setValue(translate(pi.getType(), n1.getAttribute("default")));
+			pi.setRegex(n1.getAttributeInOrder("condition,c"));
 			fields.add(pi);
 		}
 

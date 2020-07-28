@@ -87,4 +87,55 @@ public class Time
 			return null;
 		}
 	}
+
+	public static Date getDate(Object val, Date defoult)
+	{
+		if (val instanceof java.sql.Date)
+		{
+			return new Date(((java.sql.Date)val).getTime());
+		}
+		else if (val instanceof Date)
+		{
+			return (Date)val;
+		}
+		else if (val instanceof Number)
+		{
+			return new Date(((Number)val).longValue());
+		}
+		else if (val instanceof String)
+		{
+			try
+			{
+				String str = (String)val;
+				str = str.replaceAll("[\\\\/]", "-");
+
+				int mode;
+				if (str.indexOf(":") > 0)
+					mode = 4;
+				else if (str.length() > 10)
+					mode = 3;
+				else if (str.indexOf("-") < 0)
+					mode = 1;
+				else
+					mode = 2;
+
+				if (mode == 1)
+					return getDate(str, "yyyyMMdd");
+				else if (mode == 2)
+					return getDate(str, "yyyy-MM-dd");
+				else if (mode == 3)
+					return getDate(str, "yyyyMMddHHmmss");
+				else if (mode == 4)
+					return getDate(str, "yyyy-MM-dd HH:mm:ss");
+				else
+					return defoult;
+			}
+			catch (Exception e)
+			{
+				return defoult;
+			}
+		}
+
+		return defoult;
+	}
 }

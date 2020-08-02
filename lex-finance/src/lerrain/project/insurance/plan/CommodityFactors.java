@@ -374,7 +374,7 @@ public class CommodityFactors implements FactorsSupport, Serializable
 				{
 					Commodity commodity = (Commodity)list.get(i);
 					if (commodity.getParent() == this.commodity)
-						riders.add(commodity);
+						riders.add(commodity.getFactors());
 				}
 			}
 			else
@@ -384,7 +384,7 @@ public class CommodityFactors implements FactorsSupport, Serializable
 				{
 					Commodity commodity = plan.getCommodity(i);
 					if (commodity.getParent() == this.commodity)
-						riders.add(commodity);
+						riders.add(commodity.getFactors());
 				}
 			}
 
@@ -396,11 +396,22 @@ public class CommodityFactors implements FactorsSupport, Serializable
 			if (commodity.getChildren() == null || commodity.getChildren().isEmpty())
 				return null;
 
-			return commodity.getChildren().get(0);
+			return commodity.getChildren().get(0).getFactors();
 		}
 
 //		if ("INPUT".equals(name))
 //			return new InputFunction(commodity);
+
+        /**
+         * 直接.PRODUCT_ID
+         * 先看自己的附加险（在组合中和不再组合中，取法不同）
+         * 如果是组合，那么还可以直接引出组合内的产品
+         */
+        Commodity c = commodity.getRider(name);
+        if (c == null && commodity.children != null)
+            c = commodity.children.getCommodity(name);
+        if (c != null)
+            return c.getFactors();
 
 		return commodity.getPlan().getFactor(name);
 	}

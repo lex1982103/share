@@ -94,9 +94,9 @@ public class PlanFactors implements FactorsSupport, Serializable
 			return products;
 		}
 		
-		Commodity product = this.getPlan().getCommodityByProductId(name);
-		if (product != null)
-			return product.getFactors();
+//		Commodity product = this.getPlan().getCommodityByProductId(name);
+//		if (product != null)
+//			return product.getFactors();
 		
 		/*
 		 * 固定值或输入值，包括保额、保费、份数

@@ -31,6 +31,8 @@ public class CommodityFactors implements FactorsSupport, Serializable
 	FactorsSupport applicantFactors, insurantFactors;
 
 	CommodityDuty duty;
+
+    Near near = new Near();
 	
 	public CommodityFactors(Commodity commodity)
 	{
@@ -402,16 +404,8 @@ public class CommodityFactors implements FactorsSupport, Serializable
 //		if ("INPUT".equals(name))
 //			return new InputFunction(commodity);
 
-        /**
-         * 直接.PRODUCT_ID
-         * 先看自己的附加险（在组合中和不再组合中，取法不同）
-         * 如果是组合，那么还可以直接引出组合内的产品
-         */
-        Commodity c = commodity.getRider(name);
-        if (c == null && commodity.children != null)
-            c = commodity.children.getCommodity(name);
-        if (c != null)
-            return c.getFactors();
+        if ("NEAR".equals(name))
+            return near;
 
 		return commodity.getPlan().getFactor(name);
 	}
@@ -501,6 +495,39 @@ public class CommodityFactors implements FactorsSupport, Serializable
 			return child != null ? child.getFactors() : null;
 		}
 	};
+
+	//查找给自己距离最近的某个产品
+    public class Near implements Factors
+    {
+        @Override
+        public Object get(String name)
+        {
+            //先查附加险
+            Commodity c = commodity.getRider(name);
+
+            //再查组合
+            if (c == null && commodity.children != null)
+                c = commodity.children.getCommodity(name);
+
+            //再查自己主险和主险的附加险
+            if (c == null && commodity.parent != null)
+            {
+                if (commodity.parent.getProduct().getId().equals(name))
+                    c = commodity.parent;
+                else
+                    c = commodity.parent.getRider(name);
+            }
+
+            //最后查计划里的
+            if (c == null)
+                commodity.getPlan().getCommodityByProductId(name);
+
+            if (c != null)
+                return c.getFactors();
+
+            return null;
+        }
+    }
 
 //	public static class InputFunction implements Function
 //	{

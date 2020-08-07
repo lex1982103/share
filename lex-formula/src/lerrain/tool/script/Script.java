@@ -130,8 +130,6 @@ public class Script extends Code
 	//自定义函数，没加同步锁，初始化的时候加入，不要在执行的时候add
 	public static final Map FUNCTIONS		= new HashMap();
 
-	public static Map SCRIPTS;
-
 	/**
 	 * 高精度模式，java中实际使用BigDecimal来完成
 	 */
@@ -296,28 +294,7 @@ public class Script extends Code
 		if (text == null || "".equals(text.trim()))
 			return null;
 
-		if (SCRIPTS != null)
-		{
-			Map cache = (Map)SCRIPTS.get(text);
-			if (cache == null)
-			{
-				cache = new HashMap();
-				SCRIPTS.put(text, cache);
-			}
-
-			Script script = (Script)cache.get(tag);
-			if (script != null)
-				return script;
-
-			script = new Script(Words.wordsOf(tag, text), true);
-			cache.put(tag, script);
-
-			return script;
-		}
-		else
-		{
-			return new Script(Words.wordsOf(tag, text), true);
-		}
+		return new Script(Words.wordsOf(tag, text), true);
 	}
 
 	public static void addFunction(String name, Function f)

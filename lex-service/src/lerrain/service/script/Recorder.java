@@ -41,6 +41,11 @@ public class Recorder
         rq.start();
     }
 
+    public void clear()
+    {
+        temp.clear();
+    }
+
     //总记录点的数量需要限制，单个记录点的长短也需要限制
     private static final ThreadLocal<LinkedList<ReqHistory>> threadLocal = new ThreadLocal<>();
 

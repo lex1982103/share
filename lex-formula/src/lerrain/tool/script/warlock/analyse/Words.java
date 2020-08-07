@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class Words implements Serializable
 {
+	private static final long serialVersionUID = 718238024541280392L;
+
 	public static final int SYMBOL				= 10000; 
 	public static final int WORD				= 11000;
 	

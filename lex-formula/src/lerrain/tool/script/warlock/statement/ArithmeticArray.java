@@ -47,6 +47,12 @@ public class ArithmeticArray extends Code implements Reference
 //			pv = (ArithmeticArray)v;
 	}
 
+	private Object castValue(Object rv){
+		if (rv instanceof Variable.LoadOnUse)
+			return ((Variable.LoadOnUse)rv).load();
+		return rv;
+	}
+
 	public Object run(Factors factors)
 	{
 		try
@@ -111,11 +117,11 @@ public class ArithmeticArray extends Code implements Reference
 
 			if (val instanceof Map)
 			{
-				return ((Map<?, ?>) val).get(pos);
+				return castValue(((Map<?, ?>) val).get(pos));
 			}
 			else if (val instanceof Factors)
 			{
-				return ((Factors) val).get(pos == null ? null : pos.toString());
+				return castValue(((Factors) val).get(pos == null ? null : pos.toString()));
 			}
 
 //		if (pos instanceof String)

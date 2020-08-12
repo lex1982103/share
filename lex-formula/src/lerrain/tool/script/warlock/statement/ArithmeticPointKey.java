@@ -51,7 +51,7 @@ public class ArithmeticPointKey extends Code implements Reference
 			else
 				return null;
 		}
-		
+
 		if (v instanceof Factors) {
 			Object r = ((Factors) v).get(key);
 			if (r instanceof Variable.LoadOnUse)
@@ -62,10 +62,6 @@ public class ArithmeticPointKey extends Code implements Reference
 			Object r = ((Map)v).get(key);
 			if (r instanceof Variable.LoadOnUse)
 				r = ((Variable.LoadOnUse)r).load();
-			return r;
-		}
-		if (v instanceof Variable.LoadOnUse) {
-			Object r = ((Variable.LoadOnUse)v).load();
 			return r;
 		}
 

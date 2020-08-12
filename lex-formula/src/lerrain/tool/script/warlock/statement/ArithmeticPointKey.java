@@ -64,6 +64,10 @@ public class ArithmeticPointKey extends Code implements Reference
 				r = ((Variable.LoadOnUse)r).load();
 			return r;
 		}
+		if (v instanceof Variable.LoadOnUse) {
+			Object r = ((Variable.LoadOnUse)v).load();
+			return r;
+		}
 
 
 //		if (v instanceof List)

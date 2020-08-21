@@ -52,18 +52,23 @@ public class ArithmeticPointKey extends Code implements Reference
 				return null;
 		}
 
-		if (v instanceof Factors) {
-			Object r = ((Factors) v).get(key);
-			if (r instanceof Variable.LoadOnUse)
-				r = ((Variable.LoadOnUse)r).load();
-			return r;
-		}
-		if (v instanceof Map) {
-			Object r = ((Map)v).get(key);
-			if (r instanceof Variable.LoadOnUse)
-				r = ((Variable.LoadOnUse)r).load();
-			return r;
-		}
+		if (v instanceof Factors)
+			return ((Factors)v).get(key);
+		if (v instanceof Map)
+			return ((Map)v).get(key);
+
+//		if (v instanceof Factors) {
+//			Object r = ((Factors) v).get(key);
+//			if (r instanceof Variable.LoadOnUse)
+//				r = ((Variable.LoadOnUse)r).load();
+//			return r;
+//		}
+//		if (v instanceof Map) {
+//			Object r = ((Map)v).get(key);
+//			if (r instanceof Variable.LoadOnUse)
+//				r = ((Variable.LoadOnUse)r).load();
+//			return r;
+//		}
 
 
 //		if (v instanceof List)

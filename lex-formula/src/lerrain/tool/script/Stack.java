@@ -46,6 +46,20 @@ public class Stack implements Factors
 		this.root = root;
 	}
 
+	public Stack(Factors root, Map heap)
+	{
+		if (root instanceof Stack)
+		{
+			debug = ((Stack) root).debug;
+
+			if (debug == DEBUG_STEP_OVER) //进了一层，既然是stepover，新的层里即直接略过
+				debug = DEBUG_BREAK_POINT;
+		}
+
+		this.root = root;
+		this.heap = heap;
+	}
+
 	public Stack(Map root)
 	{
 		this.heap = root;

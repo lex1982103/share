@@ -1,8 +1,5 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.*;
-
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
@@ -11,6 +8,10 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ArithmeticBrace extends Code
 {

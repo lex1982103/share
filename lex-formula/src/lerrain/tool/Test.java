@@ -1,18 +1,11 @@
 package lerrain.tool;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Formula;
-import lerrain.tool.formula.FormulaUtil;
-import lerrain.tool.formula.Function;
-import lerrain.tool.script.*;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeThrow;
 import lerrain.tool.script.Stack;
-import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.analyse.Expression;
-import lerrain.tool.script.warlock.analyse.Words;
-import lerrain.tool.script.warlock.statement.ArithmeticApprox;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Test
 {

@@ -1,9 +1,8 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
@@ -40,42 +39,73 @@ public class ArithmeticBrace extends Code
 
 	public Object run(Factors factors)
 	{
-//		if (left != null)
-//		{
-//			Object list = left.run(factors);
-//			if (list instanceof Collection)
-//			{
-//				for (Object v : (Collection)list)
-//				{
-//					Stack ns = new Stack(factors);
-//
-//					if (nef != null)
-//						nef.let(stack, count);
-//
-//					ref.let(stack, v);
-//
-//					try
-//					{
-//						fc.run(stack);
-//					}
-//					catch (Interrupt.Break e)
-//					{
-//						break;
-//					}
-//					catch (Interrupt.Continue e)
-//					{
-//					}
-//
-//					count++;
-//
-//					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
-//					{
-//						if (count % Stack.LOOP_ALERT_TIMES == 0)
-//							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, count);
-//					}
-//				}
-//			}
-//		}
+		if (left != null)
+		{
+			int i = 0;
+			Object val = null;
+
+			Object list = left.run(factors);
+			if (list instanceof Collection)
+			{
+				int count = 0;
+				double num = 0;
+
+				for (Object v : (Collection)list)
+				{
+					Factors f;
+					if (v instanceof Factors)
+					{
+						f = (Factors)v;
+					}
+					else
+					{
+						Stack ns = new Stack(factors);
+						ns.declare("self", v);
+
+						if (v instanceof Map)
+							ns.getHeap().putAll((Map)v);
+
+						f = ns;
+					}
+
+					try
+					{
+						Object p = content.run(f);
+						if (p instanceof Boolean)
+						{
+							if ((Boolean)p)
+								count++;
+						}
+						else if (p instanceof Number)
+						{
+							num += ((Number) p).doubleValue();
+						}
+					}
+					catch (Interrupt.Break e)
+					{
+						break;
+					}
+					catch (Interrupt.Continue e)
+					{
+					}
+
+					i++;
+
+					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+					{
+						if (i % Stack.LOOP_ALERT_TIMES == 0)
+							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, i);
+					}
+				}
+
+				if (num != 0)
+					val = num + count;
+				else
+					val = count;
+			}
+
+			return val;
+		}
 
 		if (content == null)
 			return new LinkedHashMap();

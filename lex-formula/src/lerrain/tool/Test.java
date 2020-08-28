@@ -1,15 +1,14 @@
 package lerrain.tool;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.FormulaUtil;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.*;
+import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
@@ -19,6 +18,9 @@ public class Test
 {
 	public static void main(String[] s)
 	{
+//		char c = '，';
+//		System.out.println(c < 0x4E00 || c > 0x9FA5);
+
 //		Map<String, String> map = System.getenv();
 //		for (Map.Entry<String, String> e : map.entrySet())
 //			System.out.println(e.getKey() + ": " + e.getValue());
@@ -26,46 +28,23 @@ public class Test
 //		Properties p = System.getProperties();
 //		for (String name : p.stringPropertyNames())
 //			System.out.println(name + ": " + System.getProperty(name));
-//
-		String str = "var pack={editor:{}}; return {\n" +
-				"\t\"code\": pack.code,\n" +
-				"\t\"wareId\": pack.wareId,\n" +
-				"\t\"wareCode\": pack.wareCode,\n" +
-				"\t\"type\": pack.type,\n" +
-				"\t\"applyMode\": pack.applyMode,\n" +
-				"\t\"wareName\": pack.wareName,\n" +
-				"\t\"vendor\": pack.vendor,\n" +
-				"\t\"page\": {\n" +
-				"\t\t\"title\": null,\n" +
-				"\t\t\"ownerOrigin\": ownerDomain\n" +
-				"\t},\n" +
-				"\t\"show\": {\n" +
-				"\t\tbuyButton: saleDate,\n" +
-				"\t\tdetail: pack.editor.detail,\n" +
-				"\t\tfixed: pack.editor.fixed\n" +
-				"\t},\n" +
-				"\t\"form\": pack.editor.form,\n" +
-				"\t\"extra\": {\n" +
-				"\t\t\"prizes\": false,\n" +
-				"\t\t\"kefuUrl\": pack.extra..kefuUrl,\n" +
-				"\t\t\"informationUrl\": null,\n" +
-				"\t\t\"posterUrl\": null,\n" +
-				"\t\tshareObject: sb\n" +
-				"\t},\n" +
-				"\tdict: dict,\n" +
-				"\t\"id\": pack.id\n" +
-				"};";
 
-		str = "var aa = {x:1, z:{xx:@[100]}}; var bb = {x:1, z:{xx:[100, null]}};" +
-			"return aa ~= bb;\n";
-
+		String str = "AGENTS { PREMIUM } ";
 		Script script = Script.scriptOf(str);
-//		Script script = Script.scriptOf("var z=2; var x = {x:z==null?1:z!=null?z==1?7:8:4,y:z!=null?5:4}; return x;");
-//		Script script = Script.scriptOf("var x = {}; var z.z = x.y catch 100; return z");
-//		Script script = Script.scriptOf("try(100,0); print(try(c.z,0)); try{ var x = 1; var y = 5; for (var i = 0; i < 10; i++) { var c=null; c.x; y += x; print(y); }}  throw 100; { print(100); }  print (101);");
+
+		List list = new ArrayList<>();
+		for (int i=0;i<100;i++)
+		{
+			Stack m = new Stack();
+			m.declare("PREMIUM", i + 1);
+			list.add(m);
+		}
+
 		try
 		{
-			System.out.println(script.run(new Stack()));
+			Stack stack = new Stack();
+			stack.declare("AGENTS", list);
+			System.out.println(script.run(stack));
 		}
 		catch (ScriptRuntimeThrow e)
 		{

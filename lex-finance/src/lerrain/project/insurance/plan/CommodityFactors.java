@@ -395,10 +395,8 @@ public class CommodityFactors implements FactorsSupport, Serializable
 
 		if ("PRIMARY".equals(name))
 		{
-			if (commodity.getChildren() == null || commodity.getChildren().isEmpty())
-				return null;
-
-			return commodity.getChildren().get(0).getFactors();
+			if (commodity.getChildren() != null && !commodity.getChildren().isEmpty())
+				return commodity.getChildren().get(0).getFactors();
 		}
 
 //		if ("INPUT".equals(name))

@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
@@ -38,7 +39,7 @@ public class Variable extends Code implements Reference
 	
 	public void let(Factors factors, Object value)
 	{
-		((Stack)factors).set(varName, value);
+		((VariableFactors)factors).set(varName, value);
 	}
 	
 	public String toString()

@@ -6,6 +6,7 @@ import java.util.Map;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
+import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
@@ -242,10 +243,10 @@ public class ArithmeticArray extends Code implements Reference
 		{
 			if (val instanceof Map)
 				((Map<Object, Object>)val).put((String)pos, value);
-			else if (val instanceof Stack)
-				((Stack)val).set((String)pos, value);
+			else if (val instanceof VariableFactors)
+				((VariableFactors)val).set((String)pos, value);
 			else
-				throw new RuntimeException("下标为string时，只可以给map或stack赋值");
+				throw new RuntimeException("下标为string时，只可以给Map或VariableFactors赋值");
 		}
 		else if (val instanceof int[][]) //2维数组
 		{

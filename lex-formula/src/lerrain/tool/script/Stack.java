@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.warlock.Code;
 
-public class Stack implements Factors
+public class Stack implements VariableFactors
 {
 	public static final int RUNNING				= 0;
 	public static final int DEBUG_BREAK_POINT	= 1;

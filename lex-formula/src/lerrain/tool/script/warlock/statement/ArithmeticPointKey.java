@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
@@ -107,8 +108,8 @@ public class ArithmeticPointKey extends Code implements Reference
 	public void let(Factors factors, Object value)
 	{
 		Object v = l.run(factors);
-		if (v instanceof Stack)
-			((Stack)v).set(key, value);
+		if (v instanceof VariableFactors)
+			((VariableFactors)v).set(key, value);
 		else if (v instanceof Map)
 			((Map)v).put(key, value);
 		else

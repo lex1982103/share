@@ -86,8 +86,8 @@ public class Stack implements VariableFactors
 		
 		if (heap != null && heap.containsKey(name))
 			heap.put(name, value);
-		else
-			((Stack)root).set(name, value);
+		else if (root instanceof VariableFactors)
+			((VariableFactors)root).set(name, value);
 	}
 	
 	public void setAll(Map map)
@@ -104,8 +104,8 @@ public class Stack implements VariableFactors
 		if (heap != null && heap.containsKey(name))
 			return true;
 		
-		if (root instanceof Stack)
-			return ((Stack)root).hasVar(name);
+		if (root instanceof VariableFactors)
+			return ((VariableFactors)root).hasVar(name);
 		else
 			return false;
 	}

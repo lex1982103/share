@@ -120,7 +120,15 @@ public class Words implements Serializable
 	{
 		return scriptStr;
 	}
-	
+
+	public String getCurrentScript()
+	{
+		int f = 0;
+		if (from > 0)
+			f = words.get(from).e;
+		return scriptStr.substring(f, end);
+	}
+
 	public int size()
 	{
 		return num;

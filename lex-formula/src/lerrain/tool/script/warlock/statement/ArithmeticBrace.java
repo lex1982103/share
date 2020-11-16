@@ -38,18 +38,17 @@ public class ArithmeticBrace extends Code
 		}
 	}
 
-	public Object treat(Code left, Code content, Factors factors)
+	public Object treat(Object lead, Code content, Factors factors)
 	{
 		int i = 0;
 		Object val = null;
 
-		Object list = left.run(factors);
-		if (list instanceof Collection)
+		if (lead instanceof Collection)
 		{
 			int count = 0;
 			double num = 0;
 
-			for (Object v : (Collection)list)
+			for (Object v : (Collection)lead)
 			{
 				Factors f;
 				if (v instanceof Factors)
@@ -109,7 +108,10 @@ public class ArithmeticBrace extends Code
 	public Object run(Factors factors)
 	{
 		if (left != null)
-			return treat(left, content, factors);
+		{
+			Object list = left.run(factors);
+			return treat(list, content, factors);
+		}
 
 		if (content == null)
 			return new LinkedHashMap();
@@ -141,6 +143,6 @@ public class ArithmeticBrace extends Code
 
 	public String toText(String space, boolean line)
 	{
-		return "{\n" + content.toText(space + "  ", true) + "\n" + space + "}\n";
+		return left.toText(space, false) + "{\n" + content.toText(space + "  ", true) + "\n" + space + "}\n";
 	}
 }

@@ -1,9 +1,14 @@
 package lerrain.tool.script.warlock.analyse;
 
+import lerrain.tool.script.ArithmeticFactory;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.statement.*;
+
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 表达式处理
@@ -138,9 +143,22 @@ public class Expression
 //		}
 //		return exp;
 //	}
-	
+
+	static Map<Integer, ArithmeticFactory> map = new HashMap();
+
+	public static void register(int arithmetic, ArithmeticFactory af)
+	{
+		map.put(arithmetic, af);
+	}
+
 	private static Code arithmeticOf(int arithmetic, Words ws, int pos)
 	{
+		if (map.containsKey(arithmetic))
+		{
+			ArithmeticFactory af = map.get(arithmetic);
+			return af.buildArithmetic(ws, pos);
+		}
+
 		if (arithmetic == Words.LET) return new ArithmeticLet(ws, pos);
 		if (arithmetic == Words.ADDLET) return new ArithmeticAddLet(ws, pos);
 		if (arithmetic == Words.SUBLET) return new ArithmeticSubLet(ws, pos);

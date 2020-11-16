@@ -38,75 +38,78 @@ public class ArithmeticBrace extends Code
 		}
 	}
 
+	public Object treat(Code left, Code content, Factors factors)
+	{
+		int i = 0;
+		Object val = null;
+
+		Object list = left.run(factors);
+		if (list instanceof Collection)
+		{
+			int count = 0;
+			double num = 0;
+
+			for (Object v : (Collection)list)
+			{
+				Factors f;
+				if (v instanceof Factors)
+				{
+					f = (Factors)v;
+				}
+				else
+				{
+					Stack ns = new Stack(factors);
+					ns.declare("self", v);
+
+					if (v instanceof Map)
+						ns.getHeap().putAll((Map)v);
+
+					f = ns;
+				}
+
+				try
+				{
+					Object p = content.run(f);
+					if (p instanceof Boolean)
+					{
+						if ((Boolean)p)
+							count++;
+					}
+					else if (p instanceof Number)
+					{
+						num += ((Number) p).doubleValue();
+					}
+				}
+				catch (Interrupt.Break e)
+				{
+					break;
+				}
+				catch (Interrupt.Continue e)
+				{
+				}
+
+				i++;
+
+				if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
+				{
+					if (i % Stack.LOOP_ALERT_TIMES == 0)
+						Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, i);
+				}
+			}
+
+			if (num != 0)
+				val = num + count;
+			else
+				val = count;
+		}
+
+		return val;
+	}
+
 	public Object run(Factors factors)
 	{
 		if (left != null)
-		{
-			int i = 0;
-			Object val = null;
-
-			Object list = left.run(factors);
-			if (list instanceof Collection)
-			{
-				int count = 0;
-				double num = 0;
-
-				for (Object v : (Collection)list)
-				{
-					Factors f;
-					if (v instanceof Factors)
-					{
-						f = (Factors)v;
-					}
-					else
-					{
-						Stack ns = new Stack(factors);
-						ns.declare("self", v);
-
-						if (v instanceof Map)
-							ns.getHeap().putAll((Map)v);
-
-						f = ns;
-					}
-
-					try
-					{
-						Object p = content.run(f);
-						if (p instanceof Boolean)
-						{
-							if ((Boolean)p)
-								count++;
-						}
-						else if (p instanceof Number)
-						{
-							num += ((Number) p).doubleValue();
-						}
-					}
-					catch (Interrupt.Break e)
-					{
-						break;
-					}
-					catch (Interrupt.Continue e)
-					{
-					}
-
-					i++;
-
-					if (Stack.runtimeListener != null && Stack.LOOP_ALERT_TIMES > 0)
-					{
-						if (i % Stack.LOOP_ALERT_TIMES == 0)
-							Stack.runtimeListener.onEvent(Stack.EVENT_LOOP_ALERT, i);
-					}
-				}
-
-				if (num != 0)
-					val = num + count;
-				else
-					val = count;
-			}
-
-			return val;
-		}
+			return treat(left, content, factors);
 
 		if (content == null)
 			return new LinkedHashMap();

@@ -157,6 +157,31 @@ public class Common
 		return defoult;
 	}
 
+	public static long longOf(Object val, long defoult)
+	{
+		if (val instanceof Number)
+		{
+			return ((Number)val).longValue();
+		}
+		else if (val instanceof Date)
+		{
+			return ((Date)val).getTime();
+		}
+		else if (val instanceof String)
+		{
+			try
+			{
+				return Math.round(Double.parseDouble((String)val));
+			}
+			catch (Exception e)
+			{
+				return defoult;
+			}
+		}
+
+		return defoult;
+	}
+
 	public static boolean boolOf(Object val, boolean defoult)
 	{
 		if (val instanceof Boolean)

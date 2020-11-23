@@ -65,6 +65,7 @@ public class ArithmeticFunction extends Code
 		Script.FUNCTIONS.put("post", new FunctionPost());
 		Script.FUNCTIONS.put("time", new FunctionTime());
 		Script.FUNCTIONS.put("timestr", new FunctionTimeStr());
+		Script.FUNCTIONS.put("datestr", new FunctionDateStr());
 		Script.FUNCTIONS.put("num", new FunctionNum());
 		Script.FUNCTIONS.put("sleep", new FunctionSleep());
 		Script.FUNCTIONS.put("reflex", new FunctionReflex());

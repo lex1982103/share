@@ -1,5 +1,6 @@
 package lerrain.tool.script.warlock.function;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +28,8 @@ public class FunctionSize implements Function
 				num = ((int[])r).length;
 			else if (r instanceof int[][])
 				num = ((int[][])r).length;
-			else if (r instanceof List)
-				num = ((List)r).size();
+			else if (r instanceof Collection)
+				num = ((Collection)r).size();
 			else if (r instanceof Map)
 				num = ((Map)r).size();
 

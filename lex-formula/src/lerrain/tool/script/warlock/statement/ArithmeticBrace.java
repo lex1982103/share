@@ -9,7 +9,6 @@ import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,14 +42,16 @@ public class ArithmeticBrace extends Code
 		int i = 0;
 		Object val = null;
 
-		if (lead instanceof Collection)
+		if (lead instanceof Iterable)
 		{
 			int count = 0;
 			double num = 0;
 
-			for (Object v : (Collection)lead)
+			Factors f;
+			Object p;
+
+			for (Object v : (Iterable)lead)
 			{
-				Factors f;
 				if (v instanceof Factors)
 				{
 					f = (Factors)v;
@@ -68,7 +69,15 @@ public class ArithmeticBrace extends Code
 
 				try
 				{
-					Object p = content.run(f);
+					try
+					{
+						p = content.run(f);
+					}
+					catch (Interrupt.Return e)
+					{
+						p = e.getValue();
+					}
+
 					if (p instanceof Boolean)
 					{
 						if ((Boolean)p)

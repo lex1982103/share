@@ -27,9 +27,15 @@ public class Test
 
     public static void main(String[] arg) throws Exception
     {
+        double x = 0 /0;
+        System.out.println(x);
+
+    }
+
+    public static void main5(String[] arg) throws Exception
+    {
 //        System.out.println(1587640391384L - 1587640292360L);
 //        System.out.println(1587640406798L - 1587640394763L);
-                System.out.println(1587640387296L - 1587640216865L);
         //1587640387296  1587640216865
         //1587640406798  1587640394763
 

@@ -6,6 +6,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 public interface CompileListener
 {
     public static int FUNCTION = 1;
+
     public static int CONST = 2;
     public static int VARIABLE = 3;
 

@@ -37,8 +37,28 @@ public class ArithmeticParentheses extends Code
 		left = Expression.expressionOf(ws.cut(0, l));
 		prt = Expression.expressionOf(ws.cut(l + 1, r));
 
-		if (left != null && Script.compileListener != null)
-			Script.compileListener.compile(CompileListener.FUNCTION, left);
+		if (left != null && Script.compileListener != null) //left!=null才是函数
+			Script.compileListener.compile(CompileListener.FUNCTION, this);
+	}
+
+	public Code getPrt()
+	{
+		return prt;
+	}
+
+	public void setPrt(Code prt)
+	{
+		this.prt = prt;
+	}
+
+	public Code getLeft()
+	{
+		return left;
+	}
+
+	public void setLeft(Code left)
+	{
+		this.left = left;
 	}
 
 	public Object run(Factors factors)
@@ -63,7 +83,7 @@ public class ArithmeticParentheses extends Code
 				{
 					Object ex = null;
 
-					List<Code> codes = ((ArithmeticComma)prt).codes;
+					List<Code> codes = ((ArithmeticComma) prt).codes;
 					for (int i = 0; i < codes.size() - 1; i++)
 					{
 						try

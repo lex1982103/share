@@ -151,7 +151,15 @@ public class Words implements Serializable
 
 		words.get(from + index).d = type;
 	}
-	
+
+	public void setWord(int index, String word)
+	{
+		if (index >= num)
+			throw new RuntimeException("out of range");
+
+		words.get(from + index).c = word;
+	}
+
 	public String getWord(int index)
 	{
 		if (index >= num)

@@ -3,11 +3,7 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.FunctionInstable;
-import lerrain.tool.script.CompileListener;
-import lerrain.tool.script.Script;
-import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.Stack;
+import lerrain.tool.script.*;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
@@ -119,7 +115,11 @@ public class ArithmeticParentheses extends Code
 
 				Object[] params = null;
 
-				if (prt != null)
+				if (val instanceof ParamFunction)
+				{
+					params = ((ParamFunction)val).param(prt);
+				}
+				else if (prt != null)
 				{
 					Object r = prt.run(factors);
 					if (r instanceof Wrap)

@@ -18,7 +18,7 @@ public class ArithmeticAnd extends Arithmetic2Elements
 	{
 		try
 		{
-			return new Boolean(v(l, factors) && v(r, factors));
+			return Boolean.valueOf(v(l, factors) && v(r, factors));
 		}
 		catch (Exception e)
 		{

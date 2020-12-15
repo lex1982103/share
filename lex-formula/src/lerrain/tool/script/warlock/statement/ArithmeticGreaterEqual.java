@@ -18,20 +18,13 @@ public class ArithmeticGreaterEqual extends Arithmetic2Elements
 
 	public Object run(Factors factors)
 	{
-		Value left = Value.valueOf(l, factors);
-		Value right = Value.valueOf(r, factors);
-		
-		if (left.isDecimal() && right.isDecimal())
-		{
-			return new Boolean(left.doubleValue() >= right.doubleValue());
-//			return new Boolean(left.toDecimal().compareTo(right.toDecimal()) >= 0);
-		}
-		else if (left.isType(Value.TYPE_DATE) && right.isType(Value.TYPE_DATE))
-		{
-			Date d1 = (Date)left.getValue();
-			Date d2 = (Date)right.getValue();
-			return new Boolean(d1.after(d2) || d1.compareTo(d2) == 0);
-		}
+		Object lo = l.run(factors);
+		Object ro = r.run(factors);
+
+		if (lo instanceof Number && ro instanceof Number)
+			return Boolean.valueOf(((Number) lo).doubleValue() >= ((Number) ro).doubleValue());
+		else if (lo instanceof Date && ro instanceof Date)
+			return Boolean.valueOf(((Date) lo).after((Date) ro) || lo.equals(ro));
 
 		throw new ScriptRuntimeException(this, factors, "大小比较只可以在数字、日期上进行");
 	}

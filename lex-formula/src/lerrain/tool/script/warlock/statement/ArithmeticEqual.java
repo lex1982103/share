@@ -15,20 +15,26 @@ public class ArithmeticEqual extends Arithmetic2Elements
 	
 	public Object run(Factors factors)
 	{
-		Value v1 = Value.valueOf(l, factors);
-		Value v2 = Value.valueOf(r, factors);
-		
-		if (v1.isNull() && v2.isNull())
-			return new Boolean(true);
-		else if (!v1.isNull() && !v2.isNull())
+		Object lo = l.run(factors);
+		Object ro = r.run(factors);
+
+		if (lo == ro)
 		{
-			if (v1.isDecimal() && v2.isDecimal())
-				return new Boolean(v1.doubleValue() == v2.doubleValue());
+			return Boolean.TRUE;
+		}
+		else if (lo != null && ro != null)
+		{
+			if (lo.equals(ro))
+				return Boolean.TRUE;
+			else if (lo instanceof Number && ro instanceof Number)
+				return Boolean.valueOf(((Number) lo).doubleValue() == ((Number) ro).doubleValue());
 			else
-				return new Boolean(v1.getValue().equals(v2.getValue()));
+				return Boolean.FALSE;
 		}
 		else
-			return new Boolean(false);
+		{
+			return Boolean.FALSE;
+		}
 	}
 
 	public String toText(String space, boolean line)

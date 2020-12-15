@@ -20,11 +20,14 @@ public class ArithmeticNot extends Code
 
 	public Object run(Factors factors)
 	{
-		Value v = Value.valueOf(r, factors);
-		if (v.isBoolean() || v.isDecimal())
-			return new Boolean(!v.booleanValue());
+		Object v = r.run(factors);
 
-		throw new ScriptRuntimeException(this, factors, "NOT逻辑运算，要求值为boolean类型");
+		if (v instanceof Boolean)
+			return Boolean.valueOf(!((Boolean)v).booleanValue());
+		else
+			return Boolean.valueOf(Value.intOf(v) != 0);
+
+//		throw new ScriptRuntimeException(this, factors, "NOT逻辑运算，要求值为boolean类型");
 	}
 
 	@Override

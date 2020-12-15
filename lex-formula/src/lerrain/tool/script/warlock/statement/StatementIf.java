@@ -5,7 +5,6 @@ import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -130,6 +129,14 @@ public class StatementIf extends Code
 		}
 		
 		return null;
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return c.isFixed()
+				&& (yes == null || yes.isFixed())
+				&& (no == null || no.isFixed());
 	}
 
 	public String toText(String space, boolean line)

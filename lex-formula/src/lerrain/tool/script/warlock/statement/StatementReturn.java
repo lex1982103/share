@@ -37,6 +37,12 @@ public class StatementReturn extends Code
 		throw new Interrupt.Return(val);
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return r == null || r.isFixed();
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return space + "RETURN " + (r == null ? "" : r.toText(space + "  ", line));

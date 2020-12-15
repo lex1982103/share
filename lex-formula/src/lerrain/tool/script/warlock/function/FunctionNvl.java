@@ -11,7 +11,7 @@ import java.util.Map;
  * nvl(v1, v2, v3, v4, ...);
  * 根据参数表依次找到第一个非空值数据并返回
  */
-public class FunctionNvl implements Function
+public class FunctionNvl extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{
@@ -44,5 +44,4 @@ public class FunctionNvl implements Function
 
 		throw new RuntimeException("错误的nvl运算");
 	}
-
 }

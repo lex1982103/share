@@ -64,6 +64,12 @@ public class StatementSynch extends Code
 		super.clearBreakPoints();
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return (pre == null || pre.isFixed()) && code.isFixed();
+	}
+
 	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("SYNCH (");

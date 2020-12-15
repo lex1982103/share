@@ -22,6 +22,12 @@ public class StatementContinue extends Code
 		throw new Interrupt.Continue();
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return true;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return "CONTINUE";

@@ -15,8 +15,8 @@ import java.util.List;
 
 public class ArithmeticParentheses extends Code
 {
-	Code left, prt;
-	
+	protected Code left, prt;
+
 	public ArithmeticParentheses(Words ws, int i)
 	{
 		super(ws, i);
@@ -168,6 +168,15 @@ public class ArithmeticParentheses extends Code
 		{
 			throw new ScriptRuntimeException(this, factors, e);
 		}
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		if (left != null)
+			return left.isFixed() && (prt == null || prt.isFixed()); //函数时是否固定，无法预知，需要自己设
+
+		return prt == null || prt.isFixed();
 	}
 
 	public String toText(String space, boolean line)

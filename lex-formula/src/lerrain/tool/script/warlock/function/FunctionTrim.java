@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FunctionTrim implements Function
+public class FunctionTrim extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

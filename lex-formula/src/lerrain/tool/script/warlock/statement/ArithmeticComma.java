@@ -31,6 +31,16 @@ public class ArithmeticComma extends Code
 			codes.add(rc);
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		for (Code c : codes)
+			if (!c.isFixed())
+				return false;
+
+		return true;
+	}
+
 	public Object run(Factors factors)
 	{
 		Wrap wrap = new Wrap();

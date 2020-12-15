@@ -16,8 +16,6 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticNew extends Code
 {
-	Code v;
-	
 	String cluss;
 	int type;
 	

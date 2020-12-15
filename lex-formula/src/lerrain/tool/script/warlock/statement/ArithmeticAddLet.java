@@ -11,24 +11,19 @@ import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticAddLet extends Code
+public class ArithmeticAddLet extends Arithmetic2Elements
 {
-	Code lc, rc;
-	
 	public ArithmeticAddLet(Words ws, int i)
 	{
 		super(ws, i);
-
-		lc = Expression.expressionOf(ws.cut(0, i));
-		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
 		try
 		{
-			Object l = lc.run(factors);
-			Object r = rc.run(factors);
+			Object l = this.l.run(factors);
+			Object r = this.r.run(factors);
 
 			if (r == null)
 			{
@@ -36,7 +31,7 @@ public class ArithmeticAddLet extends Code
 			}
 			else if (l == null)
 			{
-				((Reference) lc).let(factors, r);
+				((Reference) this.l).let(factors, r);
 
 				return r;
 			}
@@ -51,7 +46,7 @@ public class ArithmeticAddLet extends Code
 				else
 					v = ((Number)l).longValue() + ((Number)r).longValue();
 
-				((Reference) lc).let(factors, v);
+				((Reference) this.l).let(factors, v);
 				return v;
 			}
 			else if (l instanceof Map)
@@ -77,7 +72,7 @@ public class ArithmeticAddLet extends Code
 			else
 			{
 				String v = l.toString() + r.toString();
-				((Reference) lc).let(factors, v);
+				((Reference) this.l).let(factors, v);
 
 				return v;
 			}
@@ -90,6 +85,6 @@ public class ArithmeticAddLet extends Code
 
 	public String toText(String space, boolean line)
 	{
-		return lc.toText("", line) + " += " + rc.toText("", line);
+		return l.toText("", line) + " += " + r.toText("", line);
 	}
 }

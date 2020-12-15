@@ -72,4 +72,10 @@ public class ArithmeticQuestMark extends Code
 	{
 		return l.toText("", false) + " ? " + r1.toText("", false) + " : " + r2.toText("", false);
 	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return l.isFixed() && r1.isFixed() && r2.isFixed();
+	}
 }

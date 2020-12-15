@@ -6,7 +6,6 @@ import java.util.Map;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
@@ -114,6 +113,12 @@ public class ArithmeticPointKey extends Code implements Reference
 			((Map)v).put(key, value);
 		else
 			throw new ScriptRuntimeException(this, factors, "赋值时，被赋值一方的POINT运算的左侧不是有效类型");
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return l.isFixed();
 	}
 
 	public String toText(String space, boolean line)

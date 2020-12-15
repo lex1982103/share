@@ -87,4 +87,10 @@ public class Constant extends Code
 //	{
 //		return vd;
 //	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return true;
+	}
 }

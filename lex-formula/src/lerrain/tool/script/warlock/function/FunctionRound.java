@@ -6,7 +6,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
-public class FunctionRound implements Function
+public class FunctionRound extends FixedFunction
 {
 	public static final double windage =  + 0.00000001f;
 

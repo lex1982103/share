@@ -9,7 +9,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Code implements Formula
+public abstract class Code implements Formula, Fixed
 {
 	Words words;
 
@@ -183,5 +183,16 @@ public abstract class Code implements Formula
 	public String getFullScriptString()
 	{
 		return words.getScript();
+	}
+
+	/**
+	 * 是否是不变的
+	 * 比如str("4444", 3)永远都是"444"
+	 * 程序可以通过这个标识位做缓存，不用每次都执行方法，直接返回"444"即可
+	 * @return
+	 */
+	public boolean isFixed()
+	{
+		return false;
 	}
 }

@@ -6,7 +6,7 @@ import lerrain.tool.formula.Value;
 
 import java.text.DecimalFormat;
 
-public class FunctionStr implements Function
+public class FunctionStr extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

@@ -4,8 +4,9 @@ import java.util.Date;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.warlock.Fixed;
 
-public class FunctionFormat implements Function
+public class FunctionFormat extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

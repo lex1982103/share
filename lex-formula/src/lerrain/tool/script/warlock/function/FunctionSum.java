@@ -3,7 +3,7 @@ package lerrain.tool.script.warlock.function;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 
-public class FunctionSum implements Function
+public class FunctionSum extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

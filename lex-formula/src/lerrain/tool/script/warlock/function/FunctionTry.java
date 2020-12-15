@@ -8,7 +8,7 @@ import lerrain.tool.formula.Function;
  * 不标准，用catch代替
  * var z = (x.y catch 100)
  */
-public class FunctionTry implements Function
+public class FunctionTry extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

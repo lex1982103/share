@@ -37,6 +37,12 @@ public class ArithmeticCatch extends Code
 		}
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return lc.isFixed() && (rc == null || rc.isFixed());
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return "CATCH " + lc.toText("", line) + " AS " + rc.toText("", line);

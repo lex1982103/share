@@ -24,6 +24,12 @@ public class ArithmeticCode extends Code
 		symbol = ws.getWord(i);
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return true;
+	}
+
 	public String getSymbol()
 	{
 		return symbol;

@@ -71,6 +71,12 @@ public class StatementThread extends Code
 		return r;
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return (pre == null || pre.isFixed()) && code.isFixed();
+	}
+
 	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("THREAD (");

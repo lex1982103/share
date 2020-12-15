@@ -61,6 +61,12 @@ public class StatementThrow extends Code
 			throw new ScriptRuntimeThrow(this, factors, msg, val);
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return r == null || r.isFixed();
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return "THROW " + r.toText("", line);

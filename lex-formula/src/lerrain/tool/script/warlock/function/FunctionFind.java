@@ -4,8 +4,9 @@ import java.util.List;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.warlock.Fixed;
 
-public class FunctionFind implements Function
+public class FunctionFind extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

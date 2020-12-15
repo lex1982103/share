@@ -6,7 +6,6 @@ import java.util.List;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -55,6 +54,12 @@ public class StatementVar extends Code
 			return null;
 		
 		return r.run(factors);
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return r == null || r.isFixed();
 	}
 
 	public String toText(String space, boolean line)

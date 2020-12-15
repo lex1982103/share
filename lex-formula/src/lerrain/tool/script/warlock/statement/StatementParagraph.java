@@ -47,6 +47,12 @@ public class StatementParagraph extends Code
 		return c.run(new Stack(factors));
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return c.isFixed();
+	}
+
 	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("{\n");

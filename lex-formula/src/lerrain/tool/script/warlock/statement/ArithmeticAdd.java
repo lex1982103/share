@@ -7,22 +7,17 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 import java.util.List;
 
-public class ArithmeticAdd extends Code
+public class ArithmeticAdd extends Arithmetic2Elements
 {
-	Code lc, rc;
-	
 	public ArithmeticAdd(Words ws, int i)
 	{
 		super(ws, i);
-
-		lc = Expression.expressionOf(ws.cut(0, i));
-		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
-		Object l = lc.run(factors);
-		Object r = rc.run(factors);
+		Object l = this.l.run(factors);
+		Object r = this.r.run(factors);
 
 		if (l instanceof Number && r instanceof Number)
 		{
@@ -78,6 +73,6 @@ public class ArithmeticAdd extends Code
 
 	public String toText(String space, boolean line)
 	{
-		return lc.toText("", line) + " + " + rc.toText("", line);
+		return l.toText("", line) + " + " + r.toText("", line);
 	}
 }

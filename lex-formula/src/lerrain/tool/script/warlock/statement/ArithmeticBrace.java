@@ -37,6 +37,12 @@ public class ArithmeticBrace extends Code
 		}
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return (left == null || left.isFixed()) && content.isFixed();
+	}
+
 	public Object treat(Object lead, Code content, Factors factors)
 	{
 		int i = 0;

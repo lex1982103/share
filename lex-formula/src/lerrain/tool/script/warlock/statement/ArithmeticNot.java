@@ -27,6 +27,12 @@ public class ArithmeticNot extends Code
 		throw new ScriptRuntimeException(this, factors, "NOT逻辑运算，要求值为boolean类型");
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return r.isFixed();
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return "NOT " + r.toText("", line);

@@ -6,22 +6,19 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticMod extends Code
+public class ArithmeticMod extends Arithmetic2Elements
 {
-	Code lc, rc;
+	Code l, r;
 	
 	public ArithmeticMod(Words ws, int i)
 	{
 		super(ws, i);
-
-		lc = Expression.expressionOf(ws.cut(0, i));
-		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
-		Object l = lc.run(factors);
-		Object r = rc.run(factors);
+		Object l = this.l.run(factors);
+		Object r = this.r.run(factors);
 
 		if (l instanceof Number && r instanceof Number)
 		{
@@ -38,6 +35,6 @@ public class ArithmeticMod extends Code
 
 	public String toText(String space, boolean line)
 	{
-		return lc.toText("", line) + " % " + rc.toText("", line);
+		return l.toText("", line) + " % " + r.toText("", line);
 	}
 }

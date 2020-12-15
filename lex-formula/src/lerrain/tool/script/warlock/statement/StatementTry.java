@@ -1,9 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
-import lerrain.tool.script.ScriptRuntimeThrow;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
@@ -118,6 +116,14 @@ public class StatementTry extends Code
 		}
 		
 		return null;
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return code.isFixed()
+				&& (catchAll == null || catchAll.isFixed())
+				&& (throwIt == null || throwIt.isFixed());
 	}
 
 	public String toText(String space, boolean line)

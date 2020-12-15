@@ -2,11 +2,12 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.warlock.Fixed;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FunctionDateStr implements Function
+public class FunctionDateStr extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

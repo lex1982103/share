@@ -6,7 +6,7 @@ import lerrain.tool.formula.Value;
 
 import java.math.BigDecimal;
 
-public class FunctionNum implements Function
+public class FunctionNum extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

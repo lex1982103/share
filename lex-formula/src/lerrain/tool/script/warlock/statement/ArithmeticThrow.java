@@ -10,7 +10,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticThrow extends Code
 {
-	Code lc, rc;
+	Code l, r;
 
 	boolean error = false;
 
@@ -18,17 +18,23 @@ public class ArithmeticThrow extends Code
 	{
 		super(ws, i);
 
-		lc = Expression.expressionOf(ws.cut(0, i));
+		l = Expression.expressionOf(ws.cut(0, i));
 
 		if ("error".equals(ws.getWord(i + 1)))
 		{
-			rc = Expression.expressionOf(ws.cut(i + 2));
+			r = Expression.expressionOf(ws.cut(i + 2));
 			error = true;
 		}
 		else
 		{
-			rc = Expression.expressionOf(ws.cut(i + 1));
+			r = Expression.expressionOf(ws.cut(i + 1));
 		}
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return l.isFixed() && r.isFixed();
 	}
 
 	public Object run(Factors factors)
@@ -37,16 +43,16 @@ public class ArithmeticThrow extends Code
 
 		try
 		{
-			return lc.run(factors);
+			return l.run(factors);
 		}
 		catch (Exception e)
 		{
 			String msg = null;
 			Object val = null;
 
-			if (rc != null)
+			if (r != null)
 			{
-				Object v = rc.run(factors);
+				Object v = r.run(factors);
 
 				if (v instanceof Wrap)
 				{
@@ -72,6 +78,6 @@ public class ArithmeticThrow extends Code
 
 	public String toText(String space, boolean line)
 	{
-		return "TRY " + lc.toText("", line) + " THROW " + rc.toText("", line);
+		return "TRY " + l.toText("", line) + " THROW " + r.toText("", line);
 	}
 }

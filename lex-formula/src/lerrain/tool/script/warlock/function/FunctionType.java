@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
-public class FunctionType implements Function
+public class FunctionType extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

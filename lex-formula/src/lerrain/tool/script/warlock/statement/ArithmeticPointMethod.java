@@ -67,6 +67,12 @@ public class ArithmeticPointMethod extends Code
 		throw new ScriptRuntimeException(this, factors, "point左侧只能是map或者factors，目前为" + v.toString());
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return obj.isFixed();
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return obj.toText("", line) + "." + name;

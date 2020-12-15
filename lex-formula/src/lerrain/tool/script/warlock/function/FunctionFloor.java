@@ -5,8 +5,9 @@ import java.math.BigDecimal;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.warlock.Fixed;
 
-public class FunctionFloor implements Function
+public class FunctionFloor extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

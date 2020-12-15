@@ -7,17 +7,12 @@ import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticLet extends Code
+public class ArithmeticLet extends Arithmetic2Elements
 {
-	Code l, r;
-	
 	public ArithmeticLet(Words ws, int i)
 	{
 		super(ws, i);
 
-		l = Expression.expressionOf(ws.cut(0, i));
-		r = Expression.expressionOf(ws.cut(i + 1));
-		
 		if (!(l instanceof Reference))
 			throw new SyntaxException("被赋值一方必须是一个引用 - " + ws);
 	}

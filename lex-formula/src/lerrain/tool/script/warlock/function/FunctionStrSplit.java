@@ -3,7 +3,7 @@ package lerrain.tool.script.warlock.function;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 
-public class FunctionStrSplit implements Function
+public class FunctionStrSplit extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

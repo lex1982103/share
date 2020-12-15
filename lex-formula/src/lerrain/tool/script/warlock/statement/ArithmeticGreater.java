@@ -9,16 +9,11 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticGreater extends Code
+public class ArithmeticGreater extends Arithmetic2Elements
 {
-	Code l, r;
-	
 	public ArithmeticGreater(Words ws, int i)
 	{
 		super(ws, i);
-
-		l = Expression.expressionOf(ws.cut(0, i));
-		r = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)

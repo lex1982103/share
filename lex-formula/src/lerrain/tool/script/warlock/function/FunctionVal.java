@@ -11,7 +11,7 @@ import lerrain.tool.script.ScriptRuntimeError;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.ScriptRuntimeThrow;
 
-public class FunctionVal implements Function
+public class FunctionVal extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

@@ -2,7 +2,6 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Expression;
@@ -26,6 +25,12 @@ public class StatementBreak extends Code
 		super.debug(factors);
 
 		throw new Interrupt.Break(r == null ? 1 : Value.intOf(r, factors));
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return r == null || r.isFixed();
 	}
 
 	public String toText(String space, boolean line)

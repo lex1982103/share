@@ -9,7 +9,7 @@ import lerrain.tool.script.ScriptRuntimeException;
 import java.util.List;
 import java.util.Map;
 
-public class FunctionSleep implements Function
+public class FunctionSleep extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class FunctionTime implements Function
+public class FunctionTime extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{
@@ -135,6 +135,13 @@ public class FunctionTime implements Function
 		{
 			throw new RuntimeException(dateStr + " - " + formatPattern + " - " + e.getMessage());
 		}
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		//程序执行的时候，如果慢当前时间会变，但考虑到通常都很快，如果需要保留同一个时间，程序自己重写一个Time函数覆盖来设定
+		return false;
 	}
 
 	public static void main(String[] s)

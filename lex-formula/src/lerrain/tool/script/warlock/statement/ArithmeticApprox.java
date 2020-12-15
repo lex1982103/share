@@ -11,16 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ArithmeticApprox extends Code
+public class ArithmeticApprox extends Arithmetic2Elements
 {
-	Code l, r;
-
 	public ArithmeticApprox(Words ws, int i)
 	{
 		super(ws, i);
-
-		l = Expression.expressionOf(ws.cut(0, i));
-		r = Expression.expressionOf(ws.cut(i + 1));
 	}
 	
 	public Object run(Factors factors)

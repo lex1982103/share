@@ -7,19 +7,22 @@ import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.Fixed;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
 import java.io.Serializable;
 
-public class ArithmeticFunctionDim extends Code implements Function, FunctionCloneable
+public class ArithmeticFunctionDim extends Code
 {
 	String[] param;
 
 	Script content;
 
 	String functionId;
+
+	ScriptFunction instant;
 
 	public ArithmeticFunctionDim(Words ws, int i)
 	{
@@ -48,6 +51,8 @@ public class ArithmeticFunctionDim extends Code implements Function, FunctionClo
 			functionId = words.hash();
 			Script.FUNCTIONS.put(functionId, this);
 		}
+
+		instant = new ScriptFunction();
 	}
 
 	public Code markBreakPoint(int pos)
@@ -64,9 +69,15 @@ public class ArithmeticFunctionDim extends Code implements Function, FunctionClo
 		super.clearBreakPoints();
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return true;
+	}
+
 	public Object run(Factors factors)
 	{
-		return this;
+		return instant;
 	}
 
 	public String toText(String space, boolean line)
@@ -83,39 +94,9 @@ public class ArithmeticFunctionDim extends Code implements Function, FunctionClo
 		return "function(" + str + ")";
 	}
 
-	public Object run(Object[] v, Factors p)
-	{
-		Stack stack = new Stack(p);
-
-		for (int i = 0; i < param.length && i < v.length; i++)
-		{
-			stack.declare(param[i]);
-			stack.set(param[i], v[i]);
-		}
-
-		try
-		{
-			return content.run(stack);
-		}
-		catch (Interrupt.Return e)
-		{
-			return e.getValue();
-		}
-		catch (Interrupt e)
-		{
-			throw new ScriptRuntimeException(this, p, "can't break/continue a function, use return");
-		}
-	}
-
 	private Object writeReplace()
 	{
 		return new SerializedFunction(functionId);
-	}
-
-	@Override
-	public String clone()
-	{
-		return functionId;
 	}
 
 	public static class SerializedFunction implements Serializable
@@ -131,5 +112,45 @@ public class ArithmeticFunctionDim extends Code implements Function, FunctionClo
 		{
 			return Script.FUNCTIONS.get(functionId);
 		}
+	}
+
+	class ScriptFunction implements Function, FunctionCloneable, Fixed
+	{
+		public Object run(Object[] v, Factors p)
+		{
+			Stack stack = new Stack(p);
+
+			for (int i = 0; i < param.length && i < v.length; i++)
+			{
+				stack.declare(param[i]);
+				stack.set(param[i], v[i]);
+			}
+
+			try
+			{
+				return content.run(stack);
+			}
+			catch (Interrupt.Return e)
+			{
+				return e.getValue();
+			}
+			catch (Interrupt e)
+			{
+				throw new ScriptRuntimeException(ArithmeticFunctionDim.this, p, "can't break/continue a function, use return");
+			}
+		}
+
+		@Override
+		public boolean isFixed()
+		{
+			return content.isFixed();
+		}
+
+		@Override
+		public String clone()
+		{
+			return functionId;
+		}
+
 	}
 }

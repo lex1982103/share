@@ -4,7 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
-public class FunctionStrTrim implements Function
+public class FunctionStrTrim extends FixedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

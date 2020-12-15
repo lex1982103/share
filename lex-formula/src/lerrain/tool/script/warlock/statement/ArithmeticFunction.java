@@ -2,10 +2,12 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.Fixed;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.*;
 
@@ -28,6 +30,8 @@ public class ArithmeticFunction extends Code
 	String name;
 	
 	Function fs;
+
+	Boolean fixed;
 
 	static
 	{
@@ -86,8 +90,11 @@ public class ArithmeticFunction extends Code
 		
 		name = ws.getWord(i);
 		
-		//内置函数，参数不直接运算
+		//内置函数，参数也直接运算
 		fs = (Function)Script.FUNCTIONS.get(name);
+
+		if (Script.compileListener != null) //left!=null才是函数
+			Script.compileListener.compile(CompileListener.FUNCTION_INSTANT, this);
 	}
 
 	public String getName()
@@ -117,6 +124,24 @@ public class ArithmeticFunction extends Code
 		}
 
 		return f;
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		if (fixed != null)
+			return fixed;
+
+		//如果值被改不是预设的fs而是factors里面取出的f，那么前面一定有可变的导致fixed是false，这里无论返回的是否，都不会对整体的code段产生判断错误
+		if (fs instanceof Fixed)
+			return ((Fixed) fs).isFixed();
+
+		return false;
+	}
+
+	public void setFixed(boolean fixed)
+	{
+		this.fixed = fixed;
 	}
 
 	public String toText(String space, boolean line)

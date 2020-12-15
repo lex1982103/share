@@ -10,24 +10,19 @@ import lerrain.tool.script.warlock.analyse.Words;
 import java.util.List;
 import java.util.Map;
 
-public class ArithmeticSubLet extends Code
+public class ArithmeticSubLet extends Arithmetic2Elements
 {
-	Code lc, rc;
-	
 	public ArithmeticSubLet(Words ws, int i)
 	{
 		super(ws, i);
-
-		lc = Expression.expressionOf(ws.cut(0, i));
-		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
 	{
 		try
 		{
-			Object l = lc.run(factors);
-			Object r = rc.run(factors);
+			Object l = this.l.run(factors);
+			Object r = this.r.run(factors);
 
 			if (l instanceof Number && r instanceof Number)
 			{
@@ -40,7 +35,7 @@ public class ArithmeticSubLet extends Code
 				else
 					v = ((Number)l).longValue() - ((Number)r).longValue();
 
-				((Reference) lc).let(factors, v);
+				((Reference) this.l).let(factors, v);
 				return v;
 			}
 			else if (l instanceof Map)
@@ -64,6 +59,6 @@ public class ArithmeticSubLet extends Code
 
 	public String toText(String space, boolean line)
 	{
-		return lc.toText("", line) + " -= " + rc.toText("", line);
+		return l.toText("", line) + " -= " + r.toText("", line);
 	}
 }

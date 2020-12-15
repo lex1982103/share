@@ -3,10 +3,8 @@ package lerrain.tool.script.warlock.statement;
 import java.util.*;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
-import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
@@ -66,6 +64,15 @@ public class StatementFor extends Code
 			return f3.markBreakPoint(pos);
 
 		return super.markBreakPoint(pos);
+	}
+
+	@Override
+	public boolean isFixed()
+	{
+		return (fc == null || fc.isFixed())
+				&& (f1 == null || f1.isFixed())
+				&& (f2 == null || f2.isFixed())
+				&& (f3 == null || f3.isFixed());
 	}
 
 	public void clearBreakPoints()

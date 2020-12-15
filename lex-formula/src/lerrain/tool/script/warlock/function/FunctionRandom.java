@@ -22,6 +22,11 @@ public class FunctionRandom implements Function, FunctionInstable
 		throw new RuntimeException("错误的random运算");
 	}
 
+	public String toString()
+	{
+		return "function/random";
+	}
+
 	@Override
 	public String getRecordName()
 	{

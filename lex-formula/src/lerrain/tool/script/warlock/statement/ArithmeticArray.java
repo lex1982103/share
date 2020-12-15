@@ -201,6 +201,12 @@ public class ArithmeticArray extends Code implements Reference
 		}
 	}
 
+	@Override
+	public boolean isFixed()
+	{
+		return (v == null || v.isFixed()) && a.isFixed();
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return (v == null ? "" : v.toText("", line)) + "[" + (a == null ? "" : a.toText("", line)) + "]";

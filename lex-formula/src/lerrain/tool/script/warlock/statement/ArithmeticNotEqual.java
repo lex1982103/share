@@ -22,12 +22,27 @@ public class ArithmeticNotEqual extends Arithmetic2Elements
 		{
 			return Boolean.FALSE;
 		}
+		else if (lo instanceof CharSequence && ro instanceof CharSequence)
+		{
+			CharSequence c1 = (CharSequence)lo;
+			CharSequence c2 = (CharSequence)ro;
+
+			int len = c1.length();
+			if (len != c2.length())
+				return Boolean.TRUE;
+
+			for (int i = 0; i < len; ++i)
+				if (c1.charAt(i) != c2.charAt(i))
+					return Boolean.TRUE;
+
+			return Boolean.FALSE;
+		}
 		else if (lo != null && ro != null)
 		{
-			if (lo.equals(ro))
-				return Boolean.FALSE;
-			else if (lo instanceof Number && ro instanceof Number)
+			if (lo instanceof Number && ro instanceof Number)
 				return Boolean.valueOf(((Number) lo).doubleValue() != ((Number) ro).doubleValue());
+			else if (lo.equals(ro))
+				return Boolean.FALSE;
 			else
 				return Boolean.TRUE;
 		}

@@ -11,6 +11,8 @@ import java.util.*;
 
 public class ArithmeticApprox extends Arithmetic2Elements
 {
+	static char wind = 'a' - 'A';
+
 	public ArithmeticApprox(Words ws, int i)
 	{
 		super(ws, i);
@@ -33,6 +35,27 @@ public class ArithmeticApprox extends Arithmetic2Elements
 		{
 			return Boolean.FALSE;
 		}
+	}
+
+	public static boolean compare(CharSequence c1, CharSequence c2)
+	{
+		int len = c1.length();
+		if (len != c2.length())
+			return false;
+
+		for (int i = 0; i < len; ++i)
+		{
+			char d1 = c1.charAt(i);
+			char d2 = c2.charAt(i);
+			if (d1 >= 'A' && d1 <= 'Z')
+				d1 += wind;
+			if (d2 >= 'A' && d2 <= 'Z')
+				d2 += wind;
+			if (d1 != d2)
+				return false;
+		}
+
+		return true;
 	}
 
 	public static boolean compare(Object v1, Object v2)
@@ -58,26 +81,34 @@ public class ArithmeticApprox extends Arithmetic2Elements
 		if (v1 instanceof Number && v2 instanceof Number)
 			return ((Number)v1).doubleValue() == ((Number)v2).doubleValue();
 
-		if (v1 instanceof String && v2 instanceof String)
+		if (v1 instanceof CharSequence && v2 instanceof CharSequence)
 		{
-			String s1 = ((String)v1).trim();
-			String s2 = ((String)v2).trim();
-
-			if (s1.equals(s2))
-			{
+			if (compare((CharSequence)v1, (CharSequence)v2))
 				return true;
-			}
-			else
+
+			if (v1 instanceof String && v2 instanceof String)
 			{
-				try
+				String s1 = ((String) v1).trim();
+				String s2 = ((String) v2).trim();
+
+				if (s1.equalsIgnoreCase(s2))
 				{
-					return Double.parseDouble(s1) == Double.parseDouble(s2);
+					return true;
 				}
-				catch (Exception e)
+				else
 				{
-					return false;
+					try
+					{
+						return Double.parseDouble(s1) == Double.parseDouble(s2);
+					}
+					catch (Exception e)
+					{
+						return false;
+					}
 				}
 			}
+
+			return false;
 		}
 
 		if (v1 instanceof Number && v2 instanceof String)

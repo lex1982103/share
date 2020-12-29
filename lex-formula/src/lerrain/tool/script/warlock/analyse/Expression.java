@@ -184,7 +184,8 @@ public class Expression
 		if (arithmetic == Words.POINT_METHOD || arithmetic == Words.POINT_METHOD2) return new ArithmeticPointMethod(ws, pos);
 		if (arithmetic == Words.BRACKET) return new ArithmeticArray(ws, pos);
 		if (arithmetic == Words.BRACE) return new ArithmeticBrace(ws, pos);
-		
+		if (arithmetic == Words.FUNCTION_BODY) return new ArithmeticFunctionBody(ws, pos);
+
 		if (arithmetic == Words.POSITIVE) return new ArithmeticAdd(ws, pos);
 		if (arithmetic == Words.NEGATIVE) return new ArithmeticSub(ws, pos);
 		if (arithmetic == Words.ADDADD) return new ArithmeticAddAdd(ws, pos);
@@ -206,9 +207,12 @@ public class Expression
 		if (arithmetic == Words.GREATEREQUAL) return new ArithmeticGreaterEqual(ws, pos);
 		if (arithmetic == Words.LESSEQUAL) return new ArithmeticLessEqual(ws, pos);
 		
-		if (arithmetic == Words.PRT) return new ArithmeticParentheses(ws, pos);
-		if (arithmetic == Words.FUNCTION) return new ArithmeticFunction(ws, pos);
-		if (arithmetic == Words.FUNCTION_BODY) return new ArithmeticFunctionBody(ws, pos);
+		if (arithmetic == Words.PRT)
+		{
+			if (pos > 0 && ws.getType(pos - 1) == Words.FUNCTION_BODY)
+				return new ArithmeticFunction(ws, pos);
+			return new ArithmeticParentheses(ws, pos);
+		}
 
 		if (arithmetic == Words.KEYWORD)
 		{

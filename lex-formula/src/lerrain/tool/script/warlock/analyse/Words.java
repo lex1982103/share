@@ -389,7 +389,6 @@ public class Words implements Serializable
 				else if (!isPoint && isPrt)
 				{
 					setType(i, FUNCTION_BODY);
-					setType(i + 1, FUNCTION);
 				}
 				else
 				{

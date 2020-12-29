@@ -1,14 +1,10 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
-import lerrain.tool.formula.Value;
-import lerrain.tool.script.warlock.Fixed;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-public class FunctionLong extends FixedFunction
+public class FunctionLong extends OptimizedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

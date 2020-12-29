@@ -7,7 +7,7 @@ import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Fixed;
+import lerrain.tool.script.warlock.Optimized;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
@@ -114,7 +114,7 @@ public class ArithmeticFunctionDim extends Code
 		}
 	}
 
-	class ScriptFunction implements Function, FunctionCloneable, Fixed
+	class ScriptFunction implements Function, FunctionCloneable, Optimized
 	{
 		public Object run(Object[] v, Factors p)
 		{
@@ -141,9 +141,9 @@ public class ArithmeticFunctionDim extends Code
 		}
 
 		@Override
-		public boolean isFixed()
+		public boolean isFixed(Code p)
 		{
-			return content.isFixed();
+			return content.isFixed(p);
 		}
 
 		@Override

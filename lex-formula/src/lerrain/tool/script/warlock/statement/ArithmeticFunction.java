@@ -1,151 +1,189 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.CompileListener;
-import lerrain.tool.script.Script;
-import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.SyntaxException;
+import lerrain.tool.script.*;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Fixed;
+import lerrain.tool.script.warlock.Optimized;
+import lerrain.tool.script.warlock.Wrap;
+import lerrain.tool.script.warlock.analyse.Expression;
+import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
-import lerrain.tool.script.warlock.function.*;
+import lerrain.tool.script.warlock.function.FunctionTry;
 
-/**
- * 
- * @author lerrain
- * 
- * 2014-08-11
- * 2014-08-10提到的这种形式，用?:来处理
- *
- * 2014-08-10
- * 由逗号分割开的多个表达式，通常是用作函数或数组的参数，并不是每个都需要计算的
- * 所以直接打包返回，处理的部分根据需要计算全部或者部分
- * 如：x[i] = case(i>0,x[i-1]+y,y); 
- * 如果每个都计算，那么这个函数是没办法运行的。
- * 
- */
+import java.util.List;
+
 public class ArithmeticFunction extends Code
 {
-	String name;
-	
-	Function fs;
+	protected Code body, prt;
+	protected Function function;
 
-	Boolean fixed;
-
-	static
-	{
-		Script.FUNCTIONS.put("try", new FunctionTry());
-		Script.FUNCTIONS.put("case", new FunctionCase());
-		Script.FUNCTIONS.put("round", new FunctionRound());
-		Script.FUNCTIONS.put("ceil", new FunctionCeil());
-		Script.FUNCTIONS.put("floor", new FunctionFloor());
-		Script.FUNCTIONS.put("format", new FunctionFormat());
-		Script.FUNCTIONS.put("array", new FunctionArray());
-		Script.FUNCTIONS.put("min", new FunctionMin());
-		Script.FUNCTIONS.put("max", new FunctionMax());
-		Script.FUNCTIONS.put("pow", new FunctionPow());
-		Script.FUNCTIONS.put("size", new FunctionSize());
-		Script.FUNCTIONS.put("call", new FunctionCall());
-		Script.FUNCTIONS.put("print", new FunctionPrint());
-		Script.FUNCTIONS.put("fill", new FunctionFill());
-		Script.FUNCTIONS.put("sum", new FunctionSum());
-		Script.FUNCTIONS.put("val", new FunctionVal());
-		Script.FUNCTIONS.put("long", new FunctionLong());
-		Script.FUNCTIONS.put("int", new FunctionInteger());
-		Script.FUNCTIONS.put("find", new FunctionFind());
-		Script.FUNCTIONS.put("str", new FunctionStr());
-		Script.FUNCTIONS.put("str_begin", new FunctionStrBegin());
-		Script.FUNCTIONS.put("str_end", new FunctionStrEnd());
-		Script.FUNCTIONS.put("str_index", new FunctionStrIndex());
-		Script.FUNCTIONS.put("str_split", new FunctionStrSplit());
-		Script.FUNCTIONS.put("str_len", new FunctionStrLen());
-		Script.FUNCTIONS.put("str_upper", new FunctionStrUpper());
-		Script.FUNCTIONS.put("str_lower", new FunctionStrLower());
-		Script.FUNCTIONS.put("str_right", new FunctionStrRight());
-		Script.FUNCTIONS.put("str_trim", new FunctionStrTrim());
-		Script.FUNCTIONS.put("str_replace", new FunctionStrReplace());
-		Script.FUNCTIONS.put("random", new FunctionRandom());
-		Script.FUNCTIONS.put("post", new FunctionPost());
-		Script.FUNCTIONS.put("time", new FunctionTime());
-		Script.FUNCTIONS.put("timestr", new FunctionTimeStr());
-		Script.FUNCTIONS.put("datestr", new FunctionDateStr());
-		Script.FUNCTIONS.put("num", new FunctionNum());
-		Script.FUNCTIONS.put("sleep", new FunctionSleep());
-		Script.FUNCTIONS.put("reflex", new FunctionReflex());
-		Script.FUNCTIONS.put("type", new FunctionType());
-		Script.FUNCTIONS.put("trim", new FunctionTrim());
-		Script.FUNCTIONS.put("match", new FunctionMatch());
-		Script.FUNCTIONS.put("copy", new FunctionCopy());
-		Script.FUNCTIONS.put("contains", new FunctionContains());
-		Script.FUNCTIONS.put("nvl", new FunctionNvl());
-	}
-	
 	public ArithmeticFunction(Words ws, int i)
 	{
 		super(ws, i);
 
-		if (i > 0)
-			throw new SyntaxException("不是一个有效的函数语法 - " + ws);
-		
-		name = ws.getWord(i);
-		
-		//内置函数，参数也直接运算
-		fs = (Function)Script.FUNCTIONS.get(name);
+		int r = Syntax.findRightBrace(ws, i + 1);
+		body = Expression.expressionOf(ws.cut(0, i));
+		prt = Expression.expressionOf(ws.cut(i + 1, r));
 
-		if (Script.compileListener != null) //left!=null才是函数
-			Script.compileListener.compile(CompileListener.FUNCTION_INSTANT, this);
+//		if (Script.compileListener != null) //left!=null才是函数
+//			Script.compileListener.compile(CompileListener.FUNCTION, this);
 	}
 
-	public String getName()
+	/**
+	 * 把code绑定到函数体，不再从环境中获取
+	 * @param body
+	 * @param prt
+	 */
+	public void bind(Code body, Code prt)
 	{
-		return name;
+		this.body = body;
+		this.prt = prt;
 	}
 
-	public String toString()
+	public void bind(Code body)
 	{
-		return name + "(...) {...}";
+		this.body = body;
+	}
+
+	public void bind(Function function, Code prt)
+	{
+		this.function = function;
+		this.prt = prt;
+	}
+
+	public void bind(Function function)
+	{
+		this.function = function;
+	}
+
+	public Code getBody()
+	{
+		return body;
+	}
+
+	public Code getParam()
+	{
+		return prt;
 	}
 
 	public Object run(Factors factors)
 	{
-		Function f = fs;
-		
-		Object v = factors.get(name);
-		if (v instanceof Function)
-			f = (Function)v;
-		
-		if (f == null)
+		try
 		{
-			if (v == null)
-				throw new ScriptRuntimeException(this, factors, "未找到函数 - " + name);
-			else
-				throw new ScriptRuntimeException(this, factors, "该变量对应的值不是函数体 - " + name + " is " + v.getClass() + ": " + v.toString());
-		}
+			Function val = function;
 
-		return f;
+			if (val == null)
+			{
+				Object res = body.run(factors);
+
+				if (!(res instanceof Function))
+				{
+					if (res instanceof Formula)
+						return ((Formula) res).run(factors);
+					else
+						return res;
+				}
+
+				val = (Function) res;
+			}
+
+			if (val instanceof FunctionTry) //这种方式的try已经作废，虽然还支持，但以后不要使用
+			{
+				Object ex = null;
+
+				List<Code> codes = ((ArithmeticComma) prt).codes;
+				for (int i = 0; i < codes.size() - 1; i++)
+				{
+					try
+					{
+						return codes.get(i).run(factors);
+					}
+					catch (Exception e)
+					{
+						if (Thread.currentThread().isInterrupted()) //线程强制中断，不拦截
+							throw new ScriptRuntimeException(this, factors, "interrupted");
+
+						ex = e;
+
+						//这里没必要处理Interrupt，break/continue直接被循环拦截，return不存在抛到try的可能
+					}
+				}
+
+				Object x = codes.get(codes.size() - 1).run(factors);
+				if (x instanceof Function)
+				{
+					Stack st = new Stack(factors);
+					return ((Function)x).run(new Object[]{ex}, st);
+				}
+
+				return x;
+			}
+
+			Object[] params = null;
+
+			if (val instanceof ParamFunction)
+			{
+				params = ((ParamFunction)val).param(prt);
+			}
+			else if (prt != null)
+			{
+				Object r = prt.run(factors);
+				if (r instanceof Wrap)
+					params = ((Wrap) r).toArray();
+				else
+					params = new Object[]{r};
+			}
+
+			Object prepare = null;
+			if (val instanceof FunctionInstable && Script.playbackListener != null)
+			{
+				String recordName = ((FunctionInstable)val).getRecordName();
+
+				if (Script.playbackListener.isDebugging())
+					return Script.playbackListener.popRecordHistory(recordName);
+
+				prepare = Script.playbackListener.prepare(recordName);
+			}
+
+			if (factors instanceof Stack)
+				((Stack)factors).setCode(this);
+
+			try
+			{
+				Object r = val.run(params, factors);
+
+				if (prepare != null)
+					Script.playbackListener.success(prepare, r);
+
+				return r;
+			}
+			catch (Exception e)
+			{
+				if (prepare != null)
+					Script.playbackListener.fail(prepare, e);
+
+				throw e;
+			}
+		}
+		catch (Exception e)
+		{
+			throw new ScriptRuntimeException(this, factors, e);
+		}
 	}
 
 	@Override
 	public boolean isFixed()
 	{
-		if (fixed != null)
-			return fixed;
+		if (function instanceof Optimized)
+			return ((Optimized)function).isFixed(prt);
 
-		//如果值被改不是预设的fs而是factors里面取出的f，那么前面一定有可变的导致fixed是false，这里无论返回的是否，都不会对整体的code段产生判断错误
-		if (fs instanceof Fixed)
-			return ((Fixed) fs).isFixed();
-
-		return false;
-	}
-
-	public void setFixed(boolean fixed)
-	{
-		this.fixed = fixed;
+		return body.isFixed(prt); //函数时是否固定，无法预知，需要自己设
 	}
 
 	public String toText(String space, boolean line)
 	{
-		return name;
+		return (body == null ? "" : body.toText("", line)) + "(" + (prt == null ? "" : prt.toText("", line)) + ")";
 	}
 }

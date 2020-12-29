@@ -3,10 +3,8 @@ package lerrain.tool.script.warlock.function;
 import java.util.List;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
-import lerrain.tool.script.warlock.Fixed;
 
-public class FunctionFind extends FixedFunction
+public class FunctionFind extends OptimizedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

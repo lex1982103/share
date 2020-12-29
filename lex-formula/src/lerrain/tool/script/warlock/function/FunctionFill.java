@@ -1,11 +1,9 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.warlock.Fixed;
 
-public class FunctionFill extends FixedFunction
+public class FunctionFill extends OptimizedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

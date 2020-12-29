@@ -10,19 +10,16 @@ import java.math.BigDecimal;
 
 public class Constant extends Code
 {
-	int type;
-	String text;
-	
 	Object v;
-	
+
 	public Constant(Words ws)
 	{
 		super(ws);
 
-		this.type = ws.getType(0);
-		this.text = ws.getWord(0);
-		
-		if (type == Words.NULLPT)
+		int type = ws.getType(0);
+		String text = ws.getWord(0);
+
+		if (type == Words.NULL)
 		{
 			v = null;
 		}
@@ -61,8 +58,20 @@ public class Constant extends Code
 			throw new RuntimeException("无法识别的常量：" + v);
 		}
 
-		if (Script.compileListener != null)
-			Script.compileListener.compile(CompileListener.CONST, this);
+//		if (Script.compileListener != null)
+//			Script.compileListener.compile(CompileListener.CONST, this);
+	}
+
+	/**
+	 * 用于替换fixed的表达式
+	 * @param ws
+	 * @param v
+	 * @return
+	 */
+	public Constant(Words ws, Object v)
+	{
+		super(ws);
+		this.v = v;
 	}
 	
 	public Object run(Factors factors)

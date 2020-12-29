@@ -1,13 +1,12 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
-import lerrain.tool.formula.Value;
+import lerrain.tool.script.warlock.Code;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FunctionTimeStr extends FixedFunction
+public class FunctionTimeStr extends OptimizedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{
@@ -28,10 +27,10 @@ public class FunctionTimeStr extends FixedFunction
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(Code p)
 	{
 		//程序执行的时候，如果慢当前时间会变，但考虑到通常都很快，如果需要保留同一个时间，程序自己重写一个Time函数覆盖来设定
-		return false;
+		return p == null ? false : p.isFixed();
 	}
 
 	public static String getString(Date date, String formatPattern)

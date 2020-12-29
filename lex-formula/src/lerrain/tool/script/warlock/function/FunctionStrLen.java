@@ -1,10 +1,8 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
-import lerrain.tool.formula.Value;
 
-public class FunctionStrLen extends FixedFunction
+public class FunctionStrLen extends OptimizedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

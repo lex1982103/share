@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
 import java.util.*;
 
 public class ServiceMgr

@@ -21,8 +21,8 @@ public class Variable extends Code implements Reference
 
 		this.varName = ws.getWord(0);
 
-		if (Script.compileListener != null)
-			Script.compileListener.compile(CompileListener.VARIABLE, this);
+//		if (Script.compileListener != null)
+//			Script.compileListener.compile(CompileListener.VARIABLE, this);
 	}
 
 	public void setFixed(boolean fixed)

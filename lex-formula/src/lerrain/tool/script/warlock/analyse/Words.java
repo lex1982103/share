@@ -64,12 +64,13 @@ public class Words implements Serializable
 	public static final int DIVIDE				= 282; 
 	public static final int MOD					= 283;
 
-	public static final int NULLPT				= 290; 
+	public static final int NULL				= 290;
 	public static final int KEYWORD				= 300;
 	public static final int CLASS				= 310;
 
 	public static final int VARIABLE			= 380; //变量
-	public static final int FUNCTION			= 390; //函数
+	public static final int FUNCTION_BODY		= 390; //函数
+	public static final int FUNCTION			= 391; //函数（包括参数部分）
 	public static final int METHOD				= 400; //方法
 	public static final int KEY					= 410; //相对于前方值的KEY
 
@@ -387,7 +388,8 @@ public class Words implements Serializable
 				}
 				else if (!isPoint && isPrt)
 				{
-					setType(i, FUNCTION);
+					setType(i, FUNCTION_BODY);
+					setType(i + 1, FUNCTION);
 				}
 				else
 				{
@@ -500,7 +502,7 @@ public class Words implements Serializable
 			return FUNCTION_DIM;
 
 		if ("null".equals(word))
-			return NULLPT;
+			return NULL;
 		if ("true".equals(word))
 			return TRUE;
 		if ("false".equals(word))

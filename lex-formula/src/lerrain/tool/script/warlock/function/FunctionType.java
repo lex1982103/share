@@ -1,16 +1,13 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
-import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeError;
 import lerrain.tool.script.ScriptRuntimeThrow;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
-public class FunctionType extends FixedFunction
+public class FunctionType extends OptimizedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

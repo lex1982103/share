@@ -9,7 +9,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Code implements Formula, Fixed
+public abstract class Code implements Formula, Optimized
 {
 	Words words;
 
@@ -191,8 +191,14 @@ public abstract class Code implements Formula, Fixed
 	 * 程序可以通过这个标识位做缓存，不用每次都执行方法，直接返回"444"即可
 	 * @return
 	 */
-	public boolean isFixed()
+	@Override
+	public boolean isFixed(Code code)
 	{
 		return false;
+	}
+
+	public boolean isFixed()
+	{
+		return isFixed(null);
 	}
 }

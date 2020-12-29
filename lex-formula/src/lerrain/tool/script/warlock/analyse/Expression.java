@@ -1,12 +1,12 @@
 package lerrain.tool.script.warlock.analyse;
 
 import lerrain.tool.script.ArithmeticFactory;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.statement.*;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,8 +65,18 @@ public class Expression
 ////		addArithmetic(Words.BRACE, 2000, StatementParagraph.class);
 //		addArithmetic(Words.PRT, 2000, ArithmeticParentheses.class);
 //	}
+
+    public static Code expressionOf(Words ws)
+    {
+        Code code = expressionOfWords(ws);
+
+        if (Script.compileListener != null)
+            code = Script.compileListener.compile(CompileListener.EXPRESSION, code);
+
+        return code;
+    }
 	
-	public static Code expressionOf(Words ws)
+	private static Code expressionOfWords(Words ws)
 	{
 		if (ws.size() == 0)
 			return null;
@@ -74,7 +84,7 @@ public class Expression
 		if (ws.size() == 1)
 		{
 			int t = ws.getType(0);
-			if (t == Words.NULLPT || t == Words.NUMBER || t == Words.STRING || t == Words.TRUE || t == Words.FALSE)
+			if (t == Words.NULL || t == Words.NUMBER || t == Words.STRING || t == Words.TRUE || t == Words.FALSE)
 				return new Constant(ws);
 			if (t == Words.VARIABLE || t == Words.WORD)
 				return new Variable(ws);
@@ -173,7 +183,6 @@ public class Expression
 		if (arithmetic == Words.POINT_KEY || arithmetic == Words.POINT_KEY2) return new ArithmeticPointKey(ws, pos);
 		if (arithmetic == Words.POINT_METHOD || arithmetic == Words.POINT_METHOD2) return new ArithmeticPointMethod(ws, pos);
 		if (arithmetic == Words.BRACKET) return new ArithmeticArray(ws, pos);
-		if (arithmetic == Words.FUNCTION) return new ArithmeticFunction(ws, pos);
 		if (arithmetic == Words.BRACE) return new ArithmeticBrace(ws, pos);
 		
 		if (arithmetic == Words.POSITIVE) return new ArithmeticAdd(ws, pos);
@@ -198,6 +207,8 @@ public class Expression
 		if (arithmetic == Words.LESSEQUAL) return new ArithmeticLessEqual(ws, pos);
 		
 		if (arithmetic == Words.PRT) return new ArithmeticParentheses(ws, pos);
+		if (arithmetic == Words.FUNCTION) return new ArithmeticFunction(ws, pos);
+		if (arithmetic == Words.FUNCTION_BODY) return new ArithmeticFunctionBody(ws, pos);
 
 		if (arithmetic == Words.KEYWORD)
 		{
@@ -239,7 +250,7 @@ public class Expression
 		if (arithmetic == Words.POINT_METHOD) return 1300;
 		if (arithmetic == Words.POINT_KEY2) return 1300;
 		if (arithmetic == Words.POINT_METHOD2) return 1300;
-		if (arithmetic == Words.FUNCTION) return 1300;
+		if (arithmetic == Words.FUNCTION_BODY) return 1300;
 		if (arithmetic == Words.BRACKET) return 1300;
 		if (arithmetic == Words.BRACE) return 1300;
 		if (arithmetic == Words.PRT) return 1300;

@@ -1,12 +1,11 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
 import java.text.DecimalFormat;
 
-public class FunctionStr extends FixedFunction
+public class FunctionStr extends OptimizedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

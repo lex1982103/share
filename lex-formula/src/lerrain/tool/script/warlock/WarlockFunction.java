@@ -7,9 +7,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.script.warlock.statement.ArithmeticComma;
 
-/**
- * @deprecated 
- */
+@Deprecated
 public class WarlockFunction implements Formula
 {
 	String[] vars;

@@ -156,18 +156,22 @@ public class Expression
 
 	static Map<Integer, ArithmeticFactory> map = new HashMap();
 
+	static Map<String, ArithmeticFactory> keywords = new HashMap();
+
 	public static void register(int arithmetic, ArithmeticFactory af)
 	{
 		map.put(arithmetic, af);
 	}
 
+	public static void register(String keyword, ArithmeticFactory af)
+	{
+		keywords.put(keyword, af);
+	}
+
 	private static Code arithmeticOf(int arithmetic, Words ws, int pos)
 	{
 		if (map.containsKey(arithmetic))
-		{
-			ArithmeticFactory af = map.get(arithmetic);
-			return af.buildArithmetic(ws, pos);
-		}
+			return map.get(arithmetic).buildArithmetic(ws, pos);
 
 		if (arithmetic == Words.LET) return new ArithmeticLet(ws, pos);
 		if (arithmetic == Words.ADDLET) return new ArithmeticAddLet(ws, pos);
@@ -218,6 +222,9 @@ public class Expression
 		{
 			String word = ws.getWord(pos);
 
+			if (keywords.containsKey(word))
+				return keywords.get(word).buildArithmetic(ws, pos);
+
 			if ("throw".equals(word))
 				return new ArithmeticThrow(ws, pos);
 			if ("catch".equals(word))
@@ -229,6 +236,13 @@ public class Expression
 
 	private static int getPriority(String word)
 	{
+		if (keywords.containsKey(word))
+		{
+			int pr = keywords.get(word).getPriority();
+			if (pr >= 0)
+				return pr;
+		}
+
 		if ("throw".equals(word))
 			return 10;
 		if ("catch".equals(word))
@@ -239,6 +253,13 @@ public class Expression
 	
 	private static int getPriority(int arithmetic)
 	{
+		if (map.containsKey(arithmetic))
+		{
+			int pr = map.get(arithmetic).getPriority();
+			if (pr >= 0) //小于0代表不变
+				return pr;
+		}
+
 		if (arithmetic == Words.COLON2) return 15;
 		if (arithmetic == Words.COLON_FLAG) return 15;
 		if (arithmetic == Words.COMMA) return 20;

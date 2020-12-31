@@ -3,7 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>lerrain</groupId>
 	<artifactId>formula</artifactId>
+<<<<<<< HEAD
 	<version>7.30.5</version>
+=======
+	<version>7.31</version>
+>>>>>>> a5683f5494017e3b2fea3eda83ab746440df8a5f
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>

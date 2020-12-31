@@ -9,6 +9,6 @@ public abstract class OptimizedFunction implements Function, Optimized
     @Override
     public boolean isFixed(Code code)
     {
-        return true;
+        return code == null || code.isFixed();
     }
 }

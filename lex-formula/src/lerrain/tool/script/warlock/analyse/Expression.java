@@ -66,17 +66,7 @@ public class Expression
 //		addArithmetic(Words.PRT, 2000, ArithmeticParentheses.class);
 //	}
 
-    public static Code expressionOf(Words ws)
-    {
-        Code code = expressionOfWords(ws);
-
-        if (Script.compileListener != null)
-            code = Script.compileListener.compile(CompileListener.EXPRESSION, code);
-
-        return code;
-    }
-	
-	private static Code expressionOfWords(Words ws)
+	public static Code expressionOf(Words ws)
 	{
 		if (ws.size() == 0)
 			return null;
@@ -121,7 +111,19 @@ public class Expression
 		}
 		
 		if (pos >= 0)
-			return arithmeticOf(ws.getType(pos), ws, pos);
+		{
+			Code code = arithmeticOf(ws.getType(pos), ws, pos);
+
+			if (Script.compileListener != null)
+			{
+				code = Script.compileListener.compile(CompileListener.EXPRESSION, code);
+
+				if (!(code instanceof ArithmeticFunctionBody) && code.isFixed())
+					code = Script.compileListener.compile(CompileListener.SIMPLIFY, code);
+			}
+
+			return code;
+		}
 
 		throw new SyntaxException(ws, "无法处理的运算");
 	}

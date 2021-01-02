@@ -3,6 +3,7 @@ package lerrain.tool.script.warlock.analyse;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -477,6 +478,8 @@ public class Words implements Serializable
 
 		return SYMBOL;
 	}
+
+	static List<String> keywords = Arrays.asList("for,while,if,else,return,continue,break,var,throw,thread,synch,function,catch".split(","));
 	
 	private static int getWordType(String word)
 	{
@@ -507,7 +510,9 @@ public class Words implements Serializable
 		if ("false".equals(word))
 			return FALSE;
 		
-		if (",for,while,if,else,return,continue,break,var,throw,thread,synch,function,catch,".indexOf("," + word + ",") >= 0)
+		if (keywords.indexOf(word) >= 0)
+			return KEYWORD;
+		if (Expression.keywords.containsKey(word))
 			return KEYWORD;
 		
 		return WORD;

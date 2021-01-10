@@ -1,5 +1,6 @@
 package lerrain.tool.script.warlock.statement;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.formula.VariableFactors;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
@@ -46,6 +48,12 @@ public class ArithmeticArray extends Code implements Reference
 //		//objectiveC 下NSArray效率过低，这里对二维数组做优化
 //		if (v instanceof ArithmeticArray)
 //			pv = (ArithmeticArray)v;
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(v, a);
 	}
 
 //	private Object castValue(Object rv){
@@ -204,7 +212,7 @@ public class ArithmeticArray extends Code implements Reference
 	@Override
 	public boolean isFixed()
 	{
-		return (v == null || v.isFixed()) && a.isFixed();
+		return (v == null || v.isFixed()) && (a == null || a.isFixed());
 	}
 
 	public String toText(String space, boolean line)

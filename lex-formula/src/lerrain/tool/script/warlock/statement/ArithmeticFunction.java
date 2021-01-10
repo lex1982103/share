@@ -12,6 +12,7 @@ import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.FunctionTry;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ArithmeticFunction extends Code
@@ -180,6 +181,12 @@ public class ArithmeticFunction extends Code
 			return ((Optimized)function).isFixed(prt);
 
 		return body.isFixed(prt); //函数时是否固定，无法预知，需要自己设
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(body, prt);
 	}
 
 	public String toText(String space, boolean line)

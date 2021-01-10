@@ -7,6 +7,9 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class StatementSynch extends Code
 {
 	Code pre, code;
@@ -80,5 +83,11 @@ public class StatementSynch extends Code
 		buf.append(space + "}");
 
 		return buf.toString();
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(pre, code);
 	}
 }

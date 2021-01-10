@@ -215,7 +215,7 @@ public class Expression
 		
 		if (arithmetic == Words.PRT)
 		{
-			if (pos > 0 && ws.getType(pos - 1) == Words.FUNCTION_BODY)
+			if (pos > 0)
 				return new ArithmeticFunction(ws, pos);
 			return new ArithmeticParentheses(ws, pos);
 		}

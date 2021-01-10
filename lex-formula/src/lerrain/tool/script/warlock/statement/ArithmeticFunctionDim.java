@@ -3,6 +3,7 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.FunctionCloneable;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;

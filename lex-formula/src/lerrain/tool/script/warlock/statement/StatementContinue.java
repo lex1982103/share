@@ -8,8 +8,6 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class StatementContinue extends Code
 {
-	Words ws;
-
 	public StatementContinue(Words ws)
 	{
 		super(ws);

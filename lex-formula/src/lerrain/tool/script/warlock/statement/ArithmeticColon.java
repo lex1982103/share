@@ -1,10 +1,12 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+@Deprecated
 public class ArithmeticColon extends Code
 {
 	Code[] v;

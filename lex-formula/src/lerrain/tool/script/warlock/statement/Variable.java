@@ -25,6 +25,11 @@ public class Variable extends Code implements Reference
 //			Script.compileListener.compile(CompileListener.VARIABLE, this);
 	}
 
+	public String getVarName()
+	{
+		return varName;
+	}
+
 	public void setFixed(boolean fixed)
 	{
 		this.fixed = fixed;

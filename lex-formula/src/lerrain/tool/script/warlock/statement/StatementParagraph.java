@@ -8,6 +8,9 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class StatementParagraph extends Code
 {
 	Code c;
@@ -60,5 +63,11 @@ public class StatementParagraph extends Code
 		buf.append(space + "}");
 		
 		return buf.toString();
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(c);
 	}
 }

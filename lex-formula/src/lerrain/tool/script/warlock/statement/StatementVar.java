@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lerrain.tool.formula.Factors;
@@ -65,5 +66,11 @@ public class StatementVar extends Code
 	public String toText(String space, boolean line)
 	{
 		return "VAR " + (r == null ? names.toString() : r.toText("", line));
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(r);
 	}
 }

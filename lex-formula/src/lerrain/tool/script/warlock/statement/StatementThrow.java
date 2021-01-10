@@ -8,6 +8,9 @@ import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class StatementThrow extends Code
 {
 	Code r;
@@ -70,5 +73,11 @@ public class StatementThrow extends Code
 	public String toText(String space, boolean line)
 	{
 		return "THROW " + r.toText("", line);
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(r);
 	}
 }

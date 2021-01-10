@@ -11,11 +11,12 @@ import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.FunctionTry;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ArithmeticParentheses extends Code
 {
-	protected Code body;
+	public Code body;
 
 	public ArithmeticParentheses(Words ws, int i)
 	{
@@ -40,11 +41,17 @@ public class ArithmeticParentheses extends Code
 	@Override
 	public boolean isFixed()
 	{
-		return body.isFixed();
+		return body == null || body.isFixed();
 	}
 
 	public String toText(String space, boolean line)
 	{
 		return "(" + body.toText("", line) + ")";
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(body);
 	}
 }

@@ -5,9 +5,12 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class StatementExpression extends Code
 {
-	Code exp;
+	public Code exp;
 
 	public StatementExpression(Words ws)
 	{
@@ -32,5 +35,11 @@ public class StatementExpression extends Code
 	public String toText(String space, boolean line)
 	{
 		return exp.toText(space, line);
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(exp);
 	}
 }

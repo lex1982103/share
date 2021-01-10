@@ -1,12 +1,16 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.ScriptRuntimeError;
 import lerrain.tool.script.ScriptRuntimeThrow;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ArithmeticThrow extends Code
 {
@@ -79,5 +83,11 @@ public class ArithmeticThrow extends Code
 	public String toText(String space, boolean line)
 	{
 		return "TRY " + l.toText("", line) + " THROW " + r.toText("", line);
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(l, r);
 	}
 }

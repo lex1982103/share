@@ -1,13 +1,11 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
@@ -19,7 +17,7 @@ public class ArithmeticNew extends Code
 	String cluss;
 	int type;
 	
-	List array;
+	List<Code> array;
 	
 	public ArithmeticNew(Words ws, int i)
 	{
@@ -114,6 +112,12 @@ public class ArithmeticNew extends Code
 		}
 		
 		return null;
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return array;
 	}
 
 	public String toText(String space, boolean line)

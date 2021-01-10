@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
@@ -9,12 +10,14 @@ import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ArithmeticBrace extends Code
 {
-	Code left;
+	Code lead;
 	Code content;
 
 	public ArithmeticBrace(Words ws, int i)
@@ -33,14 +36,20 @@ public class ArithmeticBrace extends Code
 			content = new StatementParagraph(ws.cut(i, ws.size()));
 
 			if (i > 0)
-				left = Expression.expressionOf(ws.cut(0, i));
+				lead = Expression.expressionOf(ws.cut(0, i));
 		}
 	}
 
 	@Override
 	public boolean isFixed()
 	{
-		return (left == null || left.isFixed()) && content.isFixed();
+		return (lead == null || lead.isFixed()) && content.isFixed();
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(lead, content);
 	}
 
 	public Object treat(Object lead, Code content, Factors factors)
@@ -122,9 +131,9 @@ public class ArithmeticBrace extends Code
 
 	public Object run(Factors factors)
 	{
-		if (left != null)
+		if (lead != null)
 		{
-			Object list = left.run(factors);
+			Object list = lead.run(factors);
 			return treat(list, content, factors);
 		}
 
@@ -158,6 +167,6 @@ public class ArithmeticBrace extends Code
 
 	public String toText(String space, boolean line)
 	{
-		return left.toText(space, false) + "{\n" + content.toText(space + "  ", true) + "\n" + space + "}\n";
+		return lead.toText(space, false) + "{\n" + content.toText(space + "  ", true) + "\n" + space + "}\n";
 	}
 }

@@ -2,10 +2,14 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class StatementBreak extends Code
 {
@@ -31,6 +35,12 @@ public class StatementBreak extends Code
 	public boolean isFixed()
 	{
 		return r == null || r.isFixed();
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(r);
 	}
 
 	public String toText(String space, boolean line)

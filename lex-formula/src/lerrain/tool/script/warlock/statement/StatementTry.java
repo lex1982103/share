@@ -1,12 +1,16 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class StatementTry extends Code
 {
@@ -143,5 +147,11 @@ public class StatementTry extends Code
 		}
 		
 		return buf.toString();
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(code, catchAll, throwIt);
 	}
 }

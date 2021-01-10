@@ -4,12 +4,15 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 2元运算符
  */
 public abstract class Arithmetic2Elements extends Code
 {
-    protected Code l, r;
+    public Code l, r;
 
     public Arithmetic2Elements(Words ws, int i)
     {
@@ -23,5 +26,20 @@ public abstract class Arithmetic2Elements extends Code
     public boolean isFixed()
     {
         return l.isFixed() && r.isFixed();
+    }
+
+    @Override
+    public List<Code> getChildren()
+    {
+        return Arrays.asList(l, r);
+    }
+
+    @Override
+    public void replaceChild(int i, Code code)
+    {
+        if (i == 0)
+            l = code;
+        else if (i == 1)
+            r = code;
     }
 }

@@ -7,6 +7,9 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class StatementReturn extends Code
 {
 	Code r;
@@ -46,5 +49,11 @@ public class StatementReturn extends Code
 	public String toText(String space, boolean line)
 	{
 		return space + "RETURN " + (r == null ? "" : r.toText(space + "  ", line));
+	}
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return Arrays.asList(r);
 	}
 }

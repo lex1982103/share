@@ -46,7 +46,6 @@
  */
 package lerrain.tool.script;
 
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 import lerrain.tool.formula.Factors;
@@ -254,7 +253,20 @@ public class Script extends Code
 		for (Code f : codeList)
 			f.clearBreakPoints();
 	}
-	
+
+	@Override
+	public List<Code> getChildren()
+	{
+		return codeList;
+//		return codeList.toArray(new Code[codeList.size()]);
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		codeList.set(i, code);
+	}
+
 	public String toText(String space)
 	{
 		StringBuffer buf = new StringBuffer();

@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
+import lerrain.tool.script.CompileListener;
+import lerrain.tool.script.Scanner;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -16,6 +18,10 @@ public abstract class Code implements Formula, Optimized
 	int pos1, pos2;
 
 	boolean breakPoint = false;
+
+//	List<Code> children;
+
+	public Object flag; //可自己设定的flag
 
 	public Code(Words words)
 	{
@@ -201,4 +207,50 @@ public abstract class Code implements Formula, Optimized
 	{
 		return isFixed(null);
 	}
+
+	public List<Code> getChildren()
+	{
+		return null;
+	}
+
+	public void replaceChild(int i, Code code)
+	{
+	}
+
+//	public void addChild(Code c)
+//	{
+//		if (children == null)
+//			children = new ArrayList<>();
+//
+//		children.add(c);
+//	}
+
+//	public void ergodic(Scanner scanner)
+//	{
+//		scanner.scan(this);
+//	}
+//
+//	public void ergodic(Scanner scanner)
+//	{
+//		List<Code> list = getCodes();
+//		if (list != null)
+//			for (Code code : list)
+//				code.ergodic(scanner);
+//	}
+
+//	public Code handle(CompileListener cl, int key, Code c)
+//	{
+//		try
+//		{
+//			c = cl.compile(key, c);
+//
+//			if (c != null)
+//				c.ergodic(cl);
+//		}
+//		catch (Exception e)
+//		{
+//		}
+//
+//		return c;
+//	}
 }

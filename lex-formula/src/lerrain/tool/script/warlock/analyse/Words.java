@@ -43,14 +43,18 @@ public class Words implements Serializable
 	public static final int COLON_SPLIT			= 104; //json或map串中key后面的:
 	public static final int COLON_FLAG			= 105; //~:
 	public static final int LET					= 110;
-	public static final int AND					= 120; 
-	public static final int OR					= 130; 
+	public static final int AND					= 120;
+	public static final int INTERSECTION        = 121;
+	public static final int OR					= 130;
+	public static final int UNION		        = 131;
 	public static final int REVISE				= 140; 
 	public static final int EQUAL				= 150;
 	public static final int APPROX				= 155; //~= 约等
 	public static final int NOTEQUAL			= 160; 
-	public static final int GREATER				= 170; 
-	public static final int LESS				= 180; 
+	public static final int GREATER				= 170;
+	public static final int GREATER2			= 171;
+	public static final int LESS				= 180;
+	public static final int LESS2				= 181;
 	public static final int GREATEREQUAL		= 190; 
 	public static final int LESSEQUAL			= 200; 
 	public static final int ADD					= 210; 
@@ -441,10 +445,14 @@ public class Words implements Serializable
 			return GREATER;
 		if ("<".equals(symbol))
 			return LESS;
-		if (">=".equals(symbol))
+		if (">=".equals(symbol) || "=>".equals(symbol))
 			return GREATEREQUAL;
 		if ("<=".equals(symbol))
 			return LESSEQUAL;
+		if (">>".equals(symbol))
+			return GREATER2;
+		if ("<<".equals(symbol))
+			return LESS2;
 		if ("+".equals(symbol))
 			return ADD;
 		if ("-".equals(symbol))
@@ -475,6 +483,10 @@ public class Words implements Serializable
 			return POINT_KEY;
 		if ("..".equals(symbol))
 			return POINT_KEY2;
+		if ("&".equals(symbol))
+			return INTERSECTION;
+		if ("|".equals(symbol))
+			return UNION;
 
 		return SYMBOL;
 	}

@@ -39,9 +39,9 @@ public class Words implements Serializable
 	public static final int COMMA				= 100; //,
 	public static final int QUESTMARK			= 101; //?
 	public static final int COLON				= 102; //:
-	public static final int COLON2				= 103; //::
-	public static final int COLON_SPLIT			= 104; //json或map串中key后面的:
-	public static final int COLON_FLAG			= 105; //~:
+	public static final int COLON_SPLIT			= 104; //json或map串中key后面的:  优先级低于=，似乎不那么合理
+	public static final int COLON2				= 103; //::  忘记做啥用的了，貌似也没地方用，考虑下掉
+	public static final int COLON_FLAG			= 105; //~:  忘记做啥用的了，貌似也没地方用，考虑下掉
 	public static final int LET					= 110;
 	public static final int AND					= 120;
 	public static final int INTERSECTION        = 121;

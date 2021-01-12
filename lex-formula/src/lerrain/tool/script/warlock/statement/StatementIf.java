@@ -165,8 +165,8 @@ public class StatementIf extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(c, yes, no);
+		return new Code[] {c, yes, no};
 	}
 }

@@ -208,7 +208,7 @@ public abstract class Code implements Formula, Optimized
 		return isFixed(null);
 	}
 
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
 		return null;
 	}

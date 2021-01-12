@@ -44,9 +44,10 @@ public class WarlockFunction implements Formula
 			if (formula instanceof ArithmeticComma)
 			{
 				ArithmeticComma ac = (ArithmeticComma)formula;
-				
-				findParameters(ac.getChildren().get(0), list, true);
-				findParameters(ac.getChildren().get(1), list, false);
+
+				//getChildren会生成新对象，影响效率，但这个无用了就不改了
+				findParameters(ac.getChildren()[0], list, true);
+				findParameters(ac.getChildren()[1], list, false);
 			}
 			else
 			{

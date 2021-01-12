@@ -86,8 +86,8 @@ public class StatementSynch extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(pre, code);
+		return new Code[] {pre, code};
 	}
 }

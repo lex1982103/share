@@ -113,8 +113,8 @@ public class StatementWhile extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(c, fc);
+		return new Code[] {c, fc};
 	}
 }

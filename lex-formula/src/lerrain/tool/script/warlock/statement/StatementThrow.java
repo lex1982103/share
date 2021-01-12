@@ -76,8 +76,8 @@ public class StatementThrow extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(r);
+		return new Code[] {r};
 	}
 }

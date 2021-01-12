@@ -66,8 +66,8 @@ public class StatementParagraph extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(c);
+		return new Code[] {c};
 	}
 }

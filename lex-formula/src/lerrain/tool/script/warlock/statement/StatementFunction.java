@@ -55,9 +55,9 @@ public class StatementFunction extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(f);
+		return new Code[] {f};
 	}
 
 	public String toText(String space, boolean line)

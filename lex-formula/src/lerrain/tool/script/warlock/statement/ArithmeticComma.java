@@ -82,9 +82,15 @@ public class ArithmeticComma extends Code
 //	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return codes;
+		return codes.toArray(new Code[codes.size()]);
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		codes.set(i, code);
 	}
 
 	public String toText(String space, boolean line)

@@ -86,8 +86,8 @@ public class ArithmeticThrow extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(l, r);
+		return new Code[] {l, r};
 	}
 }

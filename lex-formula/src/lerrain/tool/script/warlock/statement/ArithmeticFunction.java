@@ -184,9 +184,9 @@ public class ArithmeticFunction extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(body, prt);
+		return new Code[] {body, prt};
 	}
 
 	public String toText(String space, boolean line)

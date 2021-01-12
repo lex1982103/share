@@ -150,8 +150,8 @@ public class StatementTry extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(code, catchAll, throwIt);
+		return new Code[] {code, catchAll, throwIt};
 	}
 }

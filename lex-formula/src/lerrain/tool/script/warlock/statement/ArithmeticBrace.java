@@ -47,9 +47,9 @@ public class ArithmeticBrace extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(lead, content);
+		return new Code[] {lead, content};
 	}
 
 	public Object treat(Object lead, Code content, Factors factors)

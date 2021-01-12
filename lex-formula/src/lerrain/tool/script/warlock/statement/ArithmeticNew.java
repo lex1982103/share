@@ -115,9 +115,9 @@ public class ArithmeticNew extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return array;
+		return array == null ? null : array.toArray(new Code[array.size()]);
 	}
 
 	public String toText(String space, boolean line)

@@ -51,9 +51,9 @@ public class ArithmeticArray extends Code implements Reference
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(v, a);
+		return new Code[]{v, a};
 	}
 
 //	private Object castValue(Object rv){

@@ -38,8 +38,15 @@ public class StatementExpression extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(exp);
+		return new Code[] {exp};
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			exp = code;
 	}
 }

@@ -50,8 +50,15 @@ public class ArithmeticParentheses extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(body);
+		return new Code[] {body};
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			body = code;
 	}
 }

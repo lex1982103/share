@@ -255,10 +255,9 @@ public class Script extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return codeList;
-//		return codeList.toArray(new Code[codeList.size()]);
+		return codeList.toArray(new Code[codeList.size()]);
 	}
 
 	@Override

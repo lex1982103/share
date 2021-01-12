@@ -167,11 +167,11 @@ public class StatementFor extends Code
 			if (cc.v[0] instanceof ArithmeticComma)
 			{
 				ArithmeticComma comma = (ArithmeticComma)cc.v[0];
-				nef = (Reference)comma.getChildren().get(0);
-				ref = (Reference)comma.getChildren().get(1);
+				nef = (Reference)comma.codes.get(0);
+				ref = (Reference)comma.codes.get(1);
 
-				if (comma.getChildren().size() > 2)
-					mef = (Reference)comma.getChildren().get(2);
+				if (comma.codes.size() > 2)
+					mef = (Reference)comma.codes.get(2);
 			}
 			else
 			{
@@ -408,8 +408,8 @@ public class StatementFor extends Code
 	}
 
 	@Override
-	public List<Code> getChildren()
+	public Code[] getChildren()
 	{
-		return Arrays.asList(f1, f2, f3, fc);
+		return new Code[] {f1, f2, f3, fc};
 	}
 }

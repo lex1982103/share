@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.Counter;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
@@ -32,7 +33,9 @@ public class ArithmeticAddAdd extends Code
 			if (l != null)
 			{
 				Number v = (Number)l.run(factors);
-				if (isInt(v))
+				if (v instanceof Counter)
+					return ((Counter)v).getAndAdd();
+				else if (isInt(v))
 					((Reference) l).let(factors, v.intValue() + 1);
 				else if (isLong(v))
 					((Reference) l).let(factors, v.longValue() + 1);
@@ -43,8 +46,10 @@ public class ArithmeticAddAdd extends Code
 			else
 			{
 				Number v = (Number)r.run(factors);
-				Object n;
+				if (v instanceof Counter)
+					return ((Counter)v).addAndGet();
 
+				Object n;
 				if (isInt(v))
 					n = v.intValue() + 1;
 				else if (isLong(v))

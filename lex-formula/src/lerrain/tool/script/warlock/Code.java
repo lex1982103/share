@@ -2,8 +2,6 @@ package lerrain.tool.script.warlock;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
-import lerrain.tool.script.CompileListener;
-import lerrain.tool.script.Scanner;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -173,7 +171,7 @@ public abstract class Code implements Formula, Optimized
 
 	public boolean isInt(Object v)
 	{
-		return (v instanceof Integer) || (v instanceof Character);
+		return (v instanceof Integer) || (v instanceof Counter) || (v instanceof Character);
 	}
 
 	public boolean isLong(Object v)

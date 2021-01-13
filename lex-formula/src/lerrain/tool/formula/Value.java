@@ -55,27 +55,7 @@ public class Value implements Serializable
 		{
 			type = TYPE_NULL;
 		}
-		else if (v instanceof BigDecimal)
-		{
-			type = TYPE_DECIMAL;
-		}
-		else if (v instanceof BigInteger)
-		{
-			type = TYPE_DECIMAL;
-		}
-		else if (v instanceof Integer)
-		{
-			type = TYPE_DECIMAL;
-		}
-		else if (v instanceof Float)
-		{
-			type = TYPE_DECIMAL;
-		}
-		else if (v instanceof Double)
-		{
-			type = TYPE_DECIMAL;
-		}
-		else if (v instanceof Long)
+		else if (v instanceof Number)
 		{
 			type = TYPE_DECIMAL;
 		}

@@ -82,7 +82,7 @@ public class Stack implements VariableFactors
 	public void set(String name, Object value)
 	{
 		if (!hasVar(name))
-			declare(name);
+			throw new RuntimeException(name + "未定义或者不可修改");
 		
 		if (heap != null && heap.containsKey(name))
 			heap.put(name, value);

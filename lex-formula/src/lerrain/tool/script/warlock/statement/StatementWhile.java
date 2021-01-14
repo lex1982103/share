@@ -117,4 +117,14 @@ public class StatementWhile extends Code
 	{
 		return new Code[] {c, fc};
 	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			c = code;
+		else if (i == 1)
+			fc = code;
+	}
+
 }

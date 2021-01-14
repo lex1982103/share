@@ -116,6 +116,29 @@ public class ArithmeticPointKey extends Code implements Reference
 	}
 
 	@Override
+	public Code[] getChildren()
+	{
+		return new Code[] {l};
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			l = code;
+	}
+
+	public String getKey()
+	{
+		return key;
+	}
+
+	public void setKey(String key)
+	{
+		this.key = key;
+	}
+
+	@Override
 	public boolean isFixed()
 	{
 		return l.isFixed();

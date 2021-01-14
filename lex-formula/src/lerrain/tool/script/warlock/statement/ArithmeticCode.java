@@ -25,6 +25,18 @@ public class ArithmeticCode extends Code
 	}
 
 	@Override
+	public Code[] getChildren()
+	{
+		return v;
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		v[i] = code;
+	}
+
+	@Override
 	public boolean isFixed()
 	{
 		return true;

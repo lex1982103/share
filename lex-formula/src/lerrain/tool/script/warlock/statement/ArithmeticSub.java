@@ -47,6 +47,21 @@ public class ArithmeticSub extends Code //有可能是负数，所以不完全�
 	}
 
 	@Override
+	public Code[] getChildren()
+	{
+		return new Code[] {l, r};
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			l = code;
+		else if (i == 1)
+			r = code;
+	}
+
+	@Override
 	public boolean isFixed()
 	{
 		return (l == null ? true : l.isFixed()) && r.isFixed();

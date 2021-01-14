@@ -43,6 +43,13 @@ public class StatementBreak extends Code
 		return new Code[] {r};
 	}
 
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			r = code;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return "BREAK";

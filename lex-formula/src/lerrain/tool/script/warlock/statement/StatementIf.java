@@ -169,4 +169,15 @@ public class StatementIf extends Code
 	{
 		return new Code[] {c, yes, no};
 	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			c = code;
+		else if (i == 1)
+			yes = code;
+		else if (i == 2)
+			no = code;
+	}
 }

@@ -74,4 +74,13 @@ public class ArithmeticAddAdd extends Code
 		else
 			return "++" + r.toText("", line);
 	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			l = code;
+		else if (i == 1)
+			r = code;
+	}
 }

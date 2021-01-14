@@ -154,4 +154,16 @@ public class StatementTry extends Code
 	{
 		return new Code[] {code, catchAll, throwIt};
 	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			this.code = code;
+		else if (i == 1)
+			catchAll = code;
+		else if (i == 2)
+			throwIt = code;
+	}
+
 }

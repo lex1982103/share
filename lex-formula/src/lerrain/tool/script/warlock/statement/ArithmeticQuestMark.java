@@ -68,6 +68,23 @@ public class ArithmeticQuestMark extends Code
 		throw new ScriptRuntimeException(this, factors, "?:组合运算要求问号左侧值为boolean类型");
 	}
 
+	@Override
+	public Code[] getChildren()
+	{
+		return new Code[] {l, r1, r2};
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			l = code;
+		else if (i == 1)
+			r1 = code;
+		else if (i == 2)
+			r2 = code;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return l.toText("", false) + " ? " + r1.toText("", false) + " : " + r2.toText("", false);

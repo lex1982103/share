@@ -8,16 +8,11 @@ import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticCatch extends Code
+public class ArithmeticCatch extends Arithmetic2Elements
 {
-	Code lc, rc;
-
 	public ArithmeticCatch(Words ws, int i)
 	{
 		super(ws, i);
-
-		lc = Expression.expressionOf(ws.cut(0, i));
-		rc = Expression.expressionOf(ws.cut(i + 1));
 	}
 
 	public Object run(Factors factors)
@@ -26,25 +21,25 @@ public class ArithmeticCatch extends Code
 
 		try
 		{
-			return lc.run(factors);
+			return l.run(factors);
 		}
 		catch (Exception e)
 		{
-			if (rc == null)
+			if (r == null)
 				return null;
 
-			return rc.run(factors);
+			return r.run(factors);
 		}
 	}
 
 	@Override
 	public boolean isFixed()
 	{
-		return lc.isFixed() && (rc == null || rc.isFixed());
+		return l.isFixed() && (r == null || r.isFixed());
 	}
 
 	public String toText(String space, boolean line)
 	{
-		return "CATCH " + lc.toText("", line) + " AS " + rc.toText("", line);
+		return "CATCH " + l.toText("", line) + " AS " + r.toText("", line);
 	}
 }

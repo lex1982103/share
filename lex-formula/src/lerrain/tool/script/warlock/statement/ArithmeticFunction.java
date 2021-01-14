@@ -189,6 +189,15 @@ public class ArithmeticFunction extends Code
 		return new Code[] {body, prt};
 	}
 
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			body = code;
+		else if (i == 1)
+			prt = code;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return (body == null ? "" : body.toText("", line)) + "(" + (prt == null ? "" : prt.toText("", line)) + ")";

@@ -20,6 +20,8 @@ public class Stack implements VariableFactors
 
 	public static RuntimeListener runtimeListener;
 
+	public Object ROOT; //可一直向上传递，供各层共享，不设置就是底层的factors，中间可以改
+
 	Factors root;
 	
 	Map heap;
@@ -36,15 +38,7 @@ public class Stack implements VariableFactors
 	
 	public Stack(Factors root)
 	{
-		if (root instanceof Stack)
-		{
-			debug = ((Stack) root).debug;
-
-			if (debug == DEBUG_STEP_OVER) //进了一层，既然是stepover，新的层里即直接略过
-				debug = DEBUG_BREAK_POINT;
-		}
-
-		this.root = root;
+		this(root, null);
 	}
 
 	public Stack(Factors root, Map heap)
@@ -55,6 +49,12 @@ public class Stack implements VariableFactors
 
 			if (debug == DEBUG_STEP_OVER) //进了一层，既然是stepover，新的层里即直接略过
 				debug = DEBUG_BREAK_POINT;
+
+			ROOT = ((Stack) root).ROOT;
+		}
+		else
+		{
+			ROOT = root;
 		}
 
 		this.root = root;

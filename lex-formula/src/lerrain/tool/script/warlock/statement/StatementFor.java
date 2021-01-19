@@ -412,4 +412,18 @@ public class StatementFor extends Code
 	{
 		return new Code[] {f1, f2, f3, fc};
 	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			f1 = code;
+		else if (i == 1)
+			f2 = code;
+		else if (i == 2)
+			f3 = code;
+		else if (i == 3)
+			fc = code;
+	}
+
 }

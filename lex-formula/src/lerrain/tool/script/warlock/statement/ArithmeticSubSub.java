@@ -62,6 +62,21 @@ public class ArithmeticSubSub extends Code
 		}
 	}
 
+	@Override
+	public Code[] getChildren()
+	{
+		return new Code[] {l, r};
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			l = code;
+		else if (i == 1)
+			r = code;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		if (l != null)

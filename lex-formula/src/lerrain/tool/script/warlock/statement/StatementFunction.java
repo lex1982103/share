@@ -60,6 +60,13 @@ public class StatementFunction extends Code
 		return new Code[] {f};
 	}
 
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			f = code;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return "DIM FUNCTION " + name + " AS " + f.toText("", line);

@@ -120,6 +120,12 @@ public class ArithmeticNew extends Code
 		return array == null ? null : array.toArray(new Code[array.size()]);
 	}
 
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		array.set(i, code);
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return "NEW " + cluss + (type == 1 ? "<ARRAY>" : type == 2 ? "<OBJECT>" : "");

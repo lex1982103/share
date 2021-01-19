@@ -31,6 +31,19 @@ public class ArithmeticNot extends Code
 	}
 
 	@Override
+	public Code[] getChildren()
+	{
+		return new Code[] {r};
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			r = code;
+	}
+
+	@Override
 	public boolean isFixed()
 	{
 		return r.isFixed();

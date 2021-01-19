@@ -97,4 +97,13 @@ public class StatementThread extends Code
 	{
 		return new Code[] {pre, code};
 	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			pre = code;
+		else
+			this.code = code;
+	}
 }

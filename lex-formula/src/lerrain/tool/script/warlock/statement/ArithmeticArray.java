@@ -56,6 +56,15 @@ public class ArithmeticArray extends Code implements Reference
 		return new Code[]{v, a};
 	}
 
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			v = code;
+		else if (i == 1)
+			a = code;
+	}
+
 //	private Object castValue(Object rv){
 //		if (rv instanceof Variable.LoadOnUse)
 //			return ((Variable.LoadOnUse)rv).load();

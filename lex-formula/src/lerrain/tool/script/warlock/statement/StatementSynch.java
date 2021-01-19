@@ -90,4 +90,14 @@ public class StatementSynch extends Code
 	{
 		return new Code[] {pre, code};
 	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			pre = code;
+		else if (i == 1)
+			this.code = code;
+	}
+
 }

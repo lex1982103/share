@@ -68,6 +68,29 @@ public class ArithmeticPointMethod extends Code
 	}
 
 	@Override
+	public Code[] getChildren()
+	{
+		return new Code[] {obj};
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			obj = code;
+	}
+
+	public String getMethodName()
+	{
+		return name;
+	}
+
+	public void setMethodName(String name)
+	{
+		this.name = name;
+	}
+
+	@Override
 	public boolean isFixed()
 	{
 		return obj.isFixed();

@@ -52,6 +52,15 @@ public class ArithmeticBrace extends Code
 		return new Code[] {lead, content};
 	}
 
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			lead = code;
+		else if (i == 1)
+			content = code;
+	}
+
 	public Object treat(Object lead, Code content, Factors factors)
 	{
 		int i = 0;

@@ -70,4 +70,11 @@ public class StatementParagraph extends Code
 	{
 		return new Code[] {c};
 	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		if (i == 0)
+			c = code;
+	}
 }

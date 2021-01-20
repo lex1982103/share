@@ -181,7 +181,8 @@ public class Expression
 		if (arithmetic == Words.COMMA) return new ArithmeticComma(ws, pos);
 		if (arithmetic == Words.QUESTMARK) return new ArithmeticQuestMark(ws, pos);
 //		if (arithmetic == Words.COLON || arithmetic == Words.COLON_SPLIT) return new ArithmeticColon(ws, pos);
-		if (arithmetic == Words.COLON || arithmetic == Words.COLON_SPLIT || arithmetic == Words.COLON2 || arithmetic == Words.COLON_FLAG) return new ArithmeticCode(ws, pos);
+		if (arithmetic == Words.COLON_SPLIT) return new ArithmeticEntry(ws, pos);
+		if (arithmetic == Words.COLON || arithmetic == Words.COLON2 || arithmetic == Words.COLON_FLAG) return new ArithmeticCode(ws, pos);
 
 		if (arithmetic == Words.NEW) return new ArithmeticNew(ws, pos);
 		if (arithmetic == Words.FUNCTION_DIM) return new ArithmeticFunctionDim(ws, pos);

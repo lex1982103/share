@@ -8,8 +8,6 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticMod extends Arithmetic2Elements
 {
-	Code l, r;
-	
 	public ArithmeticMod(Words ws, int i)
 	{
 		super(ws, i);

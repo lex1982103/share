@@ -156,8 +156,8 @@ public class ArithmeticBrace extends Code
 			Map res = new LinkedHashMap();
 			for (Object val : ((Wrap)r).toList())
 			{
-				Code[] v = ((ArithmeticCode)val).v;
-				res.put(v[0].toString(), v[1].run(factors));
+				ArithmeticEntry ae = (ArithmeticEntry)val;
+				res.put(ae.getKey(), ae.v.run(factors));
 			}
 
 			return res;
@@ -165,8 +165,8 @@ public class ArithmeticBrace extends Code
 		else if (r instanceof ArithmeticCode)
 		{
 			Map res = new LinkedHashMap();
-			ArithmeticCode cc = (ArithmeticCode)r;
-			res.put(cc.v[0].toString(), cc.v[1].run(factors));
+			ArithmeticEntry ae = (ArithmeticEntry)r;
+			res.put(ae.getKey(), ae.v.run(factors));
 
 			return res;
 		}

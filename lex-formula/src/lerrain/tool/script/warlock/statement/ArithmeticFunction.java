@@ -40,23 +40,25 @@ public class ArithmeticFunction extends Code
 	public void bind(Code body, Code prt)
 	{
 		this.body = body;
+		this.function = null;
 		this.prt = prt;
 	}
 
 	public void bind(Code body)
 	{
-		this.body = body;
+		this.bind(body, null);
 	}
 
 	public void bind(Function function, Code prt)
 	{
 		this.function = function;
+		this.body = null;
 		this.prt = prt;
 	}
 
 	public void bind(Function function)
 	{
-		this.function = function;
+		this.bind(function, null);
 	}
 
 	public Code getBody()
@@ -177,8 +179,13 @@ public class ArithmeticFunction extends Code
 	@Override
 	public boolean isFixed()
 	{
-		if (function instanceof Optimized)
-			return ((Optimized)function).isFixed(prt);
+		if (function != null)
+		{
+			if (function instanceof Optimized)
+				return ((Optimized) function).isFixed(prt);
+
+			return false;
+		}
 
 		return body.isFixed(prt); //函数时是否固定，无法预知，需要自己设
 	}

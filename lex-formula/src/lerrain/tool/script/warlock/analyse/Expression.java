@@ -98,7 +98,7 @@ public class Expression
 				t = ws.getType(i);
 			}
 
-			int p2 = t == Words.KEYWORD ? getPriority(ws.getWord(i)) : getPriority(t);
+			int p2 = t == Words.ARITHMETIC_KEYWORD || t == Words.KEYWORD ? getPriority(ws.getWord(i)) : getPriority(t);
 
 			boolean right = t == Words.QUESTMARK; //这个运算是右边优先，和其他的相反
 			boolean match = right ? p2 <= p1 : p2 < p1;
@@ -109,23 +109,28 @@ public class Expression
 				pos = i;
 			}
 		}
+
+		if (pos < 0)
+			throw new SyntaxException(ws, "无法处理的运算");
+
+		return arithmeticOf(ws.getType(pos), ws, pos);
 		
-		if (pos >= 0)
-		{
-			Code code = arithmeticOf(ws.getType(pos), ws, pos);
-
-			if (Script.compileListener != null)
-			{
-				code = Script.compileListener.compile(CompileListener.EXPRESSION, code);
-
-				if (!(code instanceof ArithmeticFunctionBody) && code.isFixed())
-					code = Script.compileListener.compile(CompileListener.SIMPLIFY, code);
-			}
-
-			return code;
-		}
-
-		throw new SyntaxException(ws, "无法处理的运算");
+//		if (pos >= 0)
+//		{
+//			Code code = arithmeticOf(ws.getType(pos), ws, pos);
+//
+//			if (Script.compileListener != null)
+//			{
+//				code = Script.compileListener.compile(CompileListener.EXPRESSION, code);
+//
+//				if (!(code instanceof ArithmeticFunctionBody) && code.isFixed())
+//					code = Script.compileListener.compile(CompileListener.SIMPLIFY, code);
+//			}
+//
+//			return code;
+//		}
+//
+//		throw new SyntaxException(ws, "无法处理的运算");
 	}
 	
 //	private static int getPriority(int arithmetic)
@@ -221,7 +226,7 @@ public class Expression
 			return new ArithmeticParentheses(ws, pos);
 		}
 
-		if (arithmetic == Words.KEYWORD)
+		if (arithmetic == Words.ARITHMETIC_KEYWORD || arithmetic == Words.KEYWORD)
 		{
 			String word = ws.getWord(pos);
 

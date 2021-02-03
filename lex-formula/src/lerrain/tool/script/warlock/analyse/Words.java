@@ -71,6 +71,7 @@ public class Words implements Serializable
 
 	public static final int NULL				= 290;
 	public static final int KEYWORD				= 300;
+	public static final int ARITHMETIC_KEYWORD  = 301;
 	public static final int CLASS				= 310;
 
 	public static final int VARIABLE			= 380; //变量
@@ -525,7 +526,7 @@ public class Words implements Serializable
 		if (keywords.indexOf(word) >= 0)
 			return KEYWORD;
 		if (Expression.keywords.containsKey(word))
-			return KEYWORD;
+			return ARITHMETIC_KEYWORD;
 		
 		return WORD;
 	}

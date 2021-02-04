@@ -2,18 +2,25 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 
+import java.io.PrintStream;
+
 public class FunctionPrint extends OptimizedFunction
 {
+	public static PrintStream OUTPUT = System.out;
+
 	public Object run(Object[] v, Factors factors)
 	{
-		for (int i = 0; i < v.length; i++)
+		if (OUTPUT != null)
 		{
-			if (i != 0)
-				System.out.print(", ");
-			
-			System.out.print(v[i]);
+			for (int i = 0; i < v.length; i++)
+			{
+				if (i != 0)
+					OUTPUT.print(", ");
+
+				OUTPUT.print(v[i]);
+			}
+			OUTPUT.println();
 		}
-		System.out.println();
 		
 		return null;
 	}

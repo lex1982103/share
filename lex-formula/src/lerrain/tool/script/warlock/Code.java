@@ -171,7 +171,7 @@ public abstract class Code implements Formula, Optimized
 
 	public boolean isInt(Object v)
 	{
-		return (v instanceof Integer) || (v instanceof Counter) || (v instanceof Character);
+		return (v instanceof Integer) || (v instanceof Counter) || (v instanceof Character) || (v instanceof Short);
 	}
 
 	public boolean isLong(Object v)

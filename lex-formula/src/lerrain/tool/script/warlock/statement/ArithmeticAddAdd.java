@@ -39,6 +39,8 @@ public class ArithmeticAddAdd extends Code
 					((Reference) l).let(factors, v.intValue() + 1);
 				else if (isLong(v))
 					((Reference) l).let(factors, v.longValue() + 1);
+				else if (v == null) //null的++为1
+					((Reference) l).let(factors, new Counter(1));
 				else
 					((Reference) l).let(factors, v.doubleValue() + 1);
 				return v;
@@ -54,6 +56,8 @@ public class ArithmeticAddAdd extends Code
 					n = v.intValue() + 1;
 				else if (isLong(v))
 					n = v.longValue() + 1;
+				else if (v == null) //null的++为1
+					n = new Counter(1);
 				else
 					n = v.doubleValue() + 1;
 

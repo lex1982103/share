@@ -55,6 +55,7 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.statement.StatementExpression;
+import lerrain.tool.script.warlock.statement.Variable;
 
 /**
  * <p>脚本对象</p>
@@ -225,6 +226,9 @@ public class Script extends Code
 			{
 				throw new ScriptRuntimeException(f, factors, "not in a for/while, can't break or continue");
 			}
+
+//			if (r instanceof Variable.LoadOnUse)
+//				r = ((Variable.LoadOnUse) r).load();
 		}
 		else //非最外层，无需拦截break/continue/return，交给外面的代码处理
 		{

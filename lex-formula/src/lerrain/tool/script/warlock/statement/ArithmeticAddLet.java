@@ -26,10 +26,12 @@ public class ArithmeticAddLet extends Arithmetic2Elements
 			Object r = this.r.run(factors);
 
 			if (r == null)
-			{
 				return l;
-			}
-			else if (l == null)
+
+//			if (r instanceof Variable.LoadOnUse)
+//			    r = ((Variable.LoadOnUse) r).load();
+
+			if (l == null)
 			{
 				((Reference) this.l).let(factors, r);
 

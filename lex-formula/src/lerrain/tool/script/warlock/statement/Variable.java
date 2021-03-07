@@ -70,6 +70,10 @@ public class Variable extends Code implements Reference
 		return varName;
 	}
 
+	/**
+	 * 这个只适合门户的常量使用，每次拿值的时候实例化
+	 * 如果临时生成的值是这种类型，就难以操作，不仅仅script的main部分返回的时候要实例化，express的每一步都要判断太麻烦
+	 */
 	public interface LoadOnUse
 	{
 		public Object load();

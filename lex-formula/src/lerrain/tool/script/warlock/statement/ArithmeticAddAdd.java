@@ -79,6 +79,12 @@ public class ArithmeticAddAdd extends Code
 			return "++" + r.toText("", line);
 	}
 
+    @Override
+    public Code[] getChildren()
+    {
+        return new Code[] {l, r};
+    }
+
 	@Override
 	public void replaceChild(int i, Code code)
 	{

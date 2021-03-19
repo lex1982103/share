@@ -34,7 +34,8 @@ public class StatementBreak extends Code
 	@Override
 	public boolean isFixed()
 	{
-		return r == null || r.isFixed();
+		return false; //带动作，是不能直接fix优化的，不然return/break/throw等动作被优化没了，只剩个值
+//		return r == null || r.isFixed();
 	}
 
 	@Override

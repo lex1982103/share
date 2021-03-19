@@ -23,7 +23,7 @@ public class StatementContinue extends Code
 	@Override
 	public boolean isFixed()
 	{
-		return true;
+		return false; //带动作，是不能直接fix优化的，不然return/break/throw等动作被优化没了，只剩个值
 	}
 
 	public String toText(String space, boolean line)

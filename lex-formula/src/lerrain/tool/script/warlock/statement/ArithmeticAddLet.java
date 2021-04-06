@@ -1,5 +1,6 @@
 package lerrain.tool.script.warlock.statement;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,14 @@ public class ArithmeticAddLet extends Arithmetic2Elements
 
 				return l;
 			}
+            else if (l instanceof Object[])
+            {
+                List list = Arrays.asList((Object[])l);
+                list.add(r);
+
+                ((Reference) this.l).let(factors, list);
+                return list;
+            }
 			else if (l instanceof Date)
 			{
 				Date now = (Date) l;

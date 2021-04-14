@@ -86,6 +86,11 @@ public class Constant extends Code
 		
 		return v instanceof String ? "\"" + v + "\"" : v.toString();
 	}
+
+	public Object getValue()
+	{
+		return v;
+	}
 	
 	public String toString()
 	{

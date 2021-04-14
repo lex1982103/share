@@ -193,15 +193,13 @@ public class ArithmeticFunction extends Code
 	@Override
 	public Code[] getChildren()
 	{
-		return new Code[] {body, prt};
+		return new Code[] {prt};
 	}
 
 	@Override
 	public void replaceChild(int i, Code code)
 	{
 		if (i == 0)
-			body = code;
-		else if (i == 1)
 			prt = code;
 	}
 

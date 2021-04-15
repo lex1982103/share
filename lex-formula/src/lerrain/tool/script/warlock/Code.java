@@ -196,14 +196,9 @@ public abstract class Code implements Formula, Optimized
 	 * @return
 	 */
 	@Override
-	public boolean isFixed(Code code)
+	public boolean isFixed(int mode)
 	{
 		return false;
-	}
-
-	public boolean isFixed()
-	{
-		return isFixed(null);
 	}
 
 	public Code[] getChildren()

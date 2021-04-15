@@ -1,9 +1,10 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
-public class FunctionMax extends OptimizedFunction
+public class FunctionMax implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

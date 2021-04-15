@@ -1,9 +1,10 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
-public class FunctionStrReplace extends OptimizedFunction
+public class FunctionStrReplace implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

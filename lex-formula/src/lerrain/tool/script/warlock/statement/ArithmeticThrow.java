@@ -35,12 +35,6 @@ public class ArithmeticThrow extends Code
 		}
 	}
 
-	@Override
-	public boolean isFixed()
-	{
-		return l.isFixed() && r.isFixed();
-	}
-
 	public Object run(Factors factors)
 	{
 		super.debug(factors);

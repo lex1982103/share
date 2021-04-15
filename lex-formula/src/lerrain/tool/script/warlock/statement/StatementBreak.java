@@ -11,6 +11,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 import java.util.Arrays;
 import java.util.List;
 
+//带动作，是不能直接fix优化的，不然return/break/throw等动作被优化没了，只剩个值
 public class StatementBreak extends Code
 {
 	Code r;
@@ -29,13 +30,6 @@ public class StatementBreak extends Code
 		super.debug(factors);
 
 		throw new Interrupt.Break(r == null ? 1 : Value.intOf(r, factors));
-	}
-
-	@Override
-	public boolean isFixed()
-	{
-		return false; //带动作，是不能直接fix优化的，不然return/break/throw等动作被优化没了，只剩个值
-//		return r == null || r.isFixed();
 	}
 
 	@Override

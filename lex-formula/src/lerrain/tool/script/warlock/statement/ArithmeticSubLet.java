@@ -57,6 +57,12 @@ public class ArithmeticSubLet extends Arithmetic2Elements
 		throw new RuntimeException("只可以在数字、List或Map上做递减赋值运算");
 	}
 
+	@Override
+	public boolean isFixed(int mode)
+	{
+		return false;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return l.toText("", line) + " -= " + r.toText("", line);

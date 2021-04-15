@@ -91,9 +91,9 @@ public class ArithmeticPointMethod extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return obj.isFixed();
+		return obj.isFixed(mode);
 	}
 
 	public String toText(String space, boolean line)

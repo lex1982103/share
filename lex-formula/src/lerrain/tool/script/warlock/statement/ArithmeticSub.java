@@ -62,9 +62,9 @@ public class ArithmeticSub extends Code //有可能是负数，所以不完全�
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return (l == null ? true : l.isFixed()) && r.isFixed();
+		return (l == null ? true : l.isFixed(mode)) && r.isFixed(mode);
 	}
 
 	public String toText(String space, boolean line)

@@ -136,11 +136,11 @@ public class StatementIf extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return c.isFixed()
-				&& (yes == null || yes.isFixed())
-				&& (no == null || no.isFixed());
+		return c.isFixed(mode)
+				&& (yes == null || yes.isFixed(mode))
+				&& (no == null || no.isFixed(mode));
 	}
 
 	public String toText(String space, boolean line)

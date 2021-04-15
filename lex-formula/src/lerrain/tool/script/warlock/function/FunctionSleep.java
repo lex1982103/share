@@ -1,10 +1,11 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.ScriptRuntimeException;
 
-public class FunctionSleep extends OptimizedFunction
+public class FunctionSleep implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

@@ -6,8 +6,10 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.FunctionInstable;
+import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.Optimized;
 
-public class FunctionRandom implements Function, FunctionInstable
+public class FunctionRandom implements OptimizedFunction, Function, FunctionInstable
 {
 	static Random random = new Random();
 	
@@ -20,6 +22,15 @@ public class FunctionRandom implements Function, FunctionInstable
 			return random.nextInt(Value.intOf(v[0]));
 		
 		throw new RuntimeException("错误的random运算");
+	}
+
+	@Override
+	public boolean isFixed(int mode, Code p)
+	{
+		if ((mode & Optimized.RANDOM) != 0)
+			return true;
+
+		return false;
 	}
 
 	public String toString()

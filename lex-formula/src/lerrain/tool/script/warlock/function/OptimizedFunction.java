@@ -4,11 +4,10 @@ import lerrain.tool.formula.Function;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Optimized;
 
-public abstract class OptimizedFunction implements Function, Optimized
+public interface OptimizedFunction extends Function
 {
-    @Override
-    public boolean isFixed(Code code)
+    public default boolean isFixed(int mode, Code code)
     {
-        return code == null || code.isFixed();
+        return true;
     }
 }

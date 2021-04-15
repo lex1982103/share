@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  * nvl(v1, v2, v3, v4, ...);
  * 根据参数表依次找到第一个非空值数据并返回
  */
-public class FunctionNvl extends OptimizedFunction
+public class FunctionNvl implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

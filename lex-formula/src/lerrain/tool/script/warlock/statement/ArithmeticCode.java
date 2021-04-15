@@ -37,9 +37,9 @@ public class ArithmeticCode extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return v[1].isFixed();
+		return v[1].isFixed(mode);
 	}
 
 	public String getSymbol()

@@ -219,9 +219,9 @@ public class ArithmeticArray extends Code implements Reference
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return (v == null || v.isFixed()) && (a == null || a.isFixed());
+		return (v == null || v.isFixed(mode)) && (a == null || a.isFixed(mode));
 	}
 
 	public String toText(String space, boolean line)

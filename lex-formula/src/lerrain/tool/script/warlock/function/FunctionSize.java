@@ -4,8 +4,9 @@ import java.util.Collection;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 
-public class FunctionSize extends OptimizedFunction //对list取size，参数是变量不一定稳定，但变量本身就是个不稳定量，这里返回true不会有问题
+public class FunctionSize implements Function //对list取size，参数是变量不一定稳定，但变量本身就是个不稳定量，这里返回true不会有问题
 {
 	public Object run(Object[] v, Factors factors)
 	{

@@ -40,13 +40,6 @@ public class StatementReturn extends Code
 		throw new Interrupt.Return(val);
 	}
 
-	@Override
-	public boolean isFixed()
-	{
-		return false; //带动作，是不能直接fix优化的，不然return/break/throw等动作被优化没了，只剩个值
-//		return r == null || r.isFixed();
-	}
-
 	public String toText(String space, boolean line)
 	{
 		return space + "RETURN " + (r == null ? "" : r.toText(space + "  ", line));

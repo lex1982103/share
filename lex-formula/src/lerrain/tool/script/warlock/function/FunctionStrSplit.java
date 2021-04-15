@@ -1,8 +1,9 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 
-public class FunctionStrSplit extends OptimizedFunction
+public class FunctionStrSplit implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

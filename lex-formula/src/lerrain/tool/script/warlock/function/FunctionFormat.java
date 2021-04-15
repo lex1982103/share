@@ -3,8 +3,9 @@ package lerrain.tool.script.warlock.function;
 import java.util.Date;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 
-public class FunctionFormat extends OptimizedFunction
+public class FunctionFormat implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

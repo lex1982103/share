@@ -95,9 +95,9 @@ public class StatementWhile extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return (c == null || c.isFixed()) && fc.isFixed();
+		return (c == null || c.isFixed(mode)) && fc.isFixed(mode);
 	}
 
 	public String toText(String space, boolean line)

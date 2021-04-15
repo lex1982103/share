@@ -32,10 +32,10 @@ public class ArithmeticComma extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
 		for (Code c : codes)
-			if (!c.isFixed())
+			if (!c.isFixed(mode))
 				return false;
 
 		return true;

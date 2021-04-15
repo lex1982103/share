@@ -123,11 +123,11 @@ public class StatementTry extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return code.isFixed()
-				&& (catchAll == null || catchAll.isFixed())
-				&& (throwIt == null || throwIt.isFixed());
+		return code.isFixed(mode)
+				&& (catchAll == null || catchAll.isFixed(mode))
+				&& (throwIt == null || throwIt.isFixed(mode));
 	}
 
 	public String toText(String space, boolean line)

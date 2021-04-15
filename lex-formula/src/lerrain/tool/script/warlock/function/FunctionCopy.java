@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FunctionCopy extends OptimizedFunction
+public class FunctionCopy implements Function
 {
     @Override
     public Object run(Object[] objects, Factors factors)

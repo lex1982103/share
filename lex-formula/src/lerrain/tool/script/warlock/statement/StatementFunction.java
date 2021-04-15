@@ -49,9 +49,9 @@ public class StatementFunction extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return f.isFixed();
+		return f.isFixed(mode);
 	}
 
 	@Override

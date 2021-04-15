@@ -1,10 +1,11 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 
 import java.io.PrintStream;
 
-public class FunctionPrint extends OptimizedFunction
+public class FunctionPrint implements Function
 {
 	public static PrintStream OUTPUT = System.out;
 

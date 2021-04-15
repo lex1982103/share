@@ -44,9 +44,9 @@ public class ArithmeticNot extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return r.isFixed();
+		return r.isFixed(mode);
 	}
 
 	public String toText(String space, boolean line)

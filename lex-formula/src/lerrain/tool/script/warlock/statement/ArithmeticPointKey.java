@@ -139,9 +139,9 @@ public class ArithmeticPointKey extends Code implements Reference
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return l.isFixed();
+		return l.isFixed(mode);
 	}
 
 	public String toText(String space, boolean line)

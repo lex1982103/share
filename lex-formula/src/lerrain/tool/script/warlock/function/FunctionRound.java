@@ -3,9 +3,10 @@ package lerrain.tool.script.warlock.function;
 import java.math.BigDecimal;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 
-public class FunctionRound extends OptimizedFunction
+public class FunctionRound implements Function
 {
 	public static final double windage =  + 0.00000001f;
 

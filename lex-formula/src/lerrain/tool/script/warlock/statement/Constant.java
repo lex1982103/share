@@ -103,7 +103,7 @@ public class Constant extends Code
 //	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
 		return true;
 	}

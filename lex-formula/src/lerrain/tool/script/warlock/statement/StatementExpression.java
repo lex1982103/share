@@ -27,9 +27,9 @@ public class StatementExpression extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return exp.isFixed();
+		return exp.isFixed(mode);
 	}
 
 	public String toText(String space, boolean line)

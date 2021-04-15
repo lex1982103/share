@@ -71,7 +71,7 @@ public class ArithmeticFunctionDim extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
 		return true;
 	}
@@ -142,9 +142,9 @@ public class ArithmeticFunctionDim extends Code
 		}
 
 		@Override
-		public boolean isFixed(Code p)
+		public boolean isFixed(int mode)
 		{
-			return content.isFixed(p);
+			return content.isFixed(mode);
 		}
 
 		@Override

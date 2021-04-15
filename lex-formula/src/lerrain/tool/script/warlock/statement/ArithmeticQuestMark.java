@@ -91,8 +91,8 @@ public class ArithmeticQuestMark extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return l.isFixed() && r1.isFixed() && r2.isFixed();
+		return l.isFixed(mode) && r1.isFixed(mode) && r2.isFixed(mode);
 	}
 }

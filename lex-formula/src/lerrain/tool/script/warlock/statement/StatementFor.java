@@ -67,12 +67,12 @@ public class StatementFor extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return (fc == null || fc.isFixed())
-				&& (f1 == null || f1.isFixed())
-				&& (f2 == null || f2.isFixed())
-				&& (f3 == null || f3.isFixed());
+		return (fc == null || fc.isFixed(mode))
+				&& (f1 == null || f1.isFixed(mode))
+				&& (f2 == null || f2.isFixed(mode))
+				&& (f3 == null || f3.isFixed(mode));
 	}
 
 	public void clearBreakPoints()

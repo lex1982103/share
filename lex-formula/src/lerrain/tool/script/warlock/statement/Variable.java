@@ -6,14 +6,13 @@ import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.Optimized;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Words;
 
 public class Variable extends Code implements Reference
 {
 	String varName;
-
-	boolean fixed = false;
 	
 	public Variable(Words ws)
 	{
@@ -28,11 +27,6 @@ public class Variable extends Code implements Reference
 	public String getVarName()
 	{
 		return varName;
-	}
-
-	public void setFixed(boolean fixed)
-	{
-		this.fixed = fixed;
 	}
 
 	public Object run(Factors factors)
@@ -50,9 +44,9 @@ public class Variable extends Code implements Reference
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return fixed; //如果取的这个变量实际上是个常量，那应该返回true，配合compileListener来由程序自己修改
+		return (mode & Optimized.VARIABLE) > 0;
 	}
 
 	public void let(Factors factors, Object value)

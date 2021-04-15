@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeError;
 
-public class FunctionVal extends OptimizedFunction
+public class FunctionVal implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

@@ -1,11 +1,12 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FunctionMatch extends OptimizedFunction
+public class FunctionMatch implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

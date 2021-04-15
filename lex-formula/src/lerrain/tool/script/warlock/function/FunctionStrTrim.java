@@ -2,7 +2,7 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 
-public class FunctionStrTrim extends OptimizedFunction
+public class FunctionStrTrim implements OptimizedFunction
 {
 	public Object run(Object[] v, Factors factors)
 	{

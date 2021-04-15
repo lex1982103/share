@@ -125,14 +125,14 @@ public class ArithmeticFunctionBody extends Code
 	}
 
 	@Override
-	public boolean isFixed(Code prt)
+	public boolean isFixed(int mode)
 	{
 		//如果值被改不是预设的fs而是factors里面取出的f，那么前面一定有可变的导致fixed是false，这里无论返回的是否，都不会对整体的code段产生判断错误
-		if (fs instanceof Optimized)
-			return ((Optimized) fs).isFixed(prt);
+//		if (fs instanceof Optimized)
+//			return ((Optimized) fs).isFixed(mode);
 
 		//其实prt==null的时候，函数结果很可能是不确定的，比如random() time()，反而是结果确定的几乎没有，因为毫无意义，但这个规则一般函数里面自己直接设定了，这里还是按照基本的参数确定就确定
-		return prt == null || prt.isFixed();
+		return false; //注意time random等函数要额外处理
 	}
 
 	public String toText(String space, boolean line)

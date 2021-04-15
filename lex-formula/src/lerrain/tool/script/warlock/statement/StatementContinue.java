@@ -20,12 +20,6 @@ public class StatementContinue extends Code
 		throw new Interrupt.Continue();
 	}
 
-	@Override
-	public boolean isFixed()
-	{
-		return false; //带动作，是不能直接fix优化的，不然return/break/throw等动作被优化没了，只剩个值
-	}
-
 	public String toText(String space, boolean line)
 	{
 		return "CONTINUE";

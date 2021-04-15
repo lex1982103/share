@@ -94,6 +94,12 @@ public class ArithmeticAddLet extends Arithmetic2Elements
 		}
 	}
 
+	@Override
+	public boolean isFixed(int mode)
+	{
+		return false;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return l.toText("", line) + " += " + r.toText("", line);

@@ -23,9 +23,9 @@ public abstract class Arithmetic2Elements extends Code
     }
 
     @Override
-    public boolean isFixed()
+    public boolean isFixed(int mode)
     {
-        return l.isFixed() && r.isFixed();
+        return l.isFixed(mode) && r.isFixed(mode);
     }
 
     @Override

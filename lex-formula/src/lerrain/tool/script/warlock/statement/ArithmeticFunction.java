@@ -11,6 +11,7 @@ import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.FunctionTry;
+import lerrain.tool.script.warlock.function.OptimizedFunction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -179,20 +180,27 @@ public class ArithmeticFunction extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		if (fixed != 0)
-			return fixed > 0;
+		if ((fixed & mode) > 0)
+			return prt == null || prt.isFixed(mode);
 
 		if (function != null)
 		{
+			if (function instanceof OptimizedFunction)
+				return ((OptimizedFunction) function).isFixed(mode, prt);
 			if (function instanceof Optimized)
-				return ((Optimized) function).isFixed(prt);
+				return ((Optimized) function).isFixed(mode) && (prt == null || prt.isFixed(mode));
 
-			return false;
+			return true; //函数体默认可以优化
 		}
 
-		return body.isFixed(prt); //函数时是否固定，无法预知，需要自己设
+		return body.isFixed(mode) && (prt == null || prt.isFixed(mode)); //函数时是否固定，无法预知，需要自己设
+	}
+
+	public void setFixed(int fixed)
+	{
+		this.fixed = fixed;
 	}
 
 	@Override
@@ -206,11 +214,6 @@ public class ArithmeticFunction extends Code
 	{
 		if (i == 0)
 			prt = code;
-	}
-
-	public void setFixed(boolean fixed)
-	{
-		this.fixed = fixed ? 1 : -1;
 	}
 
 	public String toText(String space, boolean line)

@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.warlock.statement.ArithmeticApprox;
 
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class FunctionContains extends OptimizedFunction
+public class FunctionContains implements Function
 {
 	@Override
 	public Object run(Object[] objects, Factors factors)

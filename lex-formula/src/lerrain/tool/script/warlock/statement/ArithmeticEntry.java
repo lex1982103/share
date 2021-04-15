@@ -32,9 +32,9 @@ public class ArithmeticEntry extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return v.isFixed();
+		return v.isFixed(mode);
 	}
 
 	public String getKey()

@@ -67,13 +67,6 @@ public class StatementSynch extends Code
 		super.clearBreakPoints();
 	}
 
-	@Override
-	public boolean isFixed()
-	{
-		return false; //带动作，是不能直接fix优化的，不然return/break/throw等动作被优化没了，只剩个值
-//		return (pre == null || pre.isFixed()) && code.isFixed();
-	}
-
 	public String toText(String space, boolean line)
 	{
 		StringBuffer buf = new StringBuffer("SYNCH (");

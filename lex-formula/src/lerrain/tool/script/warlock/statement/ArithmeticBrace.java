@@ -41,9 +41,9 @@ public class ArithmeticBrace extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return (lead == null || lead.isFixed()) && content.isFixed();
+		return (lead == null || lead.isFixed(mode)) && content.isFixed(mode);
 	}
 
 	@Override

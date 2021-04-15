@@ -57,12 +57,6 @@ public class StatementVar extends Code
 		return r.run(factors);
 	}
 
-	@Override
-	public boolean isFixed()
-	{
-		return r == null || r.isFixed();
-	}
-
 	public String toText(String space, boolean line)
 	{
 		return "VAR " + (r == null ? names.toString() : r.toText("", line));

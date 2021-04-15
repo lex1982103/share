@@ -33,9 +33,9 @@ public class ArithmeticCatch extends Arithmetic2Elements
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return l.isFixed() && (r == null || r.isFixed());
+		return l.isFixed(mode) && (r == null || r.isFixed(mode));
 	}
 
 	public String toText(String space, boolean line)

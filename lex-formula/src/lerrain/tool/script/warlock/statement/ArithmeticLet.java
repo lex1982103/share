@@ -25,6 +25,12 @@ public class ArithmeticLet extends Arithmetic2Elements
 		return v;
 	}
 
+	@Override
+	public boolean isFixed(int mode)
+	{
+		return false;
+	}
+
 	public String toText(String space, boolean line)
 	{
 		return l.toText("", line) + " = " + r.toText("", line);

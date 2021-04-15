@@ -1,13 +1,14 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 import lerrain.tool.script.ScriptRuntimeError;
 import lerrain.tool.script.ScriptRuntimeThrow;
 
 import java.util.List;
 import java.util.Map;
 
-public class FunctionType extends OptimizedFunction
+public class FunctionType implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

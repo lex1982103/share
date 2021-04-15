@@ -51,9 +51,9 @@ public class StatementParagraph extends Code
 	}
 
 	@Override
-	public boolean isFixed()
+	public boolean isFixed(int mode)
 	{
-		return c.isFixed();
+		return c.isFixed(mode);
 	}
 
 	public String toText(String space, boolean line)

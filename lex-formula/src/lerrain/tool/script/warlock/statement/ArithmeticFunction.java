@@ -20,6 +20,8 @@ public class ArithmeticFunction extends Code
 	protected Code body, prt;
 	protected Function function;
 
+	int fixed = 0;
+
 	public ArithmeticFunction(Words ws, int i)
 	{
 		super(ws, i);
@@ -179,6 +181,9 @@ public class ArithmeticFunction extends Code
 	@Override
 	public boolean isFixed()
 	{
+		if (fixed != 0)
+			return fixed > 0;
+
 		if (function != null)
 		{
 			if (function instanceof Optimized)
@@ -201,6 +206,11 @@ public class ArithmeticFunction extends Code
 	{
 		if (i == 0)
 			prt = code;
+	}
+
+	public void setFixed(boolean fixed)
+	{
+		this.fixed = fixed ? 1 : -1;
 	}
 
 	public String toText(String space, boolean line)

@@ -182,7 +182,7 @@ public class ArithmeticFunction extends Code
 	@Override
 	public boolean isFixed(int mode)
 	{
-		if ((fixed & mode) > 0)
+		if ((fixed & mode) != 0)
 			return prt == null || prt.isFixed(mode);
 
 		if (function != null)

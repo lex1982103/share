@@ -41,7 +41,11 @@ public class Constant extends Code
 			{
 				try
 				{
-					v = Integer.valueOf(text);
+					long v1 = Long.valueOf(text);
+					if (v1 >= Integer.MIN_VALUE && v1 <= Integer.MAX_VALUE)
+						v = (int)v1;
+					else
+						v = v1;
 				}
 				catch (Exception e)
 				{

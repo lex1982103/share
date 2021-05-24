@@ -31,6 +31,22 @@ public class Common
 //		return UUID.randomUUID().toString();
 	}
 
+	public static String link(Object[] v, String sp)
+	{
+		if (v == null)
+			return null;
+
+		StringBuffer sb = new StringBuffer();
+		for (Object o : v)
+		{
+			if (sb.length() > 0)
+				sb.append(sp);
+			sb.append(o.toString());
+		}
+
+		return sb.toString();
+	}
+
 	public static BigDecimal decimalOf(Object val)
 	{
 		if (val instanceof Number)

@@ -575,6 +575,21 @@ public class ServiceMgr
         }
     }
 
+    public String uuid()
+    {
+        return uuid(Integer.parseInt(serviceIndex));
+    }
+
+    public String uuid(int index)
+    {
+        for (;;)
+        {
+            String uuid = UUID.randomUUID().toString();
+            if (hash(uuid) == index)
+                return uuid;
+        }
+    }
+
     public int hash(Object key)
     {
         return key.hashCode() & 0x7FFFFFFF;

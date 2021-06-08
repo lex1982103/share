@@ -5,7 +5,7 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticEntry extends Code
+public class ArithmeticEntry extends ArithmeticCode
 {
 	String key;
 	Code v;
@@ -15,6 +15,9 @@ public class ArithmeticEntry extends Code
 		super(ws, i);
 
 		key = ws.getWord(i - 1);
+		if (ws.getType(i - 1) == Words.STRING)
+			key = key.substring(1, key.length() - 1);
+
 		v = Expression.expressionOf(ws.cut(i + 1));
 	}
 

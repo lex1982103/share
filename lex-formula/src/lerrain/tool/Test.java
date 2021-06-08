@@ -22,6 +22,8 @@ public class Test
 //		for (String name : p.stringPropertyNames())
 //			System.out.println(name + ": " + System.getProperty(name));
 
+		System.out.println(Script.scriptOf("var x = {\"SZF\":1}").run(null));
+
 		String str = "AGENTS { PREMIUM } ";
 		Script script = Script.scriptOf(str);
 

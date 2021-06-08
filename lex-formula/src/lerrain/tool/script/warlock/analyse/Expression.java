@@ -288,9 +288,9 @@ public class Expression
 		if (arithmetic == Words.FUNCTION_BODY) return 1300;
 		if (arithmetic == Words.BRACKET) return 1300;
 		if (arithmetic == Words.PRT) return 1300;
-		if (arithmetic == Words.BRACE) return 1210; //优先级高于四则运算，低于new xxx[100] {};
+		if (arithmetic == Words.BRACE) return 1230; //优先级高于四则运算，低于new xxx[100] {};
 
-		if (arithmetic == Words.FUNCTION_DIM) return 1260;
+		if (arithmetic == Words.FUNCTION_DIM) return 1220;
 		if (arithmetic == Words.NEW) return 1250;
 
 		if (arithmetic == Words.POSITIVE) return 1200;

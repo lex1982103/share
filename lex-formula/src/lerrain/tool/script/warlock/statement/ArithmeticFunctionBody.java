@@ -2,12 +2,10 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Optimized;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.*;
 
@@ -77,6 +75,8 @@ public class ArithmeticFunctionBody extends Code
 		Script.FUNCTIONS.put("copy", new FunctionCopy());
 		Script.FUNCTIONS.put("contains", new FunctionContains());
 		Script.FUNCTIONS.put("nvl", new FunctionNvl());
+		Script.FUNCTIONS.put("list", new FunctionList());
+		Script.FUNCTIONS.put("notnull", new FunctionNotNull());
 	}
 	
 	public ArithmeticFunctionBody(Words ws, int i)

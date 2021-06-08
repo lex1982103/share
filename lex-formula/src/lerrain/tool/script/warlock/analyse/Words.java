@@ -23,7 +23,8 @@ public class Words implements Serializable
 	public static final int BRACKET_R			= 21; //中括号 
 	public static final int PRT					= 30; //小括号 
 	public static final int PRT_R				= 31; //小括号
-	
+	public static final int AT = 40; //@
+
 	public static final int NUMBER				= 50; 
 	public static final int STRING				= 60;
 	public static final int TRUE				= 61;
@@ -44,10 +45,10 @@ public class Words implements Serializable
 	public static final int COLON_FLAG			= 105; //~:  忘记做啥用的了，貌似也没地方用，考虑下掉
 	public static final int LET					= 110;
 	public static final int AND					= 120;
-	public static final int INTERSECTION        = 121;
+	public static final int INTERSECTION        = 121; //&
 	public static final int OR					= 130;
-	public static final int UNION		        = 131;
-	public static final int REVISE				= 140; 
+	public static final int UNION		        = 131; //|
+	public static final int REVISE				= 140;
 	public static final int EQUAL				= 150;
 	public static final int APPROX				= 155; //~= 约等
 	public static final int NOTEQUAL			= 160; 
@@ -488,6 +489,8 @@ public class Words implements Serializable
 			return INTERSECTION;
 		if ("|".equals(symbol))
 			return UNION;
+		if ("@".equals(symbol))
+			return AT;
 
 		return SYMBOL;
 	}

@@ -5,7 +5,10 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ArithmeticAdd extends Arithmetic2Elements
 {
@@ -31,7 +34,7 @@ public class ArithmeticAdd extends Arithmetic2Elements
 //			return left.toDecimal().add(right.toDecimal());
 //			return Double.valueOf(left.doubleValue() + right.doubleValue());
 		}
-		if ((l instanceof List || l instanceof Object[]) && (r instanceof List || r instanceof Object[]))
+		else if ((l instanceof List || l instanceof Object[]) && (r instanceof List || r instanceof Object[]))
 		{
 			Object[] o1, o2;
 
@@ -56,6 +59,15 @@ public class ArithmeticAdd extends Arithmetic2Elements
 			System.arraycopy(o2, 0, o3, o1.length, o2.length);
 
 			return o3;
+		}
+		else if (l instanceof Map && r instanceof Map) //非null优先，都不是null选择左边的
+		{
+			Map m = new HashMap();
+			m.putAll((Map)r);
+			for (Map.Entry e : (Set<Map.Entry>)((Map)l).entrySet())
+				if (e.getValue() != null)
+					m.put(e.getKey(), e.getValue());
+			return m;
 		}
 		else if (l == null)
 		{

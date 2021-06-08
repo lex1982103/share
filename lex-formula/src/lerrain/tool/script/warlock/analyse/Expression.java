@@ -207,7 +207,9 @@ public class Expression
 		if (arithmetic == Words.MULTIPLY) return new ArithmeticMultiply(ws, pos);
 		if (arithmetic == Words.DIVIDE) return new ArithmeticDivide(ws, pos);
 		if (arithmetic == Words.MOD) return new ArithmeticMod(ws, pos);
-		
+
+		if (arithmetic == Words.INTERSECTION) return new ArithmeticBitAnd(ws, pos);
+		if (arithmetic == Words.UNION) return new ArithmeticBitOr(ws, pos);
 		if (arithmetic == Words.AND) return new ArithmeticAnd(ws, pos);
 		if (arithmetic == Words.OR) return new ArithmeticOr(ws, pos);
 		if (arithmetic == Words.REVISE) return new ArithmeticNot(ws, pos);
@@ -300,6 +302,9 @@ public class Expression
 		if (arithmetic == Words.MOD) return 1010;
 		if (arithmetic == Words.ADD) return 1000;
 		if (arithmetic == Words.SUB) return 1000;
+
+		if (arithmetic == Words.INTERSECTION) return 510;
+		if (arithmetic == Words.UNION) return 500;
 
 		if (arithmetic == Words.AND) return 300;
 		if (arithmetic == Words.OR) return 200;

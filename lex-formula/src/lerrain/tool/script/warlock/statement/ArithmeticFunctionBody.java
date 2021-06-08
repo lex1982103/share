@@ -77,6 +77,7 @@ public class ArithmeticFunctionBody extends Code
 		Script.FUNCTIONS.put("nvl", new FunctionNvl());
 		Script.FUNCTIONS.put("list", new FunctionList());
 		Script.FUNCTIONS.put("notnull", new FunctionNotNull());
+		Script.FUNCTIONS.put("has", new FunctionHas());
 	}
 	
 	public ArithmeticFunctionBody(Words ws, int i)

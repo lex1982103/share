@@ -23,7 +23,7 @@ public class Words implements Serializable
 	public static final int BRACKET_R			= 21; //中括号 
 	public static final int PRT					= 30; //小括号 
 	public static final int PRT_R				= 31; //小括号
-	public static final int AT = 40; //@
+	public static final int AT					= 40; //@
 
 	public static final int NUMBER				= 50; 
 	public static final int STRING				= 60;
@@ -33,42 +33,45 @@ public class Words implements Serializable
 	public static final int NEW					= 70; 
 	public static final int FUNCTION_DIM		= 71; 
 	public static final int SEMICOLON			= 80; //;
-	public static final int POINT_KEY			= 90; 
-	public static final int POINT_METHOD		= 91;
-	public static final int POINT_KEY2			= 92;
-	public static final int POINT_METHOD2		= 93;
-	public static final int COMMA				= 100; //,
-	public static final int QUESTMARK			= 101; //?
-	public static final int COLON				= 102; //:
-	public static final int COLON_SPLIT			= 104; //json或map串中key后面的:  优先级低于=，似乎不那么合理
-	public static final int COLON2				= 103; //::  忘记做啥用的了，貌似也没地方用，考虑下掉
-	public static final int COLON_FLAG			= 105; //~:  忘记做啥用的了，貌似也没地方用，考虑下掉
-	public static final int LET					= 110;
-	public static final int AND					= 120;
-	public static final int INTERSECTION        = 121; //&
-	public static final int OR					= 130;
-	public static final int UNION		        = 131; //|
-	public static final int REVISE				= 140;
-	public static final int EQUAL				= 150;
-	public static final int APPROX				= 155; //~= 约等
-	public static final int NOTEQUAL			= 160; 
-	public static final int GREATER				= 170;
-	public static final int GREATER2			= 171;
-	public static final int LESS				= 180;
-	public static final int LESS2				= 181;
-	public static final int GREATEREQUAL		= 190; 
-	public static final int LESSEQUAL			= 200; 
-	public static final int ADD					= 210; 
-	public static final int SUB					= 220; 
-	public static final int ADDLET				= 230; //+=
-	public static final int SUBLET				= 240; //-=
+	public static final int POINT_KEY			= 2090;
+	public static final int POINT_METHOD		= 2091;
+	public static final int POINT_KEY2			= 2092;
+	public static final int POINT_METHOD2		= 2093;
+	public static final int ARROW_RIGHT			= 2095;
+	public static final int ARROW_LEFT			= 2096;
+	public static final int COMMA				= 2100; //,
+	public static final int QUESTMARK			= 2101; //?
+	public static final int COLON				= 2102; //:
+	public static final int COLON_SPLIT			= 2104; //json或map串中key后面的:  优先级低于=，似乎不那么合理
+	public static final int COLON2				= 2103; //::  忘记做啥用的了，貌似也没地方用，考虑下掉
+	public static final int COLON_FLAG			= 2105; //~:  忘记做啥用的了，貌似也没地方用，考虑下掉
+	public static final int LET					= 2110;
+	public static final int WAVE				= 2111; //~ 二元运算
+	public static final int AND					= 2120;
+	public static final int INTERSECTION        = 2121; //&
+	public static final int OR					= 2130;
+	public static final int UNION		        = 2131; //|
+	public static final int REVISE				= 140; //!
+	public static final int EQUAL				= 2150;
+	public static final int APPROX				= 2155; //~= 约等
+	public static final int NOTEQUAL			= 2160;
+	public static final int GREATER				= 2170;
+	public static final int GREATER2			= 2171;
+	public static final int LESS				= 2180;
+	public static final int LESS2				= 2181;
+	public static final int GREATEREQUAL		= 2190;
+	public static final int LESSEQUAL			= 2200;
+	public static final int ADD					= 2210;
+	public static final int SUB					= 2220;
+	public static final int ADDLET				= 2230; //+=
+	public static final int SUBLET				= 2240; //-=
 	public static final int ADDADD				= 250; //++
 	public static final int SUBSUB				= 260; //--
 	public static final int POSITIVE			= 270; 
 	public static final int NEGATIVE			= 280; 
-	public static final int MULTIPLY			= 281;  
-	public static final int DIVIDE				= 282; 
-	public static final int MOD					= 283;
+	public static final int MULTIPLY			= 2281;
+	public static final int DIVIDE				= 2282;
+	public static final int MOD					= 2283;
 
 	public static final int NULL				= 290;
 	public static final int KEYWORD				= 300;
@@ -79,7 +82,7 @@ public class Words implements Serializable
 	public static final int FUNCTION_BODY		= 390; //函数
 	public static final int FUNCTION			= 391; //函数（包括参数部分）
 	public static final int METHOD				= 400; //方法
-	public static final int KEY					= 410; //相对于前方值的KEY
+	public static final int KEY					= 2410; //相对于前方值的KEY
 
 //	List c = new ArrayList();
 //	IntList d = new IntList();
@@ -491,6 +494,12 @@ public class Words implements Serializable
 			return UNION;
 		if ("@".equals(symbol))
 			return AT;
+		if ("~".equals(symbol))
+			return WAVE;
+		if ("->".equals(symbol))
+			return ARROW_RIGHT;
+		if ("<-".equals(symbol))
+			return ARROW_LEFT;
 
 		return SYMBOL;
 	}

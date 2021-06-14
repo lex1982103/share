@@ -22,7 +22,8 @@ public class Test
 //		for (String name : p.stringPropertyNames())
 //			System.out.println(name + ": " + System.getProperty(name));
 
-		System.out.println(Script.scriptOf("var x = {\"SZF\":1}").run(null));
+		Script ss = Script.scriptOf("select count(~) from 1");
+		System.out.println(ss.run(null));
 
 		String str = "AGENTS { PREMIUM } ";
 		Script script = Script.scriptOf(str);

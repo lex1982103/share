@@ -220,13 +220,24 @@ public class Syntax
 		//分号和右大括号并不能完全代表行结尾，如果后面跟else、catch等，需要继续追加
 		if (t == Words.SEMICOLON || t == Words.BRACE_R)
 		{
-			String s1 = i + 1 < size ? ws.getWord(i + 1) : null;
+			String s1 = null;
+			int type = 0;
+
+			if (i + 1 < size)
+			{
+				type = ws.getType(i + 1);
+				s1 = ws.getWord(i + 1);
+			}
 
 			if (j >= 0) //这里是特别语法处理，j>=0时t一定是BRACE_R，throw如果跟在try{}后面，那就不单独作为语句，而是作为try语句的一部分
 			{
 				if ("throw".equals(s1) && "try".equals(ws.getWord(j)))
 					return false;
 			}
+
+			//右侧大括号后面跟着2元、3元运算符号的话，是不应该切开的
+			if (type == Words.SEMICOLON || (type >= 2000 && type < 4000))
+				return false;
 
 			return (!"else".equals(s1) && !"catch".equals(s1));
 		}

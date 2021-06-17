@@ -1,8 +1,6 @@
 package lerrain.tool.script.warlock.analyse;
 
 import lerrain.tool.script.ArithmeticFactory;
-import lerrain.tool.script.CompileListener;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.statement.*;
@@ -161,24 +159,24 @@ public class Expression
 //		return exp;
 //	}
 
-	static Map<Integer, ArithmeticFactory> map = new HashMap();
+	static Map<Integer, ArithmeticFactory> arithmeticInt = new HashMap();
 
-	static Map<String, ArithmeticFactory> keywords = new HashMap();
+	static Map<String, ArithmeticFactory> arithmeticStr = new HashMap();
 
 	public static void register(int arithmetic, ArithmeticFactory af)
 	{
-		map.put(arithmetic, af);
+		arithmeticInt.put(arithmetic, af);
 	}
 
 	public static void register(String keyword, ArithmeticFactory af)
 	{
-		keywords.put(keyword, af);
+		arithmeticStr.put(keyword, af);
 	}
 
 	private static Code arithmeticOf(int arithmetic, Words ws, int pos)
 	{
-		if (map.containsKey(arithmetic))
-			return map.get(arithmetic).buildArithmetic(ws, pos);
+		if (arithmeticInt.containsKey(arithmetic))
+			return arithmeticInt.get(arithmetic).buildArithmetic(ws, pos);
 
 		if (arithmetic == Words.LET) return new ArithmeticLet(ws, pos);
 		if (arithmetic == Words.ADDLET) return new ArithmeticAddLet(ws, pos);
@@ -232,8 +230,8 @@ public class Expression
 		{
 			String word = ws.getWord(pos);
 
-			if (keywords.containsKey(word))
-				return keywords.get(word).buildArithmetic(ws, pos);
+			if (arithmeticStr.containsKey(word))
+				return arithmeticStr.get(word).buildArithmetic(ws, pos);
 
 			if ("throw".equals(word))
 				return new ArithmeticThrow(ws, pos);
@@ -246,9 +244,9 @@ public class Expression
 
 	private static int getPriority(String word)
 	{
-		if (keywords.containsKey(word))
+		if (arithmeticStr.containsKey(word))
 		{
-			int pr = keywords.get(word).getPriority();
+			int pr = arithmeticStr.get(word).getPriority();
 			if (pr >= 0)
 				return pr;
 		}
@@ -263,9 +261,9 @@ public class Expression
 	
 	private static int getPriority(int arithmetic)
 	{
-		if (map.containsKey(arithmetic))
+		if (arithmeticInt.containsKey(arithmetic))
 		{
-			int pr = map.get(arithmetic).getPriority();
+			int pr = arithmeticInt.get(arithmetic).getPriority();
 			if (pr >= 0) //小于0代表不变
 				return pr;
 		}

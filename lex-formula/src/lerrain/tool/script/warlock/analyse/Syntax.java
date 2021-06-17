@@ -235,8 +235,8 @@ public class Syntax
 					return false;
 			}
 
-			//右侧大括号后面跟着2元、3元运算符号的话，是不应该切开的
-			if (type == Words.SEMICOLON || (type >= 2000 && type < 4000))
+			//右侧大括号后面跟着2元、3元运算符号的话，是不应该切开的，ARITHMETIC_KEYWORD一般都是自定义2元计算
+			if (type == Words.ARITHMETIC_KEYWORD || type == Words.SEMICOLON || (type >= 2000 && type < 4000))
 				return false;
 
 			return (!"else".equals(s1) && !"catch".equals(s1));

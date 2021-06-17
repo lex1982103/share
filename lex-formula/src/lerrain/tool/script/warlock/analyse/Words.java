@@ -537,7 +537,7 @@ public class Words implements Serializable
 		
 		if (keywords.indexOf(word) >= 0)
 			return KEYWORD;
-		if (Expression.keywords.containsKey(word))
+		if (Expression.arithmeticStr.containsKey(word))
 			return ARITHMETIC_KEYWORD;
 		
 		return WORD;

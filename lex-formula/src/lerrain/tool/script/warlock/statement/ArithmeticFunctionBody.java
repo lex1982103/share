@@ -40,6 +40,7 @@ public class ArithmeticFunctionBody extends Code
 		Script.FUNCTIONS.put("array", new FunctionArray());
 		Script.FUNCTIONS.put("min", new FunctionMin());
 		Script.FUNCTIONS.put("max", new FunctionMax());
+		Script.FUNCTIONS.put("abs", new FunctionAbs());
 		Script.FUNCTIONS.put("pow", new FunctionPow());
 		Script.FUNCTIONS.put("size", new FunctionSize());
 		Script.FUNCTIONS.put("call", new FunctionCall());

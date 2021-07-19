@@ -379,6 +379,14 @@ public class ProductLoader
 				duty.setCondition(Script.scriptOf(n1.getAttribute("condition")));
 				duty.setPremium(Script.scriptOf(n1.getAttribute("premium")));
 				duty.setAmount(Script.scriptOf(n1.getText()));
+				duty.setIybCode(n1.getAttribute("iybCode"));
+				duty.setAppDesc(n1.getAttribute("appDesc"));
+				duty.setProposalDesc(n1.getAttribute("proposalDesc"));
+				duty.setType(n1.getAttribute("type"));
+				duty.setPrefix(n1.getAttribute("prefix"));
+				duty.setSuffix(n1.getAttribute("suffix"));
+				duty.setOptional(n1.getAttribute("optional"));
+				duty.setIybName(n1.getAttribute("iybName"));
 				dutyList.add(duty);
 			}
 		}

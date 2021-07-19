@@ -2,6 +2,7 @@ package lerrain.project.insurance.plan;
 
 import lerrain.project.insurance.product.Duty;
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Formula;
 import lerrain.tool.formula.Value;
 
 import java.util.ArrayList;
@@ -46,6 +47,14 @@ public class CommodityDuty extends ArrayList
             Map map = new HashMap();
             map.put("NAME", duty.getName());
             map.put("CODE", duty.getCode());
+            map.put("APPDESC", duty.getAppDesc());
+            map.put("PROPOSALDESC", duty.getProposalDesc());
+            map.put("IYBCODE", duty.getIybCode());
+            map.put("TYPE", duty.getType());
+            map.put("PREFIX", duty.getPrefix());
+            map.put("SUFFIX", duty.getSuffix());
+            map.put("OPTIONAL", duty.getOptional());
+            map.put("IYBNAME",duty.getIybName());
 
             if (duty.getAmount() != null)
             {

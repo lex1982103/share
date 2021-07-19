@@ -7,13 +7,23 @@ import lerrain.tool.formula.Formula;
  */
 public class Duty
 {
-    String code;
-    String name;
+    String code; // 保司责任code
+    String name; // 责任描述
 
-    Formula premium;
-    Formula amount;
+    Formula premium; // 责任保费
+    Formula amount; // 责任描述
 
-    Formula condition;
+    Formula condition; // 触发条件
+
+    String appDesc; // app 责任描述
+    String proposalDesc; // 计划书 责任描述
+    String iybCode; // iyb责任code
+    String type; // 责任类型
+    String prefix;// 描述前缀
+    String suffix; // 描述后缀
+    String optional; // 是否可选
+    String iybName; // 责任描述
+
 
     public Formula getAmount()
     {
@@ -63,5 +73,69 @@ public class Duty
     public void setCondition(Formula condition)
     {
         this.condition = condition;
+    }
+
+    public String getAppDesc() {
+        return appDesc;
+    }
+
+    public void setAppDesc(String appDesc) {
+        this.appDesc = appDesc;
+    }
+
+    public String getProposalDesc() {
+        return proposalDesc;
+    }
+
+    public void setProposalDesc(String proposalDesc) {
+        this.proposalDesc = proposalDesc;
+    }
+
+    public String getIybCode() {
+        return iybCode;
+    }
+
+    public void setIybCode(String iybCode) {
+        this.iybCode = iybCode;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
+
+    public String getOptional() {
+        return optional;
+    }
+
+    public void setOptional(String optional) {
+        this.optional = optional;
+    }
+
+    public String getIybName() {
+        return iybName;
+    }
+
+    public void setIybName(String iybName) {
+        this.iybName = iybName;
     }
 }

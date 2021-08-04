@@ -10,9 +10,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,7 +65,7 @@ public class CacheService
     @Autowired
     ServiceMgr serviceMgr;
 
-    Map<String, TimeValue> cache = new HashMap<>();
+    Map<String, TimeValue> cache = new ConcurrentHashMap<>();
 
     Translator tran;
 
@@ -110,26 +112,25 @@ public class CacheService
 
     public void put(String id, Object value, long timeout)
     {
-        synchronized (cache)
-        {
-            cache.put(id, new TimeValue(value, timeout));
-        }
+        cache.put(id, new TimeValue(value, timeout));
     }
 
     public Object get(String id)
     {
-        TimeValue tv;
-
-        synchronized (cache)
-        {
-            tv = cache.get(id);
-        }
+        TimeValue tv = cache.get(id);
 
         if (tv == null)
             return null;
 
+        Object r = tv.val.get();
+        if (r == null) //弱引用已经释放了
+        {
+            cache.remove(id);
+            return null;
+        }
+
         tv.resetTime();
-        return tv.value;
+        return r;
     }
 
     public void store(String id, Object value)
@@ -198,28 +199,17 @@ public class CacheService
 
     public void clear()
     {
-        synchronized (cache)
-        {
-            cache.clear();
-        }
+        cache.clear();
     }
 
     public void remove(String key)
     {
-        synchronized (cache)
-        {
-            cache.remove(key);
-        }
+        cache.remove(key);
     }
 
     public Object fetch(String id)
     {
-        boolean local;
-
-        synchronized (cache)
-        {
-            local = cache.containsKey(id);
-        }
+        boolean local = cache.containsKey(id);
 
         if (local)
             return get(id);
@@ -236,11 +226,8 @@ public class CacheService
                 if (res != null)
                 {
                     Object value = tran != null ? tran.toObject(res) : res;
-                    synchronized (cache)
-                    {
-                        //由于cache那边没存timeout时间，拿默认的代替，这会造成timeout时间不准确
-                        cache.put(id, new TimeValue(value, TIME_OUT));
-                    }
+                    //由于cache那边没存timeout时间，拿默认的代替，这会造成timeout时间不准确
+                    cache.put(id, new TimeValue(value, TIME_OUT));
 
                     return value;
                 }
@@ -256,14 +243,11 @@ public class CacheService
 
     public void free()
     {
-        synchronized (cache)
+        Iterator<Map.Entry<String, TimeValue>> iter = cache.entrySet().iterator();
+        while (iter.hasNext())
         {
-            Iterator<Map.Entry<String, TimeValue>> iter = cache.entrySet().iterator();
-            while (iter.hasNext())
-            {
-                if (iter.next().getValue().expire())
-                    iter.remove();
-            }
+            if (iter.next().getValue().expire())
+                iter.remove();
         }
     }
 
@@ -279,11 +263,11 @@ public class CacheService
         long begin;
         long timeout;
 
-        Object value;
+        SoftReference val;
 
         public TimeValue(Object value, long timeout)
         {
-            this.value = value;
+            this.val = new SoftReference(value);
             this.timeout = timeout;
 
             resetTime();

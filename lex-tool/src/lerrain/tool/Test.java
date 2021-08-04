@@ -45,12 +45,19 @@ public class Test
 
     public static void main(String[] s)
     {
-        test();
+        int x1 = -1, x2 = -2;
+        long p1 = ((long)x1 & 0xFFFFFFFFl) | (((long)x2 << 32) & 0xFFFFFFFF00000000l);
+        int y1 = (int)(p1 >>> 32);
+        int y2 = (int)p1;
+        System.out.println(y1);
+        System.out.println(y2);
+
+//        test();
 
 
 //        Network.request("http://iyunbao-broker-iyb-facilities.test.za-tech.net/open/neptuneDisable/user/queryProduct?accountId=1");
 
-
+        /*
        System.out.println ((int)(System.currentTimeMillis() - 3600000*2 - 0));
 
         System.out.println("2017/6\\\\9".replaceAll("[\\\\][\\\\]", "\\\\"));
@@ -87,5 +94,7 @@ public class Test
 
         for (int i=0;i<o3.length;i++)
             System.out.println(o3[i]);
+
+         */
     }
 }

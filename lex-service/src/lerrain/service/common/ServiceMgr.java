@@ -313,7 +313,7 @@ public class ServiceMgr
                     client.moreFail = 0;
             }
 
-            if (req.length() > 4096)
+            if (req != null && req.length() > 4096)
                 req = req.substring(0, 4096) + " ...";
             Log.error("request: " + servers.name + "/" + loc + " -- " + req + " -- " + e.getMessage());
 

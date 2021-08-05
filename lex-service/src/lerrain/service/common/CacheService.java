@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 
 public class CacheService
 {
-    public static final long TIME_OUT = 3600000L * 24;
+    public static long TIME_OUT = 3600000L * 24;
 
     public static final Translator TRANSLATOR_DEFAULT = new Translator()
     {

@@ -123,7 +123,7 @@ public class CacheService
             return null;
 
         Object r = tv.val.get();
-        if (r == null) //弱引用已经释放了
+        if (r == null) //弱引用已经释放了，如果缓存的值就是null，这里会有点问题，无法被实际缓存
         {
             cache.remove(id);
             return null;

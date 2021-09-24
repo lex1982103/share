@@ -5,10 +5,7 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ArithmeticAdd extends Arithmetic2Elements
 {
@@ -76,6 +73,17 @@ public class ArithmeticAdd extends Arithmetic2Elements
 		else if (r == null)
 		{
 			return l;
+		}
+		else if (l instanceof Date)
+		{
+			if (r instanceof Number)
+				return new Date(((Date) l).getTime() - ((Number) r).longValue());
+			if (r instanceof String)
+			{
+
+			}
+
+			throw new RuntimeException("不支持日期 + " + r);
 		}
 		else
 		{

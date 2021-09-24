@@ -7,6 +7,7 @@ import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,13 @@ public class ArithmeticSubLet extends Arithmetic2Elements
 
 				((Reference) this.l).let(factors, v);
 				return v;
+			}
+			else if (l instanceof Date)
+			{
+				Date now = (Date) l;
+				now.setTime(now.getTime() - ((Number)r).longValue());
+
+				return now;
 			}
 			else if (l instanceof Map)
 			{

@@ -38,9 +38,12 @@ public class ArithmeticSub extends Code //有可能是负数，所以不完全�
 			else
 				return ((Number) l).longValue() - ((Number) r).longValue();
 		}
-		else if (l instanceof Date && r instanceof Date)
+		else if (l instanceof Date)
 		{
-			return ((Date)l).getTime() - ((Date)r).getTime();
+			if (r instanceof Date)
+				return ((Date) l).getTime() - ((Date) r).getTime();
+			else if (r instanceof Number)
+				return new Date(((Date) l).getTime() - ((Number) r).longValue());
 		}
 
 		throw new ScriptRuntimeException(this, factors, "只可以对数字或日期做减法运算：" + l + " - " + r);

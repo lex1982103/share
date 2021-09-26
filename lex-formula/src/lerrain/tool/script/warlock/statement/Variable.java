@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.FormulaAutorun;
 import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
@@ -39,6 +40,8 @@ public class Variable extends Code implements Reference
 
 		if (v instanceof LoadOnUse)
 			v = ((LoadOnUse)v).load();
+		if (v instanceof FormulaAutorun)
+			v = ((FormulaAutorun) v).run(factors);
 
 		return v;
 	}

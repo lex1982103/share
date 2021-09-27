@@ -77,7 +77,7 @@ public class ArithmeticAdd extends Arithmetic2Elements
 		else if (l instanceof Date)
 		{
 			if (r instanceof Number)
-				return new Date(((Date) l).getTime() - ((Number) r).longValue());
+				return new Date(((Date) l).getTime() + ((Number) r).longValue());
 
 			throw new RuntimeException("不支持日期 + " + r);
 		}

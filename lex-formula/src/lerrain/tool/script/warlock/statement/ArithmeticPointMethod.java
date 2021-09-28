@@ -22,6 +22,7 @@ import lerrain.tool.script.warlock.analyse.Words;
  * @author lerrain
  *
  */
+@Deprecated
 public class ArithmeticPointMethod extends Code
 {
 	Code obj;

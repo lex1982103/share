@@ -33,15 +33,21 @@ public class Variable extends Code implements Reference
 		if ("timems".equals(varName))
 			return Double.valueOf((double)System.currentTimeMillis());
 		
-		Object v = factors.get(varName);
-
-		if (v instanceof LoadOnUse)
-			v = ((LoadOnUse)v).load();
-		if (v instanceof FormulaAutoRun)
-			v = ((FormulaAutoRun) v).run(factors);
-
-		return v;
+		return val(factors.get(varName), factors);
 	}
+
+    /**
+     * PointKey的计算，比如AAA.BB返回值如果是FormulaAutoRun或者LoadOnUse，只改这里将无法自动计算，其他地方也要修改
+     * 如果直接一个autorun用let写入，实例化的时候也有问题
+     * 自定义的Array和Function运算后也有可能返回autorun，这情况太罕见，就不做处理了
+     */
+	public static Object val(Object v, Factors factors)
+    {
+        if (v instanceof FormulaAutoRun)
+            v = ((FormulaAutoRun) v).run(factors);
+
+        return v;
+    }
 
 	@Override
 	public boolean isFixed(int mode)
@@ -62,15 +68,5 @@ public class Variable extends Code implements Reference
 	public String toText(String space, boolean line)
 	{
 		return varName;
-	}
-
-	/**
-	 * 这个只适合门户的常量使用，每次拿值的时候实例化
-	 * 如果临时生成的值是这种类型，就难以操作，不仅仅script的main部分返回的时候要实例化，express的每一步都要判断太麻烦
-	 */
-	@Deprecated
-	public interface LoadOnUse
-	{
-		public Object load();
 	}
 }

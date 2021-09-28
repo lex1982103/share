@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
@@ -53,9 +54,11 @@ public class ArithmeticPointKey extends Code implements Reference
 		}
 
 		if (v instanceof Factors)
-			return ((Factors)v).get(key);
+			return Variable.val(((Factors)v).get(key), factors);
 		if (v instanceof Map)
-			return ((Map)v).get(key);
+			return Variable.val(((Map)v).get(key), factors);
+		if (v instanceof List)
+			return Variable.val(((List)v).get(Integer.parseInt(key)), factors);
 
 //		if (v instanceof Factors) {
 //			Object r = ((Factors) v).get(key);
@@ -93,7 +96,7 @@ public class ArithmeticPointKey extends Code implements Reference
 			if (f != null)
 			{
 				f.setAccessible(true);
-				return f.get(v);
+				return Variable.val(f.get(v), factors);
 			}
 		}
 		catch (Exception e)

@@ -11,6 +11,8 @@ import java.util.List;
 
 public abstract class Code implements Formula, Optimized
 {
+	public static Formula NONE = f -> null;
+
 	Words words;
 
 	int pos1, pos2;

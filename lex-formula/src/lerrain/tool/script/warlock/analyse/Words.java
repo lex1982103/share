@@ -16,7 +16,8 @@ public class Words implements Serializable
 
 	public static final int SYMBOL				= 10000; 
 	public static final int WORD				= 11000;
-	
+	public static final int CHINESE				= 12000;
+
 	public static final int BRACE				= 10; //大括号 
 	public static final int BRACE_R				= 11; //大括号 
 	public static final int BRACKET				= 20; //中括号 
@@ -328,16 +329,22 @@ public class Words implements Serializable
 			}
 			else if (isLetter(c)) //如果是单词
 			{
+				boolean chn = false;
 				int x = i;
 				for (; i < len - 1; i++)
 				{
 					c = text.charAt(i + 1);
+					if (isChinese(c))
+					{
+						chn = true;
+						continue;
+					}
 					if (!isLetter(c) && !isNumber(c))
 						break;
 				}
 
 				String w = text.substring(x, i + 1);
-				ws.add(w, getWordType(w), x);
+				ws.add(w, chn ? CHINESE : getWordType(w), x);
 			}
 			else if (isNumber(c)) //如果是数字(包括小数)，不接受C语言钟类似1.2f，3L这种形式的数字
 			{
@@ -351,6 +358,19 @@ public class Words implements Serializable
 				String number = text.substring(x, i + 1);
 				//此处加入对数字的校验
 				ws.add(number, NUMBER, x);
+			}
+			else if (isChinese(c)) //如果是中文
+			{
+				int x = i;
+				for (; i < len - 1; i++)
+				{
+					c = text.charAt(i + 1);
+					if (!isLetter(c) && !isNumber(c) && !isChinese(c))
+						break;
+				}
+
+				String w = text.substring(x, i + 1);
+				ws.add(w, CHINESE, x);
 			}
 		}
 		
@@ -556,6 +576,11 @@ public class Words implements Serializable
 	private static boolean isLetter(char c)
 	{
 		return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || c == '#');
+	}
+
+	private static boolean isChinese(char c)
+	{
+		return c >= 0x4e00 && c <= 0x9fa5;
 	}
 	
 	private static boolean isNumber(char c)

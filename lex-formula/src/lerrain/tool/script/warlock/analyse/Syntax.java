@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lerrain.tool.script.SyntaxException;
+import lerrain.tool.script.warlock.Chinese;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.statement.*;
 
@@ -83,6 +84,9 @@ public class Syntax
 		{
 			return new StatementParagraph(ws);
 		}
+
+		if (ws.size() == 1 && type == Words.CHINESE)
+			return new Chinese(ws);
 		
 		return new StatementExpression(ws);
 	}

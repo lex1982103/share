@@ -2,6 +2,7 @@ package lerrain.tool.script.warlock.analyse;
 
 import lerrain.tool.script.ArithmeticFactory;
 import lerrain.tool.script.SyntaxException;
+import lerrain.tool.script.warlock.Chinese;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.statement.*;
 
@@ -76,6 +77,8 @@ public class Expression
 				return new Constant(ws);
 			if (t == Words.VARIABLE || t == Words.WORD)
 				return new Variable(ws);
+			if (t == Words.CHINESE)
+				return new Chinese(ws);
 		}
 		
 		int p1 = 10000;

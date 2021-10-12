@@ -54,7 +54,14 @@ public class ArithmeticThrow extends Code
 
 				if (v instanceof Wrap)
 				{
-					val = ((Wrap) v).toArray();
+					Object[] array = ((Wrap) v).toArray();
+					if (array != null)
+					{
+						if (array.length >= 1)
+							msg = array[0] == null ? null : array[0].toString();
+						if (array.length >= 2)
+							val = array[1];
+					}
 				}
 				else if (v instanceof String)
 				{
@@ -63,6 +70,8 @@ public class ArithmeticThrow extends Code
 				}
 				else
 				{
+					if (v != null)
+						msg = v.toString();
 					val = v;
 				}
 			}

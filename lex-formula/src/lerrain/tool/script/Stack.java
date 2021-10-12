@@ -150,7 +150,7 @@ public class Stack implements VariableFactors
 
 	public String toString()
 	{
-		return this.getStackMap().toString();
+		return heap == null ? "{}" : heap.toString();
 	}
 
 	public Map getHeap()

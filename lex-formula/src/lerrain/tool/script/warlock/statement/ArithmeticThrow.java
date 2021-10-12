@@ -63,11 +63,6 @@ public class ArithmeticThrow extends Code
 							val = array[1];
 					}
 				}
-				else if (v instanceof String)
-				{
-					msg = (String) v;
-					val = v;
-				}
 				else
 				{
 					if (v != null)

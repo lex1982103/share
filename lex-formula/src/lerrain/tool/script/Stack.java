@@ -35,7 +35,7 @@ public class Stack implements VariableFactors
 	public Stack()
 	{
 	}
-	
+
 	public Stack(Factors root)
 	{
 		this(root, null);
@@ -196,7 +196,7 @@ public class Stack implements VariableFactors
 		return breakListener;
 	}
 
-	public static interface BreakListener
+	public interface BreakListener
 	{
 		public void onBreak(Code code, Stack s);
 
@@ -205,5 +205,28 @@ public class Stack implements VariableFactors
 		 * 没有return正常执行结束以最后一行的值返回的情况下不会触发
 		 */
 		public void onReturn(Code code, Stack s, Object val);
+	}
+
+	public interface StackFactory
+	{
+		Stack newStack(Factors parent, Map heap);
+	}
+
+	public static StackFactory STACK_FACTORY;
+
+	public static Stack newStack(Factors parent, Map heap)
+	{
+		if (STACK_FACTORY == null)
+			return new Stack(parent, heap);
+		else
+			return STACK_FACTORY.newStack(parent, heap);
+	}
+
+	public static Stack newStack(Factors parent)
+	{
+		if (STACK_FACTORY == null)
+			return new Stack(parent, null);
+		else
+			return STACK_FACTORY.newStack(parent, null);
 	}
 }

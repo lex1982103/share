@@ -51,6 +51,7 @@ public class ArithmeticFunctionBody extends Code
 		Script.FUNCTIONS.put("long", new FunctionLong());
 		Script.FUNCTIONS.put("int", new FunctionInteger());
 		Script.FUNCTIONS.put("find", new FunctionFind());
+		Script.FUNCTIONS.put("index", new FunctionIndex());
 		Script.FUNCTIONS.put("str", new FunctionStr());
 		Script.FUNCTIONS.put("str_begin", new FunctionStrBegin());
 		Script.FUNCTIONS.put("str_end", new FunctionStrEnd());

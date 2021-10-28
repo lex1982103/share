@@ -315,9 +315,9 @@ public class ServiceMgr
 
             if (req != null && req.length() > 4096)
                 req = req.substring(0, 4096) + " ...";
-            Log.error("request: " + servers.name + "/" + loc + " -- " + req + " -- " + e.getMessage());
+            Log.error("request: <" + servers.name + ">" + client.getUrl() + "/" + loc + " -- " + req + " -- " + e.getMessage());
 
-            throw new ServiceException("request: " + servers.name + "/" + loc + " -- " + e.getMessage(), e);
+            throw new ServiceException("request: <" + servers.name + ">" + client.getUrl() + "/" + loc + " -- " + e.getMessage(), e);
         }
     }
 
@@ -657,6 +657,11 @@ public class ServiceMgr
             }
 
             return Network.request(url, param, timeout);
+        }
+
+        public String toString()
+        {
+            return name + "@" + addr;
         }
     }
 

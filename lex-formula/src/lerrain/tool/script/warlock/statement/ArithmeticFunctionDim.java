@@ -119,7 +119,7 @@ public class ArithmeticFunctionDim extends Code
 	{
 		public Object run(Object[] v, Factors p)
 		{
-			Stack stack = new Stack(p);
+			Stack stack = Stack.newStack(p);
 
 			for (int i = 0; i < param.length && i < v.length; i++)
 			{

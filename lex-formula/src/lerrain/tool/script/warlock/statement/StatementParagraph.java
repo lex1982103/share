@@ -47,7 +47,7 @@ public class StatementParagraph extends Code
 	{
 		super.debug(factors);
 
-		return c.run(new Stack(factors));
+		return c.run(Stack.newStack(factors));
 	}
 
 	@Override

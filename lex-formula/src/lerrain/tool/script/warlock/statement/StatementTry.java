@@ -93,7 +93,7 @@ public class StatementTry extends Code
 
 		try
 		{
-			code.run(new Stack(factors));
+			code.run(Stack.newStack(factors));
 		}
 		catch (Interrupt e)
 		{
@@ -103,7 +103,7 @@ public class StatementTry extends Code
 		{
 			if (catchAll != null)
 			{
-				Stack exc = new Stack(factors);
+				Stack exc = Stack.newStack(factors);
 				if (excVar != null)
 					exc.set(excVar, e);
 

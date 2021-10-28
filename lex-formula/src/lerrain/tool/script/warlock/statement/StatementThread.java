@@ -58,7 +58,7 @@ public class StatementThread extends Code
 	{
 		super.debug(factors);
 
-		final Stack stack = new Stack(factors);
+		final Stack stack = Stack.newStack(factors);
 		Object r = pre == null ? null : pre.run(stack);
 
 		Thread th = new Thread(new Runnable()

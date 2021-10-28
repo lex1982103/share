@@ -61,7 +61,7 @@ public class StatementWhile extends Code
 	{
 		super.debug(factors);
 
-		Stack stack = new Stack(factors);
+		Stack stack = Stack.newStack(factors);
 
 		int count = 0;
 

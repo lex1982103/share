@@ -120,7 +120,7 @@ public class ArithmeticFunction extends Code
 				Object x = codes.get(codes.size() - 1).run(factors);
 				if (x instanceof Function)
 				{
-					Stack st = new Stack(factors);
+					Stack st = Stack.newStack(factors);
 					return ((Function)x).run(new Object[]{ex}, st);
 				}
 

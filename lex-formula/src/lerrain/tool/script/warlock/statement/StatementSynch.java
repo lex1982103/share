@@ -38,7 +38,7 @@ public class StatementSynch extends Code
 	{
 		super.debug(factors);
 
-		final Stack stack = new Stack(factors);
+		final Stack stack = Stack.newStack(factors);
 		Object r = pre == null ? null : pre.run(stack);
 
 		synchronized (r == null ? code : r)

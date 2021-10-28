@@ -124,12 +124,12 @@ public class StatementIf extends Code
 		
 		if (r)
 		{
-			return yes.run(new Stack(factors));
+			return yes.run(Stack.newStack(factors));
 		}
 		else
 		{
 			if (no != null)
-				return no.run(new Stack(factors));
+				return no.run(Stack.newStack(factors));
 		}
 		
 		return null;

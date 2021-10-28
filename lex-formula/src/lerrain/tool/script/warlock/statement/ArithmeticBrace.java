@@ -82,7 +82,7 @@ public class ArithmeticBrace extends Code
 				}
 				else
 				{
-					Stack ns = new Stack(factors);
+					Stack ns = Stack.newStack(factors);
 					ns.declare("self", v);
 
 					if (v instanceof Map)

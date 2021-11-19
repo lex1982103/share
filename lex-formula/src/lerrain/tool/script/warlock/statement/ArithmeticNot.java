@@ -23,11 +23,13 @@ public class ArithmeticNot extends Code
 		Object v = r.run(factors);
 
 		if (v == null)
-			return true;
+			return Boolean.TRUE;
 		if (v instanceof Boolean)
 			return Boolean.valueOf(!((Boolean)v).booleanValue());
+		if (v instanceof Number)
+			return Boolean.valueOf(((Number)v).intValue() != 0);
 
-		return Boolean.valueOf(Value.intOf(v, 1) != 0);
+		return Boolean.FALSE;
 
 //		throw new ScriptRuntimeException(this, factors, "NOT逻辑运算，要求值为boolean类型");
 	}

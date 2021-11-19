@@ -22,10 +22,12 @@ public class ArithmeticNot extends Code
 	{
 		Object v = r.run(factors);
 
+		if (v == null)
+			return true;
 		if (v instanceof Boolean)
 			return Boolean.valueOf(!((Boolean)v).booleanValue());
-		else
-			return Boolean.valueOf(Value.intOf(v) != 0);
+
+		return Boolean.valueOf(Value.intOf(v, 1) != 0);
 
 //		throw new ScriptRuntimeException(this, factors, "NOT逻辑运算，要求值为boolean类型");
 	}

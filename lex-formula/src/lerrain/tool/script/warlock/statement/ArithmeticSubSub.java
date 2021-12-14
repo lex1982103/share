@@ -5,10 +5,11 @@ import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
+import lerrain.tool.script.warlock.WriteVariable;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticSubSub extends Code
+public class ArithmeticSubSub extends Code implements WriteVariable
 {
 	Code l, r;
 	
@@ -83,5 +84,11 @@ public class ArithmeticSubSub extends Code
 			return l.toText("", line) + "--";
 		else
 			return "--" + l.toText("", line);
+	}
+
+	@Override
+	public Reference getReference()
+	{
+		return (Reference)(l == null ? r : l);
 	}
 }

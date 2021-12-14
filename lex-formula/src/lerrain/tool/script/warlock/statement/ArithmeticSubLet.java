@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
+import lerrain.tool.script.warlock.WriteVariable;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class ArithmeticSubLet extends Arithmetic2Elements
+public class ArithmeticSubLet extends Arithmetic2Elements implements WriteVariable
 {
 	public ArithmeticSubLet(Words ws, int i)
 	{
@@ -74,5 +75,11 @@ public class ArithmeticSubLet extends Arithmetic2Elements
 	public String toText(String space, boolean line)
 	{
 		return l.toText("", line) + " -= " + r.toText("", line);
+	}
+
+	@Override
+	public Reference getReference()
+	{
+		return (Reference)l;
 	}
 }

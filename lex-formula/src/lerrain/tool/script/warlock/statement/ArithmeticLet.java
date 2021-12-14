@@ -4,10 +4,11 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
+import lerrain.tool.script.warlock.WriteVariable;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticLet extends Arithmetic2Elements
+public class ArithmeticLet extends Arithmetic2Elements implements WriteVariable
 {
 	public ArithmeticLet(Words ws, int i)
 	{
@@ -34,5 +35,11 @@ public class ArithmeticLet extends Arithmetic2Elements
 	public String toText(String space, boolean line)
 	{
 		return l.toText("", line) + " = " + r.toText("", line);
+	}
+
+	@Override
+	public Reference getReference()
+	{
+		return (Reference)l;
 	}
 }

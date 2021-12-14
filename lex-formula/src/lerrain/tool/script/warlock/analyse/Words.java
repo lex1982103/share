@@ -404,7 +404,8 @@ public class Words implements Serializable
 				{
 					setType(i, CLASS);
 				}
-//				else if (isPoint && isPrt) //这里有问题，A.B()的形式，应该是A.B执行PoingKey运算取得一个Function，在run；而不是直接标记成PointMethod一起处理
+				//这里有问题，A.B()的形式，应该是A.B执行PoingKey运算取得一个Function，在run；而不是直接标记成PointMethod一起处理
+//				else if (isPoint && isPrt)
 //				{
 //					setType(i, METHOD);
 //					if (getType(i - 1) == POINT_KEY2)
@@ -412,7 +413,7 @@ public class Words implements Serializable
 //					else
 //						setType(i - 1, POINT_METHOD);
 //				}
-				else if (isPoint && !isPrt)
+				else if (isPoint) //(isPoint && !isPrt)
 				{
 					setType(i, KEY);
 				}

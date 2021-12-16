@@ -12,7 +12,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticAddAdd extends Code implements WriteVariable
 {
-	Code l, r;
+	public Code l, r;
 	
 	public ArithmeticAddAdd(Words ws, int i)
 	{

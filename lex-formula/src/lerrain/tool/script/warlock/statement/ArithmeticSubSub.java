@@ -11,7 +11,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticSubSub extends Code implements WriteVariable
 {
-	Code l, r;
+	public Code l, r;
 	
 	public ArithmeticSubSub(Words ws, int i)
 	{

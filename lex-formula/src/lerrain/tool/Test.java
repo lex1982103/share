@@ -11,13 +11,19 @@ import java.util.Map;
 
 public class Test
 {
-	public static void main(String[] s)
+	public static void main(String[] s) throws Exception
 	{
-		Map m1 = new HashMap<>();
-		Map m2 = new HashMap<>();
-		m1.put("m2", m2);
-		m2.put("m1", m1);
-		System.out.println(m1);
+		Script script = Script.scriptOf("var i=0, k, j=100/2, e;");
+
+//		Map m1 = new HashMap<>();
+//		Map m2 = new HashMap<>();
+//		m1.put("m2", m2);
+//		m2.put("m1", m1);
+
+		Stack st = new Stack();
+		System.out.println(script.toString());
+		script.run(st);
+		System.out.println(st);
 
 //		char c = '，';
 //		System.out.println(c < 0x4E00 || c > 0x9FA5);

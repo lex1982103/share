@@ -15,7 +15,7 @@ import lerrain.tool.script.warlock.analyse.Words;
  */
 public class StatementVar extends Code
 {
-	Code r;
+	Code[] r;
 	
 	List names = new ArrayList();
 	
@@ -23,25 +23,45 @@ public class StatementVar extends Code
 	{
 		super(ws);
 
-		names.add(ws.getWord(1));
-
-		if (ws.size() > 2)
+		List<Code> list = new ArrayList<>();
+		int j = -1, k = -1;
+		for (int i = 1; i < ws.size(); i++)
 		{
-			r = new StatementExpression(ws.cut(1));
-			
-			for (int i = 2; i < ws.size(); i++)
+			if (ws.getType(i) == Words.VARIABLE)
 			{
-				if (ws.getType(i) == Words.COMMA)
-				{
-					names.add(ws.getWord(i + 1));
-					i++;
-				}
-				else if (Syntax.isLeftBrace(ws, i))
-				{
-					i = Syntax.findRightBrace(ws, i + 1);
-				}
+				names.add(ws.getWord(i));
+				j = i;
+			}
+			else if (ws.getType(i) == Words.LET)
+			{
+				k = i;
+			}
+			else if (Syntax.isLeftBrace(ws, i))
+			{
+				i = Syntax.findRightBrace(ws, i + 1);
+			}
+			else if (ws.getType(i) == Words.COMMA)
+			{
+				if (j < 0)
+					throw new RuntimeException("错误的赋值操作");
+				if (k >= 0)
+					list.add(new ArithmeticLet(ws.cut(j, i), k - j));
+
+				k = -1;
+				j = -1;
 			}
 		}
+
+		if (k >= 0)
+		{
+			if (j < 0)
+				throw new RuntimeException("末尾错误的赋值操作");
+
+			list.add(new ArithmeticLet(ws.cut(j), k));
+		}
+
+		if (!list.isEmpty())
+			r = list.toArray(new Code[list.size()]);
 	}
 
 	public Object run(Factors factors)
@@ -51,28 +71,39 @@ public class StatementVar extends Code
 		for (int i = 0; i < names.size(); i++)
 			((Stack)factors).declare((String)names.get(i));
 		
-		if (r == null)
-			return null;
-		
-		return r.run(factors);
+		if (r != null)
+			for (Code c : r)
+				c.run(factors);
+
+		return null;
 	}
 
 	public String toText(String space, boolean line)
 	{
-		return "VAR " + (r == null ? names.toString() : r.toText("", line));
+		StringBuffer sb = new StringBuffer("VAR ");
+		sb.append(names.toString());
+		sb.append("; ");
+
+		if (r != null)
+			for (Code c : r)
+			{
+				sb.append(c.toText("", false));
+				sb.append("; ");
+			}
+
+		return sb.toString();
 	}
 
 	@Override
 	public Code[] getChildren()
 	{
-		return new Code[] {r};
+		return r;
 	}
 
 	@Override
 	public void replaceChild(int i, Code code)
 	{
-		if (i == 0)
-			r = code;
+		r[i] = code;
 	}
 
 }

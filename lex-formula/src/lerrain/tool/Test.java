@@ -14,6 +14,7 @@ public class Test
 	public static void main(String[] s) throws Exception
 	{
 		Script script = Script.scriptOf("var i=0, k, j=100/2, e;");
+//        Script script = Script.scriptOf("for (var i : [1,2]) {}");
 
 //		Map m1 = new HashMap<>();
 //		Map m2 = new HashMap<>();

@@ -7,6 +7,7 @@ import java.util.List;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -17,35 +18,51 @@ public class StatementVar extends Code
 {
 	Code[] r;
 	
-	List names = new ArrayList();
+	String[] names;
+
+	int forMode;
 	
 	public StatementVar(Words ws)
 	{
 		super(ws);
 
 		List<Code> list = new ArrayList<>();
+		List<String> names = new ArrayList<>();
+
 		int j = -1, k = -1;
 		for (int i = 1; i < ws.size(); i++)
 		{
-			if (ws.getType(i) == Words.VARIABLE)
+		    int t = ws.getType(i);
+			if (t == Words.VARIABLE && j < 0 && k < 0) //=左边的才算
 			{
 				names.add(ws.getWord(i));
 				j = i;
 			}
-			else if (ws.getType(i) == Words.LET)
+			else if (t == Words.LET)
 			{
 				k = i;
 			}
+            else if (t == Words.COLON || t == Words.COLON_FLAG)
+            {
+                if (k < 0) //没遇到=先遇到了:，通常是for(var i, j : map)，这种写法不在这里执行，直接把代码返回到for里面
+                {
+                    if (!list.isEmpty())
+                        throw new RuntimeException("不支持混写:和=");
+                    list.add(new ArithmeticColon(ws.cut(1, ws.size()), i - 1));
+                    forMode = t;
+                    break;
+                }
+            }
 			else if (Syntax.isLeftBrace(ws, i))
 			{
 				i = Syntax.findRightBrace(ws, i + 1);
 			}
-			else if (ws.getType(i) == Words.COMMA)
+			else if (t == Words.COMMA)
 			{
 				if (j < 0)
 					throw new RuntimeException("错误的赋值操作");
 				if (k >= 0)
-					list.add(new ArithmeticLet(ws.cut(j, i), k - j));
+                    list.add(new ArithmeticLet(ws.cut(j, i), k - j));
 
 				k = -1;
 				j = -1;
@@ -57,31 +74,39 @@ public class StatementVar extends Code
 			if (j < 0)
 				throw new RuntimeException("末尾错误的赋值操作");
 
-			list.add(new ArithmeticLet(ws.cut(j), k));
+			list.add(new ArithmeticLet(ws.cut(j), k - j));
 		}
 
 		if (!list.isEmpty())
 			r = list.toArray(new Code[list.size()]);
+
+		this.names = names.toArray(new String[names.size()]);
 	}
 
 	public Object run(Factors factors)
 	{
 		super.debug(factors);
 
-		for (int i = 0; i < names.size(); i++)
-			((Stack)factors).declare((String)names.get(i));
-		
+		for (String name : names)
+			((Stack)factors).declare(name);
+
+		Object v = null;
+
 		if (r != null)
 			for (Code c : r)
-				c.run(factors);
+				v = c.run(factors);
 
-		return null;
+		return v;
 	}
 
 	public String toText(String space, boolean line)
 	{
 		StringBuffer sb = new StringBuffer("VAR ");
-		sb.append(names.toString());
+		for (String name : names)
+		{
+			sb.append(name);
+			sb.append(" ");
+		}
 		sb.append("; ");
 
 		if (r != null)
@@ -106,4 +131,8 @@ public class StatementVar extends Code
 		r[i] = code;
 	}
 
+	public String[] getVars()
+	{
+		return names;
+	}
 }

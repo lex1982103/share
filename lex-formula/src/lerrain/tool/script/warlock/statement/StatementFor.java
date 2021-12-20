@@ -36,6 +36,9 @@ public class StatementFor extends Code
 		{
 			f1 = c.getSentence(0);
 			type = 2;
+
+			if (!(f1 instanceof StatementVar))
+				throw new RuntimeException("for的:遍历写法，变量var是不可缺少的");
 		}
 		
 		left = right + 1;
@@ -160,13 +163,20 @@ public class StatementFor extends Code
 
 		if (type == 2)
 		{
-			ArithmeticCode cc = (ArithmeticCode)f1.run(stack);
-			Object value = cc.v[1].run(stack);
+			StatementVar sv = (StatementVar)f1;
+			Code[] ccv = (Code[])sv.run(stack);
+			Object value = ccv[1].run(stack);
 
 			Reference nef, ref, mef = null;
-			if (cc.v[0] instanceof ArithmeticComma)
+//			if (sv.names.size() == 1)
+//			{
+//				nef = null;
+//
+//			}
+
+			if (ccv[0] instanceof ArithmeticComma)
 			{
-				ArithmeticComma comma = (ArithmeticComma)cc.v[0];
+				ArithmeticComma comma = (ArithmeticComma)ccv[0];
 				nef = (Reference)comma.codes.get(0);
 				ref = (Reference)comma.codes.get(1);
 
@@ -176,10 +186,10 @@ public class StatementFor extends Code
 			else
 			{
 				nef = null;
-				ref = (Reference)cc.v[0];
+				ref = (Reference)ccv[0];
 			}
 
-			if ("~:".equals(cc.getSymbol()))
+			if (sv.forMode == Words.COLON_FLAG)
 			{
 				LinkedList ll = null;
 				if (mef != null)

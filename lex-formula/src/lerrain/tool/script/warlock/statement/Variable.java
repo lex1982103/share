@@ -11,7 +11,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 public class Variable extends Code implements Reference
 {
 	String varName;
-	
+
 	public Variable(Words ws)
 	{
 		super(ws);
@@ -49,11 +49,11 @@ public class Variable extends Code implements Reference
         return v;
     }
 
-	@Override
-	public boolean isFixed(int mode)
-	{
-		return (mode & Optimized.VARIABLE) > 0;
-	}
+//	@Override
+//	public boolean isFixed(int mode)
+//	{
+//		return super.isFixed(mode) && (mode & Optimized.VARIABLE) > 0;
+//	}
 
 	public void let(Factors factors, Object value)
 	{

@@ -19,6 +19,8 @@ public abstract class Code implements Formula, Optimized
 
 	boolean breakPoint = false;
 
+	boolean fixed;
+
 //	List<Code> children;
 
 	public Object flag; //可自己设定的flag
@@ -200,7 +202,12 @@ public abstract class Code implements Formula, Optimized
 	@Override
 	public boolean isFixed(int mode)
 	{
-		return false;
+		return fixed;
+	}
+
+	public void setFixed(boolean fixed)
+	{
+		this.fixed = fixed;
 	}
 
 	public Code[] getChildren()

@@ -6,6 +6,7 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+//for循环用，虽然操作都放在for那边做了，但这些代码还涉及赋值之类的操作，fixed默认为false
 public class ArithmeticColon extends Code
 {
 	Code[] v;
@@ -23,12 +24,6 @@ public class ArithmeticColon extends Code
 		symbol = ws.getWord(i);
 	}
 
-	@Override
-	public boolean isFixed(int mode)
-	{
-		return true;
-	}
-
 	public String getSymbol()
 	{
 		return symbol;
@@ -42,5 +37,17 @@ public class ArithmeticColon extends Code
 	public String toText(String space, boolean line)
 	{
 		return (line ? space : "") + v[0].toText(space, line) + " " + symbol + " " + v[1].toText(space, line);
+	}
+
+	@Override
+	public Code[] getChildren()
+	{
+		return v;
+	}
+
+	@Override
+	public void replaceChild(int i, Code code)
+	{
+		v[i] = code;
 	}
 }

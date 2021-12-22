@@ -44,8 +44,11 @@ public class ArithmeticPointKey extends Code implements Reference
 	 */
 	public Object run(Factors factors)
 	{
-		Object v = l.run(factors);
-		
+		return perform(l.run(factors), factors);
+	}
+
+	public Object perform(Object v, Factors factors)
+	{
 		if (v == null)
 		{
 			if (tk)

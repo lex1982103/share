@@ -1,16 +1,10 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.formula.VariableFactors;
-import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
@@ -18,21 +12,22 @@ import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
+import java.util.List;
+import java.util.Map;
+
 public class ArithmeticArray extends Code implements Reference
 {
-	int type = 0;
-	
-	Code v, a;
+	public Code v, a;
 	
 //	ArithmeticArray pv;
-	
-	public ArithmeticArray(Words ws, int i)
-	{
-		super(ws);
 
+	public static Code arrayOf(Words ws, int i)
+	{
 		if (ws.getType(i) != Words.BRACKET || ws.getType(ws.size() - 1) != Words.BRACKET_R)
 			throw new SyntaxException("找不到数组的右括号");
-		
+
+		int type;
+
 		if (i > 0) //否则为Object数组定义 [a, b, c, ...]
 		{
 			if (i == 1 && "double".equals(ws.getWord(0))) // double[a, b, c, ...]
@@ -40,9 +35,22 @@ public class ArithmeticArray extends Code implements Reference
 			else if (i == 1 && "@".equals(ws.getWord(0))) // double[a, b, c, ...]
 				type = 2;
 			else
-				v = Expression.expressionOf(ws.cut(0, i));
+				return new ArithmeticArray(ws, i);
 		}
-		
+		else
+		{
+			type = 0;
+		}
+
+		Code a = Expression.expressionOf(ws.cut(i + 1, ws.size() - 1));
+		return new ArithmeticArrayDefine(ws, a, type);
+	}
+
+	public ArithmeticArray(Words ws, int i)
+	{
+		super(ws);
+
+		v = Expression.expressionOf(ws.cut(0, i));
 		a = Expression.expressionOf(ws.cut(i + 1, ws.size() - 1));
 		
 //		//objectiveC 下NSArray效率过低，这里对二维数组做优化
@@ -73,21 +81,14 @@ public class ArithmeticArray extends Code implements Reference
 
 	public Object run(Factors factors)
 	{
-		try
-		{
-			if (v == null) // [a, b, c, ...] 等同于java的 new Object[] {a, b, c, ...}
-			{
-				if (type == 0) // [a, b, c, ...]
-					return Wrap.arrayOf(a, factors);
-				else if (type == 1) // double[a, b, c, ...]
-					return Wrap.doubleArrayOf(a, factors);
-				else if (type == 2) // @[a, b, c, ...]
-					return Wrap.wrapOf(a, factors).toList();
-			}
+		Object val = v.run(factors);
+		Object pos = a.run(factors);
 
-			Object val = v.run(factors);
-			Object pos = a.run(factors);
+		return perform(val, pos, factors);
+	}
 
+	public Object perform(Object val, Object pos, Factors factors)
+	{
 			int i, j;
 
 			if (pos instanceof Wrap) //旧的写法IT.ABC[i, j]，向下兼容一下，最多2维，3维以上无视
@@ -210,12 +211,7 @@ public class ArithmeticArray extends Code implements Reference
 				return ((List) val).get(i);
 			}
 
-			throw new RuntimeException("无法处理的数组运算 - " + toText("", true) + " is " + val);
-		}
-		catch (Exception e)
-		{
-			throw new ScriptRuntimeException(this, factors, e);
-		}
+			throw new ScriptRuntimeException(this, factors, "无法处理的数组运算 - " + toText("", true) + " is " + val);
 	}
 
 	@Override

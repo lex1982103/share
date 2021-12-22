@@ -195,7 +195,7 @@ public class Expression
 
 		if (arithmetic == Words.POINT_KEY || arithmetic == Words.POINT_KEY2) return new ArithmeticPointKey(ws, pos);
 		if (arithmetic == Words.POINT_METHOD || arithmetic == Words.POINT_METHOD2) return new ArithmeticPointMethod(ws, pos);
-		if (arithmetic == Words.BRACKET) return new ArithmeticArray(ws, pos);
+		if (arithmetic == Words.BRACKET) return ArithmeticArray.arrayOf(ws, pos);
 		if (arithmetic == Words.BRACE) return new ArithmeticBrace(ws, pos);
 		if (arithmetic == Words.FUNCTION_BODY) return new ArithmeticFunctionBody(ws, pos);
 

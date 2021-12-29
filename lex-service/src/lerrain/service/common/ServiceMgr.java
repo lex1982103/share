@@ -388,16 +388,23 @@ public class ServiceMgr
             return;
         }
 
-        JSONArray list = new JSONArray();
-        JSONObject v = new JSONObject();
-        v.put("from", name);
-        v.put("index", index);
-        v.put("result", "down");
-        v.put("type", "service");
-        v.put("time", System.currentTimeMillis());
-        list.add(v);
+        if (getServers("secure").clients.length > 0)
+        {
+            JSONArray list = new JSONArray();
+            JSONObject v = new JSONObject();
+            v.put("from", name);
+            v.put("index", index);
+            v.put("result", "down");
+            v.put("type", "service");
+            v.put("time", System.currentTimeMillis());
+            list.add(v);
 
-        ServiceMgr.this.req("secure", "action.json", list);
+            ServiceMgr.this.req("secure", "action.json", list);
+        }
+        else
+        {
+            Log.alert("无法获取secure服务地址");
+        }
     }
 
     /*
@@ -457,7 +464,7 @@ public class ServiceMgr
 
             String[] url = addrs.split(",");
 
-            Client[] last = clients;
+//            Client[] last = clients;
 
             clients = new Client[url.length];
             for (int i = 0; i < url.length; i++)

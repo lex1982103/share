@@ -1,7 +1,5 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.*;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
@@ -11,6 +9,11 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class StatementFor extends Code
 {
@@ -236,9 +239,9 @@ public class StatementFor extends Code
 					}
 				}
 			}
-			else if (value instanceof Collection)
+			else if (value instanceof Iterable)
 			{
-				for (Object v : (Collection<?>)value)
+				for (Object v : (Iterable)value)
 				{
 					if (nef != null)
 						nef.let(stack, count);

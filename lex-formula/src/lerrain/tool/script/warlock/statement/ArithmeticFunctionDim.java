@@ -21,7 +21,7 @@ public class ArithmeticFunctionDim extends Code
 
 	Script content;
 
-	String functionId;
+	String functionId; //根据整段脚本的md5值，加上函数体所在的字符开始与结束位置，生成的唯一码。只要本机编译过这段脚本，就可以被恢复。但外部传入本机脚本的自定义函数，恢复行为如果在其他机器，那会恢复不出来
 
 	ScriptFunction instant;
 

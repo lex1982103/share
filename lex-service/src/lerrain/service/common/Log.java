@@ -87,10 +87,14 @@ public class Log
 //        }
 //    }
 
-    private static void print(int mode, String inf, Object str, Exception e)
+    private static void print(String inf, Object str, Exception e)
     {
+        StringBuilder sb = new StringBuilder();
+
         if (e != null)
         {
+            String info = null;
+
             if (EXCEPTION_STACK)
             {
                 try (ByteArrayOutputStream os = new ByteArrayOutputStream())
@@ -99,21 +103,31 @@ public class Log
                     e.printStackTrace(pw);
                     pw.close();
 
-                    str = (str == null ? "" : str) + "\n" + os.toString();
+                    info = os.toString();
                 }
                 catch (Exception e1)
                 {
                 }
             }
-            else
+
+            if (info == null)
+                info = e.toString();
+
+            if (str != null)
             {
-                str = (str == null ? "" : str) + "\n" + e.toString();
+                sb.append(str.toString());
+                sb.append("\n");
             }
+
+            if (info == null)
+                sb.append(e.toString());
+            else
+                sb.append(info);
         }
 
         long t = System.currentTimeMillis();
         StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-        String log = String.format(fmt, t, t, inf, ste[3].getClassName(), ste[3].getMethodName(), str);
+        String log = String.format(fmt, t, t, inf, ste[3].getClassName(), ste[3].getMethodName(), sb.toString());
 
         System.out.println(log);
 
@@ -127,101 +141,101 @@ public class Log
     public static void info(String fmt, Object... obj)
     {
         if(write_info)
-            print(1,"INFO", String.format(fmt, obj), null);
+            print("INFO", String.format(fmt, obj), null);
     }
 
     public static void info(Object str, Exception e)
     {
         if(write_info)
-            print(1,"INFO", str, e);
+            print("INFO", str, e);
     }
 
     public static void info(Object str)
     {
         if(write_info)
-            print(1,"INFO", str, null);
+            print("INFO", str, null);
     }
 
     public static void info(Exception e)
     {
         if(write_info)
-            print(1,"INFO", null, e);
+            print("INFO", null, e);
     }
 
     public static void debug(String fmt, Object... obj)
     {
         if(write_debug)
-            print(1,"DEBUG", String.format(fmt, obj), null);
+            print("DEBUG", String.format(fmt, obj), null);
     }
 
     public static void debug(Object str, Exception e)
     {
         if(write_debug)
-            print(1,"DEBUG", str, e);
+            print("DEBUG", str, e);
     }
 
     public static void debug(Object str)
     {
         if(write_debug)
-            print(1,"DEBUG", str, null);
+            print("DEBUG", str, null);
     }
 
     public static void debug(Exception e)
     {
         if(write_debug)
-            print(1,"DEBUG", null, e);
+            print("DEBUG", null, e);
     }
 
     public static void alert(String fmt, Object... obj)
     {
         if(write_alert)
-            print(2,"ALERT", String.format(fmt, obj), null);
+            print("ALERT", String.format(fmt, obj), null);
     }
 
     public static void alert(Object str, Exception e)
     {
         if(write_alert)
-            print(2,"ALERT", str, e);
+            print("ALERT", str, e);
     }
 
     public static void alert(Object str)
     {
         if(write_alert)
-            print(2,"ALERT", str, null);
+            print("ALERT", str, null);
     }
 
     public static void alert(Exception e)
     {
         if(write_alert)
-            print(2,"ALERT", null, e);
+            print("ALERT", null, e);
     }
 
     public static void error(String fmt, Object... obj)
     {
         if(write_error)
-            print(3,"ERROR", String.format(fmt, obj), null);
+            print("ERROR", String.format(fmt, obj), null);
     }
 
     public static void error(Object str, Exception e)
     {
         if(write_error)
-            print(3,"ERROR", str, e);
+            print("ERROR", str, e);
     }
 
     public static void error(Object str)
     {
         if(write_error)
-            print(3,"ERROR", str, null);
+            print("ERROR", str, null);
     }
 
     public static void error(Exception e)
     {
         if(write_error)
-            print(3,"ERROR", null, e);
+            print("ERROR", null, e);
     }
 
     public static void stat(String str)
     {
-        print(1,"STAT", str, null);
+        print("STAT", str, null);
     }
 }

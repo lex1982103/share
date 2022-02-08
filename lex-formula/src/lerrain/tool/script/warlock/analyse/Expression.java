@@ -182,6 +182,7 @@ public class Expression
 			return arithmeticInt.get(arithmetic).buildArithmetic(ws, pos);
 
 		if (arithmetic == Words.LET) return new ArithmeticLet(ws, pos);
+        if (arithmetic == Words.FASTLET) return new ArithmeticFastLet(ws, pos);
 		if (arithmetic == Words.ADDLET) return new ArithmeticAddLet(ws, pos);
 		if (arithmetic == Words.SUBLET) return new ArithmeticSubLet(ws, pos);
 		if (arithmetic == Words.COMMA) return new ArithmeticComma(ws, pos);
@@ -276,6 +277,7 @@ public class Expression
 		if (arithmetic == Words.COMMA) return 20;
 		if (arithmetic == Words.COLON_SPLIT) return 25;
 		if (arithmetic == Words.LET) return 30;
+        if (arithmetic == Words.FASTLET) return 30;
 
 		if (arithmetic == Words.ADDLET) return 50;
 		if (arithmetic == Words.SUBLET) return 50;

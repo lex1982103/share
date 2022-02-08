@@ -48,6 +48,7 @@ public class Words implements Serializable
 	public static final int COLON_FLAG			= 2105; //~:  忘记做啥用的了，貌似也没地方用，考虑下掉
 	public static final int LET					= 2110;
 	public static final int WAVE				= 2111; //~ 二元运算
+    public static final int FASTLET				= 2112; //:=
 	public static final int AND					= 2120;
 	public static final int INTERSECTION        = 2121; //&
 	public static final int OR					= 2130;
@@ -455,6 +456,8 @@ public class Words implements Serializable
 	{
 		if ("=".equals(symbol))
 			return LET;
+        if (":=".equals(symbol))
+            return FASTLET;
 		if ("&&".equals(symbol))
 			return AND;
 		if ("||".equals(symbol))

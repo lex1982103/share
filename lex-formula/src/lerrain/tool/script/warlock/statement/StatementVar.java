@@ -30,6 +30,7 @@ public class StatementVar extends Code
 		List<String> names = new ArrayList<>();
 
 		int j = -1, k = -1;
+		boolean fast = false;
 		for (int i = 1; i < ws.size(); i++)
 		{
 		    int t = ws.getType(i);
@@ -38,9 +39,10 @@ public class StatementVar extends Code
 				names.add(ws.getWord(i));
 				j = i;
 			}
-			else if (t == Words.LET)
+			else if (t == Words.LET || t == Words.FASTLET)
 			{
 				k = i;
+                fast = t == Words.FASTLET;
 			}
             else if (t == Words.COLON || t == Words.COLON_FLAG)
             {
@@ -62,7 +64,7 @@ public class StatementVar extends Code
 				if (j < 0)
 					throw new RuntimeException("错误的赋值操作");
 				if (k >= 0)
-                    list.add(new ArithmeticLet(ws.cut(j, i), k - j));
+                    list.add(fast ? new ArithmeticFastLet(ws.cut(j, i), k - j) : new ArithmeticLet(ws.cut(j, i), k - j));
 
 				k = -1;
 				j = -1;
@@ -74,7 +76,7 @@ public class StatementVar extends Code
 			if (j < 0)
 				throw new RuntimeException("末尾错误的赋值操作");
 
-			list.add(new ArithmeticLet(ws.cut(j), k - j));
+			list.add(fast ? new ArithmeticFastLet(ws.cut(j), k - j) : new ArithmeticLet(ws.cut(j), k - j));
 		}
 
 		if (!list.isEmpty())

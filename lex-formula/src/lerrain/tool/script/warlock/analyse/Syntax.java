@@ -1,7 +1,9 @@
 package lerrain.tool.script.warlock.analyse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Chinese;
@@ -14,6 +16,18 @@ import lerrain.tool.script.warlock.statement.*;
  */
 public class Syntax
 {
+	static Map<String, Statement> keywords = new HashMap<>();
+
+	interface Statement
+	{
+		Code newInstance(Words words);
+	}
+
+	public static void register(String keyword, Statement s)
+	{
+		keywords.put(keyword, s);
+	}
+
 	public static Code sentenceOf(Words ws)
 	{
 		if (ws.getType(ws.size() - 1) == Words.SEMICOLON)
@@ -29,7 +43,11 @@ public class Syntax
 
 		if (type == Words.KEYWORD)
 		{
-			if ("if".equals(word))
+			if (keywords.containsKey(word))
+			{
+				return keywords.get(word).newInstance(ws);
+			}
+			else if ("if".equals(word))
 			{
 				return new StatementIf(ws);
 			}

@@ -17,12 +17,36 @@ import lerrain.tool.script.warlock.statement.*;
 public class Syntax
 {
 	static Map<String, Statement> keywords = new HashMap<>();
+	static Statement ERROR = words -> { throw new SyntaxException(words, 0, "关键字位置错误"); };
 
-	interface Statement
+	static
+	{
+		keywords.put("for", words -> new StatementFor(words));
+		keywords.put("while", words -> new StatementWhile(words));
+		keywords.put("if", words -> new StatementIf(words));
+		keywords.put("else", ERROR);
+		keywords.put("return", words -> new StatementReturn(words));
+		keywords.put("continue", words -> new StatementContinue(words));
+		keywords.put("break", words -> new StatementBreak(words));
+		keywords.put("var", words -> new StatementVar(words));
+		keywords.put("throw", words -> new StatementThrow(words));
+		keywords.put("thread", words -> new StatementThread(words));
+		keywords.put("synch", words -> new StatementSynch(words));
+		keywords.put("function", words -> new StatementFunction(words));
+		keywords.put("catch", ERROR);
+		keywords.put("goto", words -> new StatementGoto(words));
+	}
+
+	public interface Statement
 	{
 		Code newInstance(Words words);
 	}
 
+	/**
+	 * 新增加自定义关键字，需要注意检查之前有无使用这个单词当作变量
+	 * @param keyword
+	 * @param s
+	 */
 	public static void register(String keyword, Statement s)
 	{
 		keywords.put(keyword, s);
@@ -42,66 +66,11 @@ public class Syntax
 		String word = ws.getWord(0);
 
 		if (type == Words.KEYWORD)
-		{
-			if (keywords.containsKey(word))
-			{
-				return keywords.get(word).newInstance(ws);
-			}
-			else if ("if".equals(word))
-			{
-				return new StatementIf(ws);
-			}
-			else if ("return".equals(word))
-			{
-				return new StatementReturn(ws);
-			}
-			else if ("for".equals(word))
-			{
-				return new StatementFor(ws);
-			}
-			else if ("while".equals(word))
-			{
-				return new StatementWhile(ws);
-			}
-			else if ("break".equals(word))
-			{
-				return new StatementBreak(ws);
-			}
-			else if ("var".equals(word))
-			{
-				return new StatementVar(ws);
-			}
-			else if ("throw".equals(word))
-			{
-				return new StatementThrow(ws);
-			}
-			else if ("continue".equals(word))
-			{
-				return new StatementContinue(ws);
-			}
-			else if ("thread".equals(word))
-			{
-				return new StatementThread(ws);
-			}
-			else if ("synch".equals(word))
-			{
-				return new StatementSynch(ws);
-			}
-			else if ("function".equals(word))
-			{
-				return new StatementFunction(ws);
-			}
-
-			throw new SyntaxException(ws, 0, "无法识别的关键字");
-		}
+			return keywords.get(word).newInstance(ws);
 		else if ("try".equals(word) && ws.getType(1) == Words.BRACE) //try也是个函数，就不好做关键字了，用try后面紧跟一个大括号来识别
-		{
 			return new StatementTry(ws);
-		}
 		else if (type == Words.BRACE)
-		{
 			return new StatementParagraph(ws);
-		}
 
 		if (ws.size() == 1 && type == Words.CHINESE)
 			return new Chinese(ws);

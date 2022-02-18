@@ -300,6 +300,7 @@ public class Words implements Serializable
 				str = str.replaceAll("[\\\\][\']", "\'");
 				str = str.replaceAll("[\\\\][\\\\]", "\\\\");
 				str = str.replaceAll("[\\\\][n]", "\n");
+				str = str.replaceAll("[\\\\][t]", "\t");
 				ws.add(str, STRING, i);
 				i = j;
 			}

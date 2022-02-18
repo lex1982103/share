@@ -529,8 +529,6 @@ public class Words implements Serializable
 		return SYMBOL;
 	}
 
-	static List<String> keywords = Arrays.asList("for,while,if,else,return,continue,break,var,throw,thread,synch,function,catch".split(","));
-	
 	private static int getWordType(String word)
 	{
 		if ("lt".equals(word))
@@ -560,9 +558,9 @@ public class Words implements Serializable
 		if ("false".equals(word))
 			return FALSE;
 		
-		if (keywords.indexOf(word) >= 0)
+		if (Syntax.keywords.containsKey(word)) //源生关键字，自定义关键字
 			return KEYWORD;
-		if (Expression.arithmeticStr.containsKey(word))
+		if (Expression.arithmeticStr.containsKey(word)) //自定义的运算符
 			return ARITHMETIC_KEYWORD;
 		
 		return WORD;

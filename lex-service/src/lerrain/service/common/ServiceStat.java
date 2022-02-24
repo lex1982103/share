@@ -62,7 +62,7 @@ public class ServiceStat extends PostQueue
             }
 
             @Override
-            public void onFail(Object o, int time, Exception e)
+            public void onError(Object o, int time, Exception e)
             {
                 if (o != null)
                 {

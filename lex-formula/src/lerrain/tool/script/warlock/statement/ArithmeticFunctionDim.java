@@ -3,7 +3,6 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.FunctionCloneable;
-import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
@@ -49,7 +48,7 @@ public class ArithmeticFunctionDim extends Code
 
 		if (Script.SERIALIZABLE) //序列化自定义函数的时候的特殊处理
 		{
-			functionId = words.hash();
+			functionId = words.getWordsKey();
 			Script.FUNCTIONS.put(functionId, this);
 		}
 

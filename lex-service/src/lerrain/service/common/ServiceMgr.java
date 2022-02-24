@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
-import java.io.InputStream;
 import java.util.*;
 
 public class ServiceMgr
@@ -195,7 +194,7 @@ public class ServiceMgr
         catch (Exception e)
         {
             if (listener != null)
-                listener.onFail(passport, (int)(System.currentTimeMillis() - t), e);
+                listener.onError(passport, (int)(System.currentTimeMillis() - t), e);
 
             throw e;
         }
@@ -271,7 +270,7 @@ public class ServiceMgr
         catch (Exception e)
         {
             if (listener != null)
-                listener.onFail(passport, (int)(System.currentTimeMillis() - t), e);
+                listener.onError(passport, (int)(System.currentTimeMillis() - t), e);
 
             throw e;
         }
@@ -341,13 +340,17 @@ public class ServiceMgr
         {
             JSONObject res = req(service, loc, param, -1);
 
-            if (!"success".equals(res.getString("result")))
-                throw new RuntimeException(res.getString("reason"));
+            if ("success".equals(res.getString("result")))
+                return res.get("content");
 
-            return res.get("content");
+            //error里面判断过了
+            throw new ServiceFeedback(res.getString("reason"));
         }
         catch (Exception e3)
         {
+            if (e3 instanceof ServiceFeedback) //非error不重试
+                throw e3;
+
             if (sleep != null && sleep.length > 0)
             {
                 try
@@ -683,6 +686,14 @@ public class ServiceMgr
 
         public void onSucc(Object passport, int time, Object res);
 
-        public void onFail(Object passport, int time, Exception e);
+        @Deprecated
+        public default void onFail(Object passport, int time, Exception e)
+        {
+        }
+
+        public default void onError(Object passport, int time, Exception e)
+        {
+            onFail(passport, time, e);
+        }
     }
 }

@@ -591,7 +591,7 @@ public class Words implements Serializable
 		return c >= '0' && c <= '9';
 	}
 
-	public String hash()
+	public String getWordsKey()
 	{
 		MessageDigest messageDigest = null;
 		try

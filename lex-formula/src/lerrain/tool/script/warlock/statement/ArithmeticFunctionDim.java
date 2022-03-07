@@ -20,7 +20,9 @@ public class ArithmeticFunctionDim extends Code
 
 	Script content;
 
-	String functionId; //根据整段脚本的md5值，加上函数体所在的字符开始与结束位置，生成的唯一码。只要本机编译过这段脚本，就可以被恢复。但外部传入本机脚本的自定义函数，恢复行为如果在其他机器，那会恢复不出来
+	//根据整段脚本的md5值，加上函数体所在的字符开始与结束位置，生成的唯一码。只要本机编译过这段脚本，就可以被恢复。但外部传入本机脚本的自定义函数，恢复行为如果在其他机器，那会恢复不出来
+	//2022-03-07修改为整段函数的脚本作为key
+	String functionId;
 
 	ScriptFunction instant;
 
@@ -48,7 +50,8 @@ public class ArithmeticFunctionDim extends Code
 
 		if (Script.SERIALIZABLE) //序列化自定义函数的时候的特殊处理
 		{
-			functionId = words.getWordsKey();
+//			functionId = words.getWordsKey();
+			functionId = words.getCurrentScript();
 			Script.FUNCTIONS.put(functionId, this);
 		}
 
@@ -110,7 +113,24 @@ public class ArithmeticFunctionDim extends Code
 
 		private Object readResolve()
 		{
-			return Script.FUNCTIONS.get(functionId);
+			Object func = Script.FUNCTIONS.get(functionId);
+			if (func == null)
+			{
+				Words ws = Words.wordsOf(functionId);
+				func = new ArithmeticFunctionDim(ws, 0);
+				Script.FUNCTIONS.put(functionId, func);
+			}
+
+//			if (func == null && Stack.runtimeListener != null)
+//			{
+//				Stack.runtimeListener.onEvent(Stack.EVENT_DYNAMIC_FUNCTION_NOT_FOUND, functionId);
+//				func = Script.FUNCTIONS.get(functionId); //处理后重新获取
+//			}
+//
+//			if (func == null)
+//				throw new RuntimeException(functionId + " not found!");
+
+			return func;
 		}
 	}
 

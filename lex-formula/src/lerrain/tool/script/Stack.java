@@ -15,6 +15,7 @@ public class Stack implements VariableFactors
 	public static final int DEBUG_STEP_OVER		= 3;
 
 	public static final int EVENT_LOOP_ALERT    = 10001;
+	public static final int EVENT_DYNAMIC_FUNCTION_NOT_FOUND    = 19001;
 
 	public static int LOOP_ALERT_TIMES     	    = 0; //大于0时生效，每当循环达到这个次数的时候报警
 

@@ -1,11 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-
+import lerrain.tool.formula.AutoFormula;
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.FormulaBindRun;
 import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
@@ -13,6 +9,10 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
 
 public class ArithmeticPointKey extends Code implements Reference
 {
@@ -61,8 +61,8 @@ public class ArithmeticPointKey extends Code implements Reference
 		{
 			//如果返回结果是个自动计算，那存在使用那个Factors（v还是factors）计算的问题
 			Object p = ((Factors) v).get(key);
-			if (p instanceof FormulaBindRun)
-				return ((FormulaBindRun) p).run((Factors)v);
+			if (p instanceof AutoFormula)
+				return ((AutoFormula) p).run((Factors)v);
 			else
 				return Variable.val(p, factors);
 		}

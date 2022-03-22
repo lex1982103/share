@@ -1,10 +1,10 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.FormulaAutoRun;
+import lerrain.tool.formula.AutoConstant;
+import lerrain.tool.formula.AutoFormula;
 import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Optimized;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -43,8 +43,10 @@ public class Variable extends Code implements Reference
      */
 	public static Object val(Object v, Factors factors)
     {
-        if (v instanceof FormulaAutoRun)
-            v = ((FormulaAutoRun) v).run(factors);
+        if (v instanceof AutoConstant)
+            return ((AutoConstant) v).run();
+		if (v instanceof AutoFormula)
+			return ((AutoFormula) v).run(factors);
 
         return v;
     }

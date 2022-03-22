@@ -57,16 +57,8 @@ public class ArithmeticPointKey extends Code implements Reference
 				return null;
 		}
 
-		if (v instanceof Factors)
-		{
-			//如果返回结果是个自动计算，那存在使用那个Factors（v还是factors）计算的问题
-			Object p = ((Factors) v).get(key);
-			if (p instanceof AutoFormula)
-				return ((AutoFormula) p).run((Factors)v);
-			else
-				return Variable.val(p, factors);
-		}
-
+		if (v instanceof Factors) //如果返回结果是个自动计算，那存在使用那个Factors（v还是factors）计算的问题
+			return Variable.val(((Factors) v).get(key), factors);
 		if (v instanceof Map)
 			return Variable.val(((Map)v).get(key), factors);
 		if (v instanceof List)

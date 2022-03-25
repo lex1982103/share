@@ -89,59 +89,48 @@ public class ArithmeticArray extends Code implements Reference
 
 	public Object perform(Object val, Object pos, Factors factors)
 	{
-			int i, j;
+		if (pos instanceof Wrap) //旧的写法IT.ABC[i, j]，向下兼容一下，最多2维，3维以上无视
+		{
+			Object[] p = ((Wrap) pos).toArray();
+			int i = Value.intOf(p[0]);
+			int j = Value.intOf(p[1]);
 
-			if (pos instanceof Wrap) //旧的写法IT.ABC[i, j]，向下兼容一下，最多2维，3维以上无视
+			if (val instanceof int[][])
 			{
-				Object[] p = ((Wrap) pos).toArray();
-				i = Value.intOf(p[0]);
-				j = Value.intOf(p[1]);
+				return Integer.valueOf(((int[][]) val)[i][j]);
+			}
+			else if (val instanceof double[][])
+			{
+				return Double.valueOf(((double[][]) val)[i][j]);
+			}
+			else if (val instanceof Object[][])
+			{
+				return ((Object[][]) val)[i][j];
+			}
+			else if (val instanceof Object[])
+			{
+				val = ((Object[]) val)[i];
 
-				if (val instanceof int[][])
+				if (val instanceof int[])
 				{
-					return Integer.valueOf(((int[][]) val)[i][j]);
+					return Integer.valueOf(((int[]) val)[j]);
 				}
-				else if (val instanceof double[][])
+				else if (val instanceof double[])
 				{
-					return Double.valueOf(((double[][]) val)[i][j]);
-				}
-				else if (val instanceof Object[][])
-				{
-					return ((Object[][]) val)[i][j];
+					return Double.valueOf(((double[]) val)[j]);
 				}
 				else if (val instanceof Object[])
 				{
-					val = ((Object[]) val)[i];
-
-					if (val instanceof int[])
-					{
-						return Integer.valueOf(((int[]) val)[j]);
-					}
-					else if (val instanceof double[])
-					{
-						return Double.valueOf(((double[]) val)[j]);
-					}
-					else if (val instanceof Object[])
-					{
-						return ((Object[]) val)[j];
-					}
+					return ((Object[]) val)[j];
 				}
-				else if (val instanceof Function) //旧的IT.XXX[A, B]，前面的IT.XXX实际是个函数，这里做一次转译
-				{
-					return ((Function) val).run(p, factors);
-				}
-
-				throw new RuntimeException("无法处理的旧版2维数组运算");
+			}
+			else if (val instanceof Function) //旧的IT.XXX[A, B]，前面的IT.XXX实际是个函数，这里做一次转译
+			{
+				return ((Function) val).run(p, factors);
 			}
 
-			if (val instanceof Map)
-			{
-				return ((Map<?, ?>) val).get(pos);
-			}
-			else if (val instanceof Factors)
-			{
-				return ((Factors) val).get(pos == null ? null : pos.toString());
-			}
+			throw new RuntimeException("无法处理的旧版2维数组运算");
+		}
 
 //			if (val instanceof Map)
 //			{
@@ -162,8 +151,8 @@ public class ArithmeticArray extends Code implements Reference
 //			throw new RuntimeException("index为string要求数组为map或factors");
 //		}
 
-			//现在都是这种写法IT.ABC[i][j]
-			i = Value.intOf(pos);
+		//现在都是这种写法IT.ABC[i][j]
+//		i = Value.intOf(pos);
 
 //		if (val instanceof Formula) //函数
 //		{
@@ -181,6 +170,9 @@ public class ArithmeticArray extends Code implements Reference
 //			return ((Formula)val).run(stack);
 //		}
 
+		if (pos instanceof Number)
+		{
+			int i = ((Number) pos).intValue();
 			if (val instanceof int[]) //1维数组
 			{
 				return Integer.valueOf(((int[]) val)[i]);
@@ -210,8 +202,18 @@ public class ArithmeticArray extends Code implements Reference
 			{
 				return ((List) val).get(i);
 			}
+		}
 
-			throw new ScriptRuntimeException(this, factors, "无法处理的数组运算 - " + toText("", true) + " is " + val);
+		if (val instanceof Map)
+		{
+			return ((Map<?, ?>) val).get(pos);
+		}
+		else if (val instanceof Factors)
+		{
+			return ((Factors) val).get(pos == null ? null : pos.toString());
+		}
+
+		throw new ScriptRuntimeException(this, factors, "无法处理的数组运算 - " + toText("", true) + " is " + val);
 	}
 
 	@Override

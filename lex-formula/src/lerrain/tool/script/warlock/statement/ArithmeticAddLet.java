@@ -7,6 +7,7 @@ import java.util.Map;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.ScriptRuntimeException;
+import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.WriteVariable;
@@ -63,6 +64,13 @@ public class ArithmeticAddLet extends Arithmetic2Elements implements WriteVariab
 			else if (l instanceof List)
 			{
 				((List) l).add(r);
+
+				return l;
+			}
+			else if (l instanceof Stack)
+			{
+				if (r instanceof Map)
+					((Stack) l).setAll((Map) r);
 
 				return l;
 			}

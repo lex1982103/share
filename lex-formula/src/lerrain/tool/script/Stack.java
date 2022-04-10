@@ -23,9 +23,8 @@ public class Stack implements VariableFactors
 
 	public Object ROOT; //可一直向上传递，供各层共享，不设置就是底层的factors，中间可以改
 
-	Factors root;
-	
-	Map heap;
+	protected Factors root;
+	protected Map heap;
 
 	BreakListener breakListener;
 

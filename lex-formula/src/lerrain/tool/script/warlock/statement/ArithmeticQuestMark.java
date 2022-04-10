@@ -47,6 +47,14 @@ public class ArithmeticQuestMark extends Code
 			throw new SyntaxException("?:运算组合缺少:");
 	}
 
+	/**
+	 * var A = request.AAA; //"0" "Y" "false"
+	 * var x = A ? 1 : 0
+	 * print(x);
+	 *
+	 * @param factors
+	 * @return
+	 */
 	public Object run(Factors factors)
 	{
 		Value v = Value.valueOf(l, factors);
@@ -59,13 +67,18 @@ public class ArithmeticQuestMark extends Code
 //
 //			Code[] c = (Code[])ro;
 
-			if (v.booleanValue())
-				return r1.run(factors);
-			else
-				return r2.run(factors);
+			return v.booleanValue() ? r1.run(factors) : r2.run(factors);
+		}
+//		else if (v.isDecimal()) //数字兼容，字符串数字容易出问题，先取消
+//		{
+//			return v.intValue() == 0 ? r2.run(factors) : r1.run(factors);
+//		}
+		else //对象
+		{
+			return v.isNull() ? r2.run(factors) : r1.run(factors);
 		}
 
-		throw new ScriptRuntimeException(this, factors, "?:组合运算要求问号左侧值为boolean类型");
+		//throw new ScriptRuntimeException(this, factors, "?:组合运算要求问号左侧值为boolean类型");
 	}
 
 	@Override

@@ -67,7 +67,7 @@ public class ArithmeticAddLet extends Arithmetic2Elements implements WriteVariab
 
 				return l;
 			}
-			else if (l instanceof Stack)
+			else if (l instanceof Stack) //会强制在最外层赋值，没有就declare，并不会向上查找覆盖
 			{
 				if (r instanceof Map)
 					((Stack) l).setAll((Map) r);

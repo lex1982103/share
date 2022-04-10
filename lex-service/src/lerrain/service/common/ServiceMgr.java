@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 public class ServiceMgr
 {
@@ -561,9 +564,9 @@ public class ServiceMgr
                     @Override
                     public int getIndex(Object req)
                     {
-                        if (req instanceof JSONObject)
+                        if (req instanceof Map)
                         {
-                            JSONObject m = (JSONObject)req;
+                            Map m = (Map)req;
                             for (String str : dispatch)
                             {
                                 Object o = m.get(str);

@@ -47,6 +47,7 @@
 package lerrain.tool.script;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
@@ -143,6 +144,8 @@ public class Script extends Code
 
 	public static CompileListener compileListener;
 	public static PlaybackListener playbackListener;
+
+	public static ExecutorService EXECUTOR;
 
 	/**
 	 * 如果是最外层，那么遇到return不能直接把Result(return)对象返回，需要把他的真实值返回。

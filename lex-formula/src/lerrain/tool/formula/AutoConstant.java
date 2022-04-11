@@ -7,5 +7,5 @@ package lerrain.tool.formula;
  */
 public interface AutoConstant
 {
-    Object run();
+    Object get();
 }

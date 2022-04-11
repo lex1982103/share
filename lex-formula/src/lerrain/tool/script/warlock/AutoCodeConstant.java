@@ -2,6 +2,7 @@ package lerrain.tool.script.warlock;
 
 import lerrain.tool.formula.AutoConstant;
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.Script;
 
 /**
  * var AGENT := Env('agent');
@@ -20,7 +21,7 @@ import lerrain.tool.formula.Factors;
  *   computed = true;
  *   v = r.run(f);
  */
-public class AutoCodeConstant implements AutoConstant
+public class AutoCodeConstant implements AutoConstant, Runnable
 {
     boolean computed = false;
 
@@ -33,10 +34,13 @@ public class AutoCodeConstant implements AutoConstant
     {
         this.r = r;
         this.f = f;
+
+        if (Script.EXECUTOR != null) //实时开始
+            Script.EXECUTOR.submit(this);
     }
 
     @Override
-    public synchronized Object run()
+    public synchronized Object get()
     {
         if (computed)
             return v;
@@ -45,5 +49,11 @@ public class AutoCodeConstant implements AutoConstant
         v = r.run(f);
 
         return v;
+    }
+
+    @Override
+    public void run()
+    {
+        get();
     }
 }

@@ -44,7 +44,7 @@ public class Variable extends Code implements Reference
 	public static Object val(Object v, Factors factors)
     {
         if (v instanceof AutoConstant)
-            return ((AutoConstant) v).run();
+            return ((AutoConstant) v).get();
 		if (v instanceof AutoFormula)
 			return ((AutoFormula) v).run(factors);
 

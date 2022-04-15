@@ -75,7 +75,7 @@ public class Syntax
 		if (ws.size() == 1 && type == Words.CHINESE)
 			return new Chinese(ws);
 		
-		return new StatementExpression(ws);
+		return Expression.expressionOf(ws);
 	}
 	
 	/**

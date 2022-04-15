@@ -6,6 +6,7 @@ import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
+import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
@@ -22,7 +23,7 @@ public class StatementIf extends Code
 
 		int left = 1; //条件左括号的位置
 		int right = Syntax.findRightBrace(ws, left + 1);
-		c = new StatementExpression(ws.cut(left + 1, right));
+		c = Expression.expressionOf(ws.cut(left + 1, right));
 		
 		left = right + 1; 
 		int type1 = ws.getType(left);

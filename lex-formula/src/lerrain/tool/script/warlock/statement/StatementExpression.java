@@ -8,6 +8,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 public class StatementExpression extends Code
 {
 	public Code exp;

@@ -14,6 +14,7 @@ import lerrain.tool.script.warlock.function.FunctionTry;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 public class ArithmeticParentheses extends Code
 {
 	public Code body;

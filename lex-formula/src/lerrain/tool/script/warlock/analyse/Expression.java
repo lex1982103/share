@@ -227,7 +227,11 @@ public class Expression
 		{
 			if (pos > 0)
 				return new ArithmeticFunction(ws, pos);
-			return new ArithmeticParentheses(ws, pos);
+
+			//return new ArithmeticParentheses(ws, pos); 减少一层
+
+			int r = Syntax.findRightBrace(ws, pos + 1);
+			return Expression.expressionOf(ws.cut(pos + 1, r));
 		}
 
 		if (arithmetic == Words.ARITHMETIC_KEYWORD || arithmetic == Words.KEYWORD)

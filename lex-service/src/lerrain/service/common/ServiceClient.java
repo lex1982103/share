@@ -1,5 +1,6 @@
 package lerrain.service.common;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import feign.Param;
 import feign.RequestLine;
 
@@ -9,5 +10,5 @@ import feign.RequestLine;
 public interface ServiceClient
 {
     @RequestLine("POST /{link}")
-    public String req(@Param("link") String link, String param, int timeout) throws Exception;
+    public JsonNode req(@Param("link") String link, Object param, int timeout) throws Exception;
 }

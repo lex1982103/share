@@ -1,11 +1,19 @@
 package lerrain.service.common;
 
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.JsonNode;
 import lerrain.tool.Common;
-import lerrain.tool.Network;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
+import javax.net.ssl.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.*;
 
 public class ServiceMgr
@@ -105,7 +113,7 @@ public class ServiceMgr
      * @param param
      * @return
      */
-    public boolean callback(String key, Object... param)
+    public Object callback(String key, Object... param)
     {
         String[] keys = key.split(";");
         Client client = getClient(keys[0], Integer.parseInt(keys[1]));
@@ -114,15 +122,7 @@ public class ServiceMgr
         req.put("key", keys[3]);
         req.put("param", param);
 
-        try
-        {
-            callStr(client, keys[2], Json.write(req), SERVICE_TIME_OUT);
-            return true;
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
+        return reqVal(client, keys[2], req, null, SERVICE_TIME_OUT);
     }
 
     public void setLog(String service, int level)
@@ -145,29 +145,29 @@ public class ServiceMgr
         return getServers(str).getClient(index);
     }
 
-    public Map req(String service, int index, String loc, Object param)
+    public <T> Result<T> req(String service, int index, String loc, Object param, Class<T> clazz)
     {
-        return req(service, index, loc, param, -1);
+        return req(service, index, loc, param, clazz, -1);
     }
 
-    public Map req(String service, int index, String loc, Object param, int timeout)
+    public <T> Result<T> req(String service, int index, String loc, Object param, Class<T> clazz, int timeout)
     {
         Client client = getClient(service, index);
-        return req(client, loc, param, timeout);
+        return req(client, loc, param, clazz, timeout);
     }
 
-    public Map req(String service, String loc, Object param)
+    public <T> Result<T> req(String service, String loc, Object param, Class<T> clazz)
     {
-        return req(service, loc, param, -1);
+        return req(service, loc, param, clazz, -1);
     }
 
-    public Map req(String service, String loc, Object param, int timeout)
+    public <T> Result<T> req(String service, String loc, Object param, Class<T> clazz, int timeout)
     {
         Client client = this.getServers(service).getClient(param);
-        return req(client, loc, param, timeout);
+        return req(client, loc, param, clazz, timeout);
     }
 
-    public Map req(Client client, String loc, Object param, int timeout)
+    public <T> Result<T> req(Client client, String loc, Object param, Class<T> clazz, int timeout)
     {
         Object passport = null;
         long t = System.currentTimeMillis();
@@ -177,14 +177,18 @@ public class ServiceMgr
 
         try
         {
-            Map res = Json.parse(call(client, loc, param, timeout));
-
-            String result = (String)res.get("result");
-            if ("error".equals(result))
-                throw new ServiceException((String)res.get("reason"), (List)res.get("detail"));
+            Result res = call(client, loc, param, clazz, timeout);
+            if (res.is("error"))
+                throw new ServiceException(Common.trimStringOf(res.getReason()), res.getDetail());
 
             if (listener != null)
-                listener.onSucc(passport, (int)(System.currentTimeMillis() - t), res);
+            {
+                int t1 = (int)(System.currentTimeMillis() - t);
+                if (res.is("success"))
+                    listener.onSuccess(passport, t1, res);
+                else
+                    listener.onFail(passport, t1, res.getReason());
+            }
 
             return res;
         }
@@ -197,47 +201,45 @@ public class ServiceMgr
         }
     }
 
-    public Object reqVal(String service, String loc, Object param)
+    public <T> T reqVal(String service, String loc, Object param, Class<T> clazz)
     {
-        return reqVal(service, loc, param, -1);
+        return reqVal(getClient(service), loc, param, clazz, -1);
     }
 
-    public Object reqVal(String service, String loc, Object param, int timeout)
+    public <T> T reqVal(String service, String loc, Object param, Class<T> clazz, int timeout)
     {
-        Map res = req(service, loc, param, timeout);
-
-        if (!"success".equals(res.get("result")))
-            throw new ServiceFeedback((String)res.get("reason"), (List)res.get("detail"));
-
-        return res.get("content");
+        return reqVal(getClient(service), loc, param, clazz, timeout);
     }
 
-    public String reqStr(String service, String loc, Object param)
+    public <T> T reqVal(Client client, String loc, Object param, Class<T> clazz)
     {
-        return reqStr(service, loc, param, -1);
+        return reqVal(client, loc, param, clazz, -1);
     }
 
-    public String reqStr(String service, String loc, Object param, int timeout)
+    public <T> T reqVal(Client client, String loc, Object param, Class<T> clazz, int timeout)
     {
-        Client client = this.getServers(service).getClient(param);
-        return callStr(client, loc, param, timeout);
+        Result<T> res = req(client, loc, param, clazz, timeout);
+        if (!res.is("success"))
+            throw new ServiceFeedback(res.getReason(), res.getDetail());
+
+        return res.getContent();
     }
 
-    public String[] reqAll(String service, String loc, Object param)
+    public <T> Result<T>[] reqAll(String service, String loc, Object param, Class<T> clazz)
     {
-        return reqAll(service, loc, param, -1);
+        return reqAll(service, loc, param, clazz, -1);
     }
 
-    public String[] reqAll(String service, String loc, Object param, int timeout)
+    public <T> Result<T>[] reqAll(String service, String loc, Object param, Class<T> clazz, int timeout)
     {
         Client[] clients = this.getServers(service).getAllClient();
-        String[] res = new String[clients.length];
+        Result[] res = new Result[clients.length];
 
         for (int i = 0; i < clients.length; i++)
         {
             try
             {
-                res[i] = callStr(clients[i], loc, param, timeout);
+                res[i] = req(clients[i], loc, param, clazz, timeout);
             }
             catch (Exception e)
             {
@@ -247,57 +249,57 @@ public class ServiceMgr
         return res;
     }
 
-    private String callStr(Client client, String loc, Object param, int timeout)
-    {
-        Object passport = null;
-        long t = System.currentTimeMillis();
-
-        if (listener != null)
-            passport = listener.onBegin(client, loc, param);
-
-        try
-        {
-            String res = call(client, loc, param, timeout);
-
-            if (listener != null)
-                listener.onSucc(passport, (int)(System.currentTimeMillis() - t), res);
-
-            return res;
-        }
-        catch (Exception e)
-        {
-            if (listener != null)
-                listener.onError(passport, (int)(System.currentTimeMillis() - t), e);
-
-            throw e;
-        }
-    }
-
-    private String call(Client client, String loc, Object param, int timeout)
+    public <T> Result<T> call(Client client, String loc, Object param, Class<T> clazz, int timeout)
     {
         Servers servers = client.getServers();
-        String req = null;
 
         try
         {
-            if (param != null)
-            {
-                req = Json.write(param);
-                if (req.length() > JSON_LIMIT)
-                    throw new ServiceException("request body is too large");
-            }
+            Result<T> result;
 
-            String res = client.client.req(loc, req, timeout);
+            JsonNode node = client.client.req(loc, param, timeout);
+            if (node.has("code"))
+            {
+                int code = node.get("code").intValue();
+                if (code == 0)
+                {
+                    if (node.has("data"))
+                        result = Result.success(Json.OM.convertValue(node.get("data"), clazz));
+                    else if (node.has("result"))
+                        result = Result.success(Json.OM.convertValue(node.get("result"), clazz));
+                    else
+                        result = Result.success(null);
+                }
+                else
+                {
+                    result = Result.fail(node.get("message").asText());
+                }
+
+                result.setCode(code);
+            }
+            else
+            {
+                result = new Result();
+                result.setResult(node.get("result").asText());
+                if (result.is(0))
+                    result.setContent(Json.OM.convertValue(node.get("content"), clazz));
+                else
+                {
+                    result.setReason(node.get("reason").asText());
+                    if (node.has("detail"))
+                        result.setDetail(Json.OM.convertValue(node.get("detail"), List.class));
+                }
+            }
 
             synchronized (client)
             {
                 client.moreFail = 0;
             }
 
-            if (servers.level == 1)
-                Log.debug("%s => %s/%s => %s", req, servers.name, loc, res);
+//            if (servers.level == 1)
+//                Log.debug("%s => %s/%s => %s", param == null ? null : param.toString(), servers.name, loc, res);
 
-            return res;
+            return result;
         }
         catch (Exception e)
         {
@@ -309,10 +311,7 @@ public class ServiceMgr
                     client.moreFail = 0;
             }
 
-            if (req != null && req.length() > 4096)
-                req = req.substring(0, 4096) + " ...";
-            Log.error("request: <" + servers.name + ">" + client.getUrl() + "/" + loc + " -- " + req + " -- " + e.getMessage());
-
+            Log.error("request: <" + servers.name + ">" + client.getUrl() + "/" + loc + " -- " + (param == null ? null : param.toString()) + " -- " + e.getMessage());
             throw new ServiceException("request: <" + servers.name + ">" + client.getUrl() + "/" + loc + " -- " + e.getMessage(), e);
         }
     }
@@ -326,28 +325,29 @@ public class ServiceMgr
      * @param param
      * @return
      */
-    public Object ask(String service, String loc, Object param)
+    public <T> T ask(String service, String loc, Object param, Class<T> clazz)
     {
-        return retry(service, loc, param, new int[] {10000, 10000, 10000, 10000, 10000});
+        return retry(service, loc, param, clazz, new int[] {10000, 10000, 10000, 10000, 10000});
     }
 
-    private Object retry(String service, String loc, Object param, int... sleep)
+    private <T> T retry(String service, String loc, Object param, Class<T> clazz, int... sleep)
     {
         try
         {
-            Map res = req(service, loc, param, -1);
+            Result<T> result = req(service, loc, param, clazz,-1);
 
-            if ("success".equals(res.get("result")))
-                return res.get("content");
+            if (result.is("success"))
+                return result.getContent();
 
             //error里面判断过了
-            throw new ServiceFeedback((String)res.get("reason"));
+            throw new ServiceFeedback(result.getReason());
+        }
+        catch (ServiceFeedback sf) //非error不重试
+        {
+            throw sf;
         }
         catch (Exception e3)
         {
-            if (e3 instanceof ServiceFeedback) //非error不重试
-                throw e3;
-
             if (sleep != null && sleep.length > 0)
             {
                 try
@@ -363,7 +363,7 @@ public class ServiceMgr
                 for (int i = 0; i < ns.length; i++)
                     ns[i] = sleep[i + 1];
 
-                return retry(service, loc, param, ns);
+                return retry(service, loc, param, clazz, ns);
             }
         }
 
@@ -399,43 +399,13 @@ public class ServiceMgr
             v.put("time", System.currentTimeMillis());
             list.add(v);
 
-            ServiceMgr.this.req("secure", "action.json", list);
+            ServiceMgr.this.req("secure", "action.json", list, null);
         }
         else
         {
             Log.alert("无法获取secure服务地址");
         }
     }
-
-    /*
-    class JSONEncoder implements Encoder
-    {
-        @Override
-        public void encode(Object o, Type type, RequestTemplate requestTemplate) throws EncodeException
-        {
-            requestTemplate.header("Content-Type", "application/json;charset=utf-8");
-
-            byte[] b = o.toString().getBytes(Util.UTF_8);
-            if (b.length > MAX)
-                throw new RuntimeException("param is too long");
-
-            requestTemplate.body(b, Util.UTF_8);
-        }
-    }
-
-    class JSONDecoder implements Decoder
-    {
-        @Override
-        public Object decode(Response response, Type type) throws IOException, DecodeException, FeignException
-        {
-            try (InputStream is = response.body().asInputStream())
-            {
-                return Common.stringOf(is, "utf-8");
-//                return JSONObject.parse(Common.byteOf(is));
-            }
-        }
-    }
-    */
 
     public class Servers
     {
@@ -648,7 +618,7 @@ public class ServiceMgr
         }
 
         @Override
-        public String req(String link, String param, int timeout) throws Exception
+        public JsonNode req(String link, Object param, int timeout) throws Exception
         {
             String url = link.startsWith("/") ? addr + link : addr + "/" + link;
 
@@ -663,12 +633,80 @@ public class ServiceMgr
                     timeout = time;
             }
 
-            return Network.request(url, param, timeout);
+            return request(url, param, timeout);
         }
 
         public String toString()
         {
             return name + "@" + addr;
+        }
+
+        public JsonNode request(String urlstr, Object param, int timeout) throws Exception
+        {
+            HttpURLConnection conn = null;
+            try
+            {
+                URL url = new URL(urlstr);
+
+                conn = (HttpURLConnection)url.openConnection();
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                conn.setReadTimeout(timeout);
+                conn.setConnectTimeout(timeout);
+                conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+
+                if (conn instanceof HttpsURLConnection)
+                {
+                    SSLContext sslContext = SSLContext.getInstance("SSL");
+                    TrustManager[] tm = {new MyX509TrustManager()};
+                    sslContext.init(null, tm, new java.security.SecureRandom());;
+                    SSLSocketFactory ssf = sslContext.getSocketFactory();
+                    ((HttpsURLConnection) conn).setSSLSocketFactory(ssf);
+                }
+
+                if (param != null)
+                {
+                    try (OutputStream out = conn.getOutputStream())
+                    {
+                        Json.write(param, out);
+                        out.flush();
+                    }
+                }
+
+                try (InputStream in = conn.getInputStream())
+                {
+                    return Json.OM.readTree(in);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (conn != null)
+                    conn.disconnect();
+            }
+        }
+    }
+
+    private static class MyX509TrustManager implements X509TrustManager
+    {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType)  throws CertificateException
+        {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
+        {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers()
+        {
+            return null;
         }
     }
 
@@ -681,16 +719,14 @@ public class ServiceMgr
     {
         public Object onBegin(Client client, String loc, Object param);
 
-        public void onSucc(Object passport, int time, Object res);
+        public void onSuccess(Object passport, int time, Object content);
 
-        @Deprecated
-        public default void onFail(Object passport, int time, Exception e)
+        public default void onFail(Object passport, int time, String reason)
         {
         }
 
         public default void onError(Object passport, int time, Exception e)
         {
-            onFail(passport, time, e);
         }
     }
 }

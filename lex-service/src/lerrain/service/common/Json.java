@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lerrain.tool.Common;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 public class Json
@@ -75,5 +77,15 @@ public class Json
         {
             return null;
         }
+    }
+
+    public static void write(Object val, OutputStream os) throws IOException
+    {
+        OM.writeValue(os, val);
+    }
+
+    public static <T> T read(InputStream is, Class<T> clazz) throws IOException
+    {
+        return OM.readValue(is, clazz);
     }
 }

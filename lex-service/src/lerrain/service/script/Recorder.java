@@ -199,7 +199,7 @@ public class Recorder
         Map req = new HashMap();
         req.put("reqId", reqId);
 
-        Map res = (Map)serviceMgr.reqVal("develop", "script/view_history.json", req);
+        Map res = serviceMgr.reqVal("develop", "script/view_history.json", req, Map.class);
         return DebugUtil.reqHistoryOf(res);
     }
 
@@ -229,7 +229,7 @@ public class Recorder
         Map req = new HashMap();
         req.put("reqId", reqId);
 
-        return (Map) serviceMgr.reqVal("develop","script/load.json", req);
+        return (Map) serviceMgr.reqVal("develop","script/load.json", req, Map.class);
     }
 
     public Map load(String reqKey)
@@ -237,12 +237,12 @@ public class Recorder
         Map req = new HashMap();
         req.put("reqKey", reqKey);
 
-        return (Map) serviceMgr.reqVal("develop","script/load.json", req);
+        return (Map) serviceMgr.reqVal("develop","script/load.json", req, Map.class);
     }
 
     public Object query(Map condition)
     {
-        return serviceMgr.reqVal("develop","script/query.json", condition);
+        return serviceMgr.reqVal("develop","script/query.json", condition, null);
     }
 
     @RequestMapping("/debug/prepare.json")

@@ -2,7 +2,6 @@ package lerrain.service.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class ServiceStat extends PostQueue
             }
 
             @Override
-            public void onSucc(Object o, int time, Object res)
+            public void onSuccess(Object o, int time, Object res)
             {
                 if (o != null)
                 {

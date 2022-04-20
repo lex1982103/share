@@ -160,7 +160,7 @@ public class CacheService
                         req.put("value", tran != null ? tran.toString(value) : value);
                         req.put("timeout", timeout);
 
-                        serviceMgr.req("cache", "save.json", req);
+                        serviceMgr.req("cache", "save.json", req, null);
                     }
                     catch (Exception e)
                     {
@@ -186,7 +186,7 @@ public class CacheService
                 req.put("value", tran != null ? tran.toString(value) : value);
                 req.put("timeout", timeout);
 
-                serviceMgr.req("cache", "save.json", req);
+                serviceMgr.req("cache", "save.json", req, null);
             }
             catch (Exception e)
             {
@@ -220,7 +220,7 @@ public class CacheService
 
             try
             {
-                String res = (String)serviceMgr.reqVal("cache", "load.json", req);
+                String res = (String)serviceMgr.reqVal("cache", "load.json", req, null);
                 if (res != null)
                 {
                     Object value = tran != null ? tran.toObject(res) : res;

@@ -91,6 +91,9 @@ public class Log
     {
         StringBuilder sb = new StringBuilder();
 
+        if (str != null)
+            sb.append(str.toString());
+
         if (e != null)
         {
             String info = null;
@@ -112,12 +115,6 @@ public class Log
 
             if (info == null)
                 info = e.toString();
-
-            if (str != null)
-            {
-                sb.append(str.toString());
-                sb.append("\n");
-            }
 
             if (info == null)
                 sb.append(e.toString());

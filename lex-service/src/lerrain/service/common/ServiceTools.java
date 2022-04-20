@@ -1,5 +1,6 @@
 package lerrain.service.common;
 
+import lerrain.tool.Network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -49,7 +50,8 @@ public class ServiceTools
     {
         try
         {
-            String[] res = serviceMgr.reqStr("tools", "id/req", code).split(",");
+            String[] res = Network.request(serviceMgr.getClient("tools").getUrl() + "/id/req", code).split(",");
+//            String[] res = serviceMgr.reqVal("tools", "id/req", code, String.class).split(",");
 
             r[0] = Long.parseLong(res[0]);
             r[1] = Long.parseLong(res[1]);
@@ -98,14 +100,14 @@ public class ServiceTools
         req.put("service", serviceCode);
         req.put("key", "idempotent/" + key);
 
-        String res = (String)serviceMgr.reqVal("cache", "load.json", req);
+        String res = serviceMgr.reqVal("cache", "load.json", req, String.class);
         if (res != null)
             throw new RuntimeException("重复的请求");
 
         req.put("value", "Y");
         req.put("timeout", 3600000L * 24 * 30); //30天内幂等
 
-        serviceMgr.req("cache", "save.json", req);
+        serviceMgr.req("cache", "save.json", req, null);
     }
 
     /**

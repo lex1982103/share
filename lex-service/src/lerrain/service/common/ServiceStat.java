@@ -1,14 +1,12 @@
 package lerrain.service.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -100,16 +98,10 @@ public class ServiceStat extends PostQueue
             response = null;
         }
 
-        try
-        {
-            if (response instanceof String)
-                response = JSON.parseObject((String)response);
-        }
-        catch (Exception e)
-        {
-        }
+        if (response instanceof String)
+            response = Json.parseNull((String)response);
 
-        JSONObject v = new JSONObject();
+        Map v = new HashMap();
         v.put("service", service);
         v.put("from", service); //废弃，为了兼容
         v.put("index", index);
@@ -135,7 +127,7 @@ public class ServiceStat extends PostQueue
         if ("develop".equals(service)) //debug的报文巨大
             request = null;
 
-        JSONObject v = new JSONObject();
+        Map v = new HashMap();
         v.put("service", service);
         v.put("from", service); //废弃，为了兼容
         v.put("index", index);

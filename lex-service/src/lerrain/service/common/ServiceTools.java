@@ -1,6 +1,5 @@
 package lerrain.service.common;
 
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -85,35 +84,17 @@ public class ServiceTools
         throw new RuntimeException("获取id失败，tools服务异常");
     }
 
-    public static JSONObject success(Object val)
-    {
-        JSONObject res = new JSONObject();
-        res.put("result", "success");
-        res.put("content", val);
-
-        return res;
-    }
-
-    public static JSONObject fail(Object val)
-    {
-        JSONObject res = new JSONObject();
-        res.put("result", "fail");
-        res.put("content", val);
-
-        return res;
-    }
-
     /**
      * synchronized对controller的每个方法来加锁效率比较高，并不需要对这个方法加锁，这里是简单化处理
      * @param param
      */
-    public synchronized void idempotent(JSONObject param)
+    public synchronized void idempotent(Param param)
     {
         String key = param.getString("idempotent");
         if (key == null)
             throw new RuntimeException("no idempotent key");
 
-        JSONObject req = new JSONObject();
+        Map req = new HashMap();
         req.put("service", serviceCode);
         req.put("key", "idempotent/" + key);
 

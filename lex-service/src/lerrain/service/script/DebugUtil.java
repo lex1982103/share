@@ -1,7 +1,6 @@
 package lerrain.service.script;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import lerrain.tool.Common;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Formula;
 import lerrain.tool.script.Script;
@@ -39,7 +38,7 @@ public class DebugUtil
 
     public static Object snapshot(ReqHistory rh)
     {
-        JSONObject r = new JSONObject();
+        Map r = new HashMap();
         r.put("id", rh.id);
         r.put("type", rh.type);
         r.put("target", rh.target);
@@ -64,7 +63,7 @@ public class DebugUtil
 
     public static Object snapshot(ReqReplay.Current current)
     {
-        JSONObject m = new JSONObject();
+        Map m = new HashMap();
         m.put("range", current.range);
         m.put("count", current.count);
         m.put("result", current.result);
@@ -98,29 +97,29 @@ public class DebugUtil
         return opt.resume(type, val);
     }
 
-    public static ReqHistory reqHistoryOf(JSONObject rs)
+    public static ReqHistory reqHistoryOf(Map rs)
     {
         ReqHistory req = new ReqHistory();
-        req.setId(rs.getLong("id"));
-        req.setType(rs.getIntValue("type"));
-        req.setTarget(rs.getString("target"));
+        req.setId(Common.toLong(rs.get("id")));
+        req.setType(Common.intOf(rs.get("type")));
+        req.setTarget((String)rs.get("target"));
 
         if (isScript(req.getType()))
-            req.setRequest(DebugUtil.resume(10, rs.getJSONObject("request")));
+            req.setRequest(DebugUtil.resume(10, rs.get("request")));
         else
             req.setRequest(rs.get("request"));
 
         req.setResponse(rs.get("response"));
-        req.setResult(rs.getIntValue("result"));
-        req.setSpend(rs.getIntValue("spend"));
-        req.setTime(rs.getDate("time").getTime());
-        req.setName(rs.getString("name"));
+        req.setResult(Common.intOf(rs.get("result")));
+        req.setSpend(Common.intOf(rs.get("spend")));
+        req.setTime(Common.longOf(rs.get("time")));
+        req.setName((String)rs.get("name"));
 
-        JSONArray ja = rs.getJSONArray("detail");
+        List ja = (List)rs.get("detail");
         if (ja != null)
         {
             for (int i = 0; i < ja.size(); i++)
-                req.add(reqHistoryOf(ja.getJSONObject(i)));
+                req.add(reqHistoryOf((Map)ja.get(i)));
         }
 
         return req;

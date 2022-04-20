@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>lerrain</groupId>
 	<artifactId>service</artifactId>
-	<version>1.31</version>
+	<version>1.32</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -15,12 +15,12 @@
 		<dependency>
 			<groupId>lerrain</groupId>
 			<artifactId>common</artifactId>
-			<version>1.10.1</version>
+			<version>1.12.1</version>
 		</dependency>
 		<dependency>
 			<groupId>lerrain</groupId>
 			<artifactId>formula</artifactId>
-			<version>7.13</version>
+			<version>7.56</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>

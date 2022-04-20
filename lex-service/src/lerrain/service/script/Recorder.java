@@ -1,8 +1,8 @@
 package lerrain.service.script;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import lerrain.service.common.Param;
 import lerrain.service.common.PostQueue;
+import lerrain.service.common.Result;
 import lerrain.service.common.ServiceMgr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -196,16 +196,16 @@ public class Recorder
 
     public ReqHistory findHistory(Long reqId)
     {
-        JSONObject req = new JSONObject();
+        Map req = new HashMap();
         req.put("reqId", reqId);
 
-        JSONObject res = (JSONObject)serviceMgr.reqVal("develop", "script/view_history.json", req);
+        Map res = (Map)serviceMgr.reqVal("develop", "script/view_history.json", req);
         return DebugUtil.reqHistoryOf(res);
     }
 
     private void store(int bizType, String scriptId, String url, String ip, Object req, ReqHistory rh, int result, Object response, Date date, int spend, boolean overwrite, String seekKey)
     {
-        JSONObject r = new JSONObject();
+        Map r = new HashMap();
         r.put("key", seekKey);
         r.put("service", serviceCode);
         r.put("instance", serviceIndex);
@@ -224,23 +224,23 @@ public class Recorder
         rq.addMsg(r);
     }
 
-    public JSONObject load(Long reqId)
+    public Map load(Long reqId)
     {
-        JSONObject req = new JSONObject();
+        Map req = new HashMap();
         req.put("reqId", reqId);
 
-        return (JSONObject) JSON.toJSON(serviceMgr.reqVal("develop","script/load.json", req));
+        return (Map) serviceMgr.reqVal("develop","script/load.json", req);
     }
 
-    public JSONObject load(String reqKey)
+    public Map load(String reqKey)
     {
-        JSONObject req = new JSONObject();
+        Map req = new HashMap();
         req.put("reqKey", reqKey);
 
-        return (JSONObject) JSON.toJSON(serviceMgr.reqVal("develop","script/load.json", req));
+        return (Map) serviceMgr.reqVal("develop","script/load.json", req);
     }
 
-    public Object query(JSONObject condition)
+    public Object query(Map condition)
     {
         return serviceMgr.reqVal("develop","script/query.json", condition);
     }
@@ -248,7 +248,7 @@ public class Recorder
     @RequestMapping("/debug/prepare.json")
     @ResponseBody
     @CrossOrigin
-    public JSONObject prepare(@RequestBody JSONObject req)
+    public Object prepare(@RequestBody Param req)
     {
         ReqHistory rh = DebugUtil.reqHistoryOf(req);
 
@@ -258,18 +258,13 @@ public class Recorder
         }
 
         Map map = (Map)DebugUtil.snapshot(rh);
-
-        JSONObject res = new JSONObject();
-        res.put("result", "success");
-        res.put("content", map);
-
-        return res;
+        return Result.success(map);
     }
 
     @RequestMapping("/debug/debug.json")
     @ResponseBody
     @CrossOrigin
-    public JSONObject debug(@RequestBody JSONObject req)
+    public Object debug(@RequestBody Param req)
     {
         ReqHistory rh;
 
@@ -281,14 +276,9 @@ public class Recorder
         ReqReplay rs = new ReqReplay(rh);
 
         Long historyId = req.getLong("historyId");
-        int pos = req.getIntValue("pos");
+        int pos = req.getIntVal("pos");
 
         ReqReplay.Current current = this.replay(rs, historyId, pos);
-
-        JSONObject res = new JSONObject();
-        res.put("result", "success");
-        res.put("content", DebugUtil.snapshot(current));
-
-        return res;
+        return Result.success(DebugUtil.snapshot(current));
     }
 }

@@ -1,7 +1,5 @@
 package lerrain.service.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import lerrain.tool.Common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,13 +82,13 @@ public class CacheService
             @Override
             public String toString(Object val)
             {
-                return JSON.toJSONString(val);
+                return Json.writeNull(val);
             }
 
             @Override
             public Object toObject(String str)
             {
-                return JSON.parseObject(str, clazz);
+                return Json.parseNull(str, clazz);
             }
         });
     }
@@ -156,7 +154,7 @@ public class CacheService
                 {
                     try
                     {
-                        JSONObject req = new JSONObject();
+                        Map req = new HashMap();
                         req.put("service", serviceCode);
                         req.put("key", id);
                         req.put("value", tran != null ? tran.toString(value) : value);
@@ -182,7 +180,7 @@ public class CacheService
         {
             try
             {
-                JSONObject req = new JSONObject();
+                Map req = new HashMap();
                 req.put("service", serviceCode);
                 req.put("key", id);
                 req.put("value", tran != null ? tran.toString(value) : value);
@@ -216,7 +214,7 @@ public class CacheService
 
         if (tran != null && serviceCode != null && serviceMgr.hasServers("cache"))
         {
-            JSONObject req = new JSONObject();
+            Map req = new HashMap();
             req.put("service", serviceCode);
             req.put("key", id);
 

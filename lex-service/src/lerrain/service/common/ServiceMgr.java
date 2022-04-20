@@ -1,18 +1,12 @@
 package lerrain.service.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import lerrain.tool.Common;
 import lerrain.tool.Network;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class ServiceMgr
 {
@@ -45,15 +39,15 @@ public class ServiceMgr
         }
     }
 
-    public void setConfig(JSONObject v)
+    public void setConfig(Map<String, List> v)
     {
         for (String srvName : v.keySet())
         {
-            JSONArray list = v.getJSONArray(srvName);
+            List list = v.get(srvName);
             for (int i = 0; i < list.size(); i++)
             {
-                JSONObject rs = list.getJSONObject(i);
-                String uri = rs.getString("uri");
+                Map rs = (Map)list.get(i);
+                String uri = (String)rs.get("uri");
                 int timeout = Common.intOf(rs.get("timeout"), -1);
 
                 if (uri != null && timeout > 0)
@@ -116,13 +110,13 @@ public class ServiceMgr
         String[] keys = key.split(";");
         Client client = getClient(keys[0], Integer.parseInt(keys[1]));
 
-        JSONObject req = new JSONObject();
+        Map req = new HashMap();
         req.put("key", keys[3]);
         req.put("param", param);
 
         try
         {
-            callStr(client, keys[2], req.toJSONString(), SERVICE_TIME_OUT);
+            callStr(client, keys[2], Json.write(req), SERVICE_TIME_OUT);
             return true;
         }
         catch (Exception e)
@@ -151,29 +145,29 @@ public class ServiceMgr
         return getServers(str).getClient(index);
     }
 
-    public JSONObject req(String service, int index, String loc, JSON param)
+    public Map req(String service, int index, String loc, Object param)
     {
         return req(service, index, loc, param, -1);
     }
 
-    public JSONObject req(String service, int index, String loc, JSON param, int timeout)
+    public Map req(String service, int index, String loc, Object param, int timeout)
     {
         Client client = getClient(service, index);
         return req(client, loc, param, timeout);
     }
 
-    public JSONObject req(String service, String loc, JSON param)
+    public Map req(String service, String loc, Object param)
     {
         return req(service, loc, param, -1);
     }
 
-    public JSONObject req(String service, String loc, JSON param, int timeout)
+    public Map req(String service, String loc, Object param, int timeout)
     {
         Client client = this.getServers(service).getClient(param);
         return req(client, loc, param, timeout);
     }
 
-    public JSONObject req(Client client, String loc, JSON param, int timeout)
+    public Map req(Client client, String loc, Object param, int timeout)
     {
         Object passport = null;
         long t = System.currentTimeMillis();
@@ -183,11 +177,11 @@ public class ServiceMgr
 
         try
         {
-            JSONObject res = JSONObject.parseObject(call(client, loc, param, timeout));
+            Map res = Json.parse(call(client, loc, param, timeout));
 
-            String result = res.getString("result");
+            String result = (String)res.get("result");
             if ("error".equals(result))
-                throw new ServiceException(res.getString("reason"), res.getJSONArray("detail"));
+                throw new ServiceException((String)res.get("reason"), (List)res.get("detail"));
 
             if (listener != null)
                 listener.onSucc(passport, (int)(System.currentTimeMillis() - t), res);
@@ -199,21 +193,21 @@ public class ServiceMgr
             if (listener != null)
                 listener.onError(passport, (int)(System.currentTimeMillis() - t), e);
 
-            throw e;
+            throw new RuntimeException(e);
         }
     }
 
-    public Object reqVal(String service, String loc, JSON param)
+    public Object reqVal(String service, String loc, Object param)
     {
         return reqVal(service, loc, param, -1);
     }
 
-    public Object reqVal(String service, String loc, JSON param, int timeout)
+    public Object reqVal(String service, String loc, Object param, int timeout)
     {
-        JSONObject res = req(service, loc, param, timeout);
+        Map res = req(service, loc, param, timeout);
 
-        if (!"success".equals(res.getString("result")))
-            throw new ServiceFeedback(res.getString("reason"), res.getJSONArray("detail"));
+        if (!"success".equals(res.get("result")))
+            throw new ServiceFeedback((String)res.get("reason"), (List)res.get("detail"));
 
         return res.get("content");
     }
@@ -288,7 +282,7 @@ public class ServiceMgr
         {
             if (param != null)
             {
-                req = param.toString();
+                req = Json.write(param);
                 if (req.length() > JSON_LIMIT)
                     throw new ServiceException("request body is too large");
             }
@@ -332,22 +326,22 @@ public class ServiceMgr
      * @param param
      * @return
      */
-    public Object ask(String service, String loc, JSON param)
+    public Object ask(String service, String loc, Object param)
     {
         return retry(service, loc, param, new int[] {10000, 10000, 10000, 10000, 10000});
     }
 
-    private Object retry(String service, String loc, JSON param, int... sleep)
+    private Object retry(String service, String loc, Object param, int... sleep)
     {
         try
         {
-            JSONObject res = req(service, loc, param, -1);
+            Map res = req(service, loc, param, -1);
 
-            if ("success".equals(res.getString("result")))
+            if ("success".equals(res.get("result")))
                 return res.get("content");
 
             //error里面判断过了
-            throw new ServiceFeedback(res.getString("reason"));
+            throw new ServiceFeedback((String)res.get("reason"));
         }
         catch (Exception e3)
         {
@@ -396,8 +390,8 @@ public class ServiceMgr
 
         if (getServers("secure").clients.length > 0)
         {
-            JSONArray list = new JSONArray();
-            JSONObject v = new JSONObject();
+            List list = new ArrayList();
+            Map v = new HashMap();
             v.put("from", name);
             v.put("index", index);
             v.put("result", "down");

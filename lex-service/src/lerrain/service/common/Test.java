@@ -1,8 +1,5 @@
 package lerrain.service.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import lerrain.tool.Network;
@@ -89,8 +86,8 @@ lerrain.service.common.ServiceException: request: secure/action.json -- Read tim
         String str = Disk.load(new File("x:/33.txt"), "utf-8");
         str = str.trim();
         System.out.println(str.length());
-        JSONArray ooo = JSON.parseArray(str.trim());
-        System.out.println(ooo.size());
+//        JSONArray ooo = JSON.parseArray(str.trim());
+//        System.out.println(ooo.size());
         if (true)  return;
 
         //        JSONArray json = JSON.parseArray(str.trim());
@@ -212,7 +209,7 @@ lerrain.service.common.ServiceException: request: secure/action.json -- Read tim
             {
                 try
                 {
-                    sm.req("dict", "test.json", new JSONObject());
+//                    sm.req("dict", "test.json", new JSONObject());
                 }
                 catch (Exception e)
                 {
@@ -535,22 +532,22 @@ lerrain.service.common.ServiceException: request: secure/action.json -- Read tim
         }
     }
 
-    private static JSONArray getExceptionStack(Throwable e)
-    {
-        JSONArray list = new JSONArray();
-        list.add(e.getMessage());
-
-        StackTraceElement[] trace = e.getStackTrace();
-        for (StackTraceElement traceElement : trace)
-            list.add("\tat " + traceElement);
-
-        for (Throwable se : e.getSuppressed())
-            list.addAll(getExceptionStack(se));
-
-        Throwable ourCause = e.getCause();
-        if (ourCause != null)
-            list.addAll(getExceptionStack(e.getCause()));
-
-        return list;
-    }
+//    private static JSONArray getExceptionStack(Throwable e)
+//    {
+//        JSONArray list = new JSONArray();
+//        list.add(e.getMessage());
+//
+//        StackTraceElement[] trace = e.getStackTrace();
+//        for (StackTraceElement traceElement : trace)
+//            list.add("\tat " + traceElement);
+//
+//        for (Throwable se : e.getSuppressed())
+//            list.addAll(getExceptionStack(se));
+//
+//        Throwable ourCause = e.getCause();
+//        if (ourCause != null)
+//            list.addAll(getExceptionStack(e.getCause()));
+//
+//        return list;
+//    }
 }

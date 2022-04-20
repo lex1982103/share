@@ -89,6 +89,20 @@ public class Common
 		return defoult;
 	}
 
+	public static double doubleOf(Object val)
+	{
+		if (val instanceof Number)
+		{
+			return ((Number)val).doubleValue();
+		}
+		else if (val instanceof String)
+		{
+			return Double.parseDouble((String) val);
+		}
+
+		throw new NumberFormatException(val + "无法转换为double");
+	}
+
 	public static Long toLong(Object val)
 	{
 		if (val instanceof Number)

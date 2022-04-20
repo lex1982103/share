@@ -1,9 +1,6 @@
 package lerrain.service.common;
 
-import com.alibaba.fastjson.JSONArray;
-
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +13,7 @@ public class PostQueue implements Runnable
     String service, uri;
 
     List msg = new ArrayList();
-    JSONArray retry = new JSONArray();
+    List retry = new ArrayList();
 
     Thread thread;
 
@@ -66,7 +63,7 @@ public class PostQueue implements Runnable
     {
         while (true)
         {
-            JSONArray list = new JSONArray();
+            List list = new ArrayList();
 
             synchronized (msg)
             {
@@ -109,7 +106,7 @@ public class PostQueue implements Runnable
         }
     }
 
-    private void store(JSONArray more)
+    private void store(List more)
     {
         boolean invoke;
 

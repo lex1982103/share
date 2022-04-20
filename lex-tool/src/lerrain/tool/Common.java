@@ -173,6 +173,38 @@ public class Common
 		return defoult;
 	}
 
+	public static long longOf(Object val)
+	{
+		if (val instanceof Number)
+		{
+			return ((Number)val).longValue();
+		}
+		else if (val instanceof Date)
+		{
+			return ((Date)val).getTime();
+		}
+		else if (val instanceof String)
+		{
+			return new BigDecimal((String)val).longValue();
+		}
+
+		throw new NumberFormatException(val + "无法转换为long");
+	}
+
+	public static int intOf(Object val)
+	{
+		if (val instanceof Number)
+		{
+			return ((Number)val).intValue();
+		}
+		else if (val instanceof String)
+		{
+			return new BigDecimal((String)val).intValue();
+		}
+
+		throw new NumberFormatException(val + "无法转换为int");
+	}
+
 	public static long longOf(Object val, long defoult)
 	{
 		if (val instanceof Number)
@@ -196,6 +228,29 @@ public class Common
 		}
 
 		return defoult;
+	}
+
+	public static boolean boolOf(Object val)
+	{
+		if (val instanceof Boolean)
+		{
+			return (Boolean)val;
+		}
+		else if (val instanceof Number)
+		{
+			return ((Number)val).intValue() != 0;
+		}
+		else if (val instanceof String)
+		{
+			if ("Y".equalsIgnoreCase((String)val) || "YES".equalsIgnoreCase((String)val) || "true".equalsIgnoreCase((String)val))
+				return true;
+			if ("N".equalsIgnoreCase((String)val) || "NO".equalsIgnoreCase((String)val) || "false".equalsIgnoreCase((String)val))
+				return false;
+
+			return Integer.parseInt((String)val) == 0;
+		}
+
+		throw new NumberFormatException(val + "无法转换为boolean");
 	}
 
 	public static boolean boolOf(Object val, boolean defoult)

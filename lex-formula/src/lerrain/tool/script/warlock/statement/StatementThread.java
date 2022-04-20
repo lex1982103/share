@@ -61,15 +61,11 @@ public class StatementThread extends Code
 		final Stack stack = Stack.newStack(factors);
 		Object r = pre == null ? null : pre.run(stack);
 
-		Thread th = new Thread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				code.run(stack);
-			}
-		});
-		th.start();
+		Runnable task = () -> code.run(stack);
+		if (Script.EXECUTOR != null)
+			Script.EXECUTOR.submit(task);
+		else
+			new Thread(task).start();
 
 		return r;
 	}

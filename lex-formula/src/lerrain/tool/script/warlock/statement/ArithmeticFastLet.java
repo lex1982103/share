@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.AutoCodeConstant;
 import lerrain.tool.script.warlock.Reference;
@@ -19,8 +20,12 @@ public class ArithmeticFastLet extends Arithmetic2Elements implements WriteVaria
 
 	public Object run(Factors factors)
 	{
-		((Reference)l).let(factors, new AutoCodeConstant(r, factors));
-		
+		AutoCodeConstant acc = new AutoCodeConstant(r, factors);
+		((Reference)l).let(factors, acc);
+
+		if (Script.EXECUTOR != null)
+			Script.EXECUTOR.submit(acc);
+
 		return null;
 	}
 

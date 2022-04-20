@@ -310,8 +310,8 @@ public class Expression
 		if (arithmetic == Words.ADD) return 1000;
 		if (arithmetic == Words.SUB) return 1000;
 
-		if (arithmetic == Words.INTERSECTION) return 1110;
-		if (arithmetic == Words.UNION) return 1100;
+		if (arithmetic == Words.INTERSECTION) return 915;
+		if (arithmetic == Words.UNION) return 910;
 
 		if (arithmetic == Words.AND) return 300;
 		if (arithmetic == Words.OR) return 200;

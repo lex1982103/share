@@ -2,11 +2,17 @@ package lerrain.service.common;
 
 public class Result
 {
+    private static Result SUCCESS = success(null);
+    
     String result;
     Object content;
 
     String reason;
-    Object detail;
+
+    public static Result success()
+    {
+        return SUCCESS;
+    }
 
     public static Result success(Object content)
     {

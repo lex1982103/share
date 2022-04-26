@@ -63,9 +63,9 @@ public class CacheService
     @Autowired
     ServiceMgr serviceMgr;
 
-    Map<String, TimeValue> cache = new ConcurrentHashMap<>();
+    protected Map<String, TimeValue> cache = new ConcurrentHashMap<>();
 
-    Translator tran;
+    protected Translator tran;
 
     ExecutorService es = Executors.newCachedThreadPool();
 
@@ -249,14 +249,14 @@ public class CacheService
         }
     }
 
-    public static interface Translator
+    public interface Translator
     {
-        public String toString(Object val);
+        String toString(Object val);
 
-        public Object toObject(String str);
+        Object toObject(String str);
     }
 
-    private static class TimeValue
+    protected static class TimeValue
     {
         long begin;
         long timeout;
@@ -269,6 +269,11 @@ public class CacheService
             this.timeout = timeout;
 
             resetTime();
+        }
+
+        public Object getValue()
+        {
+            return val.get();
         }
 
         public void resetTime()

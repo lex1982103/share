@@ -54,12 +54,16 @@ public class Syntax
 
 	public static Code sentenceOf(Words ws)
 	{
-		if (ws.getType(ws.size() - 1) == Words.SEMICOLON)
-			ws = ws.cut(0, ws.size() - 1);
-		
-		if (ws.isEmpty())
+		int i = ws.size();
+		for (; i > 0; --i)
+			if (ws.getType(i - 1) != Words.SEMICOLON)
+				break;
+
+		if (i == 0)
 			return null;
-		
+		if (ws.size() > i)
+			ws = ws.cut(0, i);
+
 //		System.out.println(ws);
 
 		int type = ws.getType(0);
@@ -94,7 +98,7 @@ public class Syntax
 			int left = i;
 			i = findSplit(ws, i);
 			i = i >= 0 ? i : size - 1;
-			
+
 			r.add(ws.cut(left, i + 1));
 		}
 		

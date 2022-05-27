@@ -32,8 +32,8 @@ public class FunctionSize implements Function //对list取size，参数是变量
 			else if (r instanceof Map)
 				num = ((Map)r).size();
 
-			if (num < -1)
-				throw new RuntimeException("求size的对象无法识别为数组 - " + r.getClass());
+//			if (num < -1)
+//				throw new RuntimeException("求size的对象无法识别为数组 - " + r.getClass());
 			
 			return Integer.valueOf(num);
 		}

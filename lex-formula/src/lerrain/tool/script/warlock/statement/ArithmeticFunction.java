@@ -192,7 +192,7 @@ public class ArithmeticFunction extends Code
 			if (function instanceof Optimized)
 				return ((Optimized) function).isFixed(mode) && (prt == null || prt.isFixed(mode));
 
-			return true; //函数体默认可以优化
+			return prt == null || prt.isFixed(mode); //函数体默认可以优化
 		}
 
 		return body.isFixed(mode) && (prt == null || prt.isFixed(mode)); //函数时是否固定，无法预知，需要自己设

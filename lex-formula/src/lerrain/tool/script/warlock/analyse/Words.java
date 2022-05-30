@@ -320,7 +320,9 @@ public class Words implements Serializable
 				
 				String w = text.substring(x, i + 1);
 				int type = getSymbolType(w);
-				if (type == Words.COLON) //如果冒号前面是一个string/word/keyword，在前面是一个逗号，那么他就是json/map串中key后面的冒号，不是常规的?:
+				//如果冒号前面是一个string/word/keyword，在前面是一个逗号，那么他就是json/map串中key后面的冒号，不是常规的?:
+				//for(var x1,x2:m) 也符合上诉标准
+				if (type == Words.COLON)
 				{
 					int t1 = ws.getType(ws.size() - 1);
 					int t2 = ws.getType(ws.size() - 2);

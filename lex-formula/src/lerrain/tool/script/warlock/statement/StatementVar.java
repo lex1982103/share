@@ -44,7 +44,7 @@ public class StatementVar extends Code
 				k = i;
                 fast = t == Words.FASTLET;
 			}
-            else if (t == Words.COLON || t == Words.COLON_FLAG)
+            else if (t == Words.COLON || t == Words.COLON_FLAG || t == Words.COLON_SPLIT)
             {
                 if (k < 0) //没遇到=先遇到了:，通常是for(var i, j : map)，这种写法不在这里执行，直接把代码返回到for里面
                 {

@@ -23,7 +23,7 @@ public abstract class Code implements Formula, Optimized
 
 //	List<Code> children;
 
-	public Object flag; //可自己设定的flag
+//	public Object flag; //可自己设定的flag
 
 	public Code(Words words)
 	{
@@ -74,19 +74,20 @@ public abstract class Code implements Formula, Optimized
 		breakPoint = false;
 	}
 
-	//能debug的一定是stack
 	public void debug(Factors factors)
 	{
-		if (!(factors instanceof Stack))
-			return;
-
-		Stack stack = (Stack)factors;
-		if (stack.getDebug() != Stack.RUNNING)
+		if (factors instanceof Stack)
 		{
-			Stack.BreakListener listener = stack.getBreakListener();
+			Stack stack = (Stack) factors;
+			stack.setCurrentCode(this); //非debug状态下，也可以获得当前执行的code，但是只能在最外层的stack获取
 
-			if (listener != null && (this.isBreakPoint() || stack.getDebug() != Stack.DEBUG_BREAK_POINT))
-				listener.onBreak(this, stack);
+			if (stack.getDebug() != Stack.RUNNING)
+			{
+				Stack.BreakListener listener = stack.getBreakListener();
+
+				if (listener != null && (this.isBreakPoint() || stack.getDebug() != Stack.DEBUG_BREAK_POINT))
+					listener.onBreak(this, stack);
+			}
 		}
 	}
 
@@ -217,6 +218,25 @@ public abstract class Code implements Formula, Optimized
 
 	public void replaceChild(int i, Code code)
 	{
+	}
+
+	public void ergodic(ErgodicListener l)
+	{
+		l.begin(this);
+
+		Code[] children = getChildren();
+		for (int i = 0; i < children.length; ++i)
+		{
+			if (l.each(this, i, children[i]))
+				children[i].ergodic(l);
+		}
+	}
+
+	interface ErgodicListener
+	{
+		void begin(Code code);
+
+		boolean each(Code parent, int i, Code code);
 	}
 
 //	public void addChild(Code c)

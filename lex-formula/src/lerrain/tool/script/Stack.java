@@ -21,51 +21,62 @@ public class Stack implements VariableFactors
 
 	public static RuntimeListener runtimeListener;
 
-	public Object ROOT; //可一直向上传递，供各层共享，不设置就是底层的factors，中间可以改
+	public Factors ROOT; //最底层的stack，可一直向上传递，供各层共享（中间可以自己改）
 
-	protected Factors root;
-	protected Map heap;
+	Factors parent;
+	Map heap;
 
 	BreakListener breakListener;
 
 	int debug = RUNNING;
 
-	Code code;
+	Code currentCode;
 
 	public Stack()
 	{
+		ROOT = this;
 	}
 
-	public Stack(Factors root)
+	public Stack(Factors parent)
 	{
-		this(root, null);
+		this(parent, null);
 	}
 
-	public Stack(Factors root, Map heap)
+	public Stack(Factors parent, Map heap)
 	{
-		if (root instanceof Stack)
+		if (parent instanceof Stack)
 		{
-			debug = ((Stack) root).debug;
+			debug = ((Stack) parent).debug;
 
 			if (debug == DEBUG_STEP_OVER) //进了一层，既然是stepover，新的层里即直接略过
 				debug = DEBUG_BREAK_POINT;
 
-			ROOT = ((Stack) root).ROOT;
+			ROOT = ((Stack) parent).ROOT;
 		}
 		else
 		{
-			ROOT = root;
+			ROOT = parent;
 		}
 
-		this.root = root;
+		this.parent = parent;
 		this.heap = heap;
 	}
 
-	public Stack(Map root)
+	public Stack(Map heap)
 	{
-		this.heap = root;
+		this.heap = heap;
 	}
-	
+
+//	public Factors getRoot()
+//	{
+//		return ROOT;
+//	}
+//
+//	public void setRoot(Stack ROOT)
+//	{
+//		this.ROOT = ROOT;
+//	}
+
 	public void declare(String name)
 	{
 		declare(name, null);
@@ -83,8 +94,8 @@ public class Stack implements VariableFactors
 	{
 		if (heap != null && heap.containsKey(name))
 			heap.put(name, value);
-		else if (root instanceof VariableFactors)
-			((VariableFactors)root).set(name, value);
+		else if (parent instanceof VariableFactors)
+			((VariableFactors) parent).set(name, value);
 		else
             throw new RuntimeException(name + "未定义或者不可修改");
 	}
@@ -103,8 +114,8 @@ public class Stack implements VariableFactors
 		if (heap != null && heap.containsKey(name))
 			return true;
 		
-		if (root instanceof Stack)
-			return ((Stack)root).hasVar(name);
+		if (parent instanceof Stack)
+			return ((Stack) parent).hasVar(name);
 		else
 			return false;
 	}
@@ -114,13 +125,13 @@ public class Stack implements VariableFactors
 		if ("this".equals(name))
 			return this;
 		if ("super".equals(name))
-			return root;
+			return parent;
 
 		if (heap != null && heap.containsKey(name))
 			return heap.get(name);
 		
-		if (root != null)
-			return root.get(name);
+		if (parent != null)
+			return parent.get(name);
 		
 		return null;
 	}
@@ -133,7 +144,7 @@ public class Stack implements VariableFactors
 	
 	public Factors getParent()
 	{
-		return root;
+		return parent;
 	}
 
 	public Map getStackMap()
@@ -142,8 +153,8 @@ public class Stack implements VariableFactors
 		if (heap != null)
 			m1.putAll(heap);
 
-		if (root instanceof Stack)
-			m1.put("parent", ((Stack) root).getStackMap());
+		if (parent instanceof Stack)
+			m1.put("parent", ((Stack) parent).getStackMap());
 
 		return m1;
 	}
@@ -158,11 +169,6 @@ public class Stack implements VariableFactors
 		return heap;
 	}
 
-	public Factors getRoot()
-	{
-		return root;
-	}
-
 	public int getDebug()
 	{
 		return debug;
@@ -173,14 +179,14 @@ public class Stack implements VariableFactors
 		this.debug = debug;
 	}
 
-	public Code getCode()
+	public Code getCurrentCode()
 	{
-		return code;
+		return currentCode;
 	}
 
-	public void setCode(Code code)
+	public void setCurrentCode(Code currentCode)
 	{
-		this.code = code;
+		this.currentCode = currentCode;
 	}
 
 	public void setBreakListener(BreakListener breakListener)
@@ -190,21 +196,21 @@ public class Stack implements VariableFactors
 
 	public BreakListener getBreakListener()
 	{
-		if (breakListener == null && root instanceof Stack)
-			return ((Stack)root).getBreakListener();
+		if (breakListener == null && parent instanceof Stack)
+			return ((Stack) parent).getBreakListener();
 
 		return breakListener;
 	}
 
 	public interface BreakListener
 	{
-		public void onBreak(Code code, Stack s);
+		void onBreak(Code code, Stack s);
 
 		/**
 		 * return语句时触发，主要用于定位return的位置
 		 * 没有return正常执行结束以最后一行的值返回的情况下不会触发
 		 */
-		public void onReturn(Code code, Stack s, Object val);
+		void onReturn(Code code, Stack s, Object val);
 	}
 
 	public interface StackFactory

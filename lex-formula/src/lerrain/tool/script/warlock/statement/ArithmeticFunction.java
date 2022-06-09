@@ -13,7 +13,6 @@ import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.FunctionTry;
 import lerrain.tool.script.warlock.function.OptimizedFunction;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class ArithmeticFunction extends Code
@@ -76,6 +75,8 @@ public class ArithmeticFunction extends Code
 
 	public Object run(Factors factors)
 	{
+		super.debug(factors);
+
 		try
 		{
 			Function val = function;
@@ -152,9 +153,6 @@ public class ArithmeticFunction extends Code
 
 				prepare = Script.playbackListener.prepare(recordName);
 			}
-
-			if (factors instanceof Stack)
-				((Stack)factors).setCode(this);
 
 			try
 			{

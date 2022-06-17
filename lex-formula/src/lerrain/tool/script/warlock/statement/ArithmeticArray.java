@@ -229,37 +229,9 @@ public class ArithmeticArray extends Code implements Reference
 
 	public void let(Factors factors, Object value)
 	{
-//		//objectiveC 下NSArray效率过低，这里对二维数组做优化
-//		if (pv != null)
-//		{
-//			Object val = pv.v.run(factors);
-//			
-//			Object[] wrap1 = Wrap.arrayOf(pv.a, factors);
-//			Object[] wrap2 = Wrap.arrayOf(a, factors);
-//			
-//			if (val instanceof int[][]) //2维数组
-//			{
-//				((int[][])val)[Value.intOf(wrap1[0])][Value.intOf(wrap2[0])] = Value.intOf(value);
-//			}
-//			else if (val instanceof double[][]) //2维数组
-//			{
-//				((double[][])val)[Value.intOf(wrap1[0])][Value.intOf(wrap2[0])] = Value.doubleOf(value);
-//			}
-//			
-//			return;
-//		}
-		
 		Object val = v.run(factors);
-//		System.out.println("*****" + val);
-		
-		Object[] wrap = Wrap.arrayOf(a, factors);
-		
-		if (wrap == null || wrap.length != 1)
-		{
-			throw new RuntimeException("无法处理的数组赋值运算，数组下标无法计算");
-		}
-		
-		Object pos = wrap[0];
+		Object pos = a.run(factors);
+
 		if (pos instanceof String)
 		{
 			if (val instanceof Map)
@@ -271,31 +243,31 @@ public class ArithmeticArray extends Code implements Reference
 		}
 		else if (val instanceof int[][]) //2维数组
 		{
-			((int[][])val)[Value.intOf(wrap[0])] = (int[])value;
+			((int[][])val)[Value.intOf(pos)] = (int[])value;
 		}
 		else if (val instanceof double[][]) //2维数组
 		{
-			((double[][])val)[Value.intOf(wrap[0])] = (double[])value;
+			((double[][])val)[Value.intOf(pos)] = (double[])value;
 		}
 		else if (val instanceof double[]) //1维数组
 		{
-			((double[])val)[Value.intOf(wrap[0])] = Value.doubleOf(value);
+			((double[])val)[Value.intOf(pos)] = Value.doubleOf(value);
 		}
 		else if (val instanceof int[]) //1维数组
 		{
-			((int[])val)[Value.intOf(wrap[0])] = Value.intOf(value);
+			((int[])val)[Value.intOf(pos)] = Value.intOf(value);
 		}
 		else if (val instanceof Object[]) //1维数组
 		{
-			((Object[])val)[Value.intOf(wrap[0])] = value;
+			((Object[])val)[Value.intOf(pos)] = value;
 		}
 		else if (val instanceof Object[][]) //2维数组
 		{
-			((Object[][])val)[Value.intOf(wrap[0])] = (Object[])value;
+			((Object[][])val)[Value.intOf(pos)] = (Object[])value;
 		}
 		else if (val instanceof List) //1维数组
 		{
-			((List)val).set(Value.intOf(wrap[0]), value);
+			((List)val).set(Value.intOf(pos), value);
 		}
 		else if (val instanceof Map)
 		{
@@ -303,7 +275,7 @@ public class ArithmeticArray extends Code implements Reference
 		}
 		else
 		{
-			throw new RuntimeException("无法处理的数组赋值运算 - " + val + "[" + wrap[0] + "] = " + value);
+			throw new RuntimeException("无法处理的数组赋值运算 - " + val + "[" + pos + "] = " + value);
 		}
 	}
 }

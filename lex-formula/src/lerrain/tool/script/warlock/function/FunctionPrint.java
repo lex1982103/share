@@ -1,11 +1,11 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
+import lerrain.tool.script.warlock.Code;
 
 import java.io.PrintStream;
 
-public class FunctionPrint implements Function
+public class FunctionPrint implements OptimizedFunction
 {
 	public static PrintStream OUTPUT = System.out;
 
@@ -24,5 +24,11 @@ public class FunctionPrint implements Function
 		}
 		
 		return null;
+	}
+
+	@Override
+	public boolean isFixed(int mode, Code p)
+	{
+		return false;
 	}
 }

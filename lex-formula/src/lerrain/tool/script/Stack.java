@@ -97,7 +97,7 @@ public class Stack implements VariableFactors
 		else if (parent instanceof VariableFactors)
 			((VariableFactors) parent).set(name, value);
 		else
-            throw new RuntimeException(name + "未定义或者不可修改");
+            throw Script.EXC != null ? Script.EXC : new RuntimeException(name + "未定义或者不可修改");
 	}
 	
 	public void setAll(Map map)

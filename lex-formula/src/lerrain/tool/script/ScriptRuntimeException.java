@@ -16,6 +16,23 @@ public class ScriptRuntimeException extends RuntimeException
 
 	Factors factors;
 
+	public ScriptRuntimeException(String detail)
+	{
+		super(detail);
+	}
+
+	public ScriptRuntimeException(Exception e)
+	{
+		super(e);
+	}
+
+	public ScriptRuntimeException(String detail, Factors factors)
+	{
+		super(detail);
+
+		this.factors = factors;
+	}
+
 	public ScriptRuntimeException(Code code, Factors factors, String detail, Exception e)
 	{
 		super(detail, e);

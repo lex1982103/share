@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
@@ -68,7 +69,7 @@ public class ArithmeticAddAdd extends Code implements WriteVariable
 		}
 		catch (Exception e)
 		{
-			throw new ScriptRuntimeException(this, factors, e);
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, e);
 		}
 	}
 

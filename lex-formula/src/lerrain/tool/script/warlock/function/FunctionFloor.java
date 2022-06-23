@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 
 public class FunctionFloor implements Function
 {
@@ -21,6 +23,6 @@ public class FunctionFloor implements Function
 			return d.setScale(scale, BigDecimal.ROUND_FLOOR);
 		}
 		
-		throw new RuntimeException("错误的floor运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的floor运算");
 	}
 }

@@ -1,6 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
@@ -60,10 +61,10 @@ public class ArithmeticSubLet extends Arithmetic2Elements implements WriteVariab
 		}
 		catch (Exception e)
 		{
-			throw new ScriptRuntimeException(this, factors, e);
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, e);
 		}
 
-		throw new RuntimeException("只可以在数字、List或Map上做递减赋值运算");
+		throw Script.EXC != null ? Script.EXC : new RuntimeException("只可以在数字、List或Map上做递减赋值运算");
 	}
 
 	@Override

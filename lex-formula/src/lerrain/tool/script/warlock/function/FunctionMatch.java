@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +26,6 @@ public class FunctionMatch implements Function
 			return r;
 		}
 		
-		throw new RuntimeException("错误的match运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的match运算");
 	}
 }

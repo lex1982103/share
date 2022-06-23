@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Optimized;
 
@@ -110,13 +112,13 @@ public class FunctionTime implements OptimizedFunction
 			}
 			catch (Exception e)
 			{
-				throw new RuntimeException("错误的time运算 - " + e.getMessage());
+				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的time运算 - " + e.getMessage());
 			}
 
-			throw new RuntimeException("timestr不支持的string格式 - " + val);
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("timestr不支持的string格式 - " + val);
 		}
 
-		throw new RuntimeException("timestr不支持的格式 - " + val.getClass().toString());
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("timestr不支持的格式 - " + val.getClass().toString());
 	}
 
 	public static Date getDate(String dateStr, String formatPattern)
@@ -132,7 +134,7 @@ public class FunctionTime implements OptimizedFunction
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(dateStr + " - " + formatPattern + " - " + e.getMessage());
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(dateStr + " - " + formatPattern + " - " + e.getMessage());
 		}
 	}
 

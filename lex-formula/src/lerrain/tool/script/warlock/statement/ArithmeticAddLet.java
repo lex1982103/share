@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
@@ -99,7 +100,7 @@ public class ArithmeticAddLet extends Arithmetic2Elements implements WriteVariab
 		}
 		catch (Exception e)
 		{
-			throw new ScriptRuntimeException(this, factors, e);
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, e);
 		}
 	}
 

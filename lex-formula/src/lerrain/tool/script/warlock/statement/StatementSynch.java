@@ -3,12 +3,10 @@ package lerrain.tool.script.warlock.statement;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
+import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class StatementSynch extends Code
 {
@@ -28,7 +26,7 @@ public class StatementSynch extends Code
 		}
 
 		if (ws.getType(left) != Words.BRACE)
-			throw new RuntimeException("synch 代码体需要以大括号包裹");
+			throw new SyntaxException("synch 代码体需要以大括号包裹");
 
 		int right = Syntax.findRightBrace(ws, left + 1);
 		code = new Script(ws.cut(left + 1, right));

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
@@ -26,7 +27,7 @@ public class ArithmeticLessEqual extends Arithmetic2Elements
 		else if (lo instanceof Date && ro instanceof Date)
 			return Boolean.valueOf(((Date) lo).before((Date) ro) || lo.equals(ro));
 
-		throw new ScriptRuntimeException(this, factors, "大小比较只可以在数字、日期上进行");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "大小比较只可以在数字、日期上进行");
 	}
 
 	public String toText(String space, boolean line)

@@ -59,7 +59,7 @@ public class Constant extends Code
 		}
 		else
 		{
-			throw new RuntimeException("无法识别的常量：" + v);
+			throw Script.EXC != null ? Script.EXC : new RuntimeException("无法识别的常量：" + v);
 		}
 
 //		if (Script.compileListener != null)

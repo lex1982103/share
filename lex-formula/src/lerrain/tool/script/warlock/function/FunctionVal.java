@@ -8,6 +8,7 @@ import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeError;
+import lerrain.tool.script.ScriptRuntimeException;
 
 public class FunctionVal implements Function
 {
@@ -60,6 +61,6 @@ public class FunctionVal implements Function
 			return s;
 		}
 		
-		throw new RuntimeException("错误的val运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的val运算");
 	}
 }

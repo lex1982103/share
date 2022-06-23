@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 
 public class FunctionStrSplit implements Function
 {
@@ -17,6 +19,6 @@ public class FunctionStrSplit implements Function
 			return s.split(r);
 		}
 		
-		throw new RuntimeException("错误的str_split运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的str_split运算");
 	}
 }

@@ -6,6 +6,8 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.FunctionInstable;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Optimized;
 
@@ -21,7 +23,7 @@ public class FunctionRandom implements OptimizedFunction, Function, FunctionInst
 		if (v.length == 1)
 			return random.nextInt(Value.intOf(v[0]));
 		
-		throw new RuntimeException("错误的random运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的random运算");
 	}
 
 	@Override

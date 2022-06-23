@@ -119,9 +119,9 @@ public class ArithmeticFunctionBody extends Code
 		if (f == null)
 		{
 			if (v == null)
-				throw new ScriptRuntimeException(this, factors, "未找到函数 - " + name);
+				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "未找到函数 - " + name);
 			else
-				throw new ScriptRuntimeException(this, factors, "该变量对应的值不是函数体 - " + name + " is " + v.getClass() + ": " + v.toString());
+				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "该变量对应的值不是函数体 - " + name + " is " + v.getClass() + ": " + v.toString());
 		}
 
 		return f;

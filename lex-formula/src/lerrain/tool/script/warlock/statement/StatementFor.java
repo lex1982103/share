@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
+import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.Reference;
@@ -41,7 +42,7 @@ public class StatementFor extends Code
 			type = 2;
 
 			if (!(f1 instanceof StatementVar))
-				throw new RuntimeException("for的:遍历写法，变量var是不可缺少的");
+				throw new SyntaxException("for的:遍历写法，变量var是不可缺少的");
 		}
 		
 		left = right + 1;

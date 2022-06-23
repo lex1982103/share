@@ -6,6 +6,7 @@ import java.util.List;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Stack;
+import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
@@ -49,7 +50,7 @@ public class StatementVar extends Code
                 if (k < 0) //没遇到=先遇到了:，通常是for(var i, j : map)，这种写法不在这里执行，直接把代码返回到for里面
                 {
                     if (!list.isEmpty())
-                        throw new RuntimeException("不支持混写:和=");
+                        throw new SyntaxException("不支持混写:和=");
                     list.add(new ArithmeticColon(ws.cut(1, ws.size()), i - 1));
                     forMode = t;
                     break;
@@ -62,7 +63,7 @@ public class StatementVar extends Code
 			else if (t == Words.COMMA)
 			{
 				if (j < 0)
-					throw new RuntimeException("错误的赋值操作");
+					throw new SyntaxException("错误的赋值操作");
 				if (k >= 0)
                     list.add(fast ? new ArithmeticFastLet(ws.cut(j, i), k - j) : new ArithmeticLet(ws.cut(j, i), k - j));
 
@@ -74,7 +75,7 @@ public class StatementVar extends Code
 		if (k >= 0)
 		{
 			if (j < 0)
-				throw new RuntimeException("末尾错误的赋值操作");
+				throw new SyntaxException("末尾错误的赋值操作");
 
 			list.add(fast ? new ArithmeticFastLet(ws.cut(j), k - j) : new ArithmeticLet(ws.cut(j), k - j));
 		}

@@ -156,7 +156,7 @@ public class ArithmeticFunctionDim extends Code
 			}
 			catch (Interrupt e)
 			{
-				throw new ScriptRuntimeException(ArithmeticFunctionDim.this, p, "can't break/continue a function, use return");
+				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(ArithmeticFunctionDim.this, p, "can't break/continue a function, use return");
 			}
 		}
 

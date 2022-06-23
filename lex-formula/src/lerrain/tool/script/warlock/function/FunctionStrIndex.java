@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 
 public class FunctionStrIndex implements Function
 {
@@ -15,6 +17,6 @@ public class FunctionStrIndex implements Function
 			return new Integer(r.indexOf(r1));
 		}
 		
-		throw new RuntimeException("错误的str_index运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的str_index运算");
 	}
 }

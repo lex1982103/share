@@ -1,9 +1,9 @@
 package lerrain.tool.script.warlock.analyse;
 
+import lerrain.tool.script.SyntaxException;
+
 import java.io.Serializable;
-import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -160,7 +160,7 @@ public class Words implements Serializable
 	public void setType(int index, int type)
 	{
 		if (index >= num)
-			throw new RuntimeException("out of range");
+			throw new SyntaxException("out of range");
 
 		words.get(from + index).d = type;
 	}
@@ -168,7 +168,7 @@ public class Words implements Serializable
 	public void setWord(int index, String word)
 	{
 		if (index >= num)
-			throw new RuntimeException("out of range");
+			throw new SyntaxException("out of range");
 
 		words.get(from + index).c = word;
 	}
@@ -176,7 +176,7 @@ public class Words implements Serializable
 	public String getWord(int index)
 	{
 		if (index >= num)
-			throw new RuntimeException("out of range");
+			throw new SyntaxException("out of range");
 
 		return words.get(from + index).c;
 	}
@@ -184,7 +184,7 @@ public class Words implements Serializable
 	public int getLocation(int index)
 	{
 		if (index >= num)
-			throw new RuntimeException("out of range");
+			throw new SyntaxException("out of range");
 
 		return words.get(from + index).e;
 	}
@@ -197,7 +197,7 @@ public class Words implements Serializable
 	public void add(String word, int type, int loc)
 	{
 		if (words.size() != num)
-			throw new RuntimeException("out of range");
+			throw new SyntaxException("out of range");
 
 		words.add(new Word(word, type, loc));
 
@@ -234,7 +234,7 @@ public class Words implements Serializable
 			i++;
 		}
 
-		throw new RuntimeException("error in formula");
+		throw new SyntaxException("error in formula");
 	}
 	
 	public Words cut(int from, int to)
@@ -593,36 +593,36 @@ public class Words implements Serializable
 		return c >= '0' && c <= '9';
 	}
 
-	public String getWordsKey()
-	{
-		MessageDigest messageDigest = null;
-		try
-		{
-			messageDigest = MessageDigest.getInstance("MD5");
-			messageDigest.reset();
-			messageDigest.update(scriptStr.getBytes("UTF-8"));
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("md5 exception", e);
-		}
-
-		byte[] byteArray = messageDigest.digest();
-
-		StringBuffer md5StrBuff = new StringBuffer();
-		for (int i = 0; i < byteArray.length; i++)
-		{
-			String s = Integer.toHexString(0xFF & byteArray[i]);
-			if (s.length() == 1)
-				md5StrBuff.append("0");
-			md5StrBuff.append(s);
-		}
-
-		md5StrBuff.append('&');
-		md5StrBuff.append(from);
-		md5StrBuff.append('&');
-		md5StrBuff.append(num);
-
-		return md5StrBuff.toString();
-	}
+//	public String getWordsKey()
+//	{
+//		MessageDigest messageDigest = null;
+//		try
+//		{
+//			messageDigest = MessageDigest.getInstance("MD5");
+//			messageDigest.reset();
+//			messageDigest.update(scriptStr.getBytes("UTF-8"));
+//		}
+//		catch (Exception e)
+//		{
+//			throw Script.EXC != null ? Script.EXC : new RuntimeException("md5 exception", e);
+//		}
+//
+//		byte[] byteArray = messageDigest.digest();
+//
+//		StringBuffer md5StrBuff = new StringBuffer();
+//		for (int i = 0; i < byteArray.length; i++)
+//		{
+//			String s = Integer.toHexString(0xFF & byteArray[i]);
+//			if (s.length() == 1)
+//				md5StrBuff.append("0");
+//			md5StrBuff.append(s);
+//		}
+//
+//		md5StrBuff.append('&');
+//		md5StrBuff.append(from);
+//		md5StrBuff.append('&');
+//		md5StrBuff.append(num);
+//
+//		return md5StrBuff.toString();
+//	}
 }

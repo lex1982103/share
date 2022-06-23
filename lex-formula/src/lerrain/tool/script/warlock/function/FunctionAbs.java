@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Counter;
 
 public class FunctionAbs implements Function
@@ -15,6 +17,6 @@ public class FunctionAbs implements Function
 		if (v[0] instanceof Number)
 			return Math.abs(((Number)v[0]).doubleValue());
 
-		throw new RuntimeException("错误的abs运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的abs运算");
 	}
 }

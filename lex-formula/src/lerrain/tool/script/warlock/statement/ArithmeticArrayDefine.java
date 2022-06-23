@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.formula.VariableFactors;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
@@ -50,7 +51,7 @@ public class ArithmeticArrayDefine extends Code
 		else if (type == 2) // @[a, b, c, ...]
 			return Wrap.wrapOf(a, factors).toList();
 		else
-			throw new ScriptRuntimeException(this, factors, "无法识别的数组定义类型");
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "无法识别的数组定义类型");
 	}
 
 	@Override

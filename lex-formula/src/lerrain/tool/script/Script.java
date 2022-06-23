@@ -132,6 +132,8 @@ public class Script extends Code
 	//自定义函数，没加同步锁，初始化的时候加入，不要在执行的时候add
 	public static final Map FUNCTIONS		= new HashMap();
 
+	public static RuntimeException EXC      = null;
+
 	/**
 	 * 高精度模式，java中实际使用BigDecimal来完成
 	 */
@@ -207,7 +209,7 @@ public class Script extends Code
 			factors = Stack.newStack(factors);
 
 		if (Thread.currentThread().isInterrupted())
-			throw new ScriptRuntimeException(this, factors, "interrupt", "thread is interrupted");
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "interrupt", "thread is interrupted");
 
 		if (main)
 		{
@@ -228,7 +230,7 @@ public class Script extends Code
 			}
 			catch (Interrupt e)
 			{
-				throw new ScriptRuntimeException(f, factors, "not in a for/while, can't break or continue");
+				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(f, factors, "not in a for/while, can't break or continue");
 			}
 
 //			if (r instanceof Variable.LoadOnUse)

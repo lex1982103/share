@@ -35,7 +35,7 @@ public class ArithmeticParentheses extends Code
 		}
 		catch (Exception e)
 		{
-			throw new ScriptRuntimeException(this, factors, e);
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, e);
 		}
 	}
 

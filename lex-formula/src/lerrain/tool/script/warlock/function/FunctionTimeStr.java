@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Optimized;
 
@@ -25,7 +27,7 @@ public class FunctionTimeStr implements OptimizedFunction, Function
 			return getString(FunctionTime.getDate(v[0]), (String)v[1]);
 		}
 
-		throw new RuntimeException("错误的timestr运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的timestr运算");
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class FunctionTimeStr implements OptimizedFunction, Function
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("错误的timestr运算", e);
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的timestr运算", e);
 		}
 	}
 }

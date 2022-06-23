@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 
 public class FunctionStrLen implements Function
 {
@@ -19,6 +21,6 @@ public class FunctionStrLen implements Function
 			return str.length();
 		}
 		
-		throw new RuntimeException("错误的str_len运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的str_len运算");
 	}
 }

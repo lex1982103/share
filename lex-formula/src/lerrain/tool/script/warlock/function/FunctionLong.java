@@ -2,6 +2,8 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.ScriptRuntimeException;
 
 import java.util.Date;
 
@@ -20,6 +22,6 @@ public class FunctionLong implements Function
 		if (x instanceof String)
 			return Long.parseLong((String)x);
 
-		throw new RuntimeException("错误的long运算");
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的long运算");
 	}
 }

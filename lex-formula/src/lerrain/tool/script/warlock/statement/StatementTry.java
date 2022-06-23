@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.Stack;
+import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
@@ -51,7 +52,7 @@ public class StatementTry extends Code
 				}
 
 				if (ws.getType(left) != Words.BRACE)
-					throw new RuntimeException("catch后面没有找到代码段");
+					throw new SyntaxException("catch后面没有找到代码段");
 
 				right = Syntax.findRightBrace(ws, left + 1);
 				catchAll = new Script(ws.cut(left + 1, right));

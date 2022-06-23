@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
@@ -53,7 +54,7 @@ public class ArithmeticPointMethod extends Code
 		if (v == null)
 		{
 			if (tk)
-				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText("", true));
+				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "空指针 - " + toText("", true));
 			else
 				return null;
 		}
@@ -65,7 +66,7 @@ public class ArithmeticPointMethod extends Code
 		if (v instanceof List)
 			return ((List)v).get(Integer.parseInt(name));
 
-		throw new ScriptRuntimeException(this, factors, "point左侧只能是map或者factors，目前为" + v.toString());
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "point左侧只能是map或者factors，目前为" + v.toString());
 	}
 
 	@Override

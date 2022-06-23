@@ -110,7 +110,7 @@ public class ArithmeticFunction extends Code
 					catch (Exception e)
 					{
 						if (Thread.currentThread().isInterrupted()) //线程强制中断，不拦截
-							throw new ScriptRuntimeException(this, factors, "interrupted");
+							throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "interrupted");
 
 						ex = e;
 
@@ -173,7 +173,7 @@ public class ArithmeticFunction extends Code
 		}
 		catch (Exception e)
 		{
-			throw new ScriptRuntimeException(this, factors, e);
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, e);
 		}
 	}
 

@@ -1,8 +1,9 @@
 package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Function;
 
-public class FunctionStrTrim implements OptimizedFunction
+public class FunctionStrTrim implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{

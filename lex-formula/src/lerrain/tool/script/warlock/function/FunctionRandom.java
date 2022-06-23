@@ -1,9 +1,6 @@
 package lerrain.tool.script.warlock.function;
 
-import java.util.Random;
-
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.FunctionInstable;
 import lerrain.tool.script.Script;
@@ -11,7 +8,9 @@ import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Optimized;
 
-public class FunctionRandom implements OptimizedFunction, Function, FunctionInstable
+import java.util.Random;
+
+public class FunctionRandom implements OptimizedFunction, FunctionInstable
 {
 	static Random random = new Random();
 	

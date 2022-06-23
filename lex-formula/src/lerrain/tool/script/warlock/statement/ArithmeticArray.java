@@ -4,6 +4,7 @@ import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.formula.VariableFactors;
+import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
@@ -129,7 +130,7 @@ public class ArithmeticArray extends Code implements Reference
 				return ((Function) val).run(p, factors);
 			}
 
-			throw new RuntimeException("无法处理的旧版2维数组运算");
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("无法处理的旧版2维数组运算");
 		}
 
 //			if (val instanceof Map)
@@ -213,7 +214,7 @@ public class ArithmeticArray extends Code implements Reference
 			return ((Factors) val).get(pos == null ? null : pos.toString());
 		}
 
-		throw new ScriptRuntimeException(this, factors, "无法处理的数组运算 - " + toText("", true) + " is " + val);
+		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "无法处理的数组运算 - " + toText("", true) + " is " + val);
 	}
 
 	@Override
@@ -239,7 +240,7 @@ public class ArithmeticArray extends Code implements Reference
 			else if (val instanceof VariableFactors)
 				((VariableFactors)val).set((String)pos, value);
 			else
-				throw new RuntimeException("下标为string时，只可以给Map或VariableFactors赋值");
+				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("下标为string时，只可以给Map或VariableFactors赋值");
 		}
 		else if (val instanceof int[][]) //2维数组
 		{
@@ -275,7 +276,7 @@ public class ArithmeticArray extends Code implements Reference
 		}
 		else
 		{
-			throw new RuntimeException("无法处理的数组赋值运算 - " + val + "[" + pos + "] = " + value);
+			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("无法处理的数组赋值运算 - " + val + "[" + pos + "] = " + value);
 		}
 	}
 }

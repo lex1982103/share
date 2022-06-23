@@ -5,6 +5,7 @@ import lerrain.tool.formula.Function;
 import lerrain.tool.script.ScriptRuntimeError;
 import lerrain.tool.script.ScriptRuntimeThrow;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,9 @@ public class FunctionType implements Function
 
 		if (v[0] instanceof Number)
 			return "decimal";
+
+		if (v[0] instanceof Date)
+			return "date";
 
 		if (v[0] instanceof Map)
 			return "map";

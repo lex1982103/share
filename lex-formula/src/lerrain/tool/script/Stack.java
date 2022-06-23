@@ -21,7 +21,7 @@ public class Stack implements VariableFactors
 
 	public static RuntimeListener runtimeListener;
 
-	public Factors ROOT; //最底层的stack，可一直向上传递，供各层共享（中间可以自己改）
+	public Object ROOT; //最底层的stack，可一直向上传递，供各层共享（中间可以自己改）
 
 	Factors parent;
 	Map heap;

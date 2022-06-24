@@ -1,9 +1,9 @@
 package lerrain.tool.script.warlock.function;
 
-import java.util.List;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
+
+import java.util.List;
 
 public class FunctionFind implements Function
 {

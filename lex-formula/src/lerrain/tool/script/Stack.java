@@ -1,11 +1,11 @@
 package lerrain.tool.script;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.VariableFactors;
 import lerrain.tool.script.warlock.Code;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Stack implements VariableFactors
 {
@@ -97,7 +97,7 @@ public class Stack implements VariableFactors
 		else if (parent instanceof VariableFactors)
 			((VariableFactors) parent).set(name, value);
 		else
-            throw Script.EXC != null ? Script.EXC : new RuntimeException(name + "未定义或者不可修改");
+            throw new RuntimeException(name + "未定义或者不可修改");
 	}
 	
 	public void setAll(Map map)

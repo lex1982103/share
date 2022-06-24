@@ -1,10 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticDivide extends Arithmetic2Elements
@@ -22,7 +19,7 @@ public class ArithmeticDivide extends Arithmetic2Elements
 		if (l instanceof Number && r instanceof Number)
 			return Double.valueOf(((Number)l).doubleValue() / ((Number)r).doubleValue());
 
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "只可以对数字做除法运算: " + toText("", true));
+		throw new ScriptRuntimeException(this, factors, "只可以对数字做除法运算: " + toText("", true));
 	}
 
 	public String toText(String space, boolean line)

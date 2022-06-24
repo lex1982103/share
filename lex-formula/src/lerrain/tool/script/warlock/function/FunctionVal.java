@@ -1,14 +1,14 @@
 package lerrain.tool.script.warlock.function;
 
-import java.util.List;
-import java.util.Map;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeError;
 import lerrain.tool.script.ScriptRuntimeException;
+
+import java.util.List;
+import java.util.Map;
 
 public class FunctionVal implements Function
 {
@@ -61,6 +61,6 @@ public class FunctionVal implements Function
 			return s;
 		}
 		
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的val运算");
+		throw new ScriptRuntimeException("错误的val运算");
 	}
 }

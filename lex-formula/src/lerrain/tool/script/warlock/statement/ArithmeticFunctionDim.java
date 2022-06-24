@@ -7,14 +7,14 @@ import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Optimized;
 import lerrain.tool.script.warlock.Interrupt;
+import lerrain.tool.script.warlock.Optimized;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
 import java.io.Serializable;
 
-public class ArithmeticFunctionDim extends Code
+public class ArithmeticFunctionDim extends Arithmetic
 {
 	String[] param;
 
@@ -156,7 +156,7 @@ public class ArithmeticFunctionDim extends Code
 			}
 			catch (Interrupt e)
 			{
-				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(ArithmeticFunctionDim.this, p, "can't break/continue a function, use return");
+				throw new ScriptRuntimeException(ArithmeticFunctionDim.this, p, "can't break/continue a function, use return");
 			}
 		}
 

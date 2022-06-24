@@ -3,10 +3,6 @@ package lerrain.tool.script;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.warlock.Code;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.Map;
-
 public class ScriptRuntimeThrow extends ScriptRuntimeException
 {
 	Object value;

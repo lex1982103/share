@@ -1,11 +1,10 @@
 package lerrain.tool.script.warlock.function;
 
-import java.util.Date;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
+
+import java.util.Date;
 
 public class FunctionFormat implements Function
 {
@@ -32,6 +31,6 @@ public class FunctionFormat implements Function
 			return String.format(style, vals);
 		}
 
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的format运算");
+		throw new ScriptRuntimeException("错误的format运算");
 	}
 }

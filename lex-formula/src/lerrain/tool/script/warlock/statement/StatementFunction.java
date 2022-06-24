@@ -1,13 +1,9 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Words;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class StatementFunction extends Code
 {

@@ -2,7 +2,6 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 
 import java.lang.reflect.Method;
@@ -122,11 +121,11 @@ public class FunctionReflex implements Function
 		}
 		catch (NoSuchMethodException e)
 		{
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("point运算取值失败，没有该方法 -- 对象：" + v + "，方法名: " + name + "<" + wrap.length + ">", e);
+			throw new ScriptRuntimeException("point运算取值失败，没有该方法 -- 对象：" + v + "，方法名: " + name + "<" + wrap.length + ">", e);
 		}
 		catch (Exception e)
 		{
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("point运算取值失败，方法内部错误 -- 对象：" + v + "，方法名: " + name, e);
+			throw new ScriptRuntimeException("point运算取值失败，方法内部错误 -- 对象：" + v + "，方法名: " + name, e);
 		}
 
 		return value;

@@ -5,7 +5,6 @@ import lerrain.tool.formula.Function;
 import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
-import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Words;
 import lerrain.tool.script.warlock.function.*;
 
@@ -23,7 +22,7 @@ import lerrain.tool.script.warlock.function.*;
  * 如果每个都计算，那么这个函数是没办法运行的。
  * 
  */
-public class ArithmeticFunctionBody extends Code
+public class ArithmeticFunctionBody extends Arithmetic
 {
 	String name;
 	
@@ -119,9 +118,9 @@ public class ArithmeticFunctionBody extends Code
 		if (f == null)
 		{
 			if (v == null)
-				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "未找到函数 - " + name);
+				throw new ScriptRuntimeException(this, factors, "未找到函数 - " + name);
 			else
-				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "该变量对应的值不是函数体 - " + name + " is " + v.getClass() + ": " + v.toString());
+				throw new ScriptRuntimeException(this, factors, "该变量对应的值不是函数体 - " + name + " is " + v.getClass() + ": " + v.toString());
 		}
 
 		return f;

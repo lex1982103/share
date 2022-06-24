@@ -1,14 +1,11 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.script.CompileListener;
-import lerrain.tool.script.Script;
-import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Words;
 
 import java.math.BigDecimal;
 
-public class Constant extends Code
+public class Constant extends Arithmetic
 {
 	Object v;
 
@@ -59,7 +56,7 @@ public class Constant extends Code
 		}
 		else
 		{
-			throw Script.EXC != null ? Script.EXC : new RuntimeException("无法识别的常量：" + v);
+			throw new RuntimeException("无法识别的常量：" + v);
 		}
 
 //		if (Script.compileListener != null)

@@ -5,9 +5,6 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Deprecated
 public class StatementExpression extends Code
 {

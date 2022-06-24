@@ -1,16 +1,14 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 这个类将来要改成个Arithmetic

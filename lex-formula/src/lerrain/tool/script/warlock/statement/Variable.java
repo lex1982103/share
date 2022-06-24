@@ -1,14 +1,13 @@
 package lerrain.tool.script.warlock.statement;
 
-import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.AutoConstant;
 import lerrain.tool.formula.AutoFormula;
+import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.VariableFactors;
-import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class Variable extends Code implements Reference
+public class Variable extends Arithmetic implements Reference
 {
 	String varName;
 

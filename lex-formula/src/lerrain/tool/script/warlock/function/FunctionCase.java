@@ -1,12 +1,11 @@
-	package lerrain.tool.script.warlock.function;
+package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 
-	public class FunctionCase implements Function
+public class FunctionCase implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{
@@ -34,7 +33,7 @@ import lerrain.tool.script.ScriptRuntimeException;
 				return v[num - 1];
 		}
 		
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的case运算");
+		throw new ScriptRuntimeException("错误的case运算");
 	}
 	
 //	public Object run(Object[] v, Factors factors)

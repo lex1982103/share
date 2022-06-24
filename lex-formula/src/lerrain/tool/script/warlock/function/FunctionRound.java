@@ -1,12 +1,11 @@
 package lerrain.tool.script.warlock.function;
 
-import java.math.BigDecimal;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
+
+import java.math.BigDecimal;
 
 public class FunctionRound implements Function
 {
@@ -44,6 +43,6 @@ public class FunctionRound implements Function
 			}
 		}
 		
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的round运算");
+		throw new ScriptRuntimeException("错误的round运算");
 	}
 }

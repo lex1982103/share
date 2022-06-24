@@ -1,12 +1,12 @@
 package lerrain.tool.script.warlock;
 
+import lerrain.tool.formula.Factors;
+import lerrain.tool.formula.Formula;
+import lerrain.tool.formula.Value;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import lerrain.tool.formula.Formula;
-import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Value;
 
 public class Wrap
 {

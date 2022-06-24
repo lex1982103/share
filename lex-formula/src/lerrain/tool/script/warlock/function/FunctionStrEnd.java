@@ -2,7 +2,6 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 
 public class FunctionStrEnd implements Function
@@ -17,6 +16,6 @@ public class FunctionStrEnd implements Function
 			return new Boolean(r.endsWith(r1));
 		}
 		
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的str_end运算");
+		throw new ScriptRuntimeException("错误的str_end运算");
 	}
 }

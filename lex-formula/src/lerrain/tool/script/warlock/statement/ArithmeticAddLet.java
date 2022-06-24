@@ -1,19 +1,16 @@
 package lerrain.tool.script.warlock.statement;
 
+import lerrain.tool.formula.Factors;
+import lerrain.tool.script.ScriptRuntimeException;
+import lerrain.tool.script.Stack;
+import lerrain.tool.script.warlock.Reference;
+import lerrain.tool.script.warlock.WriteVariable;
+import lerrain.tool.script.warlock.analyse.Words;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import lerrain.tool.formula.Factors;
-import lerrain.tool.script.Script;
-import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.Stack;
-import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Reference;
-import lerrain.tool.script.warlock.WriteVariable;
-import lerrain.tool.script.warlock.analyse.Expression;
-import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticAddLet extends Arithmetic2Elements implements WriteVariable
 {
@@ -100,7 +97,7 @@ public class ArithmeticAddLet extends Arithmetic2Elements implements WriteVariab
 		}
 		catch (Exception e)
 		{
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, e);
+			throw new ScriptRuntimeException(this, factors, e);
 		}
 	}
 

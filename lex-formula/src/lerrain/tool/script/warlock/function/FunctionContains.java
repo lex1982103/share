@@ -3,7 +3,6 @@ package lerrain.tool.script.warlock.function;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.statement.ArithmeticApprox;
 
@@ -31,7 +30,7 @@ public class FunctionContains implements Function
 		if (v1.isMap() && v2.isMap())
 			return contains(v1.toMap(), v2.toMap());
 
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("无效的包含操作");
+		throw new ScriptRuntimeException("无效的包含操作");
 	}
 
 	private static boolean contains(Map m1, Map m2)

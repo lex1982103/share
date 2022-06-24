@@ -1,9 +1,6 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Value;
-import lerrain.tool.script.ScriptRuntimeException;
-import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Words;
 
 public class ArithmeticBitAnd extends Arithmetic2Elements

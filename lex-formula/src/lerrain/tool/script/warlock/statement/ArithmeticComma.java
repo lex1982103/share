@@ -9,13 +9,13 @@ import lerrain.tool.script.warlock.analyse.Words;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArithmeticComma extends Code
+public class ArithmeticComma extends Arithmetic
 {
 	List<Code> codes = new ArrayList<>();
 	
 	public ArithmeticComma(Words ws, int i)
 	{
-		super(ws);
+		super(ws, i);
 
 		Code lc = Expression.expressionOf(ws.cut(0, i));
 		Code rc = Expression.expressionOf(ws.cut(i + 1));

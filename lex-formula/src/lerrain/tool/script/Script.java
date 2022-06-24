@@ -46,18 +46,16 @@
  */
 package lerrain.tool.script;
 
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
-import lerrain.tool.script.warlock.statement.StatementExpression;
-import lerrain.tool.script.warlock.statement.Variable;
+import lerrain.tool.script.warlock.statement.Arithmetic;
+
+import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 /**
  * <p>脚本对象</p>
@@ -132,13 +130,12 @@ public class Script extends Code
 	//自定义函数，没加同步锁，初始化的时候加入，不要在执行的时候add
 	public static final Map FUNCTIONS		= new HashMap();
 
-	public static RuntimeException EXC      = null;
+	public static boolean EXC_DETAIL		= true;
 
 	/**
 	 * 高精度模式，java中实际使用BigDecimal来完成
 	 */
 	public static final int PRECISE			= 2;
-	
 	public static final int PRECISE_SCALE	= 10;
 
 	public static boolean STACK_MESSAGE		= true;
@@ -183,7 +180,7 @@ public class Script extends Code
 				codeList.add(code);
 		}
 
-		if (line.size() == 1 && codeList.get(0) instanceof StatementExpression)
+		if (codeList.size() == 1 && codeList.get(0) instanceof Arithmetic)
 			express = true;
 	}
 	
@@ -209,7 +206,7 @@ public class Script extends Code
 			factors = Stack.newStack(factors);
 
 		if (Thread.currentThread().isInterrupted())
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "interrupt", "thread is interrupted");
+			throw new ScriptRuntimeException(this, factors, "thread is interrupted");
 
 		if (main)
 		{
@@ -230,7 +227,7 @@ public class Script extends Code
 			}
 			catch (Interrupt e)
 			{
-				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(f, factors, "not in a for/while, can't break or continue");
+				throw new ScriptRuntimeException(f, factors, "not in a for/while, can't break or continue");
 			}
 
 //			if (r instanceof Variable.LoadOnUse)

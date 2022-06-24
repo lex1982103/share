@@ -2,14 +2,10 @@ package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
-
-import java.util.Arrays;
-import java.util.List;
 
 //带动作，是不能直接fix优化的，不然return/break/throw等动作被优化没了，只剩个值
 public class StatementBreak extends Code

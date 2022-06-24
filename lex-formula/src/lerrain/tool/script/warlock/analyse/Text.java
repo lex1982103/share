@@ -1,11 +1,11 @@
 package lerrain.tool.script.warlock.analyse;
 
+import lerrain.tool.script.SyntaxException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import lerrain.tool.script.SyntaxException;
 
 /**
  * 代码的文本级处理

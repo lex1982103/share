@@ -15,7 +15,7 @@ import lerrain.tool.script.warlock.function.OptimizedFunction;
 
 import java.util.List;
 
-public class ArithmeticFunction extends Code
+public class ArithmeticFunction extends Arithmetic
 {
 	protected Code body, prt;
 	protected Function function;
@@ -110,7 +110,7 @@ public class ArithmeticFunction extends Code
 					catch (Exception e)
 					{
 						if (Thread.currentThread().isInterrupted()) //线程强制中断，不拦截
-							throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "interrupted");
+							throw new ScriptRuntimeException(this, factors, "interrupted");
 
 						ex = e;
 
@@ -173,7 +173,7 @@ public class ArithmeticFunction extends Code
 		}
 		catch (Exception e)
 		{
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, e);
+			throw new ScriptRuntimeException(this, factors, e);
 		}
 	}
 

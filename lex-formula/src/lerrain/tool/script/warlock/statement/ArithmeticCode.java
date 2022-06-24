@@ -5,9 +5,7 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Map;
-
-public class ArithmeticCode extends Code
+public class ArithmeticCode extends Arithmetic
 {
 	Code[] v;
 

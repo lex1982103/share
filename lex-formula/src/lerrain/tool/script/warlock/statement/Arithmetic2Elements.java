@@ -4,13 +4,10 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * 2元运算符
  */
-public abstract class Arithmetic2Elements extends Code
+public abstract class Arithmetic2Elements extends Arithmetic
 {
     public Code l, r;
 

@@ -2,7 +2,6 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 
 public class FunctionStrLower implements Function
@@ -14,6 +13,6 @@ public class FunctionStrLower implements Function
 			return v[0].toString().toLowerCase();
 		}
 		
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的str_lower运算");
+		throw new ScriptRuntimeException("错误的str_lower运算");
 	}
 }

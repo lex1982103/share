@@ -8,9 +8,6 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class StatementParagraph extends Code
 {
 	Code c;

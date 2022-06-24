@@ -9,9 +9,6 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class StatementWhile extends Code
 {
 	Code c, fc;

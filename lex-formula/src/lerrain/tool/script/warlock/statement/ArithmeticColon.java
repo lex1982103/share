@@ -1,13 +1,12 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
 //for循环用，虽然操作都放在for那边做了，但这些代码还涉及赋值之类的操作，fixed默认为false
-public class ArithmeticColon extends Code
+public class ArithmeticColon extends Arithmetic
 {
 	Code[] v;
 

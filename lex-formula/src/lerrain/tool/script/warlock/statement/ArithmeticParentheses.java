@@ -1,21 +1,14 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.formula.Formula;
-import lerrain.tool.formula.Function;
-import lerrain.tool.script.*;
+import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
-import lerrain.tool.script.warlock.function.FunctionTry;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Deprecated
-public class ArithmeticParentheses extends Code
+public class ArithmeticParentheses extends Arithmetic
 {
 	public Code body;
 
@@ -35,7 +28,7 @@ public class ArithmeticParentheses extends Code
 		}
 		catch (Exception e)
 		{
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, e);
+			throw new ScriptRuntimeException(this, factors, e);
 		}
 	}
 

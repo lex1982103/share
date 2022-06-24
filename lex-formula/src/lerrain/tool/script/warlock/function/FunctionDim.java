@@ -3,7 +3,6 @@ package lerrain.tool.script.warlock.function;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.Stack;
-import lerrain.tool.script.warlock.Counter;
 
 import java.util.Map;
 

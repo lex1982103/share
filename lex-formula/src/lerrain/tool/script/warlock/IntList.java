@@ -1,6 +1,6 @@
 package lerrain.tool.script.warlock;
 
-import java.util.*;
+import java.util.Arrays;
 
 public class IntList
 {

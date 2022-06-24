@@ -3,8 +3,6 @@ package lerrain.tool.script;
 import lerrain.tool.formula.Function;
 import lerrain.tool.script.warlock.Code;
 
-import java.io.Serializable;
-
 /**
  * 这种类型的函数，它的参数是由它自己处理的，也就是不一定先把参数计算出来
  * 如：try(A.B, ++C)

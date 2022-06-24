@@ -1,7 +1,6 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.Stack;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
@@ -10,19 +9,17 @@ import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-public class ArithmeticBrace extends Code
+public class ArithmeticBrace extends Arithmetic
 {
 	Code lead;
 	Code content;
 
 	public ArithmeticBrace(Words ws, int i)
 	{
-		super(ws);
+		super(ws, i);
 
 		if (ws.getType(i) != Words.BRACE || ws.getType(ws.size() - 1) != Words.BRACE_R)
 			throw new SyntaxException("找不到数组的右括号");

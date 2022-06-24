@@ -2,7 +2,6 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 
 /**
@@ -24,11 +23,11 @@ public class FunctionCall implements Function
 	public Object run(Object[] v, Factors factors)
 	{
 		if (v.length != 2 && v.length != 3)
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("call函数限定2~3个参数");
+			throw new ScriptRuntimeException("call函数限定2~3个参数");
 		if (!(v[0] instanceof Function))
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("call函数的第1个参数必须为参数表函数指针");
+			throw new ScriptRuntimeException("call函数的第1个参数必须为参数表函数指针");
 		if (v.length == 3 && !(v[2] instanceof Factors))
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("call函数的第3个参数必须为参数表Factors");
+			throw new ScriptRuntimeException("call函数的第3个参数必须为参数表Factors");
 		
 		Object[] param;
 		

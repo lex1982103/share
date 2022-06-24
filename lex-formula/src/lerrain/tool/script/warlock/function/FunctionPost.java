@@ -3,7 +3,6 @@ package lerrain.tool.script.warlock.function;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 
 import java.io.ByteArrayOutputStream;
@@ -11,7 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 public class FunctionPost implements Function
 {
@@ -72,7 +70,7 @@ public class FunctionPost implements Function
 		}
 		catch (Exception e)
 		{
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(e);
+			throw new ScriptRuntimeException(e);
 		}
 		finally
 		{

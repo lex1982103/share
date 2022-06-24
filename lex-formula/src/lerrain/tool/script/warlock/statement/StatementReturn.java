@@ -7,9 +7,6 @@ import lerrain.tool.script.warlock.Interrupt;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class StatementReturn extends Code
 {
 	Code r;

@@ -1,15 +1,14 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.List;
-import java.util.Map;
-
 import lerrain.tool.formula.Factors;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>直接取对象的某个方法</p>
@@ -24,7 +23,7 @@ import lerrain.tool.script.warlock.analyse.Words;
  *
  */
 @Deprecated
-public class ArithmeticPointMethod extends Code
+public class ArithmeticPointMethod extends Arithmetic
 {
 	Code obj;
 	
@@ -54,7 +53,7 @@ public class ArithmeticPointMethod extends Code
 		if (v == null)
 		{
 			if (tk)
-				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "空指针 - " + toText("", true));
+				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText("", true));
 			else
 				return null;
 		}
@@ -66,7 +65,7 @@ public class ArithmeticPointMethod extends Code
 		if (v instanceof List)
 			return ((List)v).get(Integer.parseInt(name));
 
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "point左侧只能是map或者factors，目前为" + v.toString());
+		throw new ScriptRuntimeException(this, factors, "point左侧只能是map或者factors，目前为" + v.toString());
 	}
 
 	@Override

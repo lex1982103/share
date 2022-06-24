@@ -1,18 +1,20 @@
 package lerrain.tool.script.warlock.statement;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Value;
-import lerrain.tool.script.CompileListener;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-public class ArithmeticNew extends Code
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class ArithmeticNew extends Arithmetic
 {
 	String cluss;
 	int type;

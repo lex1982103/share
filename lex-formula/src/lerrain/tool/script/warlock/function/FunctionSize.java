@@ -1,12 +1,11 @@
 package lerrain.tool.script.warlock.function;
 
-import java.util.Collection;
-import java.util.Map;
-
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
+
+import java.util.Collection;
+import java.util.Map;
 
 public class FunctionSize implements Function //对list取size，参数是变量不一定稳定，但变量本身就是个不稳定量，这里返回true不会有问题
 {
@@ -40,6 +39,6 @@ public class FunctionSize implements Function //对list取size，参数是变量
 			return Integer.valueOf(num);
 		}
 		
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的size运算");
+		throw new ScriptRuntimeException("错误的size运算");
 	}
 }

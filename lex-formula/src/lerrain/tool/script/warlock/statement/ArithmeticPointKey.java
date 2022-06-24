@@ -1,9 +1,7 @@
 package lerrain.tool.script.warlock.statement;
 
-import lerrain.tool.formula.AutoFormula;
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.VariableFactors;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
@@ -15,7 +13,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-public class ArithmeticPointKey extends Code implements Reference
+public class ArithmeticPointKey extends Arithmetic implements Reference
 {
 	Code l;
 	String key;
@@ -53,7 +51,7 @@ public class ArithmeticPointKey extends Code implements Reference
 		if (v == null)
 		{
 			if (tk)
-				throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "空指针 - " + toText("", true));
+				throw new ScriptRuntimeException(this, factors, "空指针 - " + toText("", true));
 			else
 				return null;
 		}
@@ -106,10 +104,10 @@ public class ArithmeticPointKey extends Code implements Reference
 		}
 		catch (Exception e)
 		{
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, String.format("POINT-KEY失败：%s<%s> / %s，%s", v.toString(), v.getClass().toString(), key, e.toString()));
+			throw new ScriptRuntimeException(this, factors, String.format("POINT-KEY失败：%s<%s> / %s，%s", v.toString(), v.getClass().toString(), key, e.toString()));
 		}
 
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, String.format("POINT-KEY失败：%s<%s> / %s，缺少key", v.toString(), v.getClass().toString(), key));
+		throw new ScriptRuntimeException(this, factors, String.format("POINT-KEY失败：%s<%s> / %s，缺少key", v.toString(), v.getClass().toString(), key));
 	}
 
 	public void let(Factors factors, Object value)
@@ -120,7 +118,7 @@ public class ArithmeticPointKey extends Code implements Reference
 		else if (v instanceof Map)
 			((Map)v).put(key, value);
 		else
-			throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "赋值时，被赋值一方的POINT运算的左侧不是有效类型");
+			throw new ScriptRuntimeException(this, factors, "赋值时，被赋值一方的POINT运算的左侧不是有效类型");
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package lerrain.tool.script.warlock.function;
 
 import lerrain.tool.formula.Factors;
 import lerrain.tool.formula.Function;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 
 import java.util.Date;
@@ -21,6 +20,6 @@ public class FunctionDateStr implements Function
 			return FunctionTimeStr.getString(new Date(System.currentTimeMillis() + d * 3600000L * 24), "yyyy-MM-dd");
 		}
 
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException("错误的timestr运算");
+		throw new ScriptRuntimeException("错误的timestr运算");
 	}
 }

@@ -604,7 +604,7 @@ public class Words implements Serializable
 //		}
 //		catch (Exception e)
 //		{
-//			throw Script.EXC != null ? Script.EXC : new RuntimeException("md5 exception", e);
+//			throw new RuntimeException("md5 exception", e);
 //		}
 //
 //		byte[] byteArray = messageDigest.digest();

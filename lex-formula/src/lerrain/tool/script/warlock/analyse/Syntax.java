@@ -1,14 +1,14 @@
 package lerrain.tool.script.warlock.analyse;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Chinese;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.statement.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 语法分析

@@ -1,9 +1,6 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.script.Script;
-import lerrain.tool.script.warlock.Code;
-import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
 
 import java.util.*;
@@ -80,7 +77,7 @@ public class ArithmeticAdd extends Arithmetic2Elements
 			if (r instanceof Number)
 				return new Date(((Date) l).getTime() + ((Number) r).longValue());
 
-			throw Script.EXC != null ? Script.EXC : new RuntimeException("不支持日期 + " + r);
+			throw new RuntimeException("不支持日期 + " + r);
 		}
 		else
 		{

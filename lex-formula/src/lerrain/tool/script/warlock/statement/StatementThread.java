@@ -7,9 +7,6 @@ import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class StatementThread extends Code
 {
 	Code pre, code;
@@ -28,7 +25,7 @@ public class StatementThread extends Code
 		}
 
 		if (ws.getType(left) != Words.BRACE)
-			throw Script.EXC != null ? Script.EXC : new RuntimeException("thread 代码体需要以大括号包裹");
+			throw new RuntimeException("thread 代码体需要以大括号包裹");
 
 		int right = Syntax.findRightBrace(ws, left + 1);
 		code = new Script(ws.cut(left + 1, right));

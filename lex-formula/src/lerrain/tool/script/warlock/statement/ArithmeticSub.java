@@ -1,7 +1,6 @@
 package lerrain.tool.script.warlock.statement;
 
 import lerrain.tool.formula.Factors;
-import lerrain.tool.script.Script;
 import lerrain.tool.script.ScriptRuntimeException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
@@ -9,7 +8,7 @@ import lerrain.tool.script.warlock.analyse.Words;
 
 import java.util.Date;
 
-public class ArithmeticSub extends Code //有可能是负数，所以不完全是二元运算
+public class ArithmeticSub extends Arithmetic //有可能是负数，所以不完全是二元运算
 {
 	Code l, r;
 
@@ -47,7 +46,7 @@ public class ArithmeticSub extends Code //有可能是负数，所以不完全�
 				return new Date(((Date) l).getTime() - ((Number) r).longValue());
 		}
 
-		throw Script.EXC != null ? Script.EXC : new ScriptRuntimeException(this, factors, "只可以对数字或日期做减法运算：" + l + " - " + r);
+		throw new ScriptRuntimeException(this, factors, "只可以对数字或日期做减法运算：" + l + " - " + r);
 	}
 
 	@Override

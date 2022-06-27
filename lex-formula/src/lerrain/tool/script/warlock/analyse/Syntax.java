@@ -73,7 +73,7 @@ public class Syntax
 			return keywords.get(word).newInstance(ws);
 		else if ("try".equals(word) && ws.getType(1) == Words.BRACE) //try也是个函数，就不好做关键字了，用try后面紧跟一个大括号来识别
 			return new StatementTry(ws);
-		else if (type == Words.BRACE && ws.size() - 1 != i + 1 && ws.getType(i + 2) != Words.COLON_SPLIT)
+		else if (type == Words.BRACE && ws.size() - 1 != i + 1 && i + 2 < ws.size() && ws.getType(i + 2) != Words.COLON_SPLIT)
 			return new StatementParagraph(ws);
 
 		if (ws.size() == 1 && type == Words.CHINESE)

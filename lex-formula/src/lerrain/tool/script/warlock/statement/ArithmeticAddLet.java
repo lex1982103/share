@@ -7,10 +7,7 @@ import lerrain.tool.script.warlock.Reference;
 import lerrain.tool.script.warlock.WriteVariable;
 import lerrain.tool.script.warlock.analyse.Words;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ArithmeticAddLet extends Arithmetic2Elements implements WriteVariable
 {
@@ -59,9 +56,9 @@ public class ArithmeticAddLet extends Arithmetic2Elements implements WriteVariab
 
 				return l;
 			}
-			else if (l instanceof List)
+			else if (l instanceof Collection)
 			{
-				((List) l).add(r);
+				((Collection) l).add(r);
 
 				return l;
 			}

@@ -259,13 +259,15 @@ public class ArithmeticFunction extends Arithmetic
 	@Override
 	public Code[] getChildren()
 	{
-		return new Code[] {prt};
+		return new Code[] {body, prt};
 	}
 
 	@Override
 	public void replaceChild(int i, Code code)
 	{
 		if (i == 0)
+			body = code;
+		else if (i == 1)
 			prt = code;
 	}
 

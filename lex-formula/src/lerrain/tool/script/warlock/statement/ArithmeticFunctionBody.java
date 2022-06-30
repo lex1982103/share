@@ -22,65 +22,13 @@ import lerrain.tool.script.warlock.function.*;
  * 如果每个都计算，那么这个函数是没办法运行的。
  * 
  */
+@Deprecated
 public class ArithmeticFunctionBody extends Arithmetic
 {
 	String name;
 	
 	Function fs;
 
-	static
-	{
-		Script.FUNCTIONS.put("try", new FunctionTry());
-		Script.FUNCTIONS.put("case", new FunctionCase());
-		Script.FUNCTIONS.put("round", new FunctionRound());
-		Script.FUNCTIONS.put("ceil", new FunctionCeil());
-		Script.FUNCTIONS.put("floor", new FunctionFloor());
-		Script.FUNCTIONS.put("format", new FunctionFormat());
-		Script.FUNCTIONS.put("array", new FunctionArray());
-		Script.FUNCTIONS.put("min", new FunctionMin());
-		Script.FUNCTIONS.put("max", new FunctionMax());
-		Script.FUNCTIONS.put("abs", new FunctionAbs());
-		Script.FUNCTIONS.put("pow", new FunctionPow());
-		Script.FUNCTIONS.put("size", new FunctionSize());
-		Script.FUNCTIONS.put("call", new FunctionCall());
-		Script.FUNCTIONS.put("print", new FunctionPrint());
-		Script.FUNCTIONS.put("fill", new FunctionFill());
-		Script.FUNCTIONS.put("sum", new FunctionSum());
-		Script.FUNCTIONS.put("val", new FunctionVal());
-		Script.FUNCTIONS.put("long", new FunctionLong());
-		Script.FUNCTIONS.put("int", new FunctionInteger());
-		Script.FUNCTIONS.put("find", new FunctionFind());
-		Script.FUNCTIONS.put("index", new FunctionIndex());
-		Script.FUNCTIONS.put("str", new FunctionStr());
-		Script.FUNCTIONS.put("str_begin", new FunctionStrBegin());
-		Script.FUNCTIONS.put("str_end", new FunctionStrEnd());
-		Script.FUNCTIONS.put("str_index", new FunctionStrIndex());
-		Script.FUNCTIONS.put("str_split", new FunctionStrSplit());
-		Script.FUNCTIONS.put("str_len", new FunctionStrLen());
-		Script.FUNCTIONS.put("str_upper", new FunctionStrUpper());
-		Script.FUNCTIONS.put("str_lower", new FunctionStrLower());
-		Script.FUNCTIONS.put("str_right", new FunctionStrRight());
-		Script.FUNCTIONS.put("str_trim", new FunctionStrTrim());
-		Script.FUNCTIONS.put("str_replace", new FunctionStrReplace());
-		Script.FUNCTIONS.put("random", new FunctionRandom());
-		Script.FUNCTIONS.put("post", new FunctionPost());
-		Script.FUNCTIONS.put("time", new FunctionTime());
-		Script.FUNCTIONS.put("timestr", new FunctionTimeStr());
-		Script.FUNCTIONS.put("datestr", new FunctionDateStr());
-		Script.FUNCTIONS.put("num", new FunctionNum());
-		Script.FUNCTIONS.put("sleep", new FunctionSleep());
-		Script.FUNCTIONS.put("reflex", new FunctionReflex());
-		Script.FUNCTIONS.put("type", new FunctionType());
-		Script.FUNCTIONS.put("trim", new FunctionTrim());
-		Script.FUNCTIONS.put("match", new FunctionMatch());
-		Script.FUNCTIONS.put("copy", new FunctionCopy());
-		Script.FUNCTIONS.put("contains", new FunctionContains());
-		Script.FUNCTIONS.put("nvl", new FunctionNvl());
-		Script.FUNCTIONS.put("list", new FunctionList());
-		Script.FUNCTIONS.put("notnull", new FunctionNotNull());
-		Script.FUNCTIONS.put("has", new FunctionHas());
-	}
-	
 	public ArithmeticFunctionBody(Words ws, int i)
 	{
 		super(ws, i);

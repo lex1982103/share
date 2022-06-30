@@ -198,7 +198,7 @@ public class Expression
 		if (arithmetic == Words.POINT_METHOD || arithmetic == Words.POINT_METHOD2) return new ArithmeticPointMethod(ws, pos);
 		if (arithmetic == Words.BRACKET) return ArithmeticArray.arrayOf(ws, pos);
 		if (arithmetic == Words.BRACE) return new ArithmeticBrace(ws, pos);
-		if (arithmetic == Words.FUNCTION_BODY) return new ArithmeticFunctionBody(ws, pos);
+//		if (arithmetic == Words.FUNCTION_BODY) return new ArithmeticFunctionBody(ws, pos);
 
 		if (arithmetic == Words.POSITIVE) return new ArithmeticAdd(ws, pos);
 		if (arithmetic == Words.NEGATIVE) return new ArithmeticSub(ws, pos);
@@ -292,7 +292,7 @@ public class Expression
 		if (arithmetic == Words.POINT_METHOD) return 1300;
 		if (arithmetic == Words.POINT_KEY2) return 1300;
 		if (arithmetic == Words.POINT_METHOD2) return 1300;
-		if (arithmetic == Words.FUNCTION_BODY) return 1300;
+//		if (arithmetic == Words.FUNCTION_BODY) return 1300;
 		if (arithmetic == Words.BRACKET) return 1300;
 		if (arithmetic == Words.PRT) return 1300;
 		if (arithmetic == Words.BRACE) return 1230; //优先级高于四则运算，低于new xxx[100] {};

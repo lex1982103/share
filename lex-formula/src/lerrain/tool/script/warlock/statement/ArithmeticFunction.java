@@ -10,15 +10,67 @@ import lerrain.tool.script.warlock.Wrap;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Syntax;
 import lerrain.tool.script.warlock.analyse.Words;
-import lerrain.tool.script.warlock.function.FunctionTry;
-import lerrain.tool.script.warlock.function.OptimizedFunction;
+import lerrain.tool.script.warlock.function.*;
 
 import java.util.List;
 
 public class ArithmeticFunction extends Arithmetic
 {
+	static
+	{
+		Script.FUNCTIONS.put("try", new FunctionTry());
+		Script.FUNCTIONS.put("case", new FunctionCase());
+		Script.FUNCTIONS.put("round", new FunctionRound());
+		Script.FUNCTIONS.put("ceil", new FunctionCeil());
+		Script.FUNCTIONS.put("floor", new FunctionFloor());
+		Script.FUNCTIONS.put("format", new FunctionFormat());
+		Script.FUNCTIONS.put("array", new FunctionArray());
+		Script.FUNCTIONS.put("min", new FunctionMin());
+		Script.FUNCTIONS.put("max", new FunctionMax());
+		Script.FUNCTIONS.put("abs", new FunctionAbs());
+		Script.FUNCTIONS.put("pow", new FunctionPow());
+		Script.FUNCTIONS.put("size", new FunctionSize());
+		Script.FUNCTIONS.put("call", new FunctionCall());
+		Script.FUNCTIONS.put("print", new FunctionPrint());
+		Script.FUNCTIONS.put("fill", new FunctionFill());
+		Script.FUNCTIONS.put("sum", new FunctionSum());
+		Script.FUNCTIONS.put("val", new FunctionVal());
+		Script.FUNCTIONS.put("long", new FunctionLong());
+		Script.FUNCTIONS.put("int", new FunctionInteger());
+		Script.FUNCTIONS.put("find", new FunctionFind());
+		Script.FUNCTIONS.put("index", new FunctionIndex());
+		Script.FUNCTIONS.put("str", new FunctionStr());
+		Script.FUNCTIONS.put("str_begin", new FunctionStrBegin());
+		Script.FUNCTIONS.put("str_end", new FunctionStrEnd());
+		Script.FUNCTIONS.put("str_index", new FunctionStrIndex());
+		Script.FUNCTIONS.put("str_split", new FunctionStrSplit());
+		Script.FUNCTIONS.put("str_len", new FunctionStrLen());
+		Script.FUNCTIONS.put("str_upper", new FunctionStrUpper());
+		Script.FUNCTIONS.put("str_lower", new FunctionStrLower());
+		Script.FUNCTIONS.put("str_right", new FunctionStrRight());
+		Script.FUNCTIONS.put("str_trim", new FunctionStrTrim());
+		Script.FUNCTIONS.put("str_replace", new FunctionStrReplace());
+		Script.FUNCTIONS.put("random", new FunctionRandom());
+		Script.FUNCTIONS.put("post", new FunctionPost());
+		Script.FUNCTIONS.put("time", new FunctionTime());
+		Script.FUNCTIONS.put("timestr", new FunctionTimeStr());
+		Script.FUNCTIONS.put("datestr", new FunctionDateStr());
+		Script.FUNCTIONS.put("num", new FunctionNum());
+		Script.FUNCTIONS.put("sleep", new FunctionSleep());
+		Script.FUNCTIONS.put("reflex", new FunctionReflex());
+		Script.FUNCTIONS.put("type", new FunctionType());
+		Script.FUNCTIONS.put("trim", new FunctionTrim());
+		Script.FUNCTIONS.put("match", new FunctionMatch());
+		Script.FUNCTIONS.put("copy", new FunctionCopy());
+		Script.FUNCTIONS.put("contains", new FunctionContains());
+		Script.FUNCTIONS.put("nvl", new FunctionNvl());
+		Script.FUNCTIONS.put("list", new FunctionList());
+		Script.FUNCTIONS.put("notnull", new FunctionNotNull());
+		Script.FUNCTIONS.put("has", new FunctionHas());
+	}
+
 	protected Code body, prt;
-	protected Function function;
+	protected Function function, innerFunction;
 
 	int fixed = 0;
 
@@ -29,6 +81,9 @@ public class ArithmeticFunction extends Arithmetic
 		int r = Syntax.findRightBrace(ws, i + 1);
 		body = Expression.expressionOf(ws.cut(0, i));
 		prt = Expression.expressionOf(ws.cut(i + 1, r));
+
+		if (body instanceof Variable) //内置函数，参数也直接运算
+			innerFunction = (Function)Script.FUNCTIONS.get(((Variable) body).getVarName());
 
 //		if (Script.compileListener != null) //left!=null才是函数
 //			Script.compileListener.compile(CompileListener.FUNCTION, this);
@@ -85,15 +140,15 @@ public class ArithmeticFunction extends Arithmetic
 			{
 				Object res = body.run(factors);
 
-				if (!(res instanceof Function))
-				{
-					if (res instanceof Formula)
-						return ((Formula) res).run(factors);
-					else
-						return res;
-				}
+				if (res == null)
+					res = innerFunction;
 
-				val = (Function) res;
+				if (res instanceof Function)
+					val = (Function) res;
+				else if (res instanceof Formula)  //考虑去除
+					return ((Formula) res).run(factors);
+				else
+					throw new ScriptRuntimeException(body + "不是函数体");
 			}
 
 			if (val instanceof FunctionTry) //这种方式的try已经作废，虽然还支持，但以后不要使用

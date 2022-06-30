@@ -81,8 +81,8 @@ public class Words implements Serializable
 	public static final int CLASS				= 310;
 
 	public static final int VARIABLE			= 380; //变量
-	public static final int FUNCTION_BODY		= 390; //函数
-	public static final int FUNCTION			= 391; //函数（包括参数部分）
+//	public static final int FUNCTION_BODY		= 390; //函数
+//	public static final int FUNCTION			= 391; //函数（包括参数部分）
 	public static final int METHOD				= 400; //方法
 	public static final int KEY					= 2410; //相对于前方值的KEY
 
@@ -421,10 +421,10 @@ public class Words implements Serializable
 				{
 					setType(i, KEY);
 				}
-				else if (!isPoint && isPrt)
-				{
-					setType(i, FUNCTION_BODY);
-				}
+//				else if (!isPoint && isPrt)
+//				{
+//					setType(i, FUNCTION_BODY);
+//				}
 				else
 				{
 					setType(i, VARIABLE);

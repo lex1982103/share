@@ -1,27 +1,15 @@
 package lerrain.service.common;
 
-import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import lerrain.tool.Common;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
-import javax.net.ssl.*;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
 public class ServiceMgr
 {
-    public static int SPEND_SLOW = 300;
-    public static int SERVICE_TIME_OUT = 500;
-    public static int JSON_LIMIT = 1024 * 1024 * 20;
-
     @Value("${sys.code:null}")
     String serviceCode;
 
@@ -29,12 +17,9 @@ public class ServiceMgr
     String serviceIndex;
 
     @Resource
-    private Environment env;
+    Environment env;
 
-    Random ran = new Random();
-
-    Map<String, Servers> map = new HashMap<>();
-    Map<String, Integer> reqTimeout = new HashMap<>();
+    Map<String, Service> map = new HashMap<>();
 
     ServiceListener listener;
 
@@ -42,8 +27,8 @@ public class ServiceMgr
     {
         for (Map.Entry<String, Object> e : json.entrySet())
         {
-            Servers servers = getServers(e.getKey());
-            servers.resetClients(Common.trimStringOf(e.getValue()));
+            Service service = getService(e.getKey());
+            service.resetClients(Common.trimStringOf(e.getValue()));
         }
     }
 
@@ -51,55 +36,65 @@ public class ServiceMgr
     {
         for (String srvName : v.keySet())
         {
-            List list = v.get(srvName);
-            for (int i = 0; i < list.size(); i++)
-            {
-                Map rs = (Map)list.get(i);
-                String uri = (String)rs.get("uri");
-                int timeout = Common.intOf(rs.get("timeout"), -1);
-
-                if (uri != null && timeout > 0)
-                {
-                    String reqKey = uri.startsWith("/") ? srvName + uri : srvName + "/" + uri;
-                    reqTimeout.put(reqKey, timeout);
-                }
-            }
+            Service service = map.get(srvName);
+            if (service != null)
+                service.setConfig(v.get(srvName));
         }
     }
 
-    public boolean hasServers(String serviceName)
+    public boolean hasClients(String serviceName)
     {
         return map.containsKey(serviceName) || env.containsProperty("service." + serviceName);
     }
 
-    public Servers getServers(String serviceName)
+    public Service getService(String serviceName)
     {
         synchronized (map)
         {
-            Servers servers = map.get(serviceName);
-            if (servers == null)
+            Service service = map.get(serviceName);
+            if (service == null)
             {
-                servers = new Servers(serviceName);
-                servers.resetClients(env.getProperty("service." + serviceName));
-                servers.setDispatch(serviceName);
+                service = new Service(this, serviceName);
+                service.resetClients(env.getProperty("service." + serviceName));
 
-                map.put(serviceName, servers);
+                if (env.containsProperty("dispatch." + serviceName))
+                {
+                    final String[] dispatch = env.getProperty("dispatch." + serviceName).split(",");
+                    service.setDispatch(req ->
+                    {
+                        if (req instanceof Map)
+                        {
+                            Map m = (Map)req;
+                            for (String str : dispatch)
+                            {
+                                Object o = m.get(str);
+
+                                if (o != null)
+                                    return hash(o.toString());
+                            }
+                        }
+
+                        return -1;
+                    });
+                }
+
+                map.put(serviceName, service);
             }
 
-            return servers;
+            return service;
         }
     }
 
-    public void setServerPicker(String serviceName, ServicePicker picker)
+    public void setServicePicker(String serviceName, ServiceClientPicker picker)
     {
-        Servers servers = getServers(serviceName);
-        servers.picker = picker;
+        Service service = getService(serviceName);
+        service.picker = picker;
     }
 
-    public void setDefaultServer(String serviceName, int defaultIndex)
+    public void setDefaultClient(String serviceName, int defaultIndex)
     {
-        Servers servers = getServers(serviceName);
-        servers.defaultIndex = defaultIndex;
+        Service service = getService(serviceName);
+        service.defaultIndex = defaultIndex;
     }
 
     public String getCallbackKey(String uri, String uuid)
@@ -116,33 +111,33 @@ public class ServiceMgr
     public Object callback(String key, Object... param)
     {
         String[] keys = key.split(";");
-        Client client = getClient(keys[0], Integer.parseInt(keys[1]));
+        ServiceClient client = getClient(keys[0], Integer.parseInt(keys[1]));
 
         Map req = new HashMap();
         req.put("key", keys[3]);
         req.put("param", param);
 
-        return reqVal(client, keys[2], req, null, SERVICE_TIME_OUT);
+        return reqVal(client, keys[2], req, null, ServiceClientConnector.REQUEST_TIME_OUT);
     }
 
     public void setLog(String service, int level)
     {
-        getServers(service).level = level;
+        getService(service).level = level;
     }
 
-    public Client[] getAllClient(String str)
+    public ServiceClient[] getAllClient(String str)
     {
-        return getServers(str).getAllClient();
+        return getService(str).getAllClient();
     }
 
-    public Client getClient(String str)
+    public ServiceClient getClient(String str)
     {
-        return getServers(str).getClient(null);
+        return getService(str).getClient(null);
     }
 
-    public Client getClient(String str, int index)
+    public ServiceClient getClient(String str, int index)
     {
-        return getServers(str).getClient(index);
+        return getService(str).getClient(index);
     }
 
     public <T> Result<T> req(String service, int index, String loc, Object param, Class<T> clazz)
@@ -152,7 +147,7 @@ public class ServiceMgr
 
     public <T> Result<T> req(String service, int index, String loc, Object param, Class<T> clazz, int timeout)
     {
-        Client client = getClient(service, index);
+        ServiceClient client = getClient(service, index);
         return req(client, loc, param, clazz, timeout);
     }
 
@@ -163,11 +158,11 @@ public class ServiceMgr
 
     public <T> Result<T> req(String service, String loc, Object param, Class<T> clazz, int timeout)
     {
-        Client client = this.getServers(service).getClient(param);
+        ServiceClient client = this.getService(service).getClient(param);
         return req(client, loc, param, clazz, timeout);
     }
 
-    public <T> Result<T> req(Client client, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> Result<T> req(ServiceClient client, String loc, Object param, Class<T> clazz, int timeout)
     {
         Object passport = null;
         long t = System.currentTimeMillis();
@@ -211,12 +206,12 @@ public class ServiceMgr
         return reqVal(getClient(service), loc, param, clazz, timeout);
     }
 
-    public <T> T reqVal(Client client, String loc, Object param, Class<T> clazz)
+    public <T> T reqVal(ServiceClient client, String loc, Object param, Class<T> clazz)
     {
         return reqVal(client, loc, param, clazz, -1);
     }
 
-    public <T> T reqVal(Client client, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> T reqVal(ServiceClient client, String loc, Object param, Class<T> clazz, int timeout)
     {
         Result<T> res = req(client, loc, param, clazz, timeout);
         if (!res.is("success"))
@@ -232,7 +227,7 @@ public class ServiceMgr
 
     public <T> Result<T>[] reqAll(String service, String loc, Object param, Class<T> clazz, int timeout)
     {
-        Client[] clients = this.getServers(service).getAllClient();
+        ServiceClient[] clients = this.getService(service).getAllClient();
         Result[] res = new Result[clients.length];
 
         for (int i = 0; i < clients.length; i++)
@@ -249,15 +244,15 @@ public class ServiceMgr
         return res;
     }
 
-    public <T> Result<T> call(Client client, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> Result<T> call(ServiceClient client, String loc, Object param, Class<T> clazz, int timeout)
     {
-        Servers servers = client.getServers();
+        Service service = client.getService();
 
         try
         {
             Result<T> result;
 
-            JsonNode node = client.client.req(loc, param, timeout);
+            JsonNode node = client.req(loc, param, timeout);
             if (node.has("code"))
             {
                 int code = node.get("code").intValue();
@@ -311,8 +306,8 @@ public class ServiceMgr
                     client.moreFail = 0;
             }
 
-            Log.error("request: <" + servers.name + ">" + client.getUrl() + "/" + loc + " -- " + (param == null ? null : param.toString()) + " -- " + e.getMessage());
-            throw new ServiceException("request: <" + servers.name + ">" + client.getUrl() + "/" + loc + " -- " + e.getMessage(), e);
+            Log.error("request: <" + service.name + ">" + client.getUrl() + "/" + loc + " -- " + (param == null ? null : param.toString()) + " -- " + e.getMessage());
+            throw new ServiceException("request: <" + service.name + ">" + client.getUrl() + "/" + loc + " -- " + e.getMessage(), e);
         }
     }
 
@@ -380,7 +375,7 @@ public class ServiceMgr
         this.listener = listener;
     }
 
-    public void requestFatal(String name, int index)
+    public void noValidClient(String name, int index)
     {
         if ("secure".equals(name))
         {
@@ -388,7 +383,7 @@ public class ServiceMgr
             return;
         }
 
-        if (getServers("secure").clients.length > 0)
+        if (getService("secure").clients.length > 0)
         {
             List list = new ArrayList();
             Map v = new HashMap();
@@ -404,151 +399,6 @@ public class ServiceMgr
         else
         {
             Log.alert("无法获取secure服务地址");
-        }
-    }
-
-    public class Servers
-    {
-        String name;
-
-        Client[] clients;
-
-        ServicePicker picker;
-
-        int defaultIndex = -1;
-
-        int level = 0;
-
-        public Servers(String name)
-        {
-            this.name = name;
-        }
-
-        public void resetClients(String addrs)
-        {
-            if (addrs == null)
-            {
-                clients = new Client[0];
-                return;
-            }
-
-            String[] url = addrs.split(",");
-
-//            Client[] last = clients;
-
-            clients = new Client[url.length];
-            for (int i = 0; i < url.length; i++)
-            {
-                clients[i] = new Client(this);
-                clients[i].index = i;
-                clients[i].url = Common.trimStringOf(url[i]);
-//                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
-                clients[i].client = new NetworkClient(name, clients[i].url);
-            }
-        }
-
-        public Client[] getAllClient()
-        {
-            return clients;
-        }
-
-        public Client getClient(int index)
-        {
-            if (index < 0)
-                index = ran.nextInt(clients.length);
-
-            Client client = clients[index % clients.length];
-
-            if (client.moreFail >= 3)
-            {
-                long t = System.currentTimeMillis();
-
-                if (t > client.restoreTime)
-                {
-                    synchronized (client)
-                    {
-                        if (client.moreFail >= 5) //连续5次错误
-                        {
-                            client.restoreTime = System.currentTimeMillis() + 3600L;
-                        }
-                        else if (client.moreFail >= 4) //连续4次错误
-                        {
-                            client.restoreTime = System.currentTimeMillis() + 1800L;
-                        }
-                        else if (client.moreFail >= 3) //连续3次错误
-                        {
-                            client.restoreTime = System.currentTimeMillis() + 600L;
-                        }
-                    }
-
-                    /*
-                     * 标机停机
-                     * 标记停机后先给一次机会，如果成功就消除记录，不会停机；如果失败则停机，并错误累加1，好了以后直接累加进入下一次停机，但是也先给一次机会，如果好了停机计划取消
-                     */
-                    requestFatal(name, index);
-                }
-                else //处于无效期，这里用else，而不是另起if（上面的结果可能已经要求停机了），是考虑每次标记失败都要先请求一次，判断是不是好了
-                {
-                    Client res = null;
-
-                    if (clients.length > 1) //多台机器才有调整停机的空间一台机器只能挂了
-                    {
-                        for (Client c : clients)
-                        {
-                            if (t > c.restoreTime) //为0也是大于
-                            {
-                                res = c;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (res != null)
-                        client = res;
-                    else
-                        Log.error("没有可用的client，继续使用有问题的client");
-                }
-            }
-
-            return client;
-        }
-
-        public Client getClient(Object req)
-        {
-            return getClient(picker == null ? defaultIndex : picker.getIndex(req));
-        }
-
-        public void setDispatch(String srvName)
-        {
-            if (env.containsProperty("dispatch." + srvName))
-            {
-                final String[] dispatch = env.getProperty("dispatch." + srvName).split(",");
-                this.picker = new ServicePicker()
-                {
-                    @Override
-                    public int getIndex(Object req)
-                    {
-                        if (req instanceof Map)
-                        {
-                            Map m = (Map)req;
-                            for (String str : dispatch)
-                            {
-                                Object o = m.get(str);
-
-                                if (o != null)
-                                    return hash(o.toString());
-                            }
-                        }
-
-                        return -1;
-                    }
-                };
-            }
-        }
-
-        public String getName()
-        {
-            return name;
         }
     }
 
@@ -570,163 +420,5 @@ public class ServiceMgr
     public int hash(Object key)
     {
         return key.hashCode() & 0x7FFFFFFF;
-    }
-
-    public static class Client
-    {
-        Servers servers;
-
-        ServiceClient client;
-
-        String url;
-
-        int index;
-
-        int moreFail; //连续错误
-        long restoreTime; //连续错误后停机的恢复时间
-
-        public Client(Servers servers)
-        {
-            this.servers = servers;
-        }
-
-        public String getUrl()
-        {
-            return url;
-        }
-
-        public int getIndex()
-        {
-            return index;
-        }
-
-        public Servers getServers()
-        {
-            return servers;
-        }
-    }
-
-    public class NetworkClient implements ServiceClient
-    {
-        String name;
-        String addr;
-
-        public NetworkClient(String name, String addr)
-        {
-            this.name = name;
-            this.addr = addr.endsWith("/") ? addr.substring(0, addr.length() - 1) : addr;
-        }
-
-        @Override
-        public JsonNode req(String link, Object param, int timeout) throws Exception
-        {
-            String url = link.startsWith("/") ? addr + link : addr + "/" + link;
-
-            if (timeout <= 0)
-            {
-                String loc = link.startsWith("/") ? name + link : name + "/" + link;
-                Integer time = reqTimeout.get(loc);
-
-                if (time == null)
-                    timeout = SERVICE_TIME_OUT;
-                else
-                    timeout = time;
-            }
-
-            return request(url, param, timeout);
-        }
-
-        public String toString()
-        {
-            return name + "@" + addr;
-        }
-
-        public JsonNode request(String urlstr, Object param, int timeout) throws Exception
-        {
-            HttpURLConnection conn = null;
-            try
-            {
-                URL url = new URL(urlstr);
-
-                conn = (HttpURLConnection)url.openConnection();
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setReadTimeout(timeout);
-                conn.setConnectTimeout(timeout);
-                conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
-
-                if (conn instanceof HttpsURLConnection)
-                {
-                    SSLContext sslContext = SSLContext.getInstance("SSL");
-                    TrustManager[] tm = {new MyX509TrustManager()};
-                    sslContext.init(null, tm, new java.security.SecureRandom());;
-                    SSLSocketFactory ssf = sslContext.getSocketFactory();
-                    ((HttpsURLConnection) conn).setSSLSocketFactory(ssf);
-                }
-
-                if (param != null)
-                {
-                    try (OutputStream out = conn.getOutputStream())
-                    {
-                        Json.write(param, out);
-                        out.flush();
-                    }
-                }
-
-                try (InputStream in = conn.getInputStream())
-                {
-                    return Json.OM.readTree(in);
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            finally
-            {
-                if (conn != null)
-                    conn.disconnect();
-            }
-        }
-    }
-
-    private static class MyX509TrustManager implements X509TrustManager
-    {
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType)  throws CertificateException
-        {
-        }
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
-        {
-        }
-
-        @Override
-        public X509Certificate[] getAcceptedIssuers()
-        {
-            return null;
-        }
-    }
-
-    public interface ServicePicker
-    {
-        public int getIndex(Object req);
-    }
-
-    public interface ServiceListener
-    {
-        public Object onBegin(Client client, String loc, Object param);
-
-        public void onSuccess(Object passport, int time, Object content);
-
-        public default void onFail(Object passport, int time, String reason)
-        {
-        }
-
-        public default void onError(Object passport, int time, Exception e)
-        {
-        }
     }
 }

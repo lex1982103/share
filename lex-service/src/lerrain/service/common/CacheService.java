@@ -20,43 +20,6 @@ public class CacheService
 {
     public static long TIME_OUT = 3600000L * 24;
 
-    public static final Translator TRANSLATOR_DEFAULT = new Translator()
-    {
-        @Override
-        public String toString(Object val) throws RuntimeException
-        {
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ObjectOutputStream oos = new ObjectOutputStream(baos))
-            {
-                oos.writeObject(val);
-                oos.flush();
-
-                return Common.encodeBase64(baos.toByteArray());
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public Object toObject(String str) throws RuntimeException
-        {
-            try
-            {
-                byte[] b = Common.decodeBase64ToByte(str);
-
-                try (ByteArrayInputStream bais = new ByteArrayInputStream(b); ObjectInputStream oos = new ObjectInputStream(bais))
-                {
-                    return oos.readObject();
-                }
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-    };
-
     @Value("${sys.code:null}")
     String serviceCode;
 
@@ -89,6 +52,46 @@ public class CacheService
             public Object toObject(String str)
             {
                 return Json.parseNull(str, clazz);
+            }
+        });
+    }
+
+    public void setDefaultTranslator()
+    {
+        this.setTranslator(new Translator()
+        {
+            @Override
+            public String toString(Object val) throws RuntimeException
+            {
+                try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ObjectOutputStream oos = new ObjectOutputStream(baos))
+                {
+                    oos.writeObject(val);
+                    oos.flush();
+
+                    return Common.encodeBase64(baos.toByteArray());
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public Object toObject(String str) throws RuntimeException
+            {
+                try
+                {
+                    byte[] b = Common.decodeBase64ToByte(str);
+
+                    try (ByteArrayInputStream bais = new ByteArrayInputStream(b); ObjectInputStream oos = new ObjectInputStream(bais))
+                    {
+                        return oos.readObject();
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
@@ -146,7 +149,7 @@ public class CacheService
         if (memory)
             put(id, value, timeout);
 
-        if (tran != null && serviceCode != null && serviceMgr.hasServers("cache"))
+        if (tran != null && serviceCode != null && serviceMgr.hasClients("cache"))
         {
             es.execute(new Runnable() {
                 @Override
@@ -176,7 +179,7 @@ public class CacheService
         if (memory)
             put(id, value, timeout);
 
-        if (tran != null && serviceCode != null && serviceMgr.hasServers("cache"))
+        if (tran != null && serviceCode != null && serviceMgr.hasClients("cache"))
         {
             try
             {
@@ -212,7 +215,7 @@ public class CacheService
         if (local)
             return get(id);
 
-        if (tran != null && serviceCode != null && serviceMgr.hasServers("cache"))
+        if (tran != null && serviceCode != null && serviceMgr.hasClients("cache"))
         {
             Map req = new HashMap();
             req.put("service", serviceCode);
@@ -220,7 +223,7 @@ public class CacheService
 
             try
             {
-                String res = (String)serviceMgr.reqVal("cache", "load.json", req, null);
+                String res = serviceMgr.reqVal("cache", "load.json", req, null);
                 if (res != null)
                 {
                     Object value = tran != null ? tran.toObject(res) : res;

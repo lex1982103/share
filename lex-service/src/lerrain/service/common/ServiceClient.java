@@ -1,14 +1,54 @@
 package lerrain.service.common;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import feign.Param;
-import feign.RequestLine;
 
-/**
- * Created by lerrain on 2017/8/3.
- */
-public interface ServiceClient
+public class ServiceClient
 {
-    @RequestLine("POST /{link}")
-    public JsonNode req(@Param("link") String link, Object param, int timeout) throws Exception;
+    Service service;
+
+    ServiceClientConnector client;
+
+    String url;
+
+    int index;
+
+    int moreFail; //连续错误
+    long restoreTime; //连续错误后停机的恢复时间
+
+    public ServiceClient(Service service)
+    {
+        this.service = service;
+
+        this.client = new SimpleConnector(service.name, url);
+    }
+
+    public String getUrl()
+    {
+        return url;
+    }
+
+    public int getIndex()
+    {
+        return index;
+    }
+
+    public Service getService()
+    {
+        return service;
+    }
+
+    public JsonNode req(String link, Object param, int timeout) throws Exception
+    {
+        if (timeout <= 0)
+        {
+            Integer time = service.reqTimeout.get(link.startsWith("/") ? link : "/" + link);
+
+            if (time == null)
+                timeout = ServiceClientConnector.REQUEST_TIME_OUT;
+            else
+                timeout = time;
+        }
+
+        return client.req(link, param, timeout);
+    }
 }

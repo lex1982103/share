@@ -33,12 +33,12 @@ public class ServiceStat extends PostQueue
     @PostConstruct
     public void start()
     {
-        serviceMgr.setListener(new ServiceMgr.ServiceListener()
+        serviceMgr.setListener(new ServiceListener()
         {
             @Override
-            public Object onBegin(ServiceMgr.Client client, String s, Object req)
+            public Object onBegin(ServiceClient client, String s, Object req)
             {
-                String name = client.getServers().getName();
+                String name = client.getService().getName();
 
                 if ("secure".equals(name))
                     return null;

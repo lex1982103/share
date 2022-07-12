@@ -1,9 +1,9 @@
 package lerrain.service.script;
 
-import lerrain.service.common.Param;
 import lerrain.service.common.PostQueue;
 import lerrain.service.common.Result;
 import lerrain.service.common.ServiceMgr;
+import lerrain.tool.Common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -199,7 +199,7 @@ public class Recorder
         Map req = new HashMap();
         req.put("reqId", reqId);
 
-        Map res = serviceMgr.reqVal("develop", "script/view_history.json", req, Map.class);
+        Map res = serviceMgr.reqVal("develop", "script/view_history.json", req);
         return DebugUtil.reqHistoryOf(res);
     }
 
@@ -229,7 +229,7 @@ public class Recorder
         Map req = new HashMap();
         req.put("reqId", reqId);
 
-        return (Map) serviceMgr.reqVal("develop","script/load.json", req, Map.class);
+        return serviceMgr.reqVal("develop","script/load.json", req);
     }
 
     public Map load(String reqKey)
@@ -237,18 +237,18 @@ public class Recorder
         Map req = new HashMap();
         req.put("reqKey", reqKey);
 
-        return (Map) serviceMgr.reqVal("develop","script/load.json", req, Map.class);
+        return serviceMgr.reqVal("develop","script/load.json", req);
     }
 
     public Object query(Map condition)
     {
-        return serviceMgr.reqVal("develop","script/query.json", condition, null);
+        return serviceMgr.reqVal("develop","script/query.json", condition);
     }
 
     @RequestMapping("/debug/prepare.json")
     @ResponseBody
     @CrossOrigin
-    public Object prepare(@RequestBody Param req)
+    public Result prepare(@RequestBody Map req)
     {
         ReqHistory rh = DebugUtil.reqHistoryOf(req);
 
@@ -264,19 +264,19 @@ public class Recorder
     @RequestMapping("/debug/debug.json")
     @ResponseBody
     @CrossOrigin
-    public Object debug(@RequestBody Param req)
+    public Result debug(@RequestBody Map req)
     {
         ReqHistory rh;
 
         synchronized (temp)
         {
-            rh = temp.get(req.getLong("reqId"));
+            rh = temp.get(Common.toLong(req.get("reqId")));
         }
 
         ReqReplay rs = new ReqReplay(rh);
 
-        Long historyId = req.getLong("historyId");
-        int pos = req.getIntVal("pos");
+        Long historyId = Common.toLong(req.get("historyId"));
+        int pos = Common.toInteger(req.get("pos"));
 
         ReqReplay.Current current = this.replay(rs, historyId, pos);
         return Result.success(DebugUtil.snapshot(current));

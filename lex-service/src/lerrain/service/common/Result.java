@@ -14,6 +14,8 @@ public class Result<T>
     String reason;
     List detail;
 
+    int reqBytes, resBytes;
+
     public static <T> Result success(T content)
     {
         Result res = new Result();
@@ -24,20 +26,20 @@ public class Result<T>
         return res;
     }
 
-    public static Result fail(String reason)
+    public static Result alert(String reason)
     {
         Result res = new Result();
-        res.result = "fail";
+        res.result = "alert";
         res.code = 1;
         res.reason = reason;
 
         return res;
     }
 
-    public static Result error(String reason)
+    public static Result fail(String reason)
     {
         Result res = new Result();
-        res.result = "error";
+        res.result = "fail";
         res.code = -1;
         res.reason = reason;
 
@@ -65,7 +67,7 @@ public class Result<T>
 
         if ("success".equals(result))
             code = 0;
-        else if ("fail".equals(result))
+        else if ("alert".equals(result))
             code = 1;
         else
             code = -1;
@@ -81,6 +83,11 @@ public class Result<T>
         this.content = content;
     }
 
+    public void setData(T content)
+    {
+        this.content = content;
+    }
+
     public String getReason()
     {
         return reason;
@@ -91,14 +98,29 @@ public class Result<T>
         this.reason = reason;
     }
 
+    public void setMessage(String reason)
+    {
+        this.reason = reason;
+    }
+
     public boolean is(String r)
     {
         return r.equals(result);
     }
 
-    public boolean is(int code)
+    public boolean success()
     {
-        return this.code == code;
+        return this.code == 0;
+    }
+
+    public boolean fail()
+    {
+        return this.code < 0;
+    }
+
+    public boolean alert()
+    {
+        return this.code > 0;
     }
 
     public List getDetail()

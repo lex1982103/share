@@ -1,10 +1,9 @@
 package lerrain.service.common;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import javax.net.ssl.*;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
@@ -21,24 +20,18 @@ public class SimpleConnector implements ServiceClientConnector
         this.addr = addr.endsWith("/") ? addr.substring(0, addr.length() - 1) : addr;
     }
 
-    @Override
-    public JsonNode req(String link, Object param, int timeout) throws Exception
-    {
-        String url = link.startsWith("/") ? addr + link : addr + "/" + link;
-        return request(url, param, timeout);
-    }
-
     public String toString()
     {
         return name + "@" + addr;
     }
 
-    public JsonNode request(String urlstr, Object param, int timeout) throws Exception
+    @Override
+    public <T> Result<T> req(String link, Object param, int timeout) throws Exception
     {
         HttpURLConnection conn = null;
         try
         {
-            URL url = new URL(urlstr);
+            URL url = new URL(link.startsWith("/") ? addr + link : addr + "/" + link);
 
             conn = (HttpURLConnection)url.openConnection();
             conn.setDoInput(true);
@@ -57,18 +50,25 @@ public class SimpleConnector implements ServiceClientConnector
                 ((HttpsURLConnection) conn).setSSLSocketFactory(ssf);
             }
 
+            int reqBytes = -1;
             if (param != null)
             {
-                try (OutputStream out = conn.getOutputStream())
+                try (StatOutputStream out = new StatOutputStream(conn.getOutputStream()))
                 {
                     Json.write(param, out);
                     out.flush();
+
+                    reqBytes = out.size;
                 }
             }
 
-            try (InputStream in = conn.getInputStream())
+            try (StatInputStream in = new StatInputStream(conn.getInputStream()))
             {
-                return Json.OM.readTree(in);
+                Result<T> r = Json.OM.readValue(in, new TypeReference<Result<T>>() {});
+                r.reqBytes = reqBytes;
+                r.resBytes = in.size;
+
+                return r;
             }
         }
         catch (Exception e)
@@ -98,6 +98,42 @@ public class SimpleConnector implements ServiceClientConnector
         public X509Certificate[] getAcceptedIssuers()
         {
             return null;
+        }
+    }
+
+    private static class StatInputStream extends BufferedInputStream
+    {
+        int size;
+
+        public StatInputStream(InputStream in)
+        {
+            super(in, 4096);
+        }
+
+        public int read(byte[] b, int off, int len) throws IOException
+        {
+            int p = super.read(b, off, len);
+            if (p >= 0)
+                size += len;
+
+            return p;
+        }
+    }
+
+    private static class StatOutputStream extends BufferedOutputStream
+    {
+        int size;
+
+        public StatOutputStream(OutputStream out)
+        {
+            super(out, 4096);
+        }
+
+        public void write(byte[] b, int off, int len) throws IOException
+        {
+            super.write(b, off, len);
+
+            size += len;
         }
     }
 }

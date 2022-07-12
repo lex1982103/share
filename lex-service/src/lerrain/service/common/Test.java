@@ -1,5 +1,6 @@
 package lerrain.service.common;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 
@@ -19,6 +20,12 @@ import java.util.Random;
 public class Test
 {
     public static void main(String[] arg) throws Exception
+    {
+        Object v = Json.OM.readValue("{result:'success', data:100}", new TypeReference<Result<Short>>(){});
+        v = v;
+    }
+
+    public static void main2(String[] arg) throws Exception
     {
         Map m = new HashMap();
         m.put("dict", "http://localhost:8888,http://localhost:7773");

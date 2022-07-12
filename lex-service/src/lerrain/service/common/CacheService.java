@@ -151,24 +151,21 @@ public class CacheService
 
         if (tran != null && serviceCode != null && serviceMgr.hasClients("cache"))
         {
-            es.execute(new Runnable() {
-                @Override
-                public void run()
+            es.execute(() ->
+            {
+                try
                 {
-                    try
-                    {
-                        Map req = new HashMap();
-                        req.put("service", serviceCode);
-                        req.put("key", id);
-                        req.put("value", tran != null ? tran.toString(value) : value);
-                        req.put("timeout", timeout);
+                    Map req = new HashMap();
+                    req.put("service", serviceCode);
+                    req.put("key", id);
+                    req.put("value", tran != null ? tran.toString(value) : value);
+                    req.put("timeout", timeout);
 
-                        serviceMgr.req("cache", "save.json", req, null);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.alert(e);
-                    }
+                    serviceMgr.req("cache", "save.json", req);
+                }
+                catch (Exception e)
+                {
+                    Log.alert(e);
                 }
             });
         }
@@ -189,7 +186,7 @@ public class CacheService
                 req.put("value", tran != null ? tran.toString(value) : value);
                 req.put("timeout", timeout);
 
-                serviceMgr.req("cache", "save.json", req, null);
+                serviceMgr.req("cache", "save.json", req);
             }
             catch (Exception e)
             {
@@ -223,7 +220,7 @@ public class CacheService
 
             try
             {
-                String res = serviceMgr.reqVal("cache", "load.json", req, null);
+                String res = serviceMgr.reqVal("cache", "load.json", req);
                 if (res != null)
                 {
                     Object value = tran != null ? tran.toObject(res) : res;

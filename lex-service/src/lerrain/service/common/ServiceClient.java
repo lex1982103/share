@@ -1,7 +1,5 @@
 package lerrain.service.common;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 public class ServiceClient
 {
     Service service;
@@ -37,14 +35,14 @@ public class ServiceClient
         return service;
     }
 
-    public JsonNode req(String link, Object param, int timeout) throws Exception
+    public <T> Result<T> req(String link, Object param, int timeout) throws Exception
     {
         if (timeout <= 0)
         {
             Integer time = service.reqTimeout.get(link.startsWith("/") ? link : "/" + link);
 
             if (time == null)
-                timeout = ServiceClientConnector.REQUEST_TIME_OUT;
+                timeout = ServiceMgr.REQUEST_TIME_OUT;
             else
                 timeout = time;
         }

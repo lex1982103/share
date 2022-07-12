@@ -1,6 +1,8 @@
 package lerrain.service.common;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lerrain.tool.Common;
 
@@ -19,12 +21,19 @@ public class Json
         OM.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
     }
 
-    public static Map parse(String str) throws Exception
+    public static Map parse(String str)
     {
         if (Common.isEmpty(str))
             return null;
 
-        return OM.readValue(str, Map.class);
+        try
+        {
+            return OM.readValue(str, Map.class);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Map parseNull(String str)
@@ -39,12 +48,47 @@ public class Json
         }
     }
 
-    public static <T> T parse(String str, Class<T> clazz) throws Exception
+    public static <T> T parse(String str, Class<T> clazz)
     {
         if (Common.isEmpty(str))
             return null;
 
-        return OM.readValue(str, clazz);
+        try
+        {
+            return OM.readValue(str, clazz);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T parse(InputStream is, Class<T> clazz) throws IOException
+    {
+        try
+        {
+            return OM.readValue(is, clazz);
+        }
+        catch (JsonParseException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (JsonMappingException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T parseNull(InputStream is, Class<T> clazz)
+    {
+        try
+        {
+            return parse(is, clazz);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     public static <T> T parseNull(String str, Class<T> clazz)
@@ -59,12 +103,19 @@ public class Json
         }
     }
 
-    public static String write(Object val) throws Exception
+    public static String write(Object val)
     {
         if (val == null)
             return null;
 
-        return OM.writeValueAsString(val);
+        try
+        {
+            return OM.writeValueAsString(val);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String writeNull(Object val)

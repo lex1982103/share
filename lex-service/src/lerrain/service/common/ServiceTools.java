@@ -100,14 +100,14 @@ public class ServiceTools
         req.put("service", serviceCode);
         req.put("key", "idempotent/" + key);
 
-        String res = serviceMgr.reqVal("cache", "load.json", req, String.class);
+        String res = serviceMgr.reqVal("cache", "load.json", req);
         if (res != null)
             throw new RuntimeException("重复的请求");
 
         req.put("value", "Y");
         req.put("timeout", 3600000L * 24 * 30); //30天内幂等
 
-        serviceMgr.req("cache", "save.json", req, null);
+        serviceMgr.req("cache", "save.json", req);
     }
 
     /**

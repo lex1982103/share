@@ -78,7 +78,7 @@ public class PostQueue implements Runnable
             {
                 try
                 {
-                    serviceMgr.req(service, uri, list, null);
+                    serviceMgr.req(service, uri, list);
                 }
                 catch (Exception e)
                 {
@@ -164,7 +164,7 @@ public class PostQueue implements Runnable
             {
                 synchronized (retry)
                 {
-                    serviceMgr.req(service, uri, retry, null);
+                    serviceMgr.req(service, uri, retry);
                     retry.clear();
                 }
             }

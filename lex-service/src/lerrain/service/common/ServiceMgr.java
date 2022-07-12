@@ -1,6 +1,5 @@
 package lerrain.service.common;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lerrain.tool.Common;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -10,6 +9,8 @@ import java.util.*;
 
 public class ServiceMgr
 {
+    public static int REQUEST_TIME_OUT = 500;
+
     @Value("${sys.code:null}")
     String serviceCode;
 
@@ -117,7 +118,7 @@ public class ServiceMgr
         req.put("key", keys[3]);
         req.put("param", param);
 
-        return reqVal(client, keys[2], req, null, ServiceClientConnector.REQUEST_TIME_OUT);
+        return reqVal(client, keys[2], req, REQUEST_TIME_OUT);
     }
 
     public void setLog(String service, int level)
@@ -140,29 +141,29 @@ public class ServiceMgr
         return getService(str).getClient(index);
     }
 
-    public <T> Result<T> req(String service, int index, String loc, Object param, Class<T> clazz)
+    public <T> Result<T> req(String service, int index, String loc, Object param)
     {
-        return req(service, index, loc, param, clazz, -1);
+        return req(service, index, loc, param, -1);
     }
 
-    public <T> Result<T> req(String service, int index, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> Result<T> req(String service, int index, String loc, Object param, int timeout)
     {
         ServiceClient client = getClient(service, index);
-        return req(client, loc, param, clazz, timeout);
+        return req(client, loc, param, timeout);
     }
 
-    public <T> Result<T> req(String service, String loc, Object param, Class<T> clazz)
+    public <T> Result<T> req(String service, String loc, Object param)
     {
-        return req(service, loc, param, clazz, -1);
+        return req(service, loc, param, -1);
     }
 
-    public <T> Result<T> req(String service, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> Result<T> req(String service, String loc, Object param, int timeout)
     {
         ServiceClient client = this.getService(service).getClient(param);
-        return req(client, loc, param, clazz, timeout);
+        return req(client, loc, param, timeout);
     }
 
-    public <T> Result<T> req(ServiceClient client, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> Result<T> req(ServiceClient client, String loc, Object param, int timeout)
     {
         Object passport = null;
         long t = System.currentTimeMillis();
@@ -170,62 +171,59 @@ public class ServiceMgr
         if (listener != null)
             passport = listener.onBegin(client, loc, param);
 
+        Result res = null;
+
         try
         {
-            Result res = call(client, loc, param, clazz, timeout);
-            if (res.is("error"))
-                throw new ServiceException(Common.trimStringOf(res.getReason()), res.getDetail());
-
-            if (listener != null)
-            {
-                int t1 = (int)(System.currentTimeMillis() - t);
-                if (res.is("success"))
-                    listener.onSuccess(passport, t1, res);
-                else
-                    listener.onFail(passport, t1, res.getReason());
-            }
-
-            return res;
+            res = call(client, loc, param, timeout);
         }
         catch (Exception e)
         {
-            if (listener != null)
-                listener.onError(passport, (int)(System.currentTimeMillis() - t), e);
-
             throw new RuntimeException(e);
         }
+        finally
+        {
+            if (listener != null)
+                listener.onFinal(passport, res, (int)(System.currentTimeMillis() - t));
+        }
+
+        return res;
     }
 
-    public <T> T reqVal(String service, String loc, Object param, Class<T> clazz)
+    public <T> T reqVal(String service, String loc, Object param)
     {
-        return reqVal(getClient(service), loc, param, clazz, -1);
+        return reqVal(getClient(service), loc, param, -1);
     }
 
-    public <T> T reqVal(String service, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> T reqVal(String service, String loc, Object param, int timeout)
     {
-        return reqVal(getClient(service), loc, param, clazz, timeout);
+        return reqVal(getClient(service), loc, param, timeout);
     }
 
-    public <T> T reqVal(ServiceClient client, String loc, Object param, Class<T> clazz)
+    public <T> T reqVal(ServiceClient client, String loc, Object param)
     {
-        return reqVal(client, loc, param, clazz, -1);
+        return reqVal(client, loc, param, -1);
     }
 
-    public <T> T reqVal(ServiceClient client, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> T reqVal(ServiceClient client, String loc, Object param, int timeout)
     {
-        Result<T> res = req(client, loc, param, clazz, timeout);
-        if (!res.is("success"))
+        Result<T> res = req(client, loc, param, timeout);
+
+        if (res.success())
+            return res.getContent();
+
+        if (res.alert())
             throw new ServiceFeedback(res.getReason(), res.getDetail());
 
-        return res.getContent();
+        throw new ServiceException(res.getReason(), res.getDetail());
     }
 
-    public <T> Result<T>[] reqAll(String service, String loc, Object param, Class<T> clazz)
+    public <T> Result<T>[] reqAll(String service, String loc, Object param)
     {
-        return reqAll(service, loc, param, clazz, -1);
+        return reqAll(service, loc, param, -1);
     }
 
-    public <T> Result<T>[] reqAll(String service, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> Result<T>[] reqAll(String service, String loc, Object param, int timeout)
     {
         ServiceClient[] clients = this.getService(service).getAllClient();
         Result[] res = new Result[clients.length];
@@ -234,7 +232,7 @@ public class ServiceMgr
         {
             try
             {
-                res[i] = req(clients[i], loc, param, clazz, timeout);
+                res[i] = req(clients[i], loc, param, timeout);
             }
             catch (Exception e)
             {
@@ -244,67 +242,23 @@ public class ServiceMgr
         return res;
     }
 
-    public <T> Result<T> call(ServiceClient client, String loc, Object param, Class<T> clazz, int timeout)
+    public <T> Result<T> call(ServiceClient client, String loc, Object param, int timeout)
     {
         Service service = client.getService();
 
         try
         {
-            Result<T> result;
-
-            JsonNode node = client.req(loc, param, timeout);
-            if (node.has("code"))
-            {
-                int code = node.get("code").intValue();
-                if (code == 0)
-                {
-                    if (node.has("data"))
-                        result = Result.success(Json.OM.convertValue(node.get("data"), clazz));
-                    else if (node.has("result"))
-                        result = Result.success(Json.OM.convertValue(node.get("result"), clazz));
-                    else
-                        result = Result.success(null);
-                }
-                else
-                {
-                    result = Result.fail(node.get("message").asText());
-                }
-
-                result.setCode(code);
-            }
-            else
-            {
-                result = new Result();
-                result.setResult(node.get("result").asText());
-                if (result.is(0))
-                    result.setContent(Json.OM.convertValue(node.get("content"), clazz));
-                else
-                {
-                    result.setReason(node.get("reason").asText());
-                    if (node.has("detail"))
-                        result.setDetail(Json.OM.convertValue(node.get("detail"), List.class));
-                }
-            }
-
-            synchronized (client)
-            {
-                client.moreFail = 0;
-            }
-
-//            if (servers.level == 1)
-//                Log.debug("%s => %s/%s => %s", param == null ? null : param.toString(), servers.name, loc, res);
+            Result<T> result = client.req(loc, param, timeout);
+            client.moreFail = 0;
 
             return result;
         }
         catch (Exception e)
         {
-            synchronized (client)
-            {
-                if (e instanceof java.net.SocketTimeoutException || e instanceof java.net.SocketException)
-                    client.moreFail++;
-                else //这种一般是地址不对，不是服务错误
-                    client.moreFail = 0;
-            }
+            if (e instanceof java.net.SocketTimeoutException || e instanceof java.net.SocketException)
+                client.moreFail++;
+            else //这种一般是地址不对，不是服务错误
+                client.moreFail = 0;
 
             Log.error("request: <" + service.name + ">" + client.getUrl() + "/" + loc + " -- " + (param == null ? null : param.toString()) + " -- " + e.getMessage());
             throw new ServiceException("request: <" + service.name + ">" + client.getUrl() + "/" + loc + " -- " + e.getMessage(), e);
@@ -320,18 +274,18 @@ public class ServiceMgr
      * @param param
      * @return
      */
-    public <T> T ask(String service, String loc, Object param, Class<T> clazz)
+    public <T> T ask(String service, String loc, Object param)
     {
-        return retry(service, loc, param, clazz, new int[] {10000, 10000, 10000, 10000, 10000});
+        return retry(service, loc, param, new int[] {10000, 10000, 10000, 10000, 10000});
     }
 
-    private <T> T retry(String service, String loc, Object param, Class<T> clazz, int... sleep)
+    private <T> T retry(String service, String loc, Object param, int... sleep)
     {
         try
         {
-            Result<T> result = req(service, loc, param, clazz,-1);
+            Result<T> result = req(service, loc, param,-1);
 
-            if (result.is("success"))
+            if (result.success())
                 return result.getContent();
 
             //error里面判断过了
@@ -358,7 +312,7 @@ public class ServiceMgr
                 for (int i = 0; i < ns.length; i++)
                     ns[i] = sleep[i + 1];
 
-                return retry(service, loc, param, clazz, ns);
+                return retry(service, loc, param, ns);
             }
         }
 
@@ -394,7 +348,7 @@ public class ServiceMgr
             v.put("time", System.currentTimeMillis());
             list.add(v);
 
-            ServiceMgr.this.req("secure", "action.json", list, null);
+            ServiceMgr.this.req("secure", "action.json", list);
         }
         else
         {

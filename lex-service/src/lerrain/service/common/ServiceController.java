@@ -22,12 +22,12 @@ public class ServiceController
         if (e instanceof ServiceFeedback) //手工抛出的异常，不算做错误
         {
             Log.alert(e.getMessage());
-            return Result.fail(e.getMessage());
+            return Result.alert(e.getMessage());
         }
         else //其他异常都算作失败
         {
             Log.error(e);
-            return Result.error(e.toString());
+            return Result.fail(e.toString());
         }
     }
 

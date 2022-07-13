@@ -65,6 +65,8 @@ public class Stack implements VariableFactors
 	public Stack(Map heap)
 	{
 		this.heap = heap;
+
+		ROOT = this;
 	}
 
 //	public Factors getRoot()

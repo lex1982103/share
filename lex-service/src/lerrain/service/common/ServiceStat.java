@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class ServiceStat extends PostQueue
+public class ServiceStat extends PostQueue implements ServiceListener
 {
     @Value("${sys.index}")
     String srvIndex;
@@ -20,49 +18,37 @@ public class ServiceStat extends PostQueue
     @Autowired
     ServiceMgr serviceMgr;
 
-    public String getSrvIndex()
-    {
-        return srvIndex;
-    }
-
-    public String getSrvCode()
-    {
-        return srvCode;
-    }
-
-    @PostConstruct
     public void start()
     {
-        serviceMgr.setListener(new ServiceListener()
-        {
-            @Override
-            public Object onBegin(ServiceClient client, String s, Object req)
-            {
-                String name = client.getService().getName();
-
-                if ("secure".equals(name))
-                    return null;
-
-                return new Object[] {
-                        name, client.getIndex(), s, req
-                };
-            }
-
-            @Override
-            public void onFinal(Object passport, Result result, int time)
-            {
-                if (passport != null)
-                {
-                    Object[] x = (Object[]) passport;
-                    recService((String) x[0], (Integer) x[1], (String) x[2], time, result.getCode(), result.reqBytes, result.resBytes, x[3], result.getContent(), result.getReason());
-                }
-            }
-        });
+        serviceMgr.setListener(this);
 
         super.initiate(serviceMgr, 1000, "secure", "action.json");
         super.start();
 
         Log.info("Service Stat started");
+    }
+
+    @Override
+    public Object onBegin(ServiceClient client, String s, Object req)
+    {
+        String name = client.getService().getName();
+
+        if ("secure".equals(name))
+            return null;
+
+        return new Object[] {
+                name, client.getIndex(), s, req
+        };
+    }
+
+    @Override
+    public void onFinal(Object passport, Result result, int time)
+    {
+        if (passport != null)
+        {
+            Object[] x = (Object[]) passport;
+            recService((String) x[0], (Integer) x[1], (String) x[2], time, result.getCode(), result.reqBytes, result.resBytes, x[3], result.getContent(), result.getReason());
+        }
     }
 
     public void addMsg(Map v)

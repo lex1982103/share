@@ -1,6 +1,7 @@
 package lerrain.tool;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Test
@@ -45,12 +46,20 @@ public class Test
 
     public static void main(String[] s)
     {
-        int x1 = -1, x2 = -2;
-        long p1 = ((long)x1 & 0xFFFFFFFFl) | (((long)x2 << 32) & 0xFFFFFFFF00000000l);
-        int y1 = (int)(p1 >>> 32);
-        int y2 = (int)p1;
-        System.out.println(y1);
-        System.out.println(y2);
+        Date d3 = Common.getDate("2022-06-01");
+        Date d1 = Common.getDate("2022-04-29 15:02:46");
+        Date d2 = Common.getDate("1931-12-13");
+
+        System.out.println(new Date(Integer.MIN_VALUE*1000L));
+        System.out.println(d3.getTime() - d1.getTime());
+        System.out.println(d3.getTime() - d2.getTime());
+
+//        int x1 = -1, x2 = -2;
+//        long p1 = ((long)x1 & 0xFFFFFFFFl) | (((long)x2 << 32) & 0xFFFFFFFF00000000l);
+//        int y1 = (int)(p1 >>> 32);
+//        int y2 = (int)p1;
+//        System.out.println(y1);
+//        System.out.println(y2);
 
 //        test();
 

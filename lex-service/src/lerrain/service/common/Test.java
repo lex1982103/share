@@ -13,6 +13,7 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by lerrain on 2017/8/3.
@@ -21,13 +22,49 @@ public class Test
 {
     public static void main(String[] arg) throws Exception
     {
-        long tm = (1657967734996L - Common.getDate("2020-01-01").getTime()) / 600000;
+        ConcurrentHashMap map = new ConcurrentHashMap();
 
-        int minute = (int)(tm % 60);
-        int hour = (int)(tm / 60) % 24;
+        Thread th = new Thread(() -> {
+            map.computeIfAbsent("AAA", k -> {
+                try
+                {
+                    Thread.sleep(1000);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                System.out.println(2);
+                return 2;
+            });
+        });
+        th.start();
 
-        System.out.println(hour);
-        System.out.println(minute);
+//        map.computeIfAbsent("AAA", k -> {
+//            try
+//            {
+//                Thread.sleep(1000);
+//            }
+//            catch (InterruptedException e)
+//            {
+//                e.printStackTrace();
+//            }
+//            System.out.println(1);
+//            return 1;
+//        });
+
+
+        Thread.sleep(100);
+
+        System.out.println(map.get("AAA"));
+
+//        long tm = (1657967734996L - Common.getDate("2020-01-01").getTime()) / 600000;
+//
+//        int minute = (int)(tm % 60);
+//        int hour = (int)(tm / 60) % 24;
+//
+//        System.out.println(hour);
+//        System.out.println(minute);
 
 //        Object v = Json.OM.readValue("{result:'success', data:100}", new TypeReference<Result<Short>>(){});
 //        v = v;

@@ -20,6 +20,8 @@ public class CacheService
 {
     public static long TIME_OUT = 3600000L * 24;
 
+    private static Object NIL = new Object();
+
     @Value("${sys.code:null}")
     String serviceCode;
 
@@ -124,6 +126,9 @@ public class CacheService
             return null;
 
         Object r = tv.val.get();
+        if (r == NIL) //没过期的null
+            return null;
+
         if (r == null) //弱引用已经释放了，如果缓存的值就是null，这里会有点问题，无法被实际缓存
         {
             cache.remove(id);
@@ -206,41 +211,47 @@ public class CacheService
     }
 
     /**
-     * 同时fetch一个id的内容，在get和put之间可能造成两次获取
+     * 同时fetch一个id的内容，没有锁把get和put包在一起，可能造成两次获取。但不同线程拿一个id的概率不大，先不处理
      * @param id
      * @return
      */
     public Object fetch(String id)
     {
-        Object v = get(id);
-        if (v != null)
-            return v;
-
-        if (tran != null && serviceCode != null && serviceMgr.hasClients("cache"))
+        TimeValue tv = cache.computeIfAbsent(id, k ->
         {
-            Map req = new HashMap();
-            req.put("service", serviceCode);
-            req.put("key", id);
-
-            try
+            if (tran != null && serviceCode != null && serviceMgr.hasClients("cache"))
             {
-                String res = serviceMgr.reqVal("cache", "load.json", req);
-                if (res != null)
-                {
-                    Object value = tran != null ? tran.toObject(res) : res;
-                    //由于cache那边没存timeout时间，拿默认的代替，这会造成timeout时间不准确
-                    cache.put(id, new TimeValue(value, TIME_OUT));
+                Map req = new HashMap();
+                req.put("service", serviceCode);
+                req.put("key", id);
 
-                    return value;
+                try
+                {
+                    String res = serviceMgr.reqVal("cache", "load.json", req);
+                    if (res != null) //由于cache那边没存timeout时间，拿默认的代替，这会造成timeout时间不准确
+                        return new TimeValue(tran != null ? tran.toObject(res) : res, TIME_OUT);
+                }
+                catch (Exception e)
+                {
+                    Log.alert(e);
                 }
             }
-            catch (Exception e)
-            {
-                Log.alert(e);
-            }
+
+            return new TimeValue(NIL, TIME_OUT); //一定时间内不会去获取
+        });
+
+        Object r = tv.val.get();
+        if (r == NIL)
+            return null;
+
+        if (r == null) //弱引用已经释放了，如果缓存的值就是null，这里会有点问题，无法被实际缓存
+        {
+            cache.remove(id);
+            return null;
         }
 
-        return null;
+        tv.resetTime();
+        return r;
     }
 
     public void free()
@@ -269,6 +280,9 @@ public class CacheService
 
         public TimeValue(Object value, long timeout)
         {
+            if (value == null)
+                value = NIL;
+
             this.val = new SoftReference(value);
             this.timeout = timeout;
 

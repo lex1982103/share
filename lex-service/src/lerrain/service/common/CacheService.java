@@ -205,12 +205,16 @@ public class CacheService
         cache.remove(key);
     }
 
+    /**
+     * 同时fetch一个id的内容，在get和put之间可能造成两次获取
+     * @param id
+     * @return
+     */
     public Object fetch(String id)
     {
-        boolean local = cache.containsKey(id);
-
-        if (local)
-            return get(id);
+        Object v = get(id);
+        if (v != null)
+            return v;
 
         if (tran != null && serviceCode != null && serviceMgr.hasClients("cache"))
         {

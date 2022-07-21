@@ -21,8 +21,16 @@ public class Test
 {
     public static void main(String[] arg) throws Exception
     {
-        Object v = Json.OM.readValue("{result:'success', data:100}", new TypeReference<Result<Short>>(){});
-        v = v;
+        long tm = (1657967734996L - Common.getDate("2020-01-01").getTime()) / 600000;
+
+        int minute = (int)(tm % 60);
+        int hour = (int)(tm / 60) % 24;
+
+        System.out.println(hour);
+        System.out.println(minute);
+
+//        Object v = Json.OM.readValue("{result:'success', data:100}", new TypeReference<Result<Short>>(){});
+//        v = v;
     }
 
     public static void main2(String[] arg) throws Exception

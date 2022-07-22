@@ -27,45 +27,54 @@ public class Test
     {
         Map map = new ConcurrentHashMap();
 
-        List<Callable<Integer>> list = new ArrayList<>();
-
-        for (int i=0;i<10;++i)
+        for (int ppp =0 ;ppp< 10; ++ppp)
         {
-            final int j = i;
-            list.add(() -> {
-                int vv = 0;
-                for (int z=0;z<100000;++z)
-                {
-                    long t1 = System.currentTimeMillis();
-                    Object v = map.computeIfAbsent(ran.nextInt(10000), k -> new byte[100000]);
+            final int pppp = ppp;
+            List<Callable<Integer>> list = new ArrayList<>();
 
-                    long t2 = System.currentTimeMillis();
-                    if (t2 - t1 > 50)
-                    {
-                        System.out.println(j + " time out " + (t2 - t1) + " " + map.size());
-                    }
-                    else if (t2 - t1 < 10)
-                    {
-                        ++vv;
-                    }
-                }
-                return vv;
-            });
-        }
-
-        try
-        {
-            int vv = 0;
-            for (Future<Integer> f : es.invokeAll(list))
+            for (int i = 0; i < 10; ++i)
             {
-                vv += f.get();
+                final int j = i;
+                list.add(() -> {
+                    int vv = 0;
+                    for (int z = 0; z < 100000; ++z)
+                    {
+                        long t1 = System.currentTimeMillis();
+                        Object v = map.computeIfAbsent(ran.nextInt(100000), k -> new byte[10000]);
+
+                        long t2 = System.currentTimeMillis();
+                        if (t2 - t1 > 50)
+                        {
+                            System.out.println(j + " time out " + (t2 - t1) + " " + map.size());
+                        }
+                        else if (t2 - t1 < 10)
+                        {
+                            ++vv;
+                        }
+                    }
+                    return vv;
+                });
             }
 
-            System.out.println(vv);
-        }
-        catch (Exception e)
-        {
-            Log.alert(e);
+            try
+            {
+                int vv = 0;
+                for (Future<Integer> f : es.invokeAll(list))
+                {
+                    vv += f.get();
+                }
+
+                System.out.println(vv);
+            }
+            catch (Exception e)
+            {
+                Log.alert(e);
+            }
+
+            for (int i=0;i<30000;++i)
+                map.remove(i);
+
+            Thread.sleep(1000);
         }
     }
 

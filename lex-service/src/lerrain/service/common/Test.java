@@ -10,64 +10,63 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by lerrain on 2017/8/3.
  */
 public class Test
 {
+    static Random ran = new Random();
+
+    static ExecutorService es = Executors.newCachedThreadPool();
+
     public static void main(String[] arg) throws Exception
     {
-        ConcurrentHashMap map = new ConcurrentHashMap();
+        Map map = new ConcurrentHashMap();
 
-        Thread th = new Thread(() -> {
-            map.computeIfAbsent("AAA", k -> {
-                try
+        List<Callable<Integer>> list = new ArrayList<>();
+
+        for (int i=0;i<10;++i)
+        {
+            final int j = i;
+            list.add(() -> {
+                int vv = 0;
+                for (int z=0;z<100000;++z)
                 {
-                    Thread.sleep(1000);
+                    long t1 = System.currentTimeMillis();
+                    Object v = map.computeIfAbsent(ran.nextInt(10000), k -> new byte[100000]);
+
+                    long t2 = System.currentTimeMillis();
+                    if (t2 - t1 > 50)
+                    {
+                        System.out.println(j + " time out " + (t2 - t1) + " " + map.size());
+                    }
+                    else if (t2 - t1 < 10)
+                    {
+                        ++vv;
+                    }
                 }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-                System.out.println(2);
-                return 2;
+                return vv;
             });
-        });
-        th.start();
+        }
 
-//        map.computeIfAbsent("AAA", k -> {
-//            try
-//            {
-//                Thread.sleep(1000);
-//            }
-//            catch (InterruptedException e)
-//            {
-//                e.printStackTrace();
-//            }
-//            System.out.println(1);
-//            return 1;
-//        });
+        try
+        {
+            int vv = 0;
+            for (Future<Integer> f : es.invokeAll(list))
+            {
+                vv += f.get();
+            }
 
-
-        Thread.sleep(100);
-
-        System.out.println(map.get("AAA"));
-
-//        long tm = (1657967734996L - Common.getDate("2020-01-01").getTime()) / 600000;
-//
-//        int minute = (int)(tm % 60);
-//        int hour = (int)(tm / 60) % 24;
-//
-//        System.out.println(hour);
-//        System.out.println(minute);
-
-//        Object v = Json.OM.readValue("{result:'success', data:100}", new TypeReference<Result<Short>>(){});
-//        v = v;
+            System.out.println(vv);
+        }
+        catch (Exception e)
+        {
+            Log.alert(e);
+        }
     }
 
     public static void main2(String[] arg) throws Exception

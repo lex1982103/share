@@ -6,6 +6,8 @@ import lerrain.tool.Disk;
 
 import javax.net.ssl.*;
 import java.io.*;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
@@ -40,7 +42,7 @@ public class Test
                     for (int z = 0; z < 100000; ++z)
                     {
                         long t1 = System.currentTimeMillis();
-                        Object v = map.computeIfAbsent(ran.nextInt(100000), k -> new byte[10000]);
+                        Object v = map.computeIfAbsent(ran.nextInt(100000), k ->  new byte[10000]);
 
                         long t2 = System.currentTimeMillis();
                         if (t2 - t1 > 50)

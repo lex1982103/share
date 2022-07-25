@@ -98,6 +98,11 @@ public class CacheService
         });
     }
 
+    public int size()
+    {
+        return cache.size();
+    }
+
     /**
      * 参考同名方法
      * 复杂的对象使用json自动转换会导致对象指针引用混乱，请使用自定义的转换器

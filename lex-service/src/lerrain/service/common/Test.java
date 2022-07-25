@@ -6,68 +6,87 @@ import lerrain.tool.Disk;
 
 import javax.net.ssl.*;
 import java.io.*;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by lerrain on 2017/8/3.
  */
 public class Test
 {
+    static Random ran = new Random();
+
+    static ExecutorService es = Executors.newCachedThreadPool();
+
     public static void main(String[] arg) throws Exception
     {
-        ConcurrentHashMap map = new ConcurrentHashMap();
+        Number c = new Long(100);
 
-        Thread th = new Thread(() -> {
-            map.computeIfAbsent("AAA", k -> {
-                try
+        Number[] cc = (Number[])Array.newInstance(c.getClass(), 100);
+        System.out.println(cc);
+    }
+
+    public static void main555(String[] arg) throws Exception
+    {
+        Map map = new ConcurrentHashMap();
+
+        for (int ppp =0 ;ppp< 10; ++ppp)
+        {
+            final int pppp = ppp;
+            List<Callable<Integer>> list = new ArrayList<>();
+
+            for (int i = 0; i < 10; ++i)
+            {
+                final int j = i;
+                list.add(() -> {
+                    int vv = 0;
+                    for (int z = 0; z < 100000; ++z)
+                    {
+                        long t1 = System.currentTimeMillis();
+                        Object v = map.computeIfAbsent(ran.nextInt(100000), k ->  new byte[10000]);
+
+                        long t2 = System.currentTimeMillis();
+                        if (t2 - t1 > 50)
+                        {
+                            System.out.println(j + " time out " + (t2 - t1) + " " + map.size());
+                        }
+                        else if (t2 - t1 < 10)
+                        {
+                            ++vv;
+                        }
+                    }
+                    return vv;
+                });
+            }
+
+            try
+            {
+                int vv = 0;
+                for (Future<Integer> f : es.invokeAll(list))
                 {
-                    Thread.sleep(1000);
+                    vv += f.get();
                 }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-                System.out.println(2);
-                return 2;
-            });
-        });
-        th.start();
 
-//        map.computeIfAbsent("AAA", k -> {
-//            try
-//            {
-//                Thread.sleep(1000);
-//            }
-//            catch (InterruptedException e)
-//            {
-//                e.printStackTrace();
-//            }
-//            System.out.println(1);
-//            return 1;
-//        });
+                System.out.println(vv);
+            }
+            catch (Exception e)
+            {
+                Log.alert(e);
+            }
 
+            for (int i=0;i<30000;++i)
+                map.remove(i);
 
-        Thread.sleep(100);
-
-        System.out.println(map.get("AAA"));
-
-//        long tm = (1657967734996L - Common.getDate("2020-01-01").getTime()) / 600000;
-//
-//        int minute = (int)(tm % 60);
-//        int hour = (int)(tm / 60) % 24;
-//
-//        System.out.println(hour);
-//        System.out.println(minute);
-
-//        Object v = Json.OM.readValue("{result:'success', data:100}", new TypeReference<Result<Short>>(){});
-//        v = v;
+            Thread.sleep(1000);
+        }
     }
 
     public static void main2(String[] arg) throws Exception

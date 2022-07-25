@@ -48,7 +48,7 @@ public class StatementTry extends Code
 				}
 
 				if (ws.getType(left) != Words.BRACE)
-					throw new SyntaxException("catch后面没有找到代码段");
+					throw new SyntaxException(ws, right, "catch后面没有找到代码段");
 
 				right = Syntax.findRightBrace(ws, left + 1);
 				catchAll = new Script(ws.cut(left + 1, right));

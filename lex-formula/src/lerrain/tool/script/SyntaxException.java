@@ -37,13 +37,44 @@ public class SyntaxException extends RuntimeException
 		this.pos = pos;
 	}
 
-	public SyntaxException(String descr)
+	public int getPosition()
 	{
-		super(descr);
+		if (ws != null)
+		{
+			if (pos >= 0)
+				return ws.getLocation(pos);
+
+			return ws.getLocation(0);
+		}
+
+		if (pos > 0)
+			return pos;
+
+		return 0;
 	}
-	
-	public SyntaxException()
+
+	public int[] getRange()
 	{
+		if (ws != null)
+			return ws.range();
+
+		if (pos >= 0)
+			return new int[] {pos, pos + 1};
+
+		return new int[] {0, 1};
+	}
+
+	public String getMistakeScript()
+	{
+		if (ws != null)
+		{
+			if (pos >= 0)
+				return ws.getWord(pos);
+
+			return ws.getCurrentScript();
+		}
+
+		return script.substring(pos, pos + 1);
 	}
 
 	public String getMessage()

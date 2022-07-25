@@ -38,7 +38,7 @@ public class ArithmeticPointMethod extends Arithmetic
 		obj = Expression.expressionOf(ws.cut(0, i));
 		
 		if (ws.getType(i + 1) != Words.METHOD)
-			throw new SyntaxException("POINT-METHOD运算右侧没有找到方法名");
+			throw new SyntaxException(ws, i, "POINT-METHOD运算右侧没有找到方法名");
 
 		if (ws.getType(i) == Words.POINT_KEY2)
 			tk = false;

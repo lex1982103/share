@@ -160,7 +160,7 @@ public class Words implements Serializable
 	public void setType(int index, int type)
 	{
 		if (index >= num)
-			throw new SyntaxException("out of range");
+			throw new SyntaxException(this, "out of range");
 
 		words.get(from + index).d = type;
 	}
@@ -168,7 +168,7 @@ public class Words implements Serializable
 	public void setWord(int index, String word)
 	{
 		if (index >= num)
-			throw new SyntaxException("out of range");
+			throw new SyntaxException(this, "out of range");
 
 		words.get(from + index).c = word;
 	}
@@ -176,7 +176,7 @@ public class Words implements Serializable
 	public String getWord(int index)
 	{
 		if (index >= num)
-			throw new SyntaxException("out of range");
+			throw new SyntaxException(this, "out of range");
 
 		return words.get(from + index).c;
 	}
@@ -184,10 +184,15 @@ public class Words implements Serializable
 	public int getLocation(int index)
 	{
 		if (index >= num)
-			throw new SyntaxException("out of range");
+			throw new SyntaxException(this, "out of range");
 
 		return words.get(from + index).e;
 	}
+
+	public int getEnd()
+    {
+        return end;
+    }
 
 	public void add(char word, int loc)
 	{
@@ -197,7 +202,7 @@ public class Words implements Serializable
 	public void add(String word, int type, int loc)
 	{
 		if (words.size() != num)
-			throw new SyntaxException("out of range");
+			throw new SyntaxException(this, "out of range");
 
 		words.add(new Word(word, type, loc));
 
@@ -234,7 +239,7 @@ public class Words implements Serializable
 			i++;
 		}
 
-		throw new SyntaxException("error in formula");
+		throw new SyntaxException(this, "error in formula");
 	}
 	
 	public Words cut(int from, int to)

@@ -43,7 +43,7 @@ public class ArithmeticQuestMark extends Arithmetic
 		}
 
 		if (r1 == null || r2 == null)
-			throw new SyntaxException("?:运算组合缺少:");
+			throw new SyntaxException(ws, i, "?:运算组合缺少:");
 	}
 
 	/**

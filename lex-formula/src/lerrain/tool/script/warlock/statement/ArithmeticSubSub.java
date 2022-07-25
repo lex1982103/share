@@ -23,7 +23,7 @@ public class ArithmeticSubSub extends Arithmetic implements WriteVariable
 			l = Expression.expressionOf(ws.cut(0, i));
 		
 		if ((l == null && r == null) || (!(l instanceof Reference) && !(r instanceof Reference)))
-			throw new SyntaxException("递减运算要求左右之一为引用");
+			throw new SyntaxException(ws, i, "递减运算要求左右之一为引用");
 	}
 
 	public Object run(Factors factors)

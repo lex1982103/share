@@ -24,7 +24,7 @@ public class ArithmeticArray extends Arithmetic implements Reference
 	public static Code arrayOf(Words ws, int i)
 	{
 		if (ws.getType(i) != Words.BRACKET || ws.getType(ws.size() - 1) != Words.BRACKET_R)
-			throw new SyntaxException("找不到数组的右括号");
+			throw new SyntaxException(ws, "找不到数组的右括号");
 
 		int type;
 

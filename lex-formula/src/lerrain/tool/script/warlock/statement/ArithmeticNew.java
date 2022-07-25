@@ -26,7 +26,7 @@ public class ArithmeticNew extends Arithmetic
 		super(ws, i);
 
 		if (i == ws.size() - 1 || ws.getType(i + 1) != Words.CLASS)
-			throw new SyntaxException("没有找到new的类型");
+			throw new SyntaxException(ws, i, "没有找到new的类型");
 		
 		cluss = ws.getWord(i + 1);
 		

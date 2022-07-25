@@ -13,7 +13,7 @@ public class ArithmeticLet extends Arithmetic2Elements implements WriteVariable
 		super(ws, i);
 
 		if (!(l instanceof Reference))
-			throw new SyntaxException("被赋值一方必须是一个引用 - " + ws);
+			throw new SyntaxException(ws, i, "被赋值一方必须是一个引用 - " + ws);
 	}
 
 	public Object run(Factors factors)

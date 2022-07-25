@@ -22,7 +22,7 @@ public class ArithmeticBrace extends Arithmetic
 		super(ws, i);
 
 		if (ws.getType(i) != Words.BRACE || ws.getType(ws.size() - 1) != Words.BRACE_R)
-			throw new SyntaxException("找不到数组的右括号");
+			throw new SyntaxException(ws, i, "找不到数组的右括号");
 
 		if (ws.size() - 1 == i + 1 || ws.getType(i + 2) == Words.COLON_SPLIT)
 		{

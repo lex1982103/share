@@ -20,7 +20,7 @@ public class StatementParagraph extends Code
 		int r = Syntax.findRightBrace(ws, i + 1);
 		
 		if (i != 0 || r != ws.size() - 1)
-			throw new SyntaxException("表达式内部脚本作为一个值，与周围的计算无法匹配");
+			throw new SyntaxException(ws, i, "表达式内部脚本作为一个值，与周围的计算无法匹配");
 		
 		c = new Script(ws.cut(i + 1, r));
 	}

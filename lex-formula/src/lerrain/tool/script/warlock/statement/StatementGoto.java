@@ -29,7 +29,7 @@ public class StatementGoto extends Code
 		left = right + 1;
 		int type1 = ws.getType(left);
 		if (type1 != Words.BRACE)
-			throw new SyntaxException(ws, 0, "goto(...)后面需要紧跟代码体，以{}包裹");
+			throw new SyntaxException(ws, "goto(...)后面需要紧跟代码体，以{}包裹");
 
 		right = Syntax.findRightBrace(ws, left + 1);
 		fc = new Script(ws.cut(left + 1, right));

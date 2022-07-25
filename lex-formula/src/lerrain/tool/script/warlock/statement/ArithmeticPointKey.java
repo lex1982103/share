@@ -27,7 +27,7 @@ public class ArithmeticPointKey extends Arithmetic implements Reference
 		l = Expression.expressionOf(ws.cut(0, i));
 		
 		if (ws.getType(i + 1) != Words.KEY)
-			throw new SyntaxException("POINT-KEY运算右侧没有找到KEY");
+			throw new SyntaxException(ws, i, "POINT-KEY运算右侧没有找到KEY");
 
 		if (ws.getType(i) == Words.POINT_KEY2)
 			tk = false;

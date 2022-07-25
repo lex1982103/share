@@ -26,7 +26,7 @@ public class StatementSynch extends Code
 		}
 
 		if (ws.getType(left) != Words.BRACE)
-			throw new SyntaxException("synch 代码体需要以大括号包裹");
+			throw new SyntaxException(ws, "synch 代码体需要以大括号包裹");
 
 		int right = Syntax.findRightBrace(ws, left + 1);
 		code = new Script(ws.cut(left + 1, right));

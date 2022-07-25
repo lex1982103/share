@@ -42,7 +42,7 @@ public class StatementFor extends Code
 			type = 2;
 
 			if (!(f1 instanceof StatementVar))
-				throw new SyntaxException("for的:遍历写法，变量var是不可缺少的");
+				throw new SyntaxException(f1.getWords(), "for的:遍历写法，变量var是不可缺少的");
 		}
 		
 		left = right + 1;

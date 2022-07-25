@@ -34,7 +34,7 @@ public class ArithmeticFunctionBody extends Arithmetic
 		super(ws, i);
 
 		if (i > 0)
-			throw new SyntaxException("不是一个有效的函数语法 - " + ws);
+			throw new SyntaxException(ws, i, "不是一个有效的函数语法 - " + ws);
 		
 		name = ws.getWord(i);
 		

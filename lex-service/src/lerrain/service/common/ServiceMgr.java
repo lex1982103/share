@@ -5,7 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ServiceMgr
 {
@@ -19,6 +24,8 @@ public class ServiceMgr
 
     @Resource
     Environment env;
+
+    ExecutorService ES = Executors.newCachedThreadPool();
 
     Map<String, Service> map = new HashMap<>();
 
@@ -228,18 +235,63 @@ public class ServiceMgr
         ServiceClient[] clients = this.getService(service).getAllClient();
         Result[] res = new Result[clients.length];
 
+        List<Callable<Result>> list = new ArrayList();
         for (int i = 0; i < clients.length; i++)
         {
-            try
-            {
-                res[i] = req(clients[i], loc, param, timeout);
-            }
-            catch (Exception e)
-            {
-            }
+            final int j = i;
+            list.add(() -> {
+                Result r;
+                try
+                {
+                    r = req(clients[j], loc, param, timeout);
+                }
+                catch (Exception e)
+                {
+                    r = Result.fail(e.getMessage());
+                }
+                return r;
+            });
+        }
+
+        try
+        {
+            int i = 0;
+            for (Future<Result> f : ES.invokeAll(list))
+                res[i++] = f.get();
+        }
+        catch (Exception e)
+        {
+            Log.error(e);
         }
 
         return res;
+    }
+
+    public <T> T[] reqAllVals(String service, String loc, Object param)
+    {
+        return reqAllVals(service, loc, param, -1);
+    }
+
+    public <T> T[] reqAllVals(String service, String loc, Object param, int timeout)
+    {
+        Result<T>[] rs = reqAll(service, loc, param, timeout);
+        T[] r = null;
+        for (int i = 0; i < rs.length; ++i)
+        {
+            if (rs[i] != null && rs[i].success())
+            {
+                T v = rs[i].getContent();
+                if (v != null)
+                {
+                    if (r == null)
+                        r = (T[])Array.newInstance(v.getClass(), rs.length);
+
+                    r[i] = v;
+                }
+            }
+        }
+
+        return r;
     }
 
     public <T> Result<T> call(ServiceClient client, String loc, Object param, int timeout)

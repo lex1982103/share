@@ -8,6 +8,7 @@ import javax.net.ssl.*;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
@@ -26,6 +27,14 @@ public class Test
     static ExecutorService es = Executors.newCachedThreadPool();
 
     public static void main(String[] arg) throws Exception
+    {
+        Number c = new Long(100);
+
+        Number[] cc = (Number[])Array.newInstance(c.getClass(), 100);
+        System.out.println(cc);
+    }
+
+    public static void main555(String[] arg) throws Exception
     {
         Map map = new ConcurrentHashMap();
 

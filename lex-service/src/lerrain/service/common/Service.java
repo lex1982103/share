@@ -46,9 +46,8 @@ public class Service
         clients = new ServiceClient[url.length];
         for (int i = 0; i < url.length; i++)
         {
-            clients[i] = new ServiceClient(this);
+            clients[i] = new ServiceClient(this, Common.trimStringOf(url[i]));
             clients[i].index = i;
-            clients[i].url = Common.trimStringOf(url[i]);
 //                clients[i].client = Feign.builder().encoder(new JSONEncoder()).decoder(new JSONDecoder()).target(ServiceClient.class, clients[i].url);
 //                clients[i].client = new NetworkClient(name, clients[i].url);
         }
@@ -137,7 +136,7 @@ public class Service
 
     public void setConfig(List list)
     {
-        reqTimeout = new HashMap<>();
+        Map reqTimeout = new HashMap<>();
 
         for (int i = 0; i < list.size(); i++)
         {
@@ -151,5 +150,7 @@ public class Service
                 reqTimeout.put(reqKey, timeout);
             }
         }
+
+        this.reqTimeout = reqTimeout.isEmpty() ? null : reqTimeout;
     }
 }

@@ -1,5 +1,8 @@
 package lerrain.tool;
 
+import lerrain.tool.script.Script;
+import lerrain.tool.script.SyntaxException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -8,7 +11,26 @@ public class Test
 {
 	static Random ran = new Random();
 
-	public static void main(String[] s) throws Exception
+	public static void main(String[] arg) throws Exception
+	{
+		String str = "var p = 5 * ; \n for (var i=0;i<100;++i){ ++p }";
+		try
+		{
+			Script.scriptOf(str);
+		}
+		catch (SyntaxException e)
+		{
+			int[] s = e.getRange();
+			System.out.println(str.substring(0, s[0]) + " <*" + str.substring(s[0], s[1]) + "*>" + str.substring(s[1]));
+		}
+
+//        Number c = new Long(100);
+//
+//        Number[] cc = (Number[])Array.newInstance(c.getClass(), 100);
+//        System.out.println(cc);
+	}
+
+	public static void main222(String[] s) throws Exception
 	{
 		Map m1 = new HashMap<>();
 		for (int i=0;i<10000;i++)

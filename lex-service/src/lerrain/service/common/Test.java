@@ -3,6 +3,8 @@ package lerrain.service.common;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
+import lerrain.tool.script.Script;
+import lerrain.tool.script.SyntaxException;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -28,10 +30,20 @@ public class Test
 
     public static void main(String[] arg) throws Exception
     {
-        Number c = new Long(100);
+        String str = "var p = 5 * ; \n for (var i=0;i<100;++i){ ++p }";
+        try
+        {
+            Script.scriptOf(str);
+        }
+        catch (SyntaxException e)
+        {
 
-        Number[] cc = (Number[])Array.newInstance(c.getClass(), 100);
-        System.out.println(cc);
+        }
+
+//        Number c = new Long(100);
+//
+//        Number[] cc = (Number[])Array.newInstance(c.getClass(), 100);
+//        System.out.println(cc);
     }
 
     public static void main555(String[] arg) throws Exception

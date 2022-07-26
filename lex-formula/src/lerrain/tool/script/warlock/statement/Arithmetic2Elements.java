@@ -1,5 +1,6 @@
 package lerrain.tool.script.warlock.statement;
 
+import lerrain.tool.script.SyntaxException;
 import lerrain.tool.script.warlock.Code;
 import lerrain.tool.script.warlock.analyse.Expression;
 import lerrain.tool.script.warlock.analyse.Words;
@@ -17,6 +18,9 @@ public abstract class Arithmetic2Elements extends Arithmetic
 
         l = Expression.expressionOf(ws.cut(0, i));
         r = Expression.expressionOf(ws.cut(i + 1));
+
+        if (l == null || r == null)
+            throw new SyntaxException(ws, i, "2元运算符需要左右的表达式");
     }
 
     @Override

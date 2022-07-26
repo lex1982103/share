@@ -1,5 +1,7 @@
 package lerrain.service.common;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
@@ -30,20 +32,63 @@ public class Test
 
     public static void main(String[] arg) throws Exception
     {
-        String str = "var p = 5 * ; \n for (var i=0;i<100;++i){ ++p }";
-        try
-        {
-            Script.scriptOf(str);
-        }
-        catch (SyntaxException e)
-        {
+        String s1 = "{nodes:[1,1], links:[1,2,3,4]}";
+        GraphResult vr = Json.OM.readValue(s1, GraphResult.class);
 
+        JsonParser jp2 = SimpleConnector.factory.createParser(s1);
+        GraphResult gr = jp2.readValueAs(GraphResult.class);
+
+
+        String str = "{result:'success', content:{nodes:[1,1], links:[1,2,3,4]}}";
+
+        JsonParser jp = SimpleConnector.factory.createParser(str);
+
+        Result r = new Result();
+
+        while (!jp.isClosed())
+        {
+            String field = jp.nextFieldName();
+            if ("content".equals(field))
+            {
+                jp.nextValue();
+                r.setContent(jp.readValueAs(GraphResult.class));
+            }
+            else if ("code".equals(field))
+                r.setCode(jp.nextIntValue(-9));
+            else if ("result".equals(field))
+                r.setResult(jp.nextTextValue());
+            else if ("reason".equals(field))
+                r.setReason(jp.nextTextValue());
         }
 
-//        Number c = new Long(100);
-//
-//        Number[] cc = (Number[])Array.newInstance(c.getClass(), 100);
-//        System.out.println(cc);
+        r = r;
+    }
+
+    public static class GraphResult
+    {
+        long[] nodes;
+        int[] links;
+
+        public long[] getNodes()
+        {
+            return nodes;
+        }
+
+        public int[] getLinks()
+        {
+            return links;
+        }
+
+        public void setNodes(long[] nodes)
+        {
+            this.nodes = nodes;
+        }
+
+        public void setLinks(int[] links)
+        {
+            this.links = links;
+        }
+
     }
 
     public static void main555(String[] arg) throws Exception

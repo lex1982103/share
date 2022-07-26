@@ -100,7 +100,7 @@ public class ServiceTools
         req.put("service", serviceCode);
         req.put("key", "idempotent/" + key);
 
-        String res = serviceMgr.reqVal("cache", "load.json", req);
+        String res = serviceMgr.reqVal("cache", "load.json", req, String.class);
         if (res != null)
             throw new RuntimeException("重复的请求");
 

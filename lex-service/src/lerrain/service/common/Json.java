@@ -2,6 +2,7 @@ package lerrain.service.common;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lerrain.tool.Common;
@@ -13,12 +14,14 @@ import java.util.Map;
 
 public class Json
 {
-    static ObjectMapper OM = new ObjectMapper();
+    public static ObjectMapper OM = new ObjectMapper();
 
     static
     {
         OM.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         OM.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+
+        OM.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
     }
 
     public static Map parse(String str)

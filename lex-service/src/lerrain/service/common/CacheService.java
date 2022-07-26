@@ -171,7 +171,7 @@ public class CacheService
                     req.put("value", tran != null ? tran.toString(value) : value);
                     req.put("timeout", timeout);
 
-                    serviceMgr.req("cache", "save.json", req);
+                    serviceMgr.req("cache", "save.json", req, Map.class);
                 }
                 catch (Exception e)
                 {
@@ -196,7 +196,7 @@ public class CacheService
                 req.put("value", tran != null ? tran.toString(value) : value);
                 req.put("timeout", timeout);
 
-                serviceMgr.req("cache", "save.json", req);
+                serviceMgr.req("cache", "save.json", req, Map.class);
             }
             catch (Exception e)
             {
@@ -225,7 +225,7 @@ public class CacheService
 
             try
             {
-                String res = serviceMgr.reqVal("cache", "load.json", req);
+                String res = serviceMgr.reqVal("cache", "load.json", req, String.class);
                 if (res != null) //由于cache那边没存timeout时间，拿默认的代替，这会造成timeout时间不准确
                     return tran != null ? tran.toObject(res) : res;
             }

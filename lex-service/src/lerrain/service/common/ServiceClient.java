@@ -36,7 +36,7 @@ public class ServiceClient
         return service;
     }
 
-    public <T> Result<T> req(String link, Object param, int timeout) throws Exception
+    public <T> Result<T> req(String link, Object param, int timeout, Class<T> clazz) throws Exception
     {
         if (timeout <= 0)
         {
@@ -55,6 +55,6 @@ public class ServiceClient
             }
         }
 
-        return client.req(link, param, timeout);
+        return client.req(link, param, timeout, clazz);
     }
 }

@@ -5,5 +5,5 @@ package lerrain.service.common;
  */
 public interface ServiceClientConnector
 {
-    <T> Result<T> req(String link, Object param, int timeout) throws Exception;
+    <T> Result<T> req(String link, Object param, int timeout, Class<T> clazz) throws Exception;
 }

@@ -1,6 +1,8 @@
 package lerrain.service.common;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MappingJsonFactory;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -8,11 +10,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.LinkedHashMap;
 
 public class SimpleConnector implements ServiceClientConnector
 {
     String name;
     String addr;
+
+    static JsonFactory factory = new JsonFactory(Json.OM);
+
+    static
+    {
+        factory.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        factory.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+    }
 
     public SimpleConnector(String name, String addr)
     {
@@ -26,7 +37,7 @@ public class SimpleConnector implements ServiceClientConnector
     }
 
     @Override
-    public <T> Result<T> req(String link, Object param, int timeout) throws Exception
+    public <T> Result<T> req(String link, Object param, int timeout, Class<T> clazz) throws Exception
     {
         HttpURLConnection conn = null;
         try
@@ -64,7 +75,25 @@ public class SimpleConnector implements ServiceClientConnector
 
             try (StatInputStream in = new StatInputStream(conn.getInputStream()))
             {
-                Result<T> r = Json.OM.readValue(in, new TypeReference<Result<T>>() {});
+                Result r = new Result();
+
+                JsonParser jp = factory.createParser(in);
+                while (!jp.isClosed())
+                {
+                    String field = jp.nextFieldName();
+                    if ("content".equals(field))
+                    {
+                        jp.nextValue();
+                        r.setContent(jp.readValueAs(clazz));
+                    }
+                    else if ("code".equals(field))
+                        r.setCode(jp.nextIntValue(-9));
+                    else if ("result".equals(field))
+                        r.setResult(jp.nextTextValue());
+                    else if ("reason".equals(field))
+                        r.setReason(jp.nextTextValue());
+                }
+
                 r.reqBytes = reqBytes;
                 r.resBytes = in.size;
 

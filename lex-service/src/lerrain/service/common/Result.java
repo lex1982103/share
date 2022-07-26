@@ -16,7 +16,7 @@ public class Result<T>
 
     int reqBytes, resBytes;
 
-    public static <T> Result success(T content)
+    public static Result success(Object content)
     {
         Result res = new Result();
         res.result = "success";

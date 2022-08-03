@@ -15,8 +15,8 @@ public class Duty
 
     Formula condition; // 触发条件
 
-    String appDesc; // app 责任描述
-    String proposalDesc; // 计划书 责任描述
+    Formula desc; // 责任描述
+    Formula extra ;
     String iybCode; // iyb责任code
     String type; // 责任类型
     String prefix;// 描述前缀
@@ -75,20 +75,20 @@ public class Duty
         this.condition = condition;
     }
 
-    public String getAppDesc() {
-        return appDesc;
+    public Formula getDesc() {
+        return desc;
     }
 
-    public void setAppDesc(String appDesc) {
-        this.appDesc = appDesc;
+    public void setDesc(Formula desc) {
+        this.desc = desc;
     }
 
-    public String getProposalDesc() {
-        return proposalDesc;
+    public Formula getExtra() {
+        return extra;
     }
 
-    public void setProposalDesc(String proposalDesc) {
-        this.proposalDesc = proposalDesc;
+    public void setExtra(Formula extra) {
+        this.extra = extra;
     }
 
     public String getIybCode() {

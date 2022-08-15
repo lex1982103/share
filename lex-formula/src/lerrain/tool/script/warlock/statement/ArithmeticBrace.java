@@ -159,7 +159,7 @@ public class ArithmeticBrace extends Arithmetic
 
 			return res;
 		}
-		else if (r instanceof ArithmeticCode)
+		else if (r instanceof ArithmeticEntry)
 		{
 			Map res = new LinkedHashMap();
 			ArithmeticEntry ae = (ArithmeticEntry)r;

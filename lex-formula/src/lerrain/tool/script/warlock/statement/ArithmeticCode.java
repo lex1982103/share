@@ -9,7 +9,7 @@ public class ArithmeticCode extends Arithmetic
 {
 	Code[] v;
 
-	String symbol;
+	int symbol;
 
 	public ArithmeticCode(Words ws, int i)
 	{
@@ -19,7 +19,7 @@ public class ArithmeticCode extends Arithmetic
 		v[0] = Expression.expressionOf(ws.cut(0, i));
 		v[1] = Expression.expressionOf(ws.cut(i + 1));
 
-		symbol = ws.getWord(i);
+		symbol = ws.getType(i);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class ArithmeticCode extends Arithmetic
 		return v[1].isFixed(mode);
 	}
 
-	public String getSymbol()
+	public int getSymbol()
 	{
 		return symbol;
 	}
@@ -52,6 +52,6 @@ public class ArithmeticCode extends Arithmetic
 	
 	public String toText(String space, boolean line)
 	{
-		return (line ? space : "") + v[0].toText(space, line) + " " + symbol + " " + v[1].toText(space, line);
+		return (line ? space : "") + v[0].toText(space, line) + " : " + v[1].toText(space, line);
 	}
 }

@@ -39,16 +39,19 @@ public class CommodityDuty extends ArrayList
 
     private synchronized void init()
     {
-        if (dutyList != null) for (Duty duty : dutyList)
-        {
+        if (dutyList != null) for (Duty duty : dutyList) {
             if (duty.getCondition() != null && !Value.booleanOf(duty.getCondition(), factors))
                 continue;
 
             Map map = new HashMap();
             map.put("NAME", duty.getName());
             map.put("CODE", duty.getCode());
-            map.put("APPDESC", duty.getAppDesc());
-            map.put("PROPOSALDESC", duty.getProposalDesc());
+            if (duty.getDesc() != null) {
+                  map.put("DESC", Value.stringOf(duty.getDesc(), factors));
+            }
+            if(duty.getExtra() !=null){
+                  map.put("EXTRA",Value.stringOf(duty.getExtra(),factors));
+            }
             map.put("IYBCODE", duty.getIybCode());
             map.put("TYPE", duty.getType());
             map.put("PREFIX", duty.getPrefix());

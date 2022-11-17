@@ -7,13 +7,13 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.itext</groupId>
+			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.6</version>
 		</dependency>
 		<dependency>
-			<groupId>com.itext</groupId>
-			<artifactId>itextpdfasian</artifactId>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-asian</artifactId>
 			<version>5.2.0</version>
 		</dependency>
 		<dependency>

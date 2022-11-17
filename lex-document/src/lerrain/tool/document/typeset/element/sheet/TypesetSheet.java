@@ -435,17 +435,17 @@ public class TypesetSheet extends TypesetElement
 		if (obj == null)
 			return null;
 
-		if (obj instanceof String[])
-		{
-			String[] s = (String[])obj;
-			SheetBlank[] res = new SheetBlank[s.length];
-			for (int j = 0; j < s.length; j++)
-			{
-				res[j] = new SheetBlank();
-				res[j].setText(s[j]);
-			}
-			return res;
-		}
+//		if (obj instanceof String[])
+//		{
+//			String[] s = (String[])obj;
+//			SheetBlank[] res = new SheetBlank[s.length];
+//			for (int j = 0; j < s.length; j++)
+//			{
+//				res[j] = new SheetBlank();
+//				res[j].setText(s[j]);
+//			}
+//			return res;
+//		}
 		if (obj instanceof Object[])
 		{
 			Object[] r1 = (Object[]) obj;
